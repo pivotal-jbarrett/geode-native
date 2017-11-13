@@ -26,6 +26,7 @@ DUNIT_TASK_DEFINITION(SERVER1, CreateLocator1)
   {
     // starting locator
     if (isLocator) CacheHelper::initLocator(1);
+    dunit::globals()->rebind("locator1", 1234);
     LOG("Locator1 started");
   }
 END_TASK_DEFINITION
@@ -62,6 +63,8 @@ END_TASK_DEFINITION
 
 DUNIT_TASK_DEFINITION(SERVER1, CreateServer1_With_Locator_XML)
   {
+    auto locator1Port = dunit::globals()->getIntValue("locator1");
+    fprintf(stdout, "XXXXXXXXXXXX locator1Port %d\n", locator1Port);
     // starting servers
     if (isLocalServer) {
       CacheHelper::initServer(1, "cacheserver_notify_subscription.xml",
