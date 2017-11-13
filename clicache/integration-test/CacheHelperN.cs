@@ -22,6 +22,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Threading;
 
 #pragma warning disable 618
 
@@ -31,6 +32,8 @@ namespace Apache.Geode.Client.UnitTests
   using Apache.Geode.DUnitFramework;
   using Apache.Geode.Client;
   using System.Management;
+  using System.Net.Sockets;
+  using System.Net;
 
   public class PropsStringToObject
   {
@@ -313,13 +316,11 @@ namespace Apache.Geode.Client.UnitTests
 
     private const string JavaServerName = "gfsh.bat";
     private const string GeodeName = "gfsh.bat";
-    private static int JavaMcastPort = -1;
     private const string JavaServerStartArgs =
       "start server --J=-Xmx512m --J=-Xms128m --J=-XX:+UseConcMarkSweepGC --J=-XX:+UseParNewGC --J=-Xss256k --cache-xml-file=";
     private const string JavaServerStopArgs = "stop server";
-    private const string LocatorStartArgs = "start locator";
+    private const string LocatorStartArgs = "start locator --http-service-port=0";
     private const string LocatorStopArgs = "stop locator";
-    private const int LocatorPort = 34755;
     private const int MaxWaitMillis = 60000;
     private static char PathSep = Path.DirectorySeparatorChar;
 
@@ -1729,14 +1730,6 @@ namespace Apache.Geode.Client.UnitTests
       else if (cacheXmls != null)
       {
         // Assume the GFE_DIR is for a local server
-        if (locators)
-        {
-          JavaMcastPort = 0;
-        }
-        else
-        {
-          JavaMcastPort = Util.Rand(2431, 31123);
-        }
 
         for (int i = 0; i < cacheXmls.Length; i++)
         {
@@ -1778,21 +1771,28 @@ namespace Apache.Geode.Client.UnitTests
 
     public static void createRandomPorts()
     {
-      if (HOST_PORT_1 == 0)
-      {
-        HOST_PORT_1 = Util.RandPort(10000, 64000);
-        HOST_PORT_2 = Util.RandPort(10000, 64000);
-        HOST_PORT_3 = Util.RandPort(10000, 64000);
-        HOST_PORT_4 = Util.RandPort(10000, 64000);
+      if (HOST_PORT_1 == 0) {
+        HOST_PORT_1 = GetAvailablePort();
+        HOST_PORT_2 = GetAvailablePort();
+        HOST_PORT_3 = GetAvailablePort();
+        HOST_PORT_4 = GetAvailablePort();
       }
 
-      if (LOCATOR_PORT_1 == 0)
-      {
-        LOCATOR_PORT_1 = Util.RandPort(10000, 64000);
-        LOCATOR_PORT_2 = Util.RandPort(10000, 64000);
-        LOCATOR_PORT_3 = Util.RandPort(10000, 64000);
-        LOCATOR_PORT_4 = Util.RandPort(10000, 64000);
+      if (LOCATOR_PORT_1 == 0) {
+        LOCATOR_PORT_1 = GetAvailablePort();
+        LOCATOR_PORT_2 = GetAvailablePort();
+        LOCATOR_PORT_3 = GetAvailablePort();
+        LOCATOR_PORT_4 = GetAvailablePort();
       }
+    }
+
+    static int GetAvailablePort()
+    {
+      TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+      l.Start();
+      var port = ((IPEndPoint)l.LocalEndpoint).Port;
+      l.Stop();
+      return port;
     }
 
     public static void createDuplicateXMLFile(string orignalFilename, string duplicateFilename)
@@ -1815,10 +1815,6 @@ namespace Apache.Geode.Client.UnitTests
     public static void StartJavaLocator(int locatorNum, string startDir)
     {
       StartJavaLocator(locatorNum, startDir, null);
-    }
-    public static int getBaseLocatorPort()
-    {
-      return LocatorPort;
     }
 
     public static void StartJavaLocator(int locatorNum, string startDir,
