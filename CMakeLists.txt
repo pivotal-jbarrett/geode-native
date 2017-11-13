@@ -239,6 +239,10 @@ add_subdirectory(tests)
 add_subdirectory(templates/security)
 add_subdirectory(docs/api)
 if (${BUILD_CLI})
+  find_program(NUGET nuget)
+  add_custom_target(nuget-restore 
+    COMMAND ${NUGET} restore ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.sln
+  )
   add_subdirectory(clicache)
   add_subdirectory(plugins/SQLiteCLI)
 endif()

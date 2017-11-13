@@ -45,14 +45,14 @@ namespace Apache.Geode.Client.UnitTests
       return null;
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();
       m_dsys = CacheHelper.DSYS;
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       try

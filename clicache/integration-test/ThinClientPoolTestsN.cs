@@ -46,7 +46,7 @@ namespace Apache.Geode.Client.UnitTests
       return new ClientBase[] { m_client1, m_client2 };
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       CacheHelper.StopJavaServers();

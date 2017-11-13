@@ -1709,6 +1709,11 @@ namespace Apache.Geode.Client.UnitTests
       m_gfeDir = Util.GetEnvironmentVariable("GFE_DIR");
       Assert.IsNotNull(m_gfeDir, "GFE_DIR is not set.");
       Assert.IsNotEmpty(m_gfeDir, "GFE_DIR is not set.");
+
+      var testsrc = Util.GetEnvironmentVariable("TESTSRC");
+      Assert.IsNotNull(m_gfeDir, "TESTSRC is not set.");
+      Assert.IsNotEmpty(m_gfeDir, "TESTSRC is not set.");
+
       m_gfeLogLevel = Util.GetEnvironmentVariable("GFE_LOGLEVEL");
       m_gfeSecLogLevel = Util.GetEnvironmentVariable("GFE_SECLOGLEVEL");
       if (m_gfeLogLevel == null || m_gfeLogLevel.Length == 0)
@@ -1741,7 +1746,7 @@ namespace Apache.Geode.Client.UnitTests
           if (cacheXml.IndexOf(PathSep) < 0)
           {
             duplicateFile = Directory.GetCurrentDirectory() + PathSep + Util.Rand(2342350).ToString() + cacheXml;
-            cacheXml = Directory.GetCurrentDirectory() + PathSep + cacheXml;
+            cacheXml = testsrc + @"\" + cacheXml;
             createDuplicateXMLFile(cacheXml, duplicateFile);
             //:create duplicate xml files
             cacheXmls[i] = duplicateFile;

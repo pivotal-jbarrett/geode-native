@@ -52,7 +52,7 @@ namespace Apache.Geode.Client.UnitTests
       return new ClientBase[] { };
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       Properties<string, string> config = new Properties<string, string>();

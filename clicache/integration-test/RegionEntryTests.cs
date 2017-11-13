@@ -35,14 +35,14 @@ namespace Apache.Geode.Client.UnitTests
       return null;
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();
       CacheHelper.InitName(hostName, hostName);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       try

@@ -141,7 +141,7 @@ namespace Apache.Geode.Client.UnitTests
     
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       CacheHelper.StopJavaServers();

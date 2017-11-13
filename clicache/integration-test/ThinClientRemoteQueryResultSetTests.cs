@@ -53,7 +53,7 @@ namespace Apache.Geode.Client.UnitTests
       return new ClientBase[] { m_client1, m_client2 };
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();

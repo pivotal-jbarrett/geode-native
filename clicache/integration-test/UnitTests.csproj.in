@@ -106,7 +106,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>${NUNIT}\bin\framework\nunit.framework.dll</HintPath>
+      <HintPath>$(CMAKE_BINARY_DIR)\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

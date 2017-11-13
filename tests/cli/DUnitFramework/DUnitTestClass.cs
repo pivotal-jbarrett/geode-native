@@ -106,7 +106,7 @@ namespace Apache.Geode.DUnitFramework
       SetClientLogging(m_clients, Util.LogFile);
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public virtual void InitTests()
     {
       m_currentTestClass = this.GetType();
@@ -120,7 +120,7 @@ namespace Apache.Geode.DUnitFramework
           if (m_fixtureSetup == null)
           {
             attrs = method.GetCustomAttributes(
-              typeof(TestFixtureSetUpAttribute), true);
+              typeof(OneTimeSetUpAttribute), true);
             if (attrs != null && attrs.Length > 0)
             {
               m_fixtureSetup = method;
@@ -161,7 +161,7 @@ namespace Apache.Geode.DUnitFramework
       SetClientLogging();
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public virtual void EndTests()
     {
       if (m_clients != null)

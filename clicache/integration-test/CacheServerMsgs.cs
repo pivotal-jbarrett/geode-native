@@ -33,7 +33,7 @@ namespace Apache.Geode.Client.UnitTests
       return null;
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();
@@ -42,7 +42,7 @@ namespace Apache.Geode.Client.UnitTests
       m_cache = CacheHelper.DCache;
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       try

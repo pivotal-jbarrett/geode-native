@@ -15,12 +15,14 @@
 cmake_minimum_required(VERSION 3.4)
 project(nativeclient.tests.clicache)
 
-set (NUNIT "C:\\Program Files (x86)\\NUnit 2.6.4")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packages.config ${CMAKE_CURRENT_BINARY_DIR}/packages.config COPYONLY)
+
+#set (NUNIT "C:\\Program Files (x86)\\NUnit 2.6.4")
 
 if (64 EQUAL ${BUILD_BITS})
-  set (NUNIT_CONSOLE "nunit-console")
+  set (NUNIT_CONSOLE "nunit3-console.exe")
 else()
-  set (NUNIT_CONSOLE "nunit-console-x86")
+  set (NUNIT_CONSOLE "nunit3-console.exe -x86")
 endif()
 
 # Set the .NET Target Framework (Note: This should match the build for Apache.Geode.)
@@ -44,7 +46,7 @@ foreach(FILE ${CSPROJECTS})
       ${PROJNAME}  ${CMAKE_CURRENT_BINARY_DIR}/${PROJNAME}.csproj
       TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
   set_target_properties(${PROJNAME} PROPERTIES FOLDER test/cliTests)
-
+  add_dependencies(${PROJNAME} nuget-restore)
 endforeach()
 
 enable_testing()
@@ -118,4 +120,3 @@ add_custom_target(run-stable-clicache-integration-tests
   USES_TERMINAL)
 add_dependencies(run-integration-tests run-stable-clicache-integration-tests)
 set_target_properties(run-stable-clicache-integration-tests PROPERTIES EXCLUDE_FROM_ALL TRUE EXCLUDE_FROM_DEFAULT_BUILD TRUE)
-

@@ -50,5 +50,5 @@ foreach(FILE ${CSPROJECTS})
       TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC
 	  PLATFORM ${PLATFORM})
   set_target_properties(${PROJNAME} PROPERTIES FOLDER test/cliTests)
-
+  add_dependencies(${PROJNAME} nuget-restore)
 endforeach()

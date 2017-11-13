@@ -61,7 +61,7 @@ namespace Apache.Geode.Client.UnitTests
       }
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();
@@ -79,7 +79,7 @@ namespace Apache.Geode.Client.UnitTests
       }
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       string coverageXMLs = string.Empty;

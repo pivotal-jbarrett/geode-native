@@ -117,7 +117,7 @@ namespace Apache.Geode.Client.UnitTests
       return new ClientBase[] { };
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       Util.Log("InitTests: AppDomain: " + AppDomain.CurrentDomain.Id);

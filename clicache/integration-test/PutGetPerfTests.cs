@@ -192,7 +192,7 @@ namespace Apache.Geode.Client.UnitTests
 
     #endregion
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();

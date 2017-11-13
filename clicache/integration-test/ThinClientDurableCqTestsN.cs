@@ -273,13 +273,13 @@ namespace Apache.Geode.Client.UnitTests
       }
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();
     }
 
-    [TestFixtureTearDown]
+    [OneTimeSetUp]
     public override void EndTests()
     {
       m_client1.Exit();

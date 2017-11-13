@@ -55,7 +55,7 @@ namespace Apache.Geode.Client.UnitTests
       return new ClientBase[] { m_client1, m_client2 };
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public override void InitTests()
     {
       base.InitTests();
@@ -1920,7 +1920,7 @@ namespace Apache.Geode.Client.UnitTests
 		}
 
 		[Test]
-    [Ignore]
+    [Ignore("unknown")]
     public void RemoteParamQueryFailover()
     {
       for (int i = 0; i < 2; i++)
@@ -1948,7 +1948,7 @@ namespace Apache.Geode.Client.UnitTests
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("unknown")]
     public void QueryTimeout()
     {
       for (int i = 0; i < 2; i++)
@@ -1960,7 +1960,7 @@ namespace Apache.Geode.Client.UnitTests
     }
 
     [Test]
-    [Ignore]
+    [Ignore("unknown")]
     public void ParamQueryTimeout()
     {
       for (int i = 0; i < 2; i++)
