@@ -44,7 +44,6 @@ set GF_CLASSPATH=%GF_CLASSPATH%;$<SHELL_PATH:${CMAKE_BINARY_DIR}>\tests\javaobje
 set PROFILERCMD=
 set BUG481=
 set TESTNAME=${TEST}
-set LOG=${TEST}.log
 
 rmdir /q /s "%TEST_DIR%" 2>nul
 mkdir "%TEST_DIR%"
@@ -55,9 +54,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 rem In Windows, pipes to tee return tee's exit code instead of executable's
 rem exit code. As a workaround we write exit codes to files.
 
-(${NUNIT_CONSOLE} --labels=On --test=${NAMESPACE}.${TESTCLASS} $<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}>\$<CONFIG>\UnitTests.dll 2>&1 && echo 0 >${TEST}.errorlevel || echo 1 >${TEST}.errorlevel) | tee %LOG%
-
-set /p errorlevel= <${TEST}.errorlevel
+${NUNIT_CONSOLE} --labels=On --test=${NAMESPACE}.${TESTCLASS} $<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}>\$<CONFIG>\UnitTests.dll
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 popd
