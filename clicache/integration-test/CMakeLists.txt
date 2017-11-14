@@ -37,19 +37,12 @@ if(EXISTS "${STRONG_NAME_KEY}")
   set(STRONG_NAME_KEY_ENABLED true)
 endif()
 
-foreach(FILE ${CSPROJECTS})
-  # TODO: make this a one line MATCH statement
-  string(REGEX REPLACE "\\.csproj.in" "" PROJDIR ${FILE})
-  string(REGEX REPLACE ".*/" "" PROJNAME ${PROJDIR})
-  configure_file(${FILE} ${CMAKE_CURRENT_BINARY_DIR}/${PROJNAME}.csproj)
-  include_external_msproject(
-      ${PROJNAME}  ${CMAKE_CURRENT_BINARY_DIR}/${PROJNAME}.csproj
-      TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
-  set_target_properties(${PROJNAME} PROPERTIES FOLDER test/cliTests)
-  add_dependencies(${PROJNAME} nuget-restore)
-endforeach()
-
-enable_testing()
+configure_file(UnitTests.csproj.in ${CMAKE_CURRENT_BINARY_DIR}/UnitTests.csproj)
+include_external_msproject(
+  ${PROJECT_NAME}  ${CMAKE_CURRENT_BINARY_DIR}/UnitTests.csproj
+  TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER test/cliTests)
+add_dependencies(${PROJECT_NAME} nuget-restore)
 
 # Function to resolve both config and generate stage variables.
 macro(generate_config INPUT TEMP OUTPUT)
@@ -65,54 +58,34 @@ foreach( lib ssl xerces-c sqlite )
   set(PATH ${PATH} ${runtime_path})
 endforeach()
 
-file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cs")
+enable_testing()
+include(NUnit)
+nunit_discover_tests(${PROJECT_NAME}
+  TEST_ASSEMBLY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/UnitTests.dll"
+)
 
-foreach(FILE ${SOURCES})
-  # Find all non-deprecated tests
-  file(STRINGS ${FILE} HasTests REGEX "\\[Test\\]")
-
-  LIST(LENGTH HasTests length)
-  if (${length} GREATER 0)
-      file(STRINGS ${FILE} IsDeprecated REGEX "\\[Category.*deprecated.*\\]")
-	  if (NOT IsDeprecated)
-
-		  # Get the namespace
-		  file(STRINGS ${FILE} NameSpaceLine REGEX "namespace Apache.Geode.Client.UnitTests")
-		  string(REGEX REPLACE "namespace.*Apache" "Apache" NAMESPACE ${NameSpaceLine})
-
-          string(REGEX REPLACE "\\.cs" "" TEST ${FILE})        
-          set(TESTS ${TESTS} ${TEST})
-          set(TEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/.tests/${TEST})
-
-		  # Get the test class (NewAPI tests have N in the file name but not test class name)
-		  string(REGEX REPLACE "N$" "" TESTCLASS ${TEST})
-
-          set(TEST_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${TEST}.bat)
-          generate_config(${CMAKE_CURRENT_SOURCE_DIR}/test.bat.in ${CMAKE_CURRENT_BINARY_DIR}/.${TEST}.bat.in ${TEST_SCRIPT})
-
-          add_test(NAME ${TEST} COMMAND ${TEST_SCRIPT})
-          set_property(TEST ${TEST} PROPERTY LABELS STABLE)
-	  endif()
-  endif()
-endforeach()
+#TODO make work in vstest_discover_tests
+set_directory_properties(PROPERTIES
+  TEST_INCLUDE_FILE "${PROJECT_NAME}_include.cmake"
+)
 
 # Label any flaky tests here
-set_property(TEST ThinClientCqTestsN PROPERTY LABELS FLAKY)
-set_property(TEST ThinClientQueryTestsN PROPERTY LABELS FLAKY)
-
-# Label any tests that always fail here
-set_property(TEST OverflowTestsN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientDeltaTestN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientDurableTestsN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientHARegionTestsN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientPdxTests PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientRegionTestsN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientSecurityAuthTestsMUN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientSecurityAuthTestsN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientSecurityAuthTestsMUN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientSecurityAuthzTestsMUN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientSecurityAuthzTestsN PROPERTY LABELS OMITTED)
-set_property(TEST ThinClientStatisticTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientCqTestsN PROPERTY LABELS FLAKY)
+#set_property(TEST ThinClientQueryTestsN PROPERTY LABELS FLAKY)
+#
+## Label any tests that always fail here
+#set_property(TEST OverflowTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientDeltaTestN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientDurableTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientHARegionTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientPdxTests PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientRegionTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientSecurityAuthTestsMUN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientSecurityAuthTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientSecurityAuthTestsMUN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientSecurityAuthzTestsMUN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientSecurityAuthzTestsN PROPERTY LABELS OMITTED)
+#set_property(TEST ThinClientStatisticTestsN PROPERTY LABELS OMITTED)
 
 add_custom_target(run-stable-clicache-integration-tests
   COMMAND ctest -C $<CONFIGURATION> -L STABLE
