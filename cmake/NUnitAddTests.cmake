@@ -25,8 +25,8 @@ endif()
 
 execute_process(
   COMMAND ${TEST_NUNIT_EXECUTABLE}
-	"${TEST_ASSEMBLY}"
-    --explore:tests.out;format=cases
+	  "${TEST_ASSEMBLY}"
+    "--explore:tests.out;format=cases"
     --where "_SKIPREASON!~//"
   OUTPUT_VARIABLE output
   RESULT_VARIABLE result
@@ -45,15 +45,22 @@ file(STRINGS tests.out output)
 foreach(test ${output})
   message("Discovered NUnit test: ${test}")
   add_command(add_test
-	"${test}"
-	${TEST_NUNIT_EXECUTABLE}
-	"${TEST_ASSEMBLY}"
-	--test "${test}"
-	--noheader
-	${extra_args}
+    "${test}"
+    ${TEST_NUNIT_EXECUTABLE}
+    "${TEST_ASSEMBLY}"
+    --test "${test}"
+    --noheader
+    ${extra_args}
   )
+
+  add_command(set_tests_properties "${test}" PROPERTIES
+     ENVIRONMENT "PATH=$<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}>\$<CONFIG>;%PATH%"
+  )
+
  list(APPEND tests ${test})
 endforeach()
+
+add_command(set ${TEST_LIST} ${tests})
 
 # Write CTest script
 file(WRITE "${CTEST_FILE}" "${script}")

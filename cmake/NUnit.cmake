@@ -1,8 +1,8 @@
 function(nunit_discover_tests TARGET)
   cmake_parse_arguments(
     ""
-	""
-	"WORKING_DIRECTORY;TEST_ASSEMBLY"
+	  ""
+	  "WORKING_DIRECTORY;TEST_ASSEMBLY;TEST_LIST"
     "EXTRA_ARGS;PROPERTIES"
     ${ARGN}
   )
@@ -13,7 +13,10 @@ function(nunit_discover_tests TARGET)
   if(NOT _TEST_ASSEMBLY)
     set(_TEST_ASSEMBLY "$<TARGET_FILE:${TARGET}>")
   endif()
-
+  if(NOT _TEST_LIST)
+    set(_TEST_LIST ${TARGET}_TESTS)
+  endif()
+  
   set(ctest_include_file "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}_include.cmake")
   set(ctest_tests_file "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}_tests.cmake")
 
@@ -26,6 +29,7 @@ function(nunit_discover_tests TARGET)
             -D "TEST_ASSEMBLY=${_TEST_ASSEMBLY}"
             -D "TEST_EXTRA_ARGS=${_EXTRA_ARGS}"
             -D "TEST_WORKING_DIR=${_WORKING_DIRECTORY}"
+            -D "TEST_LIST=${_TEST_LIST}"
             -D "CTEST_FILE=${ctest_tests_file}"
             -P "${_NUNIT_DISCOVER_TESTS_SCRIPT}"
     VERBATIM
@@ -50,7 +54,7 @@ endfunction()
 ###############################################################################
 
 set(_NUNIT_DISCOVER_TESTS_SCRIPT
-  ${CMAKE_CURRENT_LIST_DIR}/NUnitsAddTests.cmake
+  ${CMAKE_CURRENT_LIST_DIR}/NUnitAddTests.cmake
 )
 
 find_program(_NUNIT_EXECUTABLE 

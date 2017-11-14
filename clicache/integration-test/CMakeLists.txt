@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-cmake_minimum_required(VERSION 3.4)
-project(nativeclient.tests.clicache)
+
+cmake_minimum_required(VERSION 3.9)
+project(Apache.Geode.IntegrationTests CSharp)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packages.config ${CMAKE_CURRENT_BINARY_DIR}/packages.config COPYONLY)
 
-#set (NUNIT "C:\\Program Files (x86)\\NUnit 2.6.4")
 
 if (64 EQUAL ${BUILD_BITS})
   set (NUNIT_CONSOLE "nunit3-console.exe")
@@ -25,24 +25,57 @@ else()
   set (NUNIT_CONSOLE "nunit3-console.exe -x86")
 endif()
 
-# Set the .NET Target Framework (Note: This should match the build for Apache.Geode.)
-set (DOTNET_TARGET_FRAMEWORK_VERSION "v4.5.2")
+file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cs")
+add_library( ${PROJECT_NAME} SHARED ${SOURCES}
 
-foreach(var CMAKE_CURRENT_SOURCE_DIR CMAKE_SOURCE_DIR CMAKE_BINARY_DIR CMAKE_CURRENT_BINARY_DIR)
-  file(TO_NATIVE_PATH ${${var}} ${var}_NATIVE)
-endforeach()
+# TODO make these their own assembly
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/DeltaTestImpl.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/TestObject1.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/DeltaEx.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/PortfolioPdx.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/PositionPdx.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/Portfolio.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/Position.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/NewTestObject/SimpleCacheListener.cs
+  ${CMAKE_SOURCE_DIR}/tests/cli/QueryHelper/QueryHelperN.cs
+)
 
-file(GLOB_RECURSE CSPROJECTS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.csproj.in")
-if(EXISTS "${STRONG_NAME_KEY}")
-  set(STRONG_NAME_KEY_ENABLED true)
+target_link_libraries(${PROJECT_NAME}
+  Apache.Geode
+  QueryWrapper
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
+  VS_GLOBAL_TestProjectType UnitTest
+  VS_GLOBAL_PROJECT_TYPES "{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5.2"
+  VS_DOTNET_REFERENCES "System;System.Xml;System.Data;System.Management"
+#  VS_DOTNET_REFERENCE_Microsoft.VisualStudio.TestPlatform.TestFramework "${CMAKE_BINARY_DIR}/packages/Microsoft.VisualStudio.TestPlatform.14.0.0.1/lib/net20/Microsoft.VisualStudio.TestPlatform.TestFramework.dll"
+#  VS_DOTNET_REFERENCE_Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions "${CMAKE_BINARY_DIR}/packages/Microsoft.VisualStudio.TestPlatform.14.0.0.1/lib/net20/Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll"
+  VS_DOTNET_REFERENCE_nunit.framework "${CMAKE_BINARY_DIR}/packages/NUnit.3.9.0/lib/net45/nunit.framework.dll"
+)
+
+if(NOT "${STRONG_NAME_KEY}" STREQUAL "")
+  set_target_properties( ${PROJECT_NAME} PROPERTIES
+    VS_GLOBAL_SignAssembly "true"
+    VS_GLOBAL_AssemblyOriginatorKeyFile ${STRONG_NAME_KEY}
+  )
 endif()
 
-configure_file(UnitTests.csproj.in ${CMAKE_CURRENT_BINARY_DIR}/UnitTests.csproj)
-include_external_msproject(
-  ${PROJECT_NAME}  ${CMAKE_CURRENT_BINARY_DIR}/UnitTests.csproj
-  TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER test/cliTests)
-add_dependencies(${PROJECT_NAME} nuget-restore)
+target_compile_options(${PROJECT_NAME} PRIVATE "/langversion:6")
+
+add_dependencies(${PROJECT_NAME}
+  DUnitFramework
+  FwkClient
+  PdxClassLibrary
+  PdxVersion1Lib
+  PdxVersion2Lib
+#  QueryWrapper
+  SecurityUtil
+  SQLiteCLI
+  nuget-restore
+)
 
 # Function to resolve both config and generate stage variables.
 macro(generate_config INPUT TEMP OUTPUT)
@@ -60,14 +93,16 @@ endforeach()
 
 enable_testing()
 include(NUnit)
-nunit_discover_tests(${PROJECT_NAME}
-  TEST_ASSEMBLY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/UnitTests.dll"
-)
+nunit_discover_tests(${PROJECT_NAME})
 
 #TODO make work in vstest_discover_tests
 set_directory_properties(PROPERTIES
   TEST_INCLUDE_FILE "${PROJECT_NAME}_include.cmake"
 )
+
+#set_tests_properties(${${PROJECT_NAME}_TESTS} PROPERTIES
+#  ENVIRONMENT "PATH=$<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}>\$<CONFIG>;%PATH%"
+#)
 
 # Label any flaky tests here
 #set_property(TEST ThinClientCqTestsN PROPERTY LABELS FLAKY)
