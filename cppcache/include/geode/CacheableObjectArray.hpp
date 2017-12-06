@@ -20,11 +20,14 @@
 #ifndef GEODE_CACHEABLEOBJECTARRAY_H_
 #define GEODE_CACHEABLEOBJECTARRAY_H_
 
-#include <vector>
-#include <memory>
 
-#include "geode_globals.hpp"
+
+#include <memory>
+#include <vector>
+
 #include "Cacheable.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /** @file
  */
@@ -37,6 +40,10 @@ namespace client {
  * Implement an immutable Vector of <code>Cacheable</code> objects
  * that can serve as a distributable object for caching.
  */
+class DataInput;
+class DataOutput;
+class Serializable;
+
 class CPPCACHE_EXPORT CacheableObjectArray
     : public Cacheable,
       public std::vector<std::shared_ptr<Cacheable>> {

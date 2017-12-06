@@ -20,15 +20,16 @@
 #ifndef GEODE_DEFAULTRESULTCOLLECTOR_H_
 #define GEODE_DEFAULTRESULTCOLLECTOR_H_
 
-#include <memory>
 #include <chrono>
-#include <mutex>
 #include <condition_variable>
-
-#include "geode_globals.hpp"
+#include <memory>
+#include <mutex>
 
 #include "CacheableBuiltins.hpp"
 #include "ResultCollector.hpp"
+#include "geode/Cacheable.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /**
  * @file
@@ -37,6 +38,8 @@
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableVector;
 
 class CPPCACHE_EXPORT DefaultResultCollector : public ResultCollector {
  public:

@@ -24,6 +24,8 @@
 
 #include <chrono>
 #include <memory>
+
+#include "geode_base.hpp"
 #include "geode_globals.hpp"
 
 namespace apache {

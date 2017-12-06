@@ -20,8 +20,9 @@
  * limitations under the License.
  */
 
-#include "geode_globals.hpp"
 #include "CqEvent.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /**
  * @file
@@ -31,6 +32,8 @@ namespace apache {
 namespace geode {
 namespace client {
 class CacheListener;
+class CqEvent;
+
 /**
  * @cacheserver
  * Querying is only supported for native clients.

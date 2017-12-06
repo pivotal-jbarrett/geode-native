@@ -21,6 +21,7 @@
  */
 
 #include "CqListener.hpp"
+#include "geode_base.hpp"
 
 namespace apache {
 namespace geode {

@@ -20,9 +20,12 @@
 #ifndef GEODE_REGIONEVENT_H_
 #define GEODE_REGIONEVENT_H_
 
-#include "geode_globals.hpp"
-#include "Region.hpp"
+#include <memory>
+
 #include "CacheableKey.hpp"
+#include "Region.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /** @file
 */
@@ -34,6 +37,9 @@ namespace client {
 /**
  * Declares region events.
  */
+class Region;
+class Serializable;
+
 class CPPCACHE_EXPORT RegionEvent {
  protected:
   const std::shared_ptr<Region> m_region; /**< Region for this event. */

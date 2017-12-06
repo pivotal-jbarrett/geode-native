@@ -22,34 +22,49 @@
 
 //#### Warning: DO NOT directly include Region.hpp, include Cache.hpp instead.
 
-#include "geode_globals.hpp"
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+
+#include "CacheStatistics.hpp"
+#include "CacheableBuiltins.hpp"
 #include "CacheableKey.hpp"
 #include "CacheableString.hpp"
-#include "CacheStatistics.hpp"
-#include "ExceptionTypes.hpp"
 #include "CacheableString.hpp"
-#include "CacheableBuiltins.hpp"
+#include "ExceptionTypes.hpp"
+#include "geode/Cacheable.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /**
  * @file
  */
 
-#include "RegionEntry.hpp"
-#include "CacheListener.hpp"
-#include "PartitionResolver.hpp"
-#include "CacheWriter.hpp"
-#include "CacheLoader.hpp"
-#include "RegionAttributes.hpp"
-#include "AttributesMutator.hpp"
 #include "AttributesFactory.hpp"
+#include "AttributesMutator.hpp"
+#include "CacheListener.hpp"
+#include "CacheLoader.hpp"
+#include "CacheWriter.hpp"
 #include "CacheableKey.hpp"
+#include "PartitionResolver.hpp"
 #include "Query.hpp"
+#include "RegionAttributes.hpp"
+#include "RegionEntry.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class Pool;
+class AttributesMutator;
+class Cache;
+class CacheStatistics;
+class CacheableKey;
+class RegionAttributes;
+class RegionEntry;
+class RegionService;
+class SelectResults;
+class Serializable;
 
 static constexpr std::chrono::milliseconds DEFAULT_RESPONSE_TIMEOUT =
     std::chrono::seconds(15);

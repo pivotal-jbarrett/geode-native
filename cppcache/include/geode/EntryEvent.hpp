@@ -3,6 +3,12 @@
 #ifndef GEODE_ENTRYEVENT_H_
 #define GEODE_ENTRYEVENT_H_
 
+#include <memory>
+
+#include "CacheableKey.hpp"
+#include "Region.hpp"
+#include "geode/Cacheable.hpp"
+#include "geode_base.hpp"
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,8 +26,6 @@
  * limitations under the License.
  */
 #include "geode_globals.hpp"
-#include "Region.hpp"
-#include "CacheableKey.hpp"
 
 /** @file
 */
@@ -32,6 +36,10 @@ namespace client {
 
 /** Represents an entry event affecting an entry, including its identity and the
  * the circumstances of the event. */
+class CacheableKey;
+class Region;
+class Serializable;
+
 class CPPCACHE_EXPORT EntryEvent {
  protected:
   std::shared_ptr<Region> m_region;      /**< Region */

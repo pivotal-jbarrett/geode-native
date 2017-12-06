@@ -23,6 +23,7 @@
 #include <atomic>
 #include <chrono>
 
+#include "geode_base.hpp"
 #include "geode_globals.hpp"
 
 /**

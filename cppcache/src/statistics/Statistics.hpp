@@ -20,12 +20,15 @@
 #ifndef GEODE_STATISTICS_STATISTICS_H_
 #define GEODE_STATISTICS_STATISTICS_H_
 
+
+#include <iosfwd>
 #include <string>
 
 #include <geode/geode_globals.hpp>
 
-#include "StatisticsType.hpp"
 #include "StatisticDescriptor.hpp"
+#include "StatisticsType.hpp"
+#include "geode/statistics/../geode_base.hpp"
 
 /** @file
  */
@@ -40,6 +43,9 @@ namespace statistics {
  * setting, incrementing and getting individual <code>StatisticDescriptor</code>
  * values.
  */
+class StatisticDescriptor;
+class StatisticsType;
+
 class CPPCACHE_EXPORT Statistics {
  public:
   /**

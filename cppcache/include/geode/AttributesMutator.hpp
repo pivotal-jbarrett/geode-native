@@ -21,11 +21,13 @@
 #define GEODE_ATTRIBUTESMUTATOR_H_
 
 #include <chrono>
-#include <string>
+#include <iosfwd>
 #include <memory>
+#include <string>
 
-#include "geode_globals.hpp"
 #include "ExpirationAction.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /**
  * @file

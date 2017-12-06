@@ -20,8 +20,13 @@
 #ifndef GEODE_CACHEABLEUNDEFINED_H_
 #define GEODE_CACHEABLEUNDEFINED_H_
 
-#include "geode_globals.hpp"
+
+
+#include <memory>
+
 #include "Cacheable.hpp"
+#include "geode_base.hpp"
+#include "geode_globals.hpp"
 
 /** @file
  */
@@ -33,6 +38,10 @@ namespace client {
 /**
  * Encapsulate an undefined query result.
  */
+class DataInput;
+class DataOutput;
+class Serializable;
+
 class CPPCACHE_EXPORT CacheableUndefined : public Cacheable {
  public:
   /**
