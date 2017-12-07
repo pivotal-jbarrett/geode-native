@@ -28,6 +28,9 @@
 #include <ace/Time_Value.h>
 #include <ace/Guard_T.h>
 
+#include "util/Log.hpp"
+#include "Assert.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {

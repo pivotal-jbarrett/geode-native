@@ -37,7 +37,7 @@
 #include "Queue.hpp"
 #include "DistributedSystemImpl.hpp"
 #include "NonCopyable.hpp"
-#include "util/functional.hpp"
+#include <geode/util/functional.hpp>
 
 namespace apache {
 namespace geode {

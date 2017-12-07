@@ -16,12 +16,12 @@
  */
 
 #include <geode/Cache.hpp>
-#include <Utils.hpp>
+#include "Utils.hpp"
 #include <geode/DataOutput.hpp>
 #include <string>
 #include <cstdlib>
 #include <geode/GeodeTypeIds.hpp>
-#include <CacheXmlParser.hpp>
+#include "CacheXmlParser.hpp"
 #include <ace/DLL.h>
 #include <ace/OS.h>
 #include <geode/DataInput.hpp>

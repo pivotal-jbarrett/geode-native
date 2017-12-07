@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "SerializationRegistry.hpp"
 #include "PkcsAuthInit.hpp"
 #include <geode/Properties.hpp>
 #include <geode/CacheableBuiltins.hpp>
 #include <geode/ExceptionTypes.hpp>
 #include <cstdio>
 #include <string>
+#include <util/Log.hpp>
 
 namespace apache {
 namespace geode {

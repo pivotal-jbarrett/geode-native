@@ -22,9 +22,9 @@
  */
 
 #include <geode/PdxSerializable.hpp>
-#include <GeodeTypeIdsImpl.hpp>
+#include "GeodeTypeIdsImpl.hpp"
 #include <geode/CacheableString.hpp>
-#include <PdxHelper.hpp>
+#include "PdxHelper.hpp"
 #include <geode/CacheableKeys.hpp>
 
 namespace apache {

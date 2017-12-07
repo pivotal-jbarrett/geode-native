@@ -35,7 +35,7 @@
 #include "EnumInfo.hpp"
 #include "PreservedDataExpiryHandler.hpp"
 #include "ExpiryTaskManager.hpp"
-#include "util/functional.hpp"
+#include <geode/util/functional.hpp>
 
 namespace apache {
 namespace geode {

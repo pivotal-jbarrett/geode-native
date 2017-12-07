@@ -89,7 +89,7 @@ BEGIN_TEST.
 
 #include <CppCacheLibrary.hpp>
 #include <geode/Exception.hpp>
-#include "util/Log.hpp"
+#include <util/Log.hpp>
 
 #include <list>
 #include <string>
@@ -133,7 +133,7 @@ class TestException {
   void print() {
     char buf[256];
     apache::geode::client::Log::formatLogLine(
-        buf, apache::geode::client::Log::Error);
+        buf, apache::geode::client::LogLevel::Error);
     fprintf(stdout, "--->%sTestException: %s in %s at line %d<---\n", buf,
             m_message.c_str(), m_filename, m_lineno);
   }

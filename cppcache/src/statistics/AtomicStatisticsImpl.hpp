@@ -29,7 +29,7 @@
 #include "StatisticsTypeImpl.hpp"
 #include "StatisticsFactory.hpp"
 
-#include <NonCopyable.hpp>
+#include "../NonCopyable.hpp"
 
 using namespace apache::geode::client;
 

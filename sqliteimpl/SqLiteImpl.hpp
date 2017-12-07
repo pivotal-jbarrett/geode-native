@@ -21,6 +21,7 @@
  */
 
 #include "SqLiteHelper.hpp"
+#include "util/Log.hpp"
 
 /**
  * @file

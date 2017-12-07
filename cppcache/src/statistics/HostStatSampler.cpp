@@ -36,11 +36,11 @@
 #include "HostStatSampler.hpp"
 #include "HostStatHelper.hpp"
 #include "StatArchiveWriter.hpp"
-#include "util/Log.hpp"
+#include "../util/Log.hpp"
 #include "GeodeStatisticsFactory.hpp"
-#include "ClientHealthStats.hpp"
-#include "ClientProxyMembershipID.hpp"
-#include "CacheImpl.hpp"
+#include "../ClientHealthStats.hpp"
+#include "../ClientProxyMembershipID.hpp"
+#include "../CacheImpl.hpp"
 
 namespace apache {
 namespace geode {

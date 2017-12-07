@@ -20,7 +20,7 @@
 #include <ace/OS.h>
 #include <geode/Exception.hpp>
 #include <geode/CacheableString.hpp>
-#include <StackTrace.hpp>
+#include "StackTrace.hpp"
 #include <ace/TSS_T.h>
 #include <boost/core/demangle.hpp>
 

@@ -16,7 +16,7 @@
  */
 
 #include <geode/AttributesMutator.hpp>
-#include <RegionInternal.hpp>
+#include "RegionInternal.hpp"
 
 namespace apache {
 namespace geode {

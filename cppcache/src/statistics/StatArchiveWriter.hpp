@@ -36,8 +36,10 @@
 #include "StatisticsType.hpp"
 #include "HostStatSampler.hpp"
 #include "../util/Log.hpp"
+#include <geode/DataOutput.hpp>
 #include "../NonCopyable.hpp"
-#include "SerializationRegistry.hpp"
+#include <chrono>
+#include "../SerializationRegistry.hpp"
 
 using namespace apache::geode::client;
 /**

@@ -23,7 +23,7 @@
 #include "Statistics.hpp"
 #include "StatisticsFactory.hpp"
 #include "StatisticsTypeImpl.hpp"
-#include "NonCopyable.hpp"
+#include "../NonCopyable.hpp"
 
 /** @file
  */

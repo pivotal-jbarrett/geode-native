@@ -22,7 +22,7 @@
 #include "GeodeTypeIdsImpl.hpp"
 #include "EnumInfo.hpp"
 #include "CacheRegionHelper.hpp"
-#include "util/functional.hpp"
+#include <geode/util/functional.hpp>
 
 namespace apache {
 namespace geode {

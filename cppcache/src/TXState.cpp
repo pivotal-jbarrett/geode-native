@@ -22,6 +22,7 @@
 #include "TssConnectionWrapper.hpp"
 #include "ThinClientPoolDM.hpp"
 #include "util/exception.hpp"
+#include <geode/CacheTransactionManager.hpp>
 
 namespace apache {
 namespace geode {

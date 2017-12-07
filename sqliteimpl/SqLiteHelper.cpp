@@ -14,8 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "SqLiteHelper.hpp"
+#include "util/Log.hpp"
+
 #define QUERY_SIZE 512
+
 int SqLiteHelper::initDB(const char *regionName, int maxPageCount, int pageSize,
                          const char *regionDBfile, int busy_timeout_ms) {
   LOGDEBUG(

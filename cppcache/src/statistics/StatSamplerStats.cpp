@@ -16,7 +16,7 @@
  */
 
 #include "StatSamplerStats.hpp"
-#include "statistics/StatisticsManager.hpp"
+#include "StatisticsManager.hpp"
 using namespace apache::geode::statistics;
 
 /**

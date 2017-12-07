@@ -17,6 +17,7 @@
 
 #include "CqAttributesImpl.hpp"
 #include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {

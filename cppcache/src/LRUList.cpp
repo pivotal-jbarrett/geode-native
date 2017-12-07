@@ -18,6 +18,7 @@
 #include "util/concurrent/spinlock_mutex.hpp"
 
 #include <mutex>
+#include "Assert.hpp"
 
 namespace apache {
 namespace geode {

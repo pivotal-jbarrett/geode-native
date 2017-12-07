@@ -14,10 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include <geode/Region.hpp>
 #include <geode/Cache.hpp>
 
 #include "SqLiteImpl.hpp"
+#include "util/Log.hpp"
+
 #ifdef _WIN32
 #include <Windows.h>
 #endif

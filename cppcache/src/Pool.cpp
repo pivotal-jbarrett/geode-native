@@ -16,11 +16,11 @@
  */
 
 #include <geode/Pool.hpp>
-#include <PoolAttributes.hpp>
+#include "PoolAttributes.hpp"
 #include <geode/Cache.hpp>
 #include <geode/CacheFactory.hpp>
-#include <ProxyCache.hpp>
-#include <ThinClientPoolHADM.hpp>
+#include "ProxyCache.hpp"
+#include "ThinClientPoolHADM.hpp"
 /**
  * @file
  */

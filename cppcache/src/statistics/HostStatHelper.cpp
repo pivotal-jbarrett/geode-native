@@ -20,6 +20,7 @@
 #include <ace/OS_NS_sys_utsname.h>
 #include "HostStatHelper.hpp"
 #include "GeodeStatisticsFactory.hpp"
+#include "../Assert.hpp"
 
 using namespace apache::geode::statistics;
 

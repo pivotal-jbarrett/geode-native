@@ -17,13 +17,13 @@
 
 #include <geode/CacheFactory.hpp>
 #include <geode/RegionFactory.hpp>
-#include <CppCacheLibrary.hpp>
+#include "CppCacheLibrary.hpp"
 #include <geode/Cache.hpp>
-#include <CacheImpl.hpp>
+#include "CacheImpl.hpp"
 #include <geode/SystemProperties.hpp>
 #include <geode/PoolManager.hpp>
-#include <CacheConfig.hpp>
-#include <CacheRegionHelper.hpp>
+#include "CacheConfig.hpp"
+#include "CacheRegionHelper.hpp"
 #include <ace/Recursive_Thread_Mutex.h>
 #include <ace/Guard_T.h>
 #include <map>

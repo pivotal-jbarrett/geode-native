@@ -33,7 +33,7 @@
 
 #include "EventId.hpp"
 #include "EventSource.hpp"
-#include "util/functional.hpp"
+#include <geode/util/functional.hpp>
 
 namespace apache {
 namespace geode {

@@ -22,7 +22,8 @@
 
 #include <geode/DataOutput.hpp>
 #include <geode/SystemProperties.hpp>
-#include <SerializationRegistry.hpp>
+#include "SerializationRegistry.hpp"
+#include <ace/TSS_T.h>
 
 #include "CacheImpl.hpp"
 #include "CacheRegionHelper.hpp"

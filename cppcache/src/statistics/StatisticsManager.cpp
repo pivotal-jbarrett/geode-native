@@ -26,7 +26,7 @@
 #include <geode/Exception.hpp>
 
 #include "StatisticsManager.hpp"
-#include "util/Log.hpp"
+#include "../util/Log.hpp"
 #include "GeodeStatisticsFactory.hpp"
 #include "AtomicStatisticsImpl.hpp"
 #include "OsStatisticsImpl.hpp"

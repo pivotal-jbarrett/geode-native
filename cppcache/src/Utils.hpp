@@ -44,6 +44,9 @@
 
 #include "statistics/Statistics.hpp"
 
+#include "util/Log.hpp"
+#include "Assert.hpp"
+
 #ifdef __GNUC__
 extern "C" {
 #include <cxxabi.h>

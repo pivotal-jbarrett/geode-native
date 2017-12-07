@@ -17,6 +17,7 @@
 
 #include "DistributedSystemImpl.hpp"
 #include <geode/SystemProperties.hpp>
+#include "util/Log.hpp"
 
 using namespace apache::geode::client;
 

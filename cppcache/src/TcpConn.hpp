@@ -27,6 +27,8 @@
 #include <ace/SOCK_Stream.h>
 #include <ace/OS.h>
 
+#include "Assert.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {

@@ -19,6 +19,8 @@
 #include "StatisticDescriptorImpl.hpp"
 #include <string>
 #include <ace/OS.h>
+#include "../util/Log.hpp"
+
 using namespace apache::geode::statistics;
 
 /**

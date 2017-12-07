@@ -19,6 +19,7 @@
 #include <ace/Singleton.h>
 #include "SolarisProcessStats.hpp"
 #include "HostStatHelperSolaris.hpp"
+#include "../Assert.hpp"
 
 using namespace apache::geode::statistics;
 

@@ -16,7 +16,7 @@
  */
 
 #include <geode/Cache.hpp>
-#include <CacheRegionHelper.hpp>
+#include "CacheRegionHelper.hpp"
 #include "RegionXmlCreation.hpp"
 #include "CacheImpl.hpp"
 using namespace apache::geode::client;

@@ -24,6 +24,7 @@
 #include "VersionTag.hpp"
 #include <ace/Task.h>
 #include <vector>
+#include "util/Log.hpp"
 
 /** @file
  */

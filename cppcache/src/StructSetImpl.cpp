@@ -19,6 +19,7 @@
 #include <stdexcept>
 
 #include "StructSetImpl.hpp"
+#include "util/Log.hpp"
 
 using namespace apache::geode::client;
 

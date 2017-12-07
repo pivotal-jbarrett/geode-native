@@ -25,7 +25,7 @@
 #include <unordered_map>
 
 #include "geode_globals.hpp"
-#include "util/functional.hpp"
+#include <geode/util/functional.hpp>
 
 /**
  * @file

@@ -21,8 +21,8 @@
 #include "statistics/StatisticsManager.hpp"
 #include <geode/SystemProperties.hpp>
 
-#include <CppCacheLibrary.hpp>
-#include <Utils.hpp>
+#include "CppCacheLibrary.hpp"
+#include "Utils.hpp"
 #include "util/Log.hpp"
 #include <geode/CacheFactory.hpp>
 #include <ace/OS.h>

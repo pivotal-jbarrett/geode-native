@@ -23,6 +23,8 @@
 #include "AtomicStatisticsImpl.hpp"
 #include "StatisticsTypeImpl.hpp"
 #include "StatisticDescriptorImpl.hpp"
+#include "../Assert.hpp"
+
 
 namespace apache {
 namespace geode {

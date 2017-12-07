@@ -19,6 +19,7 @@
 #include <ace/Singleton.h>
 #include "LinuxProcessStats.hpp"
 #include "HostStatHelperLinux.hpp"
+#include "../Assert.hpp"
 
 using namespace apache::geode::statistics;
 

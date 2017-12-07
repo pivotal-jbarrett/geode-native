@@ -26,7 +26,7 @@
 #include "fwklib/ClientTask.hpp"
 #include "fwklib/FwkBBClient.hpp"
 
-#include <util/concurrent/spinlock_mutex.hpp>
+#include "util/concurrent/spinlock_mutex.hpp"
 
 namespace apache {
 namespace geode {

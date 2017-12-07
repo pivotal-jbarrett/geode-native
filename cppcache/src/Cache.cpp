@@ -19,16 +19,17 @@
 #include <memory>
 
 #include <geode/DistributedSystem.hpp>
-#include <DistributedSystemImpl.hpp>
-#include <CacheXmlParser.hpp>
-#include <CacheRegionHelper.hpp>
+
+#include "DistributedSystemImpl.hpp"
+#include "CacheXmlParser.hpp"
+#include "CacheRegionHelper.hpp"
 #include <geode/Cache.hpp>
-#include <CacheImpl.hpp>
-#include <UserAttributes.hpp>
-#include <ProxyRegion.hpp>
+#include "CacheImpl.hpp"
+#include "UserAttributes.hpp"
+#include "ProxyRegion.hpp"
 #include <geode/FunctionService.hpp>
 #include <geode/PoolManager.hpp>
-#include <PdxInstanceFactoryImpl.hpp>
+#include "PdxInstanceFactoryImpl.hpp"
 
 extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 

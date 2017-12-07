@@ -17,7 +17,7 @@
 
 #include <geode/Cache.hpp>
 #include <geode/CacheableKey.hpp>
-#include <CacheableToken.hpp>
+#include "CacheableToken.hpp"
 
 namespace apache {
 namespace geode {

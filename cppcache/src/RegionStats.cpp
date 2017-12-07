@@ -19,7 +19,7 @@
 #include <ace/Singleton.h>
 
 #include <geode/geode_globals.hpp>
-#include <util/concurrent/spinlock_mutex.hpp>
+#include "util/concurrent/spinlock_mutex.hpp"
 
 #include "RegionStats.hpp"
 

@@ -25,15 +25,13 @@
 #include <memory>
 #include <string>
 
-#include "Assert.hpp"
 #include "CacheableString.hpp"
 #include "ExceptionTypes.hpp"
 #include "Serializable.hpp"
-#include "geode/GeodeTypeIds.hpp"
+#include "GeodeTypeIds.hpp"
 #include "geode_base.hpp"
-#include "geode/statistics/../ExceptionTypes.hpp"
+#include "ExceptionTypes.hpp"
 #include "geode_globals.hpp"
-#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
@@ -647,7 +645,6 @@ class CPPCACHE_EXPORT DataInput {
           CacheableString::createUTFDeserializableHuge()));
       csPtr->fromData(*this);
     } else {
-      LOGDEBUG("In readNativeString something is wrong while expecting string");
       rewindCursor(1);
       csPtr = nullptr;
     }
