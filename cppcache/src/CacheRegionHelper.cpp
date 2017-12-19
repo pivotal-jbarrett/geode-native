@@ -16,8 +16,9 @@
  */
 
 #include "CacheRegionHelper.hpp"
-#include "CacheImpl.hpp"
 #include "ProxyCache.hpp"
+#include <geode/Cache.hpp>
+#include <geode/RegionService.hpp>
 
 namespace apache {
 namespace geode {

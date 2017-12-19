@@ -15,16 +15,36 @@
  * limitations under the License.
  */
 
-#include "ThinClientHARegion.hpp"
-#include "TcrHADistributionManager.hpp"
-#include "CacheImpl.hpp"
 #include <geode/SystemProperties.hpp>
+#include <sys/_types/_int64_t.h>
+
+#include "CacheImpl.hpp"
+#include "CachePerfStats.hpp"
 #include "ReadWriteLock.hpp"
-#include <geode/PoolManager.hpp>
+#include "RegionStats.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientHARegion.hpp"
 #include "ThinClientPoolHADM.hpp"
+#include "ThinClientRedundancyManager.hpp"
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include <geode/RegionEvent.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
+#include <geode/PoolManager.hpp>
+#include "TcrHADistributionManager.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheStatistics;
+class EventId;
+class RegionAttributes;
+class RegionInternal;
+class VersionTag;
 
 ThinClientHARegion::ThinClientHARegion(
     const std::string& name, CacheImpl* cache,

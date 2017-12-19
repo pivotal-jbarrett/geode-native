@@ -14,11 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <string>
+
 #include "CqEventImpl.hpp"
-#include <geode/CacheableString.hpp>
-#include "ThinClientPoolHADM.hpp"
-#include "ThinClientCacheDistributionManager.hpp"
 #include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientPoolHADM.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/CqOperation.hpp>
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableBytes;
+class CacheableKey;
+class CqQuery;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 CqEventImpl::CqEventImpl(std::shared_ptr<CqQuery>& cQuery,

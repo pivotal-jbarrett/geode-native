@@ -20,11 +20,15 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
 #include <geode/CacheableKey.hpp>
-#include "MapEntry.hpp"
+#include <geode/geode_globals.hpp>
+#include <memory>
+
 #include "LRUList.hpp"
+#include "MapEntry.hpp"
+#include "RegionInternal.hpp"
 #include "VersionStamp.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -59,6 +63,9 @@ namespace client {
  *
  *
  */
+class CacheableKey;
+class ExpiryTaskManager;
+
 class CPPCACHE_EXPORT LRUMapEntry : public MapEntryImpl,
                                     public LRUEntryProperties {
  public:

@@ -14,17 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "VersionedCacheableObjectPartList.hpp"
-#include <geode/ExceptionTypes.hpp>
+#include <string.h>
+
 #include "GeodeTypeIdsImpl.hpp"
-#include <geode/CacheableString.hpp>
+#include "VersionedCacheableObjectPartList.hpp"
+#include <ace/Guard_T.h>
+#include <geode/DataInput.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+#include <geode/CacheableBuiltins.hpp>
 #include "ThinClientRegion.hpp"
-#include "CacheableToken.hpp"
-#include "DiskStoreId.hpp"
 #include "DiskVersionTag.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class CacheableString;
+class DataOutput;
+class MemberListForVersionStamp;
+class VersionTag;
 
 const uint8_t VersionedCacheableObjectPartList::FLAG_NULL_TAG = 0;
 const uint8_t VersionedCacheableObjectPartList::FLAG_FULL_TAG = 1;

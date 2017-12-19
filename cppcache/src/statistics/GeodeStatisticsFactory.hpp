@@ -20,17 +20,17 @@
 #ifndef GEODE_STATISTICS_GEODESTATISTICSFACTORY_H_
 #define GEODE_STATISTICS_GEODESTATISTICSFACTORY_H_
 
+#include <ace/Map_Manager.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include "StatisticsFactory.hpp"
+#include <iosfwd>
+#include <string>
 #include <vector>
 
-#include <ace/Recursive_Thread_Mutex.h>
-#include <ace/Map_Manager.h>
-
-#include <geode/geode_globals.hpp>
-#include <geode/ExceptionTypes.hpp>
-
-#include "StatisticsFactory.hpp"
-#include "StatisticsTypeImpl.hpp"
 #include "StatisticsManager.hpp"
+#include "StatisticsTypeImpl.hpp"
 
 /** @file
  */
@@ -38,6 +38,11 @@
 namespace apache {
 namespace geode {
 namespace statistics {
+
+class StatisticDescriptor;
+class Statistics;
+class StatisticsType;
+class StatisticsTypeImpl;
 
 using namespace apache::geode::client;
 

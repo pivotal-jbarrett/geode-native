@@ -15,15 +15,24 @@
  * limitations under the License.
  */
 
-#include "FarSideEntryOp.hpp"
-#include "RegionCommit.hpp"
+#include <sys/_types/_int16_t.h>
+
 #include "ClientProxyMembershipID.hpp"
-#include "DiskVersionTag.hpp"
+#include "FarSideEntryOp.hpp"
+#include "GeodeTypeIdsImpl.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class MemberListForVersionStamp;
+class Region;
 
 FarSideEntryOp::FarSideEntryOp(
     RegionCommit* region, MemberListForVersionStamp& memberListForVersionStamp)

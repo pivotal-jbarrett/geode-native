@@ -21,12 +21,24 @@
  *      Author: npatel
  */
 
+#include <string>
+
 #include "PdxRemoteWriter.hpp"
-#include "PdxTypeRegistry.hpp"
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class CacheableObjectArray;
+class DataOutput;
+class PdxRemotePreservedData;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class PdxWriter;
+class Serializable;
 
 PdxRemoteWriter::PdxRemoteWriter(
     DataOutput& output, std::shared_ptr<PdxType> pdxType,

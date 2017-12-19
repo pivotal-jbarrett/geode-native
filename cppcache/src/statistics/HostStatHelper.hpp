@@ -20,26 +20,25 @@
 #ifndef GEODE_STATISTICS_HOSTSTATHELPER_H_
 #define GEODE_STATISTICS_HOSTSTATHELPER_H_
 
-#include <string>
-
 #include <geode/geode_globals.hpp>
-
-#include "StatisticDescriptorImpl.hpp"
 #include "StatisticsType.hpp"
 #include "Statistics.hpp"
 #include "StatisticDescriptor.hpp"
-#include "ProcessStats.hpp"
-#include "StatisticsFactory.hpp"
-#include "OsStatisticsImpl.hpp"
-#include "LinuxProcessStats.hpp"
-#include "SolarisProcessStats.hpp"
-#include "StatsDef.hpp"
-#include "HostStatHelperWin.hpp"
+#include <string>
+
 #include "HostStatHelperLinux.hpp"
-#include "HostStatHelperSolaris.hpp"
 #include "HostStatHelperNull.hpp"
-#include "WindowsProcessStats.hpp"
+#include "HostStatHelperSolaris.hpp"
+#include "HostStatHelperWin.hpp"
+#include "LinuxProcessStats.hpp"
 #include "NullProcessStats.hpp"
+#include "OsStatisticsImpl.hpp"
+#include "ProcessStats.hpp"
+#include "SolarisProcessStats.hpp"
+#include "StatisticDescriptorImpl.hpp"
+#include "StatsDef.hpp"
+#include "WindowsProcessStats.hpp"
+#include <geode/geode_base.hpp>
 
 // TODO refactor - conditionally include os specific impl headers.
 
@@ -53,6 +52,9 @@ namespace statistics {
  * Provides native methods which fetch operating system statistics.
  * accessed by calling {@link #getInstance()}.
  */
+
+class GeodeStatisticsFactory;
+class ProcessStats;
 
 class CPPCACHE_EXPORT HostStatHelper {
  private:

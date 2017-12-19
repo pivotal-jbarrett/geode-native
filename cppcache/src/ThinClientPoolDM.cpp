@@ -15,28 +15,63 @@
  * limitations under the License.
  */
 
-#include <algorithm>
+
 #include <ace/INET_Addr.h>
-
-#include <geode/ResultCollector.hpp>
 #include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
-#include <geode/AuthInitialize.hpp>
+#include <exception>
 
-#include "statistics/PoolStatsSampler.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "TcrEndpoint.hpp"
-#include "ThinClientRegion.hpp"
-#include "ExecutionImpl.hpp"
-#include "ExpiryHandler_T.hpp"
-#include "ExpiryTaskManager.hpp"
+#include "Assert.hpp"
+#include "CacheImpl.hpp"
+#include "ClientMetadataService.hpp"
+#include "ClientProxyMembershipID.hpp"
 #include "DistributedSystemImpl.hpp"
-#include "UserAttributes.hpp"
-#include "ThinClientStickyManager.hpp"
+#include "ExpiryTaskManager.hpp"
+#include "MapWithLock.hpp"
 #include "NonCopyable.hpp"
-#include "util/exception.hpp"
+#include "PoolStatistics.hpp"
+#include "ServerLocation.hpp"
+#include "TcrConnection.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrEndpoint.hpp"
+#include "ThinClientLocatorHelper.hpp"
+#include "ThinClientPoolDM.hpp"
+#include "ThinClientRegion.hpp"
+#include "ThinClientStickyManager.hpp"
+#include "UserAttributes.hpp"
+#include "Utils.hpp"
+#include <ace/Guard_T.h>
 
-using namespace apache::geode::client;
+#include <ace/Semaphore.h>
+
+#include <ace/Time_Value.h>
+
+#include <ace/ace_wchar.h>
+#include <geode/Cache.hpp>
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "statistics/PoolStatsSampler.hpp"
+#include "statistics/StatisticsManager.hpp"
+#include "util/exception.hpp"
+#include <geode/AuthInitialize.hpp>
+#include "ExpiryHandler_T.hpp"
+#include <geode/PoolManager.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+
+class BucketServerLocation;
+class CacheableKey;
+class CacheableString;
+class CacheableStringArray;
+class PoolAttributes;
+class Properties;
+class QueryService;
+class Region;
+class ResultCollector;
+class Serializable;
+
 using namespace apache::geode::statistics;
 
 /* adongre
@@ -2393,3 +2428,7 @@ GfErrType ThinClientPoolDM::doFailover(TcrConnection* conn) {
 
   return err;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

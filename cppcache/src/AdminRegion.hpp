@@ -20,14 +20,14 @@
 #ifndef GEODE_ADMINREGION_H_
 #define GEODE_ADMINREGION_H_
 
+#include <geode/Cacheable.hpp>
+#include <geode/Serializable.hpp>
 #include <memory>
 #include <string>
 
-#include <geode/Serializable.hpp>
-#include <geode/Cacheable.hpp>
-
-#include "ReadWriteLock.hpp"
 #include "NonCopyable.hpp"
+#include "ReadWriteLock.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {

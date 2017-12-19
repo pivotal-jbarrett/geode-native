@@ -15,20 +15,26 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-#include <geode/ExpirationAttributes.hpp>
-#include "Utils.hpp"
-#include <geode/DistributedSystem.hpp>
-#include <cstdlib>
-#include <string>
-#include <geode/Pool.hpp>
-#include <geode/PoolManager.hpp>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+
+#include <geode/AttributesFactory.hpp>
+#include <geode/DiskPolicyType.hpp>
+#include <geode/ExpirationAction.hpp>
+#include <geode/RegionAttributes.hpp>
+#include <geode/ExceptionTypes.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
-class Region;
+class CacheListener;
+class CacheLoader;
+class CacheWriter;
+class PartitionResolver;
+class PersistenceManager;
+class Properties;
 
 AttributesFactory::AttributesFactory() : m_regionAttributes() {}
 

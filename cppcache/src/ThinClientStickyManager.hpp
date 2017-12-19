@@ -20,18 +20,22 @@
  * limitations under the License.
  */
 
-#include "TssConnectionWrapper.hpp"
-#include <algorithm>
-#include <vector>
-#include <set>
 #include <ace/Recursive_Thread_Mutex.h>
+#include <algorithm>
+#include <set>
+#include <vector>
+
+#include "TssConnectionWrapper.hpp"
+#include <geode/geode_base.hpp>
+
 namespace apache {
 namespace geode {
 namespace client {
-class ThinClientPoolDM;
 class ServerLocation;
 class TcrConnection;
 class TcrEndpoint;
+class ThinClientPoolDM;
+
 class ThinClientStickyManager {
  public:
   ThinClientStickyManager(ThinClientPoolDM* poolDM) : m_dm(poolDM) {}

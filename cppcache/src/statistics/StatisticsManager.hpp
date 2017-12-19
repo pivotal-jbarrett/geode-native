@@ -20,23 +20,38 @@
 #ifndef GEODE_STATISTICS_STATISTICSMANAGER_H_
 #define GEODE_STATISTICS_STATISTICSMANAGER_H_
 
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <chrono>
 #include <memory>
 #include <vector>
 
-#include <geode/geode_globals.hpp>
-#include <geode/ExceptionTypes.hpp>
-
-#include "Statistics.hpp"
-#include "HostStatSampler.hpp"
-#include "StatisticsTypeImpl.hpp"
 #include "../AdminRegion.hpp"
 #include "GeodeStatisticsFactory.hpp"
+#include "HostStatSampler.hpp"
+#include "StatisticsTypeImpl.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+
+namespace apache {
+namespace geode {
+namespace client {
+class AdminRegion;
+class CacheImpl;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {
 namespace statistics {
 
 class GeodeStatisticsFactory;
+class HostStatSampler;
+class Statistics;
+class StatisticsType;
 
 /**
  * Head Application Manager for Statistics Module.

@@ -20,21 +20,32 @@
  * limitations under the License.
  */
 
-#include <string>
 #include <geode/geode_globals.hpp>
-#include "TcrEndpoint.hpp"
-#include "ServerLocation.hpp"
-#include <set>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <iosfwd>
 #include <list>
+#include <set>
+#include <string>
+
 #include "ClientProxyMembershipID.hpp"
 #include "GetAllServersRequest.hpp"
 #include "GetAllServersResponse.hpp"
+#include "ServerLocation.hpp"
+#include "TcrEndpoint.hpp"
+#include <ace/Thread_Mutex.h>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 class TcrEndpoint;
 class ThinClientPoolDM;
+class ClientProxyMembershipID;
+class Connector;
+class ServerLocation;
+class TcrConnection;
+
 class ThinClientLocatorHelper {
  public:
   ThinClientLocatorHelper(std::vector<std::string> locHostPort,

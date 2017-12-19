@@ -21,13 +21,18 @@
  */
 
 #include <geode/geode_globals.hpp>
+
 #include "ThinClientDistributionManager.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class ThinClientRegion;
+class TcrConnectionManager;
+class TcrEndpoint;
+
 /**
  * @brief Distribute data between caches
  */

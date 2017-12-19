@@ -20,12 +20,17 @@
 #ifndef GEODE_EVENTID_H_
 #define GEODE_EVENTID_H_
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cacheable.hpp>
-#include "GeodeTypeIdsImpl.hpp"
 #include <geode/DataOutput.hpp>
-
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <memory>
 #include <string>
+
+#include "GeodeTypeIdsImpl.hpp"
+#include <geode/geode_base.hpp>
 
 /** @file
  */
@@ -38,6 +43,9 @@ namespace client {
  * EventID "token" with a Distributed Member ID, Thread ID and per-thread
  * Sequence ID
  */
+class DataInput;
+class Serializable;
+
 class CPPCACHE_EXPORT EventId : public Cacheable {
  private:
   char m_eidMem[512];

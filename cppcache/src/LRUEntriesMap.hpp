@@ -20,23 +20,42 @@
 #ifndef GEODE_LRUENTRIESMAP_H_
 #define GEODE_LRUENTRIESMAP_H_
 
-#include <atomic>
-#include <geode/geode_globals.hpp>
+
 #include <geode/Cache.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <atomic>
+#include <iosfwd>
+#include <memory>
+#include <string>
+
 #include "ConcurrentEntriesMap.hpp"
+#include "CqServiceVsdStats.hpp"
+#include "EntriesMap.hpp"
 #include "LRUAction.hpp"
 #include "LRUList.hpp"
 #include "LRUMapEntry.hpp"
 #include "MapEntryT.hpp"
-
-#include "util/concurrent/spinlock_mutex.hpp"
-
 #include "NonCopyable.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+#include "util/concurrent/spinlock_mutex.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 class EvictionController;
+class CacheableKey;
+class DataInput;
+class ExpiryTaskManager;
+class LRUMapEntry;
+class MapEntryImpl;
+class PersistenceManager;
+class RegionInternal;
+class VersionTag;
+template <typename TBase, int NUM_TRACKERS, int UPDATE_COUNT> class MapEntryT;
 
 /**
  * @brief Concurrent entries map with LRU behavior.

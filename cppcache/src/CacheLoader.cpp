@@ -15,10 +15,17 @@
  * limitations under the License.
  */
 
-#include <geode/Region.hpp>
-#include "CacheRegionHelper.hpp"
-#include "RegionInternal.hpp"
-#include "MapEntry.hpp"
+#include <memory>
+
+#include <geode/CacheLoader.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class Region;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

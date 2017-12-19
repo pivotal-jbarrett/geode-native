@@ -20,11 +20,23 @@
  * limitations under the License.
  */
 
+#include <memory>
+
 #include "ThinClientBaseDM.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+class Properties;
+class TcrConnectionManager;
+class TcrEndpoint;
+class TcrMessage;
+class TcrMessageReply;
+class ThinClientRegion;
+
 class ThinClientDistributionManager : public ThinClientBaseDM {
  public:
   ThinClientDistributionManager(TcrConnectionManager& connManager,

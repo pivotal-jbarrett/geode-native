@@ -15,15 +15,24 @@
  * limitations under the License.
  */
 
-#include <string>
-
-#include <geode/Struct.hpp>
-#include "GeodeTypeIdsImpl.hpp"
 #include <geode/DataInput.hpp>
+#include <geode/Struct.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+
+#include "GeodeTypeIdsImpl.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/StructSet.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class DataOutput;
+class Serializable;
 
 Struct::Struct() : m_parent(nullptr), m_lastAccessIndex(0) {}
 

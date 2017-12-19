@@ -20,12 +20,8 @@
 #ifndef GEODE_REGIONSTATS_H_
 #define GEODE_REGIONSTATS_H_
 
-#include <string>
-
 #include <geode/geode_globals.hpp>
 
-#include "statistics/Statistics.hpp"
-#include "statistics/StatisticsFactory.hpp"
 
 namespace apache {
 namespace geode {

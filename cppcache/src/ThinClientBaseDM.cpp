@@ -14,17 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
-#include "ThinClientBaseDM.hpp"
-#include "ThinClientRegion.hpp"
-#include "TcrMessage.hpp"
-#include "TcrEndpoint.hpp"
-#include <geode/ExceptionTypes.hpp>
-#include "Utils.hpp"
-#include "CacheImpl.hpp"
+
 #include <geode/SystemProperties.hpp>
-//#include "UserAttributes.hpp"
-#include "ProxyCache.hpp"
+#include <sys/_types/_int64_t.h>
+
+#include "Assert.hpp"
+#include "CacheImpl.hpp"
+#include "TcrChunkedContext.hpp"
+#include "TcrConnection.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include <geode/DistributedSystem.hpp>
+#include "util/Log.hpp"
+#include "ThinClientRegion.hpp"
+#include "UserAttributes.hpp"
 
 using namespace apache::geode::client;
 

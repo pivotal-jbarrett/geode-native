@@ -15,19 +15,25 @@
  * limitations under the License.
  */
 
-#include <vector>
-#include <algorithm>
+#include <memory>
 
-#include <geode/DataOutput.hpp>
-
-#include "TXCommitMessage.hpp"
 #include "ClientProxyMembershipID.hpp"
-#include "FarSideEntryOp.hpp"
+#include "GeodeTypeIdsImpl.hpp"
+#include "TXCommitMessage.hpp"
+#include <geode/DataInput.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class DataOutput;
+class MemberListForVersionStamp;
+class Serializable;
 
 TXCommitMessage::TXCommitMessage(
     MemberListForVersionStamp& memberListForVersionStamp)

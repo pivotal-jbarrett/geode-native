@@ -20,21 +20,54 @@
 #ifndef GEODE_PDXINSTANCEIMPL_H_
 #define GEODE_PDXINSTANCEIMPL_H_
 
-#include <vector>
-#include <map>
 
-#include <geode/PdxInstance.hpp>
-#include <geode/WritablePdxInstance.hpp>
-#include <geode/PdxSerializable.hpp>
 #include <geode/PdxFieldTypes.hpp>
+#include <geode/PdxInstance.hpp>
+#include <geode/PdxSerializable.hpp>
+#include <geode/WritablePdxInstance.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "PdxType.hpp"
 #include "PdxLocalWriter.hpp"
+#include "PdxType.hpp"
 #include "PdxTypeRegistry.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class CachePerfStats;
+class CacheableArrayList;
+class CacheableDate;
+class CacheableHashMap;
+class CacheableHashSet;
+class CacheableHashTable;
+class CacheableKey;
+class CacheableLinkedHashSet;
+class CacheableLinkedList;
+class CacheableObjectArray;
+class CacheableStringArray;
+class CacheableVector;
+class DataInput;
+class DataOutput;
+class PdxFieldType;
+class PdxLocalWriter;
+class PdxReader;
+class PdxSerializable;
+class PdxType;
+class PdxTypeRegistry;
+class PdxWriter;
 
 typedef std::map<std::string, std::shared_ptr<Cacheable>> FieldVsValues;
 

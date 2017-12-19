@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include <geode/EntryEvent.hpp>
-#include "CacheableToken.hpp"
 
 namespace apache {
 namespace geode {

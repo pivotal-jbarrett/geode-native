@@ -14,11 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/Cache.hpp>
-#include "LRUAction.hpp"
-#include "LRULocalDestroyAction.hpp"
-#include "LRUEntriesMap.hpp"
+#include <sys/_types/_int64_t.h>
+
 #include "CacheImpl.hpp"
+#include "CachePerfStats.hpp"
+#include "LRUAction.hpp"
+#include "LRUEntriesMap.hpp"
+#include "LRUList.hpp"
+#include "LRULocalDestroyAction.hpp"
+#include "RegionStats.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableKey;
+class MapEntryImpl;
+class VersionTag;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

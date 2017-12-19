@@ -28,6 +28,8 @@ namespace apache {
 namespace geode {
 namespace client {
 
+class TSSTXStateWrapper;
+
 TransactionSuspender::TransactionSuspender() {
   TSSTXStateWrapper* txStateWrapper = TSSTXStateWrapper::s_geodeTSSTXState;
   m_TXState = txStateWrapper->getTXState();

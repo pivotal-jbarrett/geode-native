@@ -14,16 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <sys/_types/_int32_t.h>
+#include <cstdlib>
+
 #include "ClientMetadata.hpp"
 #include "Utils.hpp"
+#include "util/Log.hpp"
 #include "ThinClientPoolDM.hpp"
-#include <cstdlib>
-#include <climits>
-#include <ace/OS.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class CacheableString;
 
 ClientMetadata::ClientMetadata(
     int totalNumBuckets, std::shared_ptr<CacheableString> colocatedWith,

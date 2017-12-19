@@ -20,13 +20,20 @@
 #ifndef GEODE_QUEUECONNECTIONRESPONSE_H_
 #define GEODE_QUEUECONNECTIONRESPONSE_H_
 
-#include <list>
-#include "ServerLocationResponse.hpp"
+
 #include <geode/DataInput.hpp>
+#include <sys/types.h>
+#include <list>
+
 #include "ServerLocation.hpp"
+#include "ServerLocationResponse.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class DataInput;
+class Serializable;
 
 class QueueConnectionResponse : public ServerLocationResponse {
  public:

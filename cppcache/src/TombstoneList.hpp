@@ -20,23 +20,28 @@
 #ifndef GEODE_TOMBSTONELIST_H_
 #define GEODE_TOMBSTONELIST_H_
 
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/CacheableBuiltins.hpp>
+#include <geode/util/functional.hpp>
+#include <sys/_types/_int64_t.h>
 #include <list>
+#include <memory>
 #include <unordered_map>
 
-#include <ace/Recursive_Thread_Mutex.h>
-#include <ace/Guard_T.h>
-
-#include <memory>
-#include <geode/CacheableBuiltins.hpp>
-
+#include "ExpiryTaskManager.hpp"
 #include "MapEntry.hpp"
-#include <geode/util/functional.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 class MapSegment;
 class TombstoneExpiryHandler;
+class CacheImpl;
+class CacheableHashSet;
+class CacheableKey;
+class MapEntryImpl;
+
 class TombstoneEntry {
  public:
   TombstoneEntry(const std::shared_ptr<MapEntryImpl>& entry,

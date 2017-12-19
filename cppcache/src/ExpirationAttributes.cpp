@@ -16,6 +16,8 @@
  */
 #include <geode/ExpirationAttributes.hpp>
 
+#include <geode/ExpirationAction.hpp>
+
 using namespace apache::geode::client;
 
 ExpirationAttributes::ExpirationAttributes()

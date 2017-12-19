@@ -15,17 +15,21 @@
  * limitations under the License.
  */
 #include <geode/FunctionService.hpp>
+
 #include <geode/ExceptionTypes.hpp>
-#include <geode/PoolManager.hpp>
-
-#include "CacheRegionHelper.hpp"
-#include "ExecutionImpl.hpp"
+#include "util/Log.hpp"
+#include <geode/Region.hpp>
 #include "ProxyRegion.hpp"
-#include "UserAttributes.hpp"
-#include "ProxyCache.hpp"
+#include <geode/PoolManager.hpp>
 #include "CacheImpl.hpp"
+#include "ExecutionImpl.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class ProxyCache;
+
 std::shared_ptr<Execution> FunctionService::onRegion(
     const std::shared_ptr<Region>& region) {
   LOGDEBUG("FunctionService::onRegion(std::shared_ptr<Region> region)");
@@ -148,3 +152,7 @@ std::shared_ptr<Execution> FunctionService::onServerWithPool(
         realcache->m_cacheImpl->getPoolManager().getDefaultPool());
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

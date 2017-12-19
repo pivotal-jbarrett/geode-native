@@ -20,6 +20,7 @@
 #ifndef GEODE_CLIENTPROXYMEMBERSHIPIDFACTORY_H_
 #define GEODE_CLIENTPROXYMEMBERSHIPIDFACTORY_H_
 
+#include <iosfwd>
 #include <string>
 
 #include "ClientProxyMembershipID.hpp"

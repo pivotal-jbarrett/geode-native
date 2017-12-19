@@ -15,13 +15,24 @@
  * limitations under the License.
  */
 
-#include <ace/Thread_Mutex.h>
-#include <ace/Singleton.h>
-#include <mutex>
-#include <geode/geode_globals.hpp>
+#include <__mutex_base>
 
 #include "CqServiceVsdStats.hpp"
 #include "statistics/StatisticsFactory.hpp"
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class StatisticsFactory;
+}  // namespace statistics
+namespace util {
+namespace concurrent {
+class spinlock_mutex;
+}  // namespace concurrent
+}  // namespace util
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {

@@ -20,11 +20,28 @@
 #ifndef GEODE_PDXREMOTEWRITER_H_
 #define GEODE_PDXREMOTEWRITER_H_
 
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+
 #include "PdxLocalWriter.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class CacheableObjectArray;
+class DataOutput;
+class PdxRemotePreservedData;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class PdxWriter;
+class Serializable;
 
 class PdxRemoteWriter : public PdxLocalWriter {
  private:

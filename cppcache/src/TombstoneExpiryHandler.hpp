@@ -20,11 +20,21 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include <geode/Region.hpp>
 #include <geode/ExpirationAction.hpp>
+#include <geode/Region.hpp>
+#include <geode/geode_globals.hpp>
+#include <chrono>
+#include <memory>
+
 #include "RegionInternal.hpp"
 #include "TombstoneList.hpp"
+#include <ace/Event_Handler.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 
 /**
  * @file
@@ -40,6 +50,11 @@ namespace client {
  * when a tombstone expires.
  *
  */
+class CacheImpl;
+class CacheableKey;
+class TombstoneEntry;
+class TombstoneList;
+
 class CPPCACHE_EXPORT TombstoneExpiryHandler : public ACE_Event_Handler {
  public:
   /**

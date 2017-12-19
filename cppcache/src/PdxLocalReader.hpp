@@ -20,15 +20,34 @@
  * limitations under the License.
  */
 
-#include <geode/PdxReader.hpp>
-#include "PdxType.hpp"
-#include <geode/DataInput.hpp>
-#include <geode/CacheableObjectArray.hpp>
 #include <geode/CacheableDate.hpp>
+#include <geode/CacheableObjectArray.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/PdxReader.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+
 #include "PdxRemotePreservedData.hpp"
+#include "PdxType.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableArrayList;
+class CacheableDate;
+class CacheableObjectArray;
+class DataInput;
+class PdxRemotePreservedData;
+class PdxSerializable;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class Serializable;
 
 class PdxLocalReader : public PdxReader {
  protected:

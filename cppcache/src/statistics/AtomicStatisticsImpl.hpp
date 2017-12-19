@@ -21,15 +21,25 @@
  */
 
 #include <geode/geode_globals.hpp>
-
+#include "Statistics.hpp"
+#include "StatisticsFactory.hpp"
 #include <atomic>
+#include <iosfwd>
 #include <string>
 
-#include "Statistics.hpp"
-#include "StatisticsTypeImpl.hpp"
-#include "StatisticsFactory.hpp"
-
 #include "../NonCopyable.hpp"
+#include "StatisticsTypeImpl.hpp"
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class StatisticsFactory;
+class StatisticsType;
+class StatisticsTypeImpl;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

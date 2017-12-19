@@ -14,12 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
+#include "Assert.hpp"
 #include "TcrDistributionManager.hpp"
 #include "ThinClientRegion.hpp"
-#include "TcrEndpoint.hpp"
-#include <geode/ExceptionTypes.hpp>
-#include "Utils.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class TcrConnectionManager;
+class TcrEndpoint;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
+
 using namespace apache::geode::client;
 
 TcrDistributionManager::TcrDistributionManager(

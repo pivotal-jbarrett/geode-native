@@ -20,8 +20,13 @@
  * limitations under the License.
  */
 
-#include "ThinClientRegion.hpp"
 #include <geode/Pool.hpp>
+#include <iosfwd>
+#include <memory>
+
+#include "ThinClientRegion.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
 
 /**
  * @file
@@ -41,6 +46,13 @@ namespace client {
  * send and invalidate methods.
  *
  */
+class CacheImpl;
+class CacheStatistics;
+class EventId;
+class RegionAttributes;
+class RegionInternal;
+class VersionTag;
+
 class CPPCACHE_EXPORT ThinClientHARegion : public ThinClientRegion {
  public:
   /**

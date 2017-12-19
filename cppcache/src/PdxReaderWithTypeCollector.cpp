@@ -23,13 +23,20 @@
 
 #include "PdxReaderWithTypeCollector.hpp"
 #include "PdxTypes.hpp"
-#include <ace/OS_NS_stdio.h>
+#include <geode/DataInput.hpp>
+#include "util/Log.hpp"
 #include <geode/PdxFieldTypes.hpp>
-#include "CacheImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableArrayList;
+class CacheableDate;
+class CacheableObjectArray;
+class PdxType;
+class PdxTypeRegistry;
+class Serializable;
 
 PdxReaderWithTypeCollector::PdxReaderWithTypeCollector(
     DataInput& dataInput, std::shared_ptr<PdxType> pdxType, int32_t pdxlen,

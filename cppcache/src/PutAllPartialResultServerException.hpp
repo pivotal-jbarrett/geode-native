@@ -20,16 +20,29 @@
 #ifndef GEODE_PUTALLPARTIALRESULTSERVEREXCEPTION_H_
 #define GEODE_PUTALLPARTIALRESULTSERVEREXCEPTION_H_
 
-#include <geode/Serializable.hpp>
+
 #include <geode/CacheableString.hpp>
-#include "VersionedCacheableObjectPartList.hpp"
+#include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <memory>
+
 #include "PutAllPartialResult.hpp"
+#include "VersionedCacheableObjectPartList.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class PutAllPartialResultServerException;
+class CacheableKey;
+class CacheableString;
+class DataInput;
+class DataOutput;
+class Exception;
+class PutAllPartialResult;
+class VersionedCacheableObjectPartList;
 
 /**
  * @brief PutAllPartialResultServerException class is used to encapsulate

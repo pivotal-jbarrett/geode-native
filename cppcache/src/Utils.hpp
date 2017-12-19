@@ -24,28 +24,40 @@
  * @file
  */
 
-#include <typeinfo>
-#include <string>
-#include <unordered_set>
-#include <memory>
-#include <typeinfo>
-#include <string>
-#include <unordered_set>
-#include <memory>
-#include <chrono>
 
-#include <geode/geode_globals.hpp>
-#include <geode/geode_base.hpp>
-#include <geode/ExceptionTypes.hpp>
 #include <geode/CacheableString.hpp>
 #include <geode/DataOutput.hpp>
-#include <geode/SystemProperties.hpp>
 #include <geode/DistributedSystem.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/SystemProperties.hpp>
+#include <geode/geode_base.hpp>
+#include <geode/geode_globals.hpp>
+#include <stddef.h>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+#include <string>
+#include <typeinfo>
+#include <unordered_set>
 
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
+
+#include "Assert.hpp"
+#include "util/Log.hpp"
 #include "statistics/Statistics.hpp"
 
-#include "util/Log.hpp"
-#include "Assert.hpp"
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableKey;
+class CacheableString;
+}  // namespace client
+namespace statistics {
+class Statistics;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 #ifdef __GNUC__
 extern "C" {

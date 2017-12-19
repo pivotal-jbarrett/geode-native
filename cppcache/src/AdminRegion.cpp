@@ -16,13 +16,25 @@
  */
 
 #include <geode/SystemProperties.hpp>
+#include <memory>
 
 #include "AdminRegion.hpp"
 #include "CacheImpl.hpp"
-#include "ThinClientRegion.hpp"
+#include "ReadWriteLock.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolDM.hpp"
-#include "statistics/StatisticsManager.hpp"
+
+#include <geode/Cacheable.hpp>
+#include <geode/DistributedSystem.hpp>
+#include <geode/geode_base.hpp>
+#include "AdminRegion.hpp"
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_RW_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {

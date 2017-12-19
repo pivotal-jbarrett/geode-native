@@ -20,27 +20,32 @@
 #ifndef GEODE_EVENTIDMAP_H_
 #define GEODE_EVENTIDMAP_H_
 
+
+#include <ace/ACE.h>
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Time_Value.h>
+#include <geode/util/functional.hpp>
+#include <sys/_types/_int64_t.h>
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <unordered_map>
-#include <vector>
 #include <utility>
-
-#include <ace/ACE.h>
-#include <ace/Time_Value.h>
-#include <ace/Recursive_Thread_Mutex.h>
-#include <ace/Guard_T.h>
+#include <vector>
 
 #include "EventId.hpp"
 #include "EventSource.hpp"
-#include <geode/util/functional.hpp>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
-class EventSequence;
 class EventIdMap;
+class EventSequence;
+class EventId;
+class EventSource;
 
 typedef std::pair<std::shared_ptr<EventSource>, std::shared_ptr<EventSequence>>
     EventIdMapEntry;

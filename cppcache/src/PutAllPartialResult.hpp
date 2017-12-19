@@ -20,16 +20,36 @@
 #ifndef GEODE_PUTALLPARTIALRESULT_H_
 #define GEODE_PUTALLPARTIALRESULT_H_
 
-#include <geode/Serializable.hpp>
-#include <geode/CacheableString.hpp>
-#include "VersionedCacheableObjectPartList.hpp"
+
 #include <ace/Task.h>
+#include <geode/CacheableString.hpp>
+#include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+#include <string>
+
+#include "VersionedCacheableObjectPartList.hpp"
+#include <ace/OS_NS_stdio.h>
+#include <ace/RW_Thread_Mutex.h>
+
+#include <geode/ExceptionTypes.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class PutAllPartialResult;
+class CacheableKey;
+class DataInput;
+class DataOutput;
+class Exception;
+class VersionedCacheableObjectPartList;
 
 class PutAllPartialResult : public Serializable {
  private:

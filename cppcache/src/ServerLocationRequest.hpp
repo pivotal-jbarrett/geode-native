@@ -21,10 +21,15 @@
 #define GEODE_SERVERLOCATIONREQUEST_H_
 
 #include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+class DataInput;
+class DataOutput;
+
 class ServerLocationRequest : public Serializable {
  public:
   ServerLocationRequest() : Serializable() {}

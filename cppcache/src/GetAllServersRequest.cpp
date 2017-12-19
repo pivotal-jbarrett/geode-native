@@ -17,6 +17,15 @@
 
 #include "GetAllServersRequest.hpp"
 
+namespace apache {
+namespace geode {
+namespace client {
+class DataInput;
+class DataOutput;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
+
 using namespace apache::geode::client;
 
 void GetAllServersRequest::toData(DataOutput& output) const {

@@ -26,8 +26,9 @@
  *      Author: ankurs
  */
 
-#include <geode/TransactionId.hpp>
 #include <geode/DataOutput.hpp>
+#include <geode/TransactionId.hpp>
+#include <sys/_types/_int32_t.h>
 #include <atomic>
 
 namespace apache {

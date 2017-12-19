@@ -20,9 +20,12 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include "ProxyCache.hpp"
 #include <geode/FunctionService.hpp>
+#include <geode/geode_globals.hpp>
+#include <memory>
+
+#include "ProxyCache.hpp"
+#include <geode/geode_base.hpp>
 /**
  * @file
  */
@@ -35,6 +38,8 @@ namespace client {
  * entry point for function execution
  * @see Execution
  */
+
+class ProxyCache;
 
 class CPPCACHE_EXPORT FunctionServiceImpl : public FunctionService {
  public:

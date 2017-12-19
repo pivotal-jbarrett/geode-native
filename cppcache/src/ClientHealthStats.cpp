@@ -15,11 +15,16 @@
  * limitations under the License.
  */
 #include "ClientHealthStats.hpp"
-#include "CacheImpl.hpp"
+#include "GeodeTypeIdsImpl.hpp"
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include <ace/OS.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Serializable;
 
 void ClientHealthStats::toData(DataOutput& output) const {
   output.writeInt(static_cast<int32_t>(m_numGets));

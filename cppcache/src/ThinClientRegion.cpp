@@ -15,39 +15,49 @@
  * limitations under the License.
  */
 
-#include <algorithm>
-#include <limits>
-#include <regex>
-
-#include <geode/SelectResultsIterator.hpp>
 #include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
-#include <geode/UserFunctionExecutionException.hpp>
-#include <geode/Struct.hpp>
+#include <string>
 
-#include "Utils.hpp"
-#include "CacheRegionHelper.hpp"
-#include "ThinClientRegion.hpp"
-#include "TcrDistributionManager.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "ThinClientBaseDM.hpp"
-#include "TcrEndpoint.hpp"
 #include "CacheImpl.hpp"
-#include "RegionGlobalLocks.hpp"
+#include "CachePerfStats.hpp"
+#include "EntriesMap.hpp"
 #include "ReadWriteLock.hpp"
-#include "RemoteQuery.hpp"
-#include "GeodeTypeIdsImpl.hpp"
-#include "AutoDelete.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientPoolDM.hpp"
+#include "ThinClientRegion.hpp"
 #include "UserAttributes.hpp"
-#include "PutAllPartialResultServerException.hpp"
-#include "VersionedCacheableObjectPartList.hpp"
-#include "util/bounds.hpp"
-#include "DataInputInternal.hpp"
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "NonCopyable.hpp"
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include <regex>
+#include <geode/PoolManager.hpp>
+#include "TcrDistributionManager.hpp"
+#include "util/bounds.hpp"
+#include "RemoteQuery.hpp"
+#include "CacheRegionHelper.hpp"
+#include "PutAllPartialResultServerException.hpp"
+#include "DataInputInternal.hpp"
+#include "AutoDelete.hpp"
+#include <geode/UserFunctionExecutionException.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class BucketServerLocation;
+class CacheStatistics;
+class CacheableKey;
+class Region;
+class RegionAttributes;
+class SelectResults;
+class Serializable;
+class TXState;
+class VersionedCacheableObjectPartList;
 
 static const std::regex PREDICATE_IS_FULL_QUERY_REGEX(
     "^\\s*(?:select|import)\\b", std::regex::icase);

@@ -15,32 +15,22 @@
  * limitations under the License.
  */
 
-#include <functional>
-#include <map>
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/Cache.hpp>
+#include <geode/CacheFactory.hpp>
+#include <iosfwd>
+#include <memory>
 #include <string>
 
-#include <ace/Recursive_Thread_Mutex.h>
-#include <ace/Guard_T.h>
-
-#include <geode/CacheFactory.hpp>
-#include <geode/Cache.hpp>
-#include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
-
 #include "config.h"
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "version.h"
-
 #include "CacheImpl.hpp"
-#include "CppCacheLibrary.hpp"
-#include "PoolAttributes.hpp"
-
-#include "CacheConfig.hpp"
-#include "DistributedSystemImpl.hpp"
-#include "SerializationRegistry.hpp"
-#include "PdxType.hpp"
-#include "PdxTypeRegistry.hpp"
-#include "DiskVersionTag.hpp"
 #include "TXCommitMessage.hpp"
+#include "DiskVersionTag.hpp"
 #include "PdxHelper.hpp"
 
 #define DEFAULT_CACHE_NAME "default_GeodeCache"
@@ -50,6 +40,10 @@ extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 namespace apache {
 namespace geode {
 namespace client {
+
+class AuthInitialize;
+class CacheAttributes;
+class Properties;
 
 std::shared_ptr<CacheFactory> CacheFactory::createCacheFactory(
     const std::shared_ptr<Properties>& configPtr) {

@@ -20,13 +20,23 @@
 #ifndef GEODE_TXCOMMITMESSAGE_H_
 #define GEODE_TXCOMMITMESSAGE_H_
 
-#include <geode/geode_globals.hpp>
 #include <geode/DataInput.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+
 #include "RegionCommit.hpp"
+#include <geode/Cacheable.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class DataInput;
+class DataOutput;
+class MemberListForVersionStamp;
+class Serializable;
 
 class TXCommitMessage : public apache::geode::client::Cacheable {
  public:

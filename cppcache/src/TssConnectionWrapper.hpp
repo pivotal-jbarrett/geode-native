@@ -22,13 +22,22 @@
 #include <ace/TSS_T.h>
 #include <geode/Pool.hpp>
 #include <map>
+#include <memory>
 #include <string>
+
 #include "TcrEndpoint.hpp"
+
+namespace ACE_6_4_5 {
+template <class TYPE> class ACE_TSS;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
 class TcrConnection;
+class Pool;
+class TcrEndpoint;
+
 typedef std::map<std::string, TcrConnection*> EpNameVsConnection;
 
 class PoolWrapper {

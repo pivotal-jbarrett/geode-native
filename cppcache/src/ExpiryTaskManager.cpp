@@ -14,12 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "config.h"
-#include "ExpiryTaskManager.hpp"
-#include "util/Log.hpp"
-#include <geode/DistributedSystem.hpp>
 #include "Assert.hpp"
 #include "DistributedSystemImpl.hpp"
+#include "ExpiryTaskManager.hpp"
+#include <ace/OS_NS_Thread.h>
+#include <ace/OS_NS_unistd.h>
+
+#include "config.h"
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Event_Handler;
+}  // namespace ACE_6_4_5
 
 #if defined(_WIN32)
 #include <ace/WFMO_Reactor.h>

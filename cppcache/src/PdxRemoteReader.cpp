@@ -22,11 +22,16 @@
  */
 
 #include "PdxRemoteReader.hpp"
-#include "PdxTypes.hpp"
+#include <geode/DataInput.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableArrayList;
+class CacheableDate;
+class CacheableObjectArray;
+class Serializable;
 
 PdxRemoteReader::~PdxRemoteReader() {
   // TODO Auto-generated destructor stub

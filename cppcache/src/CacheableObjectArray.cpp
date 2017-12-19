@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 #include <geode/CacheableObjectArray.hpp>
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
-#include <geode/ExceptionTypes.hpp>
+#include <geode/DataOutput.hpp>
 #include <geode/GeodeTypeIds.hpp>
+
 #include "GeodeTypeIdsImpl.hpp"
+#include <geode/Cacheable.hpp>
 
 namespace apache {
 namespace geode {

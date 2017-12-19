@@ -21,10 +21,24 @@
  */
 #include <ace/DLL.h>
 #include <ace/OS.h>
-#include <string>
+#include <ace/Recursive_Thread_Mutex.h>
 #include <geode/CacheableBuiltins.hpp>
 #include <geode/Properties.hpp>
-#include <ace/Recursive_Thread_Mutex.h>
+#include <memory>
+#include <string>
+
+namespace ACE_6_4_5 {
+class ACE_DLL;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableBytes;
+class CacheableString;
+class Properties;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 #define DH_ERR_NO_ERROR 0
 #define DH_ERR_UNSUPPORTED_ALGO 1

@@ -20,18 +20,25 @@
  * limitations under the License.
  */
 
-#include <string>
-#include <vector>
-#include <geode/geode_globals.hpp>
 #include <geode/ExceptionTypes.hpp>
 #include <geode/Pool.hpp>
-#include "PoolXmlCreation.hpp"
 #include <geode/PoolFactory.hpp>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "/Users/jbarrett/Development/geode-native/cppcache/src/PoolXmlCreation.hpp"
+#include "PoolXmlCreation.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 class Cache;
+class Pool;
+class PoolFactory;
 
 /**
  * Represents a {@link Pool} that is created declaratively.

@@ -20,14 +20,31 @@
 #ifndef GEODE_CQQUERYVSDSTATS_H_
 #define GEODE_CQQUERYVSDSTATS_H_
 
-#include <string>
 
-#include <geode/geode_globals.hpp>
 #include <geode/CqStatistics.hpp>
-
+#include <geode/geode_globals.hpp>
 #include "statistics/Statistics.hpp"
 #include "statistics/StatisticsFactory.hpp"
+#include <iosfwd>
+#include <string>
+
+#include <geode/geode_base.hpp>
 #include "util/concurrent/spinlock_mutex.hpp"
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class StatisticsFactory;
+class StatisticsType;
+}  // namespace statistics
+namespace util {
+namespace concurrent {
+class spinlock_mutex;
+}  // namespace concurrent
+}  // namespace util
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {

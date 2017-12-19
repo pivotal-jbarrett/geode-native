@@ -26,11 +26,20 @@
  *      Author: abhaware
  */
 
+#include <iosfwd>
+#include <memory>
+
 #include "ThinClientHARegion.hpp"
+#include "ThinClientRegion.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+class CacheImpl;
+class CacheStatistics;
+class RegionAttributes;
+class RegionInternal;
+
 class ThinClientPoolRegion : public ThinClientRegion {
  public:
   /**

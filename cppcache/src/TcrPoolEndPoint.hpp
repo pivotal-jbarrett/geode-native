@@ -3,6 +3,11 @@
 #ifndef GEODE_TCRPOOLENDPOINT_H_
 #define GEODE_TCRPOOLENDPOINT_H_
 
+#include <sys/_types/_int64_t.h>
+#include <iosfwd>
+#include <memory>
+
+#include "PoolStatistics.hpp"
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,11 +25,24 @@
  * limitations under the License.
  */
 #include "TcrEndpoint.hpp"
-#include "PoolStatistics.hpp"
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Semaphore;
+}  // namespace ACE_6_4_5
+
 namespace apache {
 namespace geode {
 namespace client {
 class ThinClientPoolDM;
+class CacheImpl;
+class EventId;
+class QueryService;
+class TcrConnection;
+class TcrMessage;
+class TcrMessageReply;
+class ThinClientBaseDM;
+
 class TcrPoolEndPoint : public TcrEndpoint {
  public:
   TcrPoolEndPoint(const std::string& name, CacheImpl* cache,

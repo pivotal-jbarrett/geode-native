@@ -23,6 +23,7 @@
 
 #include "TSSTXStateWrapper.hpp"
 #include "TXState.hpp"
+#include <ace/TSS_T.h>
 
 namespace apache {
 namespace geode {

@@ -15,14 +15,11 @@
  * limitations under the License.
  */
 
-#include <cstdlib>
-
-#include <ace/OS.h>
-#include <geode/Exception.hpp>
-#include <geode/CacheableString.hpp>
-#include "StackTrace.hpp"
 #include <ace/TSS_T.h>
+#include <geode/Exception.hpp>
+#include <iosfwd>
 #include <boost/core/demangle.hpp>
+#include "StackTrace.hpp"
 
 namespace apache {
 namespace geode {

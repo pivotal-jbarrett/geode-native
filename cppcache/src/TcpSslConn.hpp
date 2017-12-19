@@ -21,9 +21,20 @@
 #define GEODE_TCPSSLCONN_H_
 
 #include <ace/DLL.h>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
 
-#include "TcpConn.hpp"
 #include "../../cryptoimpl/Ssl.hpp"
+#include "Assert.hpp"
+#include "TcpConn.hpp"
+#include <ace/OS_NS_errno.h>
+#include <ace/OS_NS_string.h>
+#include <ace/config-macros.h>
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_INET_Addr;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {

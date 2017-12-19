@@ -15,7 +15,15 @@
  * limitations under the License.
  */
 
+#include <errno.h>
+
 #include "Condition.hpp"
+#include <ace/Condition_Recursive_Thread_Mutex.h>
+#include <ace/OS_NS_errno.h>
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {

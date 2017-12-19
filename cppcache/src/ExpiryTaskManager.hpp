@@ -20,17 +20,31 @@
 #ifndef GEODE_EXPIRYTASKMANAGER_H_
 #define GEODE_EXPIRYTASKMANAGER_H_
 
-#include <chrono>
 
 #include <ace/Reactor.h>
 #include <ace/Task.h>
 #include <ace/Timer_Heap.h>
-
 #include <geode/geode_globals.hpp>
 #include <geode/util/chrono/duration.hpp>
+#include <chrono>
 
 #include "ReadWriteLock.hpp"
+#include <ace/Functor.h>
+#include <ace/Global_Macros.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Synch_Traits.h>
+#include <ace/Time_Value.h>
+
+#include <ace/Timer_Queue_Iterator.h>
+#include <ace/config-all.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
 #include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Event_Handler;
+class ACE_Event_Handler_Handle_Timeout_Upcall;
+}  // namespace ACE_6_4_5
 
 /**
  * @file ExpiryTaskManager.hpp

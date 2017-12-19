@@ -15,16 +15,26 @@
  * limitations under the License.
  */
 
-#include <geode/PoolManager.hpp>
+#include <utility>
 
 #include "PdxTypeRegistry.hpp"
-#include "CacheRegionHelper.hpp"
+#include "ReadWriteLock.hpp"
+
+#include "util/Log.hpp"
+#include <geode/PoolManager.hpp>
 #include "ThinClientPoolDM.hpp"
-#include "CacheImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheImpl;
+class CacheableHashMap;
+class EnumInfo;
+class ExpiryTaskManager;
+class PdxRemotePreservedData;
+class PdxSerializable;
+class PdxType;
 
 PdxTypeRegistry::PdxTypeRegistry(CacheImpl* cache)
     : cache(cache),
@@ -221,8 +231,8 @@ int32_t PdxTypeRegistry::getEnumValue(std::shared_ptr<EnumInfo> ei) {
     return val2->value();
   }
 
-  int val = static_cast<ThinClientPoolDM*>(
-                cache->getPoolManager().getAll().begin()->second.get())
+  int val = std::static_pointer_cast<ThinClientPoolDM>(
+                cache->getPoolManager().getAll().begin()->second)
                 ->GetEnumValue(ei);
 
   tmp = enumToInt;

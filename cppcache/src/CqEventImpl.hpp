@@ -20,13 +20,15 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
+#include <geode/Cacheable.hpp>
+#include <geode/CacheableKey.hpp>
 #include <geode/CqEvent.hpp>
 #include <geode/CqOperation.hpp>
 #include <geode/CqQuery.hpp>
-#include <geode/CacheableKey.hpp>
-#include <geode/Cacheable.hpp>
 #include <geode/Exception.hpp>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
+#include <memory>
 #include <string>
 
 /**
@@ -47,8 +49,12 @@ namespace client {
  * CqEvent.
  */
 
-class ThinClientBaseDM;
 class EventId;
+class ThinClientBaseDM;
+class CacheableBytes;
+class CacheableKey;
+class CqQuery;
+
 class CqEventImpl : public CqEvent {
  public:
   CqEventImpl(std::shared_ptr<CqQuery>& cQuery,

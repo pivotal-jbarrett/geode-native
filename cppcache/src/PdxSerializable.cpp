@@ -21,15 +21,21 @@
  *      Author: npatel
  */
 
+#include <_types/_uint64_t.h>
 #include <geode/PdxSerializable.hpp>
+#include <stdint.h>
+#include <typeinfo>
+
 #include "GeodeTypeIdsImpl.hpp"
-#include <geode/CacheableString.hpp>
 #include "PdxHelper.hpp"
-#include <geode/CacheableKeys.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+class CacheableKey;
+
 PdxSerializable::PdxSerializable() {}
 
 PdxSerializable::~PdxSerializable() {}

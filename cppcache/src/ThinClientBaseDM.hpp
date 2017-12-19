@@ -21,9 +21,19 @@
  */
 
 #include <geode/geode_globals.hpp>
+#include <string.h>
+#include <memory>
+#include <vector>
+
+#include "Queue.hpp"
 #include "TcrConnectionManager.hpp"
 #include "TcrEndpoint.hpp"
-#include <vector>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
@@ -34,6 +44,12 @@ namespace client {
  */
 class TcrMessage;
 class ThinClientRegion;
+class EventId;
+class TcrChunkedContext;
+class TcrConnection;
+class TcrEndpoint;
+class TcrMessageReply;
+template <class T> class Task;
 
 class ThinClientBaseDM {
  public:

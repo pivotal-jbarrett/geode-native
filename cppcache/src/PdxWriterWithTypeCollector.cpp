@@ -21,15 +21,25 @@
  *      Author: npatel
  */
 
+#include <string>
+
 #include "PdxWriterWithTypeCollector.hpp"
-#include "PdxType.hpp"
+#include <geode/ExceptionTypes.hpp>
 #include "PdxHelper.hpp"
-#include "PdxTypes.hpp"
 #include <geode/PdxFieldTypes.hpp>
+#include "PdxTypes.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class CacheableObjectArray;
+class DataOutput;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class PdxWriter;
+class Serializable;
 
 PdxWriterWithTypeCollector::PdxWriterWithTypeCollector(
     DataOutput& output, std::string domainClassName,

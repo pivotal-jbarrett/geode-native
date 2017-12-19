@@ -15,16 +15,27 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-
 #include "PoolStatistics.hpp"
+#include <geode/statistics/Statistics.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class StatisticsFactory;
+class StatisticsManager;
+}  // namespace statistics
+namespace util {
+namespace concurrent {
+class spinlock_mutex;
+}  // namespace concurrent
+}  // namespace util
+}  // namespace geode
+}  // namespace apache
 //#include "StatisticsFactory.hpp"
 
-#include <ace/Singleton.h>
 
-#include <mutex>
 
-#include "util/concurrent/spinlock_mutex.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 

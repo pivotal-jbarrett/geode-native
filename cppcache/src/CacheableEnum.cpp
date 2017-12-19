@@ -17,12 +17,12 @@
 
 #include <geode/CacheableEnum.hpp>
 
-#include "Utils.hpp"
+#include <geode/CacheableKey.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+
 #include "PdxHelper.hpp"
-#include "GeodeTypeIdsImpl.hpp"
-#include "EnumInfo.hpp"
 #include "CacheRegionHelper.hpp"
-#include <geode/util/functional.hpp>
 
 namespace apache {
 namespace geode {

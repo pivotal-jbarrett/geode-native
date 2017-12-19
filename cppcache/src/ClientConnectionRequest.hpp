@@ -20,15 +20,22 @@
 #ifndef GEODE_CLIENTCONNECTIONREQUEST_H_
 #define GEODE_CLIENTCONNECTIONREQUEST_H_
 
+
+#include <sys/types.h>
+#include <iosfwd>
+#include <set>
+#include <string>
+
+#include "ServerLocation.hpp"
 #include "ServerLocationRequest.hpp"
 #include "TcrEndpoint.hpp"
-#include <string>
-#include <set>
-#include "ServerLocation.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class DataInput;
+class DataOutput;
 
 class ClientConnectionRequest : public ServerLocationRequest {
  public:

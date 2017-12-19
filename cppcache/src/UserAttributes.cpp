@@ -15,9 +15,17 @@
  * limitations under the License.
  */
 #include "UserAttributes.hpp"
+#include <ace/TSS_T.h>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "ProxyCache.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class Pool;
+class Properties;
 
 UserAttributes::UserAttributes(std::shared_ptr<Properties> credentials,
                                std::shared_ptr<Pool> pool,
@@ -153,3 +161,7 @@ GuardUserAttribures::~GuardUserAttribures() {
         nullptr);
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

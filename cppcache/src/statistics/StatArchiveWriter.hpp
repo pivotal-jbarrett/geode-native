@@ -20,26 +20,43 @@
  * limitations under the License.
  */
 
-#include <map>
-#include <list>
-#include <chrono>
-
-#include <geode/geode_globals.hpp>
-#include <geode/ExceptionTypes.hpp>
 #include <geode/Cache.hpp>
 #include <geode/DataOutput.hpp>
-
-#include "StatsDef.hpp"
-#include "Statistics.hpp"
-#include "StatisticDescriptor.hpp"
-#include "StatisticDescriptorImpl.hpp"
-#include "StatisticsType.hpp"
-#include "HostStatSampler.hpp"
-#include "../util/Log.hpp"
-#include <geode/DataOutput.hpp>
-#include "../NonCopyable.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <geode/statistics/StatisticDescriptor.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <geode/statistics/StatisticsType.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
 #include <chrono>
+#include <iosfwd>
+#include <list>
+#include <map>
+#include <string>
+
+#include "../NonCopyable.hpp"
 #include "../SerializationRegistry.hpp"
+#include "../util/Log.hpp"
+#include "HostStatSampler.hpp"
+#include "StatisticDescriptorImpl.hpp"
+#include "StatsDef.hpp"
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheImpl;
+}  // namespace client
+namespace statistics {
+class StatisticDescriptor;
+class Statistics;
+class StatisticsType;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 /**

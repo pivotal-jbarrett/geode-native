@@ -20,14 +20,23 @@
 #ifndef GEODE_CACHEABLETOKEN_H_
 #define GEODE_CACHEABLETOKEN_H_
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cacheable.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class CPPCACHE_EXPORT CacheableToken;
+class DataInput;
+class DataOutput;
+class Serializable;
 
 /** Implement a non-mutable int64_t wrapper that can serve as a distributable
  * key object for cacheing as well as being a 64 bit value. */

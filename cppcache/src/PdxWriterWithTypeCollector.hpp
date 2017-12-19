@@ -20,12 +20,28 @@
  * limitations under the License.
  */
 
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+
 #include "PdxLocalWriter.hpp"
 //#include <map>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class CacheableObjectArray;
+class DataOutput;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class PdxWriter;
+class Serializable;
 
 class PdxWriterWithTypeCollector : public PdxLocalWriter {
  private:

@@ -25,6 +25,8 @@
  */
 #include <geode/geode_globals.hpp>
 
+#include <geode/geode_base.hpp>
+
 namespace apache {
 namespace geode {
 namespace client {

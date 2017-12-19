@@ -20,13 +20,20 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include "EntriesMap.hpp"
 #include <geode/RegionAttributes.hpp>
+#include <geode/geode_globals.hpp>
+#include <memory>
+
+#include "EntriesMap.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class EntriesMap;
+class RegionAttributes;
+class RegionInternal;
 
 class CPPCACHE_EXPORT EntriesMapFactory {
  public:

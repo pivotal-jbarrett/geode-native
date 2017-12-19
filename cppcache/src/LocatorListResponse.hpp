@@ -20,16 +20,21 @@
 #ifndef GEODE_LOCATORLISTRESPONSE_H_
 #define GEODE_LOCATORLISTRESPONSE_H_
 
+
+#include <sys/types.h>
 #include <vector>
+
 #include "GeodeTypeIdsImpl.hpp"
-#include "ServerLocationResponse.hpp"
 #include "ServerLocation.hpp"
+#include "ServerLocationResponse.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class DataInput;
+class Serializable;
+
 class LocatorListResponse : public ServerLocationResponse {
  private:
   std::vector<ServerLocation> m_locators;

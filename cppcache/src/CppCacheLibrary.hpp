@@ -21,7 +21,10 @@
  */
 
 #include <geode/geode_globals.hpp>
+#include <iosfwd>
 #include <string>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {

@@ -20,42 +20,76 @@
 #ifndef GEODE_TCRMESSAGE_H_
 #define GEODE_TCRMESSAGE_H_
 
-#include <atomic>
-#include <string>
-#include <map>
-#include <vector>
 
+#include <_types/_uint64_t.h>
 #include <ace/OS.h>
-
-#include <geode/geode_globals.hpp>
 #include <geode/Cacheable.hpp>
+#include <geode/CacheableBuiltins.hpp>
 #include <geode/CacheableKey.hpp>
 #include <geode/CacheableString.hpp>
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include <geode/CacheableBuiltins.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <atomic>
+#include <chrono>
+#include <iosfwd>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "InterestResultPolicy.hpp"
+#include "BucketServerLocation.hpp"
 #include "EventId.hpp"
 #include "EventIdMap.hpp"
-#include "TcrChunkedContext.hpp"
-#include "GeodeTypeIdsImpl.hpp"
-#include "BucketServerLocation.hpp"
 #include "FixedPartitionAttributesImpl.hpp"
+#include "GeodeTypeIdsImpl.hpp"
+#include "InterestResultPolicy.hpp"
+#include "SerializationRegistry.hpp"
+#include "TcrChunkedContext.hpp"
 #include "VersionTag.hpp"
 #include "VersionedCacheableObjectPartList.hpp"
-#include "SerializationRegistry.hpp"
+#include <ace/OS_NS_stdio.h>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Semaphore;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
-class TcrMessage;
-class ThinClientRegion;
-class ThinClientBaseDM;
-class TcrMessageHelper;
 class TcrConnection;
+class TcrMessage;
+class TcrMessageHelper;
 class TcrMessagePing;
+class ThinClientBaseDM;
+class ThinClientRegion;
+class BucketServerLocation;
+class Cache;
+class CacheableBytes;
+class CacheableHashMap;
+class CacheableHashSet;
+class CacheableKey;
+class CacheableString;
+class CacheableVector;
+class DSMemberForVersionStamp;
+class EventId;
+class MemberListForVersionStamp;
+class Properties;
+class Region;
+class Serializable;
+class SerializationRegistry;
+class TcrChunkedResult;
+class VersionTag;
+class VersionedCacheableObjectPartList;
+
 class CPPCACHE_EXPORT TcrMessage {
  private:
   inline static void writeInt(uint8_t* buffer, uint16_t value);

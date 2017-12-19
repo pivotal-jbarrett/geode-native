@@ -14,7 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "EventIdMap.hpp"
+
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+
+#include "EventSource.hpp"
+#include <ace/ACE.h>
 
 namespace apache {
 namespace geode {

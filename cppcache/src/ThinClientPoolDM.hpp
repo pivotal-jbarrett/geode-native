@@ -20,29 +20,74 @@
  * limitations under the License.
  */
 
-#include <string>
-#include "ThinClientBaseDM.hpp"
+#include <ace/Semaphore.h>
 #include <geode/Pool.hpp>
-#include "PoolAttributes.hpp"
-#include "ThinClientLocatorHelper.hpp"
-#include "RemoteQueryService.hpp"
+#include <geode/ResultCollector.hpp>
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <atomic>
+#include <chrono>
+#include <iosfwd>
 #include <memory>
 #include <set>
+#include <string>
 #include <vector>
-#include "Task.hpp"
-#include <ace/Semaphore.h>
-#include "PoolStatistics.hpp"
-#include "FairQueue.hpp"
-#include "TcrPoolEndPoint.hpp"
-#include "ThinClientRegion.hpp"
-#include <geode/ResultCollector.hpp>
-#include "ExecutionImpl.hpp"
-#include "ClientMetadataService.hpp"
-#include "ThreadPool.hpp"
-#include "ThinClientStickyManager.hpp"
-#include "TXState.hpp"
 
+#include "ClientMetadataService.hpp"
+#include "ExecutionImpl.hpp"
+#include "FairQueue.hpp"
 #include "NonCopyable.hpp"
+#include "PoolAttributes.hpp"
+#include "PoolStatistics.hpp"
+#include "RemoteQueryService.hpp"
+#include "TXState.hpp"
+#include "Task.hpp"
+#include "TcrChunkedContext.hpp"
+#include "TcrMessage.hpp"
+#include "TcrPoolEndPoint.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientLocatorHelper.hpp"
+#include "ThinClientRegion.hpp"
+#include "ThinClientStickyManager.hpp"
+#include "ThreadPool.hpp"
+#include "UserAttributes.hpp"
+#include <ace/Map_Manager.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class BucketServerLocation;
+class CacheableHashSet;
+class CacheableString;
+class CacheableStringArray;
+class ClientMetadataService;
+class ClientProxyMembershipID;
+class EventId;
+class PoolAttributes;
+class PoolStats;
+class Properties;
+class QueryService;
+class Region;
+class RemoteQueryService;
+class ResultCollector;
+class Serializable;
+class ServerLocation;
+class TcrConnection;
+class TcrConnectionManager;
+class TcrEndpoint;
+class ThinClientLocatorHelper;
+template <class T> class Task;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {

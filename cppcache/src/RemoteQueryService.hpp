@@ -20,17 +20,28 @@
 #ifndef GEODE_REMOTEQUERYSERVICE_H_
 #define GEODE_REMOTEQUERYSERVICE_H_
 
-#include <string>
-#include <memory>
-
 #include <ace/Recursive_Thread_Mutex.h>
-
-#include <geode/geode_globals.hpp>
 #include <geode/QueryService.hpp>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
+#include <memory>
+#include <string>
 
 #include "CqService.hpp"
 #include "ThinClientCacheDistributionManager.hpp"
+#include <ace/RW_Thread_Mutex.h>
+
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "statistics/StatisticsManager.hpp"
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticsFactory;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {
@@ -38,6 +49,16 @@ namespace client {
 
 class CacheImpl;
 class ThinClientPoolDM;
+class CacheableArrayList;
+class CqAttributes;
+class CqQuery;
+class CqService;
+class CqServiceStatistics;
+class Query;
+class TcrEndpoint;
+class TcrMessage;
+class ThinClientBaseDM;
+
 typedef std::map<std::string, bool> CqPoolsConnected;
 class CPPCACHE_EXPORT RemoteQueryService
     : public QueryService,

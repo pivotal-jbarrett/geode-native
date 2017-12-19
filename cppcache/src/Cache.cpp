@@ -15,19 +15,22 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include <memory>
-
-#include <geode/DistributedSystem.hpp>
-
-#include "DistributedSystemImpl.hpp"
-#include "CacheXmlParser.hpp"
-#include "CacheRegionHelper.hpp"
 #include <geode/Cache.hpp>
+#include <geode/DistributedSystem.hpp>
+#include <iosfwd>
+#include <memory>
+#include <string>
+
+#include "CacheXmlParser.hpp"
+#include "DistributedSystemImpl.hpp"
+#include <ace/Guard_T.h>
+#include <geode/Exception.hpp>
+#include <geode/RegionFactory.hpp>
+#include <geode/RegionShortcut.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "CacheImpl.hpp"
-#include "UserAttributes.hpp"
-#include "ProxyRegion.hpp"
-#include <geode/FunctionService.hpp>
+#include <ace/Recursive_Thread_Mutex.h>
 #include <geode/PoolManager.hpp>
 #include "PdxInstanceFactoryImpl.hpp"
 
@@ -38,6 +41,19 @@ extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 namespace apache {
 namespace geode {
 namespace client {
+
+class AuthInitialize;
+class CacheTransactionManager;
+class PdxInstanceFactory;
+class Properties;
+class QueryService;
+class Region;
+class RegionService;
+class TypeRegistry;
+
+namespace statistics {
+class StatisticsFactory;
+}  // namespace statistics
 
 /** Returns the name of this cache.
  * This method does not throw

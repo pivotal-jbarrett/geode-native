@@ -26,11 +26,21 @@
  *      Author: npatel
  */
 
-#include <geode/geode_globals.hpp>
+
 #include <geode/Cache.hpp>
 #include <geode/PdxSerializable.hpp>
+#include <geode/geode_globals.hpp>
+#include <memory>
+
 #include "CacheImpl.hpp"
 #include "ExpiryTaskManager.hpp"
+#include <ace/Event_Handler.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 //#include "CacheTransactionManagerImpl.hpp"
 
 /**
@@ -48,6 +58,9 @@ namespace client {
  * when a preserved data expires.
  *
  */
+class PdxSerializable;
+class PdxTypeRegistry;
+
 class CPPCACHE_EXPORT PreservedDataExpiryHandler : public ACE_Event_Handler {
  public:
   /**

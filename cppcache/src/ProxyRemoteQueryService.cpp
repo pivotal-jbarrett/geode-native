@@ -15,14 +15,29 @@
  * limitations under the License.
  */
 
+#include <string>
+
 #include "ProxyRemoteQueryService.hpp"
-#include "ThinClientPoolDM.hpp"
+#include "UserAttributes.hpp"
+#include <ace/Guard_T.h>
+#include <geode/QueryService.hpp>
+#include <geode/ExceptionTypes.hpp>
 #include <geode/PoolManager.hpp>
+#include "util/Log.hpp"
+#include "CacheImpl.hpp"
+#include "ThinClientPoolDM.hpp"
 #include "CqQueryImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableArrayList;
+class CqAttributes;
+class CqQuery;
+class CqServiceStatistics;
+class ProxyCache;
+class Query;
 
 ProxyRemoteQueryService::ProxyRemoteQueryService(
     std::shared_ptr<ProxyCache> cptr)

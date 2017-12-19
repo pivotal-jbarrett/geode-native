@@ -20,15 +20,21 @@
  *  Created on: Apr 5, 2012
  *      Author: npatel
  */
-#include "ace/Timer_Queue.h"
-#include "ace/Timer_Heap.h"
-#include "ace/Reactor.h"
-#include "ace/svc_export.h"
-#include "ace/Timer_Heap_T.h"
-#include "ace/Timer_Queue_Adapters.h"
-
 #include "PreservedDataExpiryHandler.hpp"
-#include "PdxTypeRegistry.hpp"
+#include "ReadWriteLock.hpp"
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class PdxSerializable;
+class PdxTypeRegistry;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

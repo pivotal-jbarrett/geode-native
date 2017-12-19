@@ -27,7 +27,12 @@
  */
 
 #include <ace/TSS_T.h>
+
 #include "TXId.hpp"
+
+namespace ACE_6_4_5 {
+template <class TYPE> class ACE_TSS;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {

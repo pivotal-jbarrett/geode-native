@@ -20,14 +20,14 @@
 #ifndef GEODE_POOLATTRIBUTES_H_
 #define GEODE_POOLATTRIBUTES_H_
 
+#include <ace/OS.h>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
 #include <string>
 #include <vector>
-#include <chrono>
-
-#include <ace/OS.h>
-
-#include <geode/geode_globals.hpp>
-#include <geode/ExceptionTypes.hpp>
 
 /**
  * @file

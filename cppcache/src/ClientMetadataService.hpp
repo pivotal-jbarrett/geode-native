@@ -20,30 +20,46 @@
 #ifndef GEODE_CLIENTMETADATASERVICE_H_
 #define GEODE_CLIENTMETADATASERVICE_H_
 
-#include <unordered_map>
+#include <ace/Task.h>
+#include <geode/Cacheable.hpp>
+#include <geode/CacheableKey.hpp>
+#include <geode/Region.hpp>
+#include <geode/util/functional.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
-#include <ace/Task.h>
-
-#include <memory>
-#include <geode/CacheableKey.hpp>
-#include <geode/Cacheable.hpp>
-#include <geode/Region.hpp>
-
-#include "ClientMetadata.hpp"
-#include "ServerLocation.hpp"
 #include "BucketServerLocation.hpp"
-#include "Queue.hpp"
+#include "ClientMetadata.hpp"
 #include "DistributedSystemImpl.hpp"
 #include "NonCopyable.hpp"
-#include <geode/util/functional.hpp>
+#include "Queue.hpp"
+#include "ServerLocation.hpp"
+#include <ace/OS_NS_sys_time.h>
+#include <ace/RW_Thread_Mutex.h>
+#include <ace/Semaphore.h>
+
+#include <ace/Time_Value.h>
+
+#include "NonCopyable.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class ClienMetadata;
+class CacheableKey;
+class CacheableVector;
+class ClientMetadata;
+class Pool;
+class Region;
+class Serializable;
+template <class T> class Queue;
 
 typedef std::map<std::string, std::shared_ptr<ClientMetadata>>
     RegionMetadataMapType;

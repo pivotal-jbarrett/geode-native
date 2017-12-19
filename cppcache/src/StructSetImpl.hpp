@@ -20,16 +20,19 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-
-#include <geode/StructSet.hpp>
-#include <geode/Struct.hpp>
 #include <geode/CacheableBuiltins.hpp>
-
 #include <geode/SelectResultsIterator.hpp>
-
-#include <string>
+#include <geode/Struct.hpp>
+#include <geode/StructSet.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
 #include <map>
+#include <memory>
+#include <string>
+
+#include <geode/SelectResults.hpp>
+#include <geode/geode_base.hpp>
 
 /**
  * @file
@@ -38,6 +41,9 @@
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableVector;
+class Serializable;
 
 class CPPCACHE_EXPORT StructSetImpl
     : public StructSet,

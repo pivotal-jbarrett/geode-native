@@ -23,6 +23,15 @@
 #include <ace/ACE.h>
 #include <ace/DLL.h>
 #include <ace/INET_Addr.h>
+#include <stddef.h>
+#include <sys/types.h>
+
+#include <ace/config-macros.h>
+
+namespace ACE_6_4_5 {
+class ACE_Addr;
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {

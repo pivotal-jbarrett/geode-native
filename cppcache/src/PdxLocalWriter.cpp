@@ -21,15 +21,25 @@
  *      Author: npatel
  */
 
-#include "PdxLocalWriter.hpp"
-#include "PdxHelper.hpp"
-#include "PdxTypeRegistry.hpp"
-#include <geode/CacheableEnum.hpp>
 #include "GeodeTypeIdsImpl.hpp"
+#include "PdxLocalWriter.hpp"
+#include <geode/DataOutput.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "PdxHelper.hpp"
+#include <geode/CacheableEnum.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class CacheableObjectArray;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class PdxWriter;
+class Serializable;
 
 PdxLocalWriter::PdxLocalWriter(DataOutput& output,
                                std::shared_ptr<PdxType> pdxType,

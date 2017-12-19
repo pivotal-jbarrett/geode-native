@@ -15,18 +15,22 @@
  * limitations under the License.
  */
 
-#include "ace/Timer_Queue.h"
-#include "ace/Timer_Heap.h"
-#include "ace/Reactor.h"
-#include "ace/svc_export.h"
-#include "ace/Timer_Heap_T.h"
-#include "ace/Timer_Queue_Adapters.h"
-
-#include "CacheImpl.hpp"
-#include "ExpiryTaskManager.hpp"
 #include "EntryExpiryHandler.hpp"
+#include "MapEntry.hpp"
+#include <ace/Time_Value.h>
 
-#include "RegionInternal.hpp"
+#include <geode/ExpirationAction.hpp>
+#include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableKey;
+class RegionInternal;
+class VersionTag;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

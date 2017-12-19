@@ -26,15 +26,23 @@
  *      Author: ankurs
  */
 
-#include <geode/DataInput.hpp>
-#include <geode/CacheableString.hpp>
 #include <geode/Cache.hpp>
+#include <geode/CacheableString.hpp>
+#include <geode/DataInput.hpp>
+#include <memory>
 #include <vector>
+
 #include "FarSideEntryOp.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class CacheableString;
+class DataInput;
+class MemberListForVersionStamp;
+class Region;
 
 class RegionCommit {
  public:

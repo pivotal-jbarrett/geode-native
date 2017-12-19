@@ -15,25 +15,45 @@
  * limitations under the License.
  */
 
-#include <thread>
-#include <chrono>
-#include <ace/OS.h>
-
+#include <errno.h>
 #include <geode/SystemProperties.hpp>
-#include <geode/AuthInitialize.hpp>
+#include <stddef.h>
+#include <chrono>
+#include <exception>
 
-#include "TcrEndpoint.hpp"
-#include "ThinClientRegion.hpp"
-#include "ThinClientPoolHADM.hpp"
-#include "StackTrace.hpp"
+#include "Assert.hpp"
 #include "CacheImpl.hpp"
-#include "Utils.hpp"
-#include "DistributedSystemImpl.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientRegion.hpp"
+#include <ace/Guard_T.h>
+#include <ace/OS_NS_errno.h>
+#include <ace/OS_NS_string.h>
+#include <ace/OS_NS_sys_time.h>
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include <ace/Semaphore.h>
+
+#include <ace/Time_Value.h>
+
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include <thread>
+#include <geode/AuthInitialize.hpp>
+#include "ThinClientPoolDM.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class EventId;
+class Properties;
+class Region;
 
 #define throwException(ex)                              \
   {                                                     \

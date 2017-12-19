@@ -15,24 +15,36 @@
  * limitations under the License.
  */
 
+#include <__mutex_base>
+
+#include "CacheableToken.hpp"
+#include "ExpiryTaskManager.hpp"
+#include "LocalRegion.hpp"
 #include "MapSegment.hpp"
-#include "MapEntry.hpp"
-#include "TrackedMapEntry.hpp"
 #include "RegionInternal.hpp"
 #include "TableOfPrimes.hpp"
-#include "Utils.hpp"
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolDM.hpp"
 #include "ThinClientRegion.hpp"
 #include "TombstoneExpiryHandler.hpp"
-#include <ace/OS.h>
-#include "ace/Time_Value.h"
+#include "VersionStamp.hpp"
+#include <ace/OS_NS_sys_time.h>
+#include <ace/Recursive_Thread_Mutex.h>
 
-#include <mutex>
-#include "util/concurrent/spinlock_mutex.hpp"
+#include <ace/Time_Value.h>
+
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableHashSet;
+class CacheableKey;
+class DataInput;
+class EntriesMap;
+class VersionTag;
 
 #define _VERSION_TAG_NULL_CHK \
   (versionTag != nullptr && versionTag.get() != nullptr)

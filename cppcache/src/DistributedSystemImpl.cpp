@@ -15,9 +15,22 @@
  * limitations under the License.
  */
 
-#include "DistributedSystemImpl.hpp"
 #include <geode/SystemProperties.hpp>
+
+#include "DistributedSystemImpl.hpp"
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include <geode/DistributedSystem.hpp>
 #include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class Cache;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

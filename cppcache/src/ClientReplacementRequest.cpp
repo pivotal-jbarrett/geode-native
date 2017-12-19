@@ -16,9 +16,16 @@
  */
 
 #include "ClientReplacementRequest.hpp"
-#include <geode/DataOutput.hpp>
-#include <geode/DataInput.hpp>
 #include "GeodeTypeIdsImpl.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class DataInput;
+class DataOutput;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

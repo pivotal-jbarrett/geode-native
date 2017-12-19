@@ -15,22 +15,29 @@
  * limitations under the License.
  */
 
+#include "Connector.hpp"
+#include "TcrConnection.hpp"
 #include "ThinClientLocatorHelper.hpp"
+#include <ace/Guard_T.h>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
+#include "ThinClientPoolDM.hpp"
 #include "TcpSslConn.hpp"
-#include <geode/SystemProperties.hpp>
-#include "ClientConnectionRequest.hpp"
-#include "ClientReplacementRequest.hpp"
-#include "ClientConnectionResponse.hpp"
-#include <geode/DataOutput.hpp>
-#include <geode/DataInput.hpp>
 #include "QueueConnectionRequest.hpp"
 #include "QueueConnectionResponse.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "LocatorListResponse.hpp"
+#include "ClientConnectionRequest.hpp"
+#include "ClientConnectionResponse.hpp"
+#include "ClientReplacementRequest.hpp"
 #include "LocatorListRequest.hpp"
-#include <set>
-#include <algorithm>
-using namespace apache::geode::client;
+#include "LocatorListResponse.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+
+class ClientProxyMembershipID;
+class ServerLocation;
+
 const int BUFF_SIZE = 3000;
 
 class ConnectionWrapper {
@@ -450,3 +457,7 @@ GfErrType ThinClientLocatorHelper::updateLocators(
   }
   return GF_NOTCON;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

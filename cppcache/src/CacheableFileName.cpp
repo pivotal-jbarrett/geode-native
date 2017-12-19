@@ -15,11 +15,9 @@
  * limitations under the License.
  */
 #include <geode/CacheableFileName.hpp>
-#include <geode/GeodeTypeIds.hpp>
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
-
-#include <ace/ACE.h>
+#include <geode/DataOutput.hpp>
+#include <geode/GeodeTypeIds.hpp>
 #include <ace/OS.h>
 
 namespace apache {

@@ -15,24 +15,46 @@
  * limitations under the License.
  */
 
-#include <sstream>
-
-#include <geode/CqStatusListener.hpp>
-#include <geode/CqServiceStatistics.hpp>
 #include <geode/DistributedSystem.hpp>
 #include <geode/SystemProperties.hpp>
-#include <geode/ExceptionTypes.hpp>
+#include <sstream>
 
+#include "CacheImpl.hpp"
 #include "CqService.hpp"
-#include "ReadWriteLock.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientPoolDM.hpp"
+#include "ThinClientRegion.hpp"
+#include <ace/Semaphore.h>
+
+#include <geode/CqOperation.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
+#include "util/exception.hpp"
 #include "CqQueryImpl.hpp"
 #include "CqEventImpl.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "util/exception.hpp"
+#include <geode/CqStatusListener.hpp>
 
 namespace apache {
 namespace geode {
+
+namespace statistics {
+class StatisticsFactory;
+}  // namespace statistics
+
 namespace client {
+
+class CacheableArrayList;
+class CacheableBytes;
+class CacheableKey;
+class CqAttributes;
+class CqQuery;
+class CqServiceStatistics;
+class EventId;
+class TcrEndpoint;
+class UserAttributes;
 
 CqService::CqService(ThinClientBaseDM* tccdm,
                      StatisticsFactory* statisticsFactory)

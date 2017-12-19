@@ -15,11 +15,18 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
+#include "Assert.hpp"
 #include "CacheRegionHelper.hpp"
 #include "RegionXmlCreation.hpp"
 #include "CacheImpl.hpp"
-using namespace apache::geode::client;
+
+namespace apache {
+namespace geode {
+namespace client {
+
+class CacheImpl;
+class Region;
+class RegionAttributes;
 
 void RegionXmlCreation::addSubregion(
     std::shared_ptr<RegionXmlCreation> regionPtr) {
@@ -44,7 +51,7 @@ void RegionXmlCreation::createRoot(Cache* cache) {
   GF_D_ASSERT(this->isRoot);
   std::shared_ptr<Region> rootRegPtr = nullptr;
 
-  CacheImpl* cacheImpl = CacheRegionHelper::getCacheImpl(cache);
+  auto cacheImpl = CacheRegionHelper::getCacheImpl(cache);
   cacheImpl->createRegion(regionName.c_str(), regAttrs, rootRegPtr);
   fillIn(rootRegPtr);
 }
@@ -70,3 +77,7 @@ std::string RegionXmlCreation::getAttrId() const { return attrId; }
 void RegionXmlCreation::setAttrId(const std::string& pattrId) {
   this->attrId = pattrId;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

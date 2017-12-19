@@ -20,13 +20,27 @@
 #define GEODE_STATISTICS_SOLARISPROCESSSTATS_H_
 
 #include <geode/geode_globals.hpp>
+#include <geode/statistics/StatisticDescriptor.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <geode/statistics/StatisticsType.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
 
-#include "Statistics.hpp"
-#include "StatisticsType.hpp"
-#include "StatisticDescriptor.hpp"
-#include "ProcessStats.hpp"
-#include "HostStatHelper.hpp"
 #include "GeodeStatisticsFactory.hpp"
+#include "HostStatHelper.hpp"
+#include "ProcessStats.hpp"
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class GeodeStatisticsFactory;
+class Statistics;
+class StatisticsFactory;
+class StatisticsType;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

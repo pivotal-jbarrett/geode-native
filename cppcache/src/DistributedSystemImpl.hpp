@@ -24,15 +24,31 @@
  * @file
  */
 
-#include <geode/geode_globals.hpp>
-#include <memory>
-#include "ace/Recursive_Thread_Mutex.h"
-#include "ace/Guard_T.h"
-#include "ace/OS.h"
 #include <geode/DistributedSystem.hpp>
-#include "DiffieHellman.hpp"
-#include <string>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
 #include <map>
+#include <memory>
+#include <string>
+
+#include "DiffieHellman.hpp"
+#include <ace/Guard_T.h>
+#include <ace/OS.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/Serializable.hpp>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class Cache;
+class DistributedSystem;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 #ifdef __linux
 #include <sys/prctl.h>

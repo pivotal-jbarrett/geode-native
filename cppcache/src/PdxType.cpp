@@ -21,18 +21,25 @@
  *      Author: npatel
  */
 
-#include "PdxType.hpp"
-#include "PdxHelper.hpp"
+#include <utility>
+
 #include "GeodeTypeIdsImpl.hpp"
-#include "PdxFieldType.hpp"
-#include "Utils.hpp"
+#include "PdxType.hpp"
+#include "ReadWriteLock.hpp"
+
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/Serializable.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "PdxTypeRegistry.hpp"
 #include "PdxHelper.hpp"
-#include <ace/OS.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class PdxFieldType;
 
 const char* PdxType::m_javaPdxClass = "org.apache.geode.pdx.internal.PdxType";
 

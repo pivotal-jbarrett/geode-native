@@ -20,6 +20,7 @@
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include <boost/stacktrace.hpp>
 #include <geode/ExceptionTypes.hpp>
+
 #include "Assert.hpp"
 #include "util/Log.hpp"
 

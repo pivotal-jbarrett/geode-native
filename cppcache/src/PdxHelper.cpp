@@ -21,29 +21,35 @@
  *      Author: npatel
  */
 
-#include <geode/Cache.hpp>
+#include "PdxHelper.hpp"
+
 #include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
 #include <geode/PoolManager.hpp>
 
-#include "PdxHelper.hpp"
-#include "PdxTypeRegistry.hpp"
-#include "PdxWriterWithTypeCollector.hpp"
-#include "SerializationRegistry.hpp"
-#include "PdxLocalReader.hpp"
-#include "PdxRemoteReader.hpp"
-#include "PdxType.hpp"
-#include "PdxReaderWithTypeCollector.hpp"
-#include "PdxInstanceImpl.hpp"
-#include "Utils.hpp"
-#include "PdxRemoteWriter.hpp"
+#include "CacheImpl.hpp"
+#include "CachePerfStats.hpp"
 #include "CacheRegionHelper.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "DataInputInternal.hpp"
+#include "util/Log.hpp"
+#include "PdxInstanceImpl.hpp"
 #include "DataOutputInternal.hpp"
+#include "DataInputInternal.hpp"
+#include "PdxWriterWithTypeCollector.hpp"
+#include "PdxReaderWithTypeCollector.hpp"
+#include "PdxRemoteWriter.hpp"
+#include "PdxLocalWriter.hpp"
+#include "PdxRemoteReader.hpp"
+#include "PdxLocalReader.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class EnumInfo;
+class PdxRemoteWriter;
+class PdxSerializable;
+class PdxType;
+class PdxTypeRegistry;
 
 uint8_t PdxHelper::PdxHeader = 8;
 

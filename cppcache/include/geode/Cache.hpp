@@ -47,6 +47,7 @@ class Pool;
 class CacheImpl;
 class AuthInitialize;
 class CacheTransactionManager;
+class RegionFactory;
 
 /**
  * @class Cache Cache.hpp

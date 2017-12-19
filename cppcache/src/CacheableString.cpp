@@ -15,27 +15,24 @@
  * limitations under the License.
  */
 
-#include <codecvt>
-#include <locale>
-#include <cwchar>
-#include <cstdlib>
-
-#include <ace/ACE.h>
-#include <ace/OS.h>
 
 #include <geode/CacheableString.hpp>
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/GeodeTypeIds.hpp>
+#include <geode/DataOutput.hpp>
+#include <iosfwd>
+#include <codecvt>
+#include <locale>
 
+#include "Assert.hpp"
 #include "DataOutputInternal.hpp"
-#include "SerializationRegistry.hpp"
-#include "Utils.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class Serializable;
 
 void CacheableString::toData(DataOutput& output) const {
   if (m_type == GeodeTypeIds::CacheableASCIIString) {

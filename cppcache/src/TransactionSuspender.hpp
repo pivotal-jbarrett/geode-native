@@ -32,6 +32,8 @@ namespace apache {
 namespace geode {
 namespace client {
 
+class TXState;
+
 class TransactionSuspender {
  public:
   TransactionSuspender();

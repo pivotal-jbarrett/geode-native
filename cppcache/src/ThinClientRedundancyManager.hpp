@@ -20,14 +20,20 @@
 #ifndef GEODE_THINCLIENTREDUNDANCYMANAGER_H_
 #define GEODE_THINCLIENTREDUNDANCYMANAGER_H_
 
-#include <set>
 #include <list>
+#include <memory>
+#include <set>
 #include <string>
 
-#include "TcrMessage.hpp"
-#include "TcrEndpoint.hpp"
-#include "ServerLocation.hpp"
 #include "EventIdMap.hpp"
+#include "ServerLocation.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include <ace/Semaphore.h>
+#include <ace/Time_Value.h>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -35,8 +41,15 @@ namespace client {
 
 class TcrConnectionManager;
 class TcrHADistributionManager;
-class ThinClientRegion;
 class ThinClientPoolHADM;
+class ThinClientRegion;
+class CacheableStringArray;
+class EventId;
+class TcrEndpoint;
+class TcrMessage;
+class TcrMessageReply;
+class ThinClientBaseDM;
+template <class T> class Task;
 
 class ThinClientRedundancyManager {
  public:

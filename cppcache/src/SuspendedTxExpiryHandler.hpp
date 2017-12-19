@@ -20,10 +20,19 @@
 #ifndef GEODE_SUSPENDEDTXEXPIRYHANDLER_H_
 #define GEODE_SUSPENDEDTXEXPIRYHANDLER_H_
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cache.hpp>
+#include <geode/geode_globals.hpp>
+#include <chrono>
+#include <memory>
 
 #include "CacheTransactionManagerImpl.hpp"
+#include <ace/Event_Handler.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 
 /**
  * @file
@@ -34,6 +43,7 @@ namespace geode {
 namespace client {
 
 class CacheTransactionManagerImpl;
+class TransactionId;
 
 /**
  * @class SuspendedTxExpiryHandler

@@ -20,30 +20,58 @@
 #ifndef GEODE_MAPSEGMENT_H_
 #define GEODE_MAPSEGMENT_H_
 
-#include <vector>
-#include <memory>
 
-#include <geode/geode_globals.hpp>
-
-#include <geode/CacheableKey.hpp>
-#include "MapEntry.hpp"
-#include <geode/RegionEntry.hpp>
-#include "MapWithLock.hpp"
-#include "CacheableToken.hpp"
-#include <geode/Delta.hpp>
-
-#include <ace/Hash_Map_Manager.h>
 #include <ace/Functor_T.h>
+#include <ace/Hash_Map_Manager.h>
 #include <ace/Null_Mutex.h>
-#include <ace/Thread_Mutex.h>
 #include <ace/Recursive_Thread_Mutex.h>
-#include <vector>
-#include <ace/config-lite.h>
+#include <ace/Thread_Mutex.h>
 #include <ace/Versioned_Namespace.h>
-#include "TombstoneList.hpp"
+#include <ace/config-lite.h>
+#include <geode/CacheableKey.hpp>
+#include <geode/Delta.hpp>
+#include <geode/RegionEntry.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <atomic>
+#include <memory>
 #include <unordered_map>
+#include <utility>
+#include <vector>
+#include <vector>
 
+#include "CacheableToken.hpp"
+#include "CqServiceVsdStats.hpp"
+#include "MapEntry.hpp"
+#include "MapWithLock.hpp"
+#include "TombstoneList.hpp"
+#include <ace/Hash_Map_Manager_T.h>
+#include <ace/config-macros.h>
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
 #include "util/concurrent/spinlock_mutex.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Null_Mutex;
+template <class TYPE> class ACE_Equal_To;
+template <class TYPE> class ACE_Hash;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableHashSet;
+class CacheableKey;
+class DataInput;
+class ExpiryTaskManager;
+class TombstoneExpiryHandler;
+class TombstoneList;
+class VersionStamp;
+class VersionTag;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -70,6 +98,7 @@ namespace geode {
 namespace client {
 
 class RegionInternal;
+
 typedef ::ACE_Hash_Map_Manager_Ex<
     std::shared_ptr<CacheableKey>, std::shared_ptr<MapEntry>,
     ::ACE_Hash<std::shared_ptr<CacheableKey>>,

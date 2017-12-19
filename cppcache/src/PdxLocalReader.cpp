@@ -21,11 +21,23 @@
  */
 
 #include "PdxLocalReader.hpp"
+#include <geode/DataInput.hpp>
+#include "util/Log.hpp"
 #include "PdxTypeRegistry.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableArrayList;
+class CacheableDate;
+class CacheableObjectArray;
+class PdxRemotePreservedData;
+class PdxSerializable;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class Serializable;
 
 PdxLocalReader::PdxLocalReader(std::shared_ptr<PdxTypeRegistry> pdxTypeRegistry)
     : m_dataInput(nullptr),

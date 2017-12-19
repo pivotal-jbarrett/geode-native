@@ -16,7 +16,17 @@
  */
 
 #include "TrackedMapEntry.hpp"
-#include "MapEntry.hpp"
+#include <geode/ExceptionTypes.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableKey;
+class LRUEntryProperties;
+class VersionStamp;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

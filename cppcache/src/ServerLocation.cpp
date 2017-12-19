@@ -16,7 +16,6 @@
  */
 
 #include "ServerLocation.hpp"
-#include <ace/OS_NS_stdio.h>
 
 namespace apache {
 namespace geode {

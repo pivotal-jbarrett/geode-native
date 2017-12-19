@@ -15,14 +15,24 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-#include "EntriesMapFactory.hpp"
-#include "LRUEntriesMap.hpp"
-#include "ExpMapEntry.hpp"
-#include "LRUExpMapEntry.hpp"
+
 #include <geode/DiskPolicyType.hpp>
-//#include <geode/ExpirationAction.hpp>
 #include <geode/SystemProperties.hpp>
+
+#include "CacheImpl.hpp"
+#include "EntriesMap.hpp"
+#include "EntriesMapFactory.hpp"
+#include "LRUAction.hpp"
+#include "LRUExpMapEntry.hpp"
+#include "LRUEntriesMap.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class RegionAttributes;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

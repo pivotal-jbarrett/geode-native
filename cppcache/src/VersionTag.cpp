@@ -14,13 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "GeodeTypeIdsImpl.hpp"
 #include "VersionTag.hpp"
-#include "CacheImpl.hpp"
-#include "RegionInternal.hpp"
-#include "MemberListForVersionStamp.hpp"
+#include <geode/DataInput.hpp>
+#include <geode/ExceptionTypes.hpp>
 #include "ClientProxyMembershipID.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class DataOutput;
+class MemberListForVersionStamp;
+class Serializable;
 
 VersionTag::VersionTag(MemberListForVersionStamp& memberListForVersionStamp)
     : VersionTag(0, 0, 0, 0, 0, memberListForVersionStamp) {}
@@ -99,3 +105,7 @@ void VersionTag::readMembers(uint16_t flags, DataInput& input) {
     }
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

@@ -20,8 +20,10 @@
 #ifndef GEODE_CACHEREGIONHELPER_H_
 #define GEODE_CACHEREGIONHELPER_H_
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cache.hpp>
+#include <geode/geode_globals.hpp>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -29,6 +31,8 @@ namespace client {
 
 class CacheImpl;
 class ProxyCache;
+class Cache;
+class RegionService;
 
 class CPPCACHE_EXPORT CacheRegionHelper {
   /**

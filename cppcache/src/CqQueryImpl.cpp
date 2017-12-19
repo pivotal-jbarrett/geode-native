@@ -16,18 +16,41 @@
  */
 
 #include <geode/CqAttributesFactory.hpp>
-#include <geode/ExceptionTypes.hpp>
 
 #include "CqQueryImpl.hpp"
-#include "CqAttributesMutatorImpl.hpp"
-#include "ResultSetImpl.hpp"
-#include "StructSetImpl.hpp"
-#include "ThinClientRegion.hpp"
-#include "ReadWriteLock.hpp"
-#include "ThinClientRegion.hpp"
-#include "util/bounds.hpp"
+#include "UserAttributes.hpp"
+#include <ace/Guard_T.h>
+#include <geode/CqAttributes.hpp>
+#include <geode/CqEvent.hpp>
+#include <geode/CqOperation.hpp>
+#include <geode/CqState.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
 #include "util/Log.hpp"
 #include "util/exception.hpp"
+#include "CqAttributesMutatorImpl.hpp"
+#include "CacheImpl.hpp"
+#include "ThinClientRegion.hpp"
+#include "util/bounds.hpp"
+#include "ResultSetImpl.hpp"
+#include "StructSetImpl.hpp"
+
+namespace apache {
+namespace geode {
+
+namespace statistics {
+class StatisticsFactory;
+}  // namespace statistics
+
+namespace client {
+
+class CqAttributesMutator;
+class CqQuery;
+class CqResults;
+class CqService;
+class CqStatistics;
+class Query;
+class TcrEndpoint;
 
 using namespace apache::geode::client;
 
@@ -35,7 +58,7 @@ CqQueryImpl::CqQueryImpl(
     const std::shared_ptr<CqService>& cqService, const std::string& cqName,
     const std::string& queryString,
     const std::shared_ptr<CqAttributes>& cqAttributes,
-    StatisticsFactory* factory, const bool isDurable,
+    statistics::StatisticsFactory* factory, const bool isDurable,
     const std::shared_ptr<UserAttributes>& userAttributesPtr)
     : m_cqName(cqName),
       m_queryString(queryString),
@@ -604,3 +627,7 @@ bool CqQueryImpl::isClosed() const {
  * @return true if durable, false otherwise
  */
 bool CqQueryImpl::isDurable() const { return m_isDurable; }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

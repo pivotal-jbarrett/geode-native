@@ -14,16 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <string.h>
+#include <iosfwd>
+#include <string>
+
 #include "CacheableObjectPartList.hpp"
-#include <geode/ExceptionTypes.hpp>
 #include "GeodeTypeIdsImpl.hpp"
-#include <geode/CacheableString.hpp>
+#include <geode/Cacheable.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "ThinClientRegion.hpp"
-#include "CacheableToken.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class CacheableString;
+class DataOutput;
+class VersionTag;
 
 void CacheableObjectPartList::toData(DataOutput& output) const {
   // don't really care about toData() and should never get invoked

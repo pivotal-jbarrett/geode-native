@@ -15,13 +15,19 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-#include <geode/CacheableKey.hpp>
+#include <memory>
+
+#include <geode/Cacheable.hpp>
+#include <geode/RegionEntry.hpp>
 #include "CacheableToken.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheStatistics;
+class CacheableKey;
+class Region;
 
 RegionEntry::RegionEntry(const std::shared_ptr<Region>& region,
                          const std::shared_ptr<CacheableKey>& key,

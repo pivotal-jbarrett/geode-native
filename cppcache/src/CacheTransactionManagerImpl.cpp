@@ -15,24 +15,31 @@
  * limitations under the License.
  */
 
-#include "CacheTransactionManagerImpl.hpp"
-#include <geode/TransactionId.hpp>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/PoolManager.hpp>
-
-#include "TSSTXStateWrapper.hpp"
-#include "TcrMessage.hpp"
-#include "ThinClientBaseDM.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "CacheRegionHelper.hpp"
 #include "CacheImpl.hpp"
-#include "TssConnectionWrapper.hpp"
+#include "CacheTransactionManagerImpl.hpp"
+#include "ExpiryTaskManager.hpp"
 #include "TXCleaner.hpp"
+#include "TXState.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientPoolDM.hpp"
+#include <ace/Guard_T.h>
+#include <ace/OS_NS_sys_time.h>
+#include <ace/Time_Value.h>
+
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include <geode/SystemProperties.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class TcrConnection;
+class TransactionId;
 
 CacheTransactionManagerImpl::CacheTransactionManagerImpl(CacheImpl* cache)
     : m_cache(cache), m_txCond(m_suspendedTxLock) {}

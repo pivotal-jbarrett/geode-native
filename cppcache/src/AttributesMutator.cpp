@@ -16,6 +16,9 @@
  */
 
 #include <geode/AttributesMutator.hpp>
+#include <geode/Region.hpp>
+#include <geode/ExpirationAction.hpp>
+
 #include "RegionInternal.hpp"
 
 namespace apache {

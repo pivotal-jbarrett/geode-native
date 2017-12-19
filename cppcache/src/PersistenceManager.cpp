@@ -16,7 +16,6 @@
  */
 
 #include <geode/PersistenceManager.hpp>
-#include <geode/Region.hpp>
 
 using namespace apache::geode::client;
 

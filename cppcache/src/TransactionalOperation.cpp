@@ -15,17 +15,22 @@
  * limitations under the License.
  */
 
-#include <geode/CacheableString.hpp>
+#include "TransactionalOperation.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/exception.hpp"
+#include <geode/CacheableBuiltins.hpp>
 #include <geode/Cache.hpp>
 #include <geode/FunctionService.hpp>
-
-#include "TransactionalOperation.hpp"
 #include "RegionInternal.hpp"
-#include "util/exception.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class Execution;
 
 TransactionalOperation::TransactionalOperation(
     ServerRegionOperation op, const char* regionName,

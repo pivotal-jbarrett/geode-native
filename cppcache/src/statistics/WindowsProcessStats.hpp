@@ -20,15 +20,18 @@
 #ifndef GEODE_STATISTICS_WINDOWSPROCESSSTATS_H_
 #define GEODE_STATISTICS_WINDOWSPROCESSSTATS_H_
 
-#include <geode/geode_globals.hpp>
-#include "statistics/Statistics.hpp"
-#include "statistics/StatisticsType.hpp"
-#include "statistics/StatisticDescriptor.hpp"
-#include "statistics/StatisticsFactory.hpp"
 #include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <geode/statistics/StatisticDescriptor.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <geode/statistics/StatisticsFactory.hpp>
+#include <geode/statistics/StatisticsType.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
 
-#include "ProcessStats.hpp"
 #include "GeodeStatisticsFactory.hpp"
+#include "ProcessStats.hpp"
+#include <geode/geode_base.hpp>
 
 /** @file
  */
@@ -36,6 +39,11 @@
 namespace apache {
 namespace geode {
 namespace statistics {
+
+class GeodeStatisticsFactory;
+class Statistics;
+class StatisticsFactory;
+class StatisticsType;
 
 using namespace apache::geode::client;
 

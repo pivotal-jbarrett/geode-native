@@ -14,14 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <__mutex_base>
+
+#include "Assert.hpp"
+#include "CacheImpl.hpp"
+#include "CachePerfStats.hpp"
+#include "CacheableToken.hpp"
+#include "EvictionController.hpp"
 #include "LRUEntriesMap.hpp"
 #include "LRUList.cpp"
-#include "ExpiryTaskManager.hpp"
 #include "MapSegment.hpp"
-#include "CacheImpl.hpp"
-
-#include <mutex>
-#include "util/concurrent/spinlock_mutex.hpp"
+#include "RegionInternal.hpp"
+#include "RegionStats.hpp"
+#include "Utils.hpp"
+#include <ace/Guard_T.h>
+#include <geode/Exception.hpp>
 
 namespace apache {
 namespace geode {
@@ -29,6 +36,12 @@ namespace client {
 /**
  * @brief LRUAction for testing map outside of a region....
  */
+class CacheableKey;
+class DataInput;
+class ExpiryTaskManager;
+class MapEntryImpl;
+class VersionTag;
+
 class CPPCACHE_EXPORT TestMapAction : public virtual LRUAction {
  private:
   EntriesMap* m_eMap;

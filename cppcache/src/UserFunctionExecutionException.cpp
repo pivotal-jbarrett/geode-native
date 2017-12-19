@@ -18,6 +18,8 @@
 #include <geode/UserFunctionExecutionException.hpp>
 #include <geode/ExceptionTypes.hpp>
 
+#include <geode/ExceptionTypes.hpp>
+
 namespace apache {
 namespace geode {
 namespace client {

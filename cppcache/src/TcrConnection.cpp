@@ -14,32 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <memory.h>
 #include <ace/INET_Addr.h>
-#include <ace/OS.h>
-
+#include <errno.h>
 #include <geode/DistributedSystem.hpp>
 #include <geode/SystemProperties.hpp>
-#include <geode/AuthInitialize.hpp>
+#include <sys/types.h>
 
-#include "TcrConnection.hpp"
-
-#include "Connector.hpp"
-#include "TcpSslConn.hpp"
+#include "Assert.hpp"
+#include "CacheImpl.hpp"
 #include "ClientProxyMembershipID.hpp"
-#include "ThinClientPoolHADM.hpp"
-#include "TcrEndpoint.hpp"
-
-#include "GeodeTypeIdsImpl.hpp"
-#include "TcrConnectionManager.hpp"
-#include "DistributedSystemImpl.hpp"
-#include "Version.hpp"
-
+#include "Connector.hpp"
 #include "DiffieHellman.hpp"
-#include "Utils.hpp"  // for RandGen for server challenge
+#include "TcrConnection.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientPoolDM.hpp"
 #include "ThinClientRegion.hpp"
+#include "Utils.hpp"  // for RandGen for server challenge
+#include "Version.hpp"
+#include <ace/OS_NS_errno.h>
+#include <ace/OS_NS_string.h>
 
-using namespace apache::geode::client;
+#include <ace/OS_NS_sys_time.h>
+
+
+#include <ace/ace_wchar.h>
+#include <geode/CacheableString.hpp>
+#include <geode/Exception.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/statistics/../geode_globals.hpp>
+#include "util/Log.hpp"
+#include <geode/AuthInitialize.hpp>
+#include "TcpSslConn.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+
+class CacheableBytes;
+class Properties;
 
 const int HEADER_LENGTH = 17;
 const int MAXBUFSIZE ATTR_UNUSED = 65536;
@@ -1503,3 +1518,7 @@ bool TcrConnection::setAndGetBeingUsed(volatile bool isBeingUsed,
     }
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

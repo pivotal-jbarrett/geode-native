@@ -20,26 +20,38 @@
 #ifndef GEODE_PDXTYPEREGISTRY_H_
 #define GEODE_PDXTYPEREGISTRY_H_
 
-#include <unordered_map>
-#include <map>
-
 #include <ace/ACE.h>
 #include <ace/Recursive_Thread_Mutex.h>
-
-#include <geode/PdxSerializable.hpp>
 #include <geode/Cache.hpp>
-
-#include "PdxRemotePreservedData.hpp"
-#include "ReadWriteLock.hpp"
-#include "PdxType.hpp"
-#include "EnumInfo.hpp"
-#include "PreservedDataExpiryHandler.hpp"
-#include "ExpiryTaskManager.hpp"
+#include <geode/PdxSerializable.hpp>
 #include <geode/util/functional.hpp>
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
+#include <map>
+#include <memory>
+#include <unordered_map>
+
+#include "EnumInfo.hpp"
+#include "ExpiryTaskManager.hpp"
+#include "PdxRemotePreservedData.hpp"
+#include "PdxType.hpp"
+#include "PreservedDataExpiryHandler.hpp"
+#include "ReadWriteLock.hpp"
+#include <ace/RW_Thread_Mutex.h>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheImpl;
+class CacheableHashMap;
+class EnumInfo;
+class ExpiryTaskManager;
+class PdxRemotePreservedData;
+class PdxSerializable;
+class PdxType;
 
 struct PdxTypeLessThan {
   bool operator()(std::shared_ptr<PdxType> const& n1,

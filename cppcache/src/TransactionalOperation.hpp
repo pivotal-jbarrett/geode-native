@@ -26,12 +26,16 @@
  *      Author: ankurs
  */
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cacheable.hpp>
+#include <geode/geode_globals.hpp>
+#include <memory>
 #include <vector>
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
 
 enum ServerRegionOperation {
   GF_CONTAINS_KEY,
@@ -51,6 +55,7 @@ enum ServerRegionOperation {
 };
 
 class CacheableKey;
+
 class TransactionalOperation {
  public:
   TransactionalOperation(ServerRegionOperation op, const char* regionName,

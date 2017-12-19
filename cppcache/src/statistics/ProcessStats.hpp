@@ -21,8 +21,11 @@
  */
 
 #include <geode/geode_globals.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
 
-#include "Statistics.hpp"
+#include <geode/geode_base.hpp>
 
 using namespace apache::geode::client;
 

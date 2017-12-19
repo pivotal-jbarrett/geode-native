@@ -21,9 +21,13 @@
 #define GEODE_LRUEXPMAPENTRY_H_
 
 #include <geode/geode_globals.hpp>
-#include "MapEntry.hpp"
+#include <memory>
+
 #include "LRUList.hpp"
+#include "MapEntry.hpp"
+#include "RegionInternal.hpp"
 #include "VersionStamp.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -31,6 +35,9 @@ namespace client {
 /**
  * @brief Hold region mapped entry value and lru information.
  */
+class CacheableKey;
+class ExpiryTaskManager;
+
 class CPPCACHE_EXPORT LRUExpMapEntry : public MapEntryImpl,
                                        public LRUEntryProperties,
                                        public ExpEntryProperties {

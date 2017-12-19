@@ -21,8 +21,12 @@
 #define GEODE_EXPMAPENTRY_H_
 
 #include <geode/geode_globals.hpp>
+#include <memory>
+
 #include "MapEntry.hpp"
+#include "RegionInternal.hpp"
 #include "VersionStamp.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -31,6 +35,9 @@ namespace client {
  * @brief Hold region mapped entry value.
  * This subclass adds expiration times.
  */
+class CacheableKey;
+class ExpiryTaskManager;
+
 class CPPCACHE_EXPORT ExpMapEntry : public MapEntryImpl,
                                     public ExpEntryProperties {
  public:

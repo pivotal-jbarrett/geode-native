@@ -20,21 +20,35 @@
 #ifndef GEODE_EXECUTIONIMPL_H_
 #define GEODE_EXECUTIONIMPL_H_
 
-#include <map>
-
 #include <ace/Condition_Recursive_Thread_Mutex.h>
 #include <ace/Guard_T.h>
-
-#include <geode/Execution.hpp>
 #include <geode/CacheableBuiltins.hpp>
-#include <geode/ResultCollector.hpp>
+#include <geode/Execution.hpp>
 #include <geode/Region.hpp>
+#include <geode/ResultCollector.hpp>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <iosfwd>
+#include <map>
+#include <memory>
 
 #include "ProxyCache.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableVector;
+class Pool;
+class ProxyCache;
+class Region;
+class ResultCollector;
 
 typedef std::map<std::string, std::vector<int8_t>*> FunctionToFunctionAttributes;
 

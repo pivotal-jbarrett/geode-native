@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 #include <geode/CacheableUndefined.hpp>
-#include <geode/DataOutput.hpp>
-#include <geode/DataInput.hpp>
 #include <geode/GeodeTypeIds.hpp>
+
 #include "GeodeTypeIdsImpl.hpp"
 
 namespace apache {

@@ -21,11 +21,15 @@
  *      Author: ankurs
  */
 
-#include "ThreadPool.hpp"
-#include <geode/DistributedSystem.hpp>
-#include <geode/SystemProperties.hpp>
 #include "DistributedSystemImpl.hpp"
-#include "CacheImpl.hpp"
+#include "ThreadPool.hpp"
+#include <ace/Global_Macros.h>
+#include <ace/Method_Request.h>
+#include <ace/OS_Memory.h>
+#include <ace/Thread.h>
+
+#include <ace/config-all.h>
+
 using namespace apache::geode::client;
 
 ThreadPoolWorker::ThreadPoolWorker(IThreadPool* manager)

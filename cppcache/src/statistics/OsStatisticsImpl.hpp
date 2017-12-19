@@ -20,10 +20,15 @@
 #ifndef GEODE_STATISTICS_OSSTATISTICSIMPL_H_
 #define GEODE_STATISTICS_OSSTATISTICSIMPL_H_
 
-#include "Statistics.hpp"
-#include "StatisticsFactory.hpp"
-#include "StatisticsTypeImpl.hpp"
+#include <geode/statistics/Statistics.hpp>
+#include <geode/statistics/StatisticsFactory.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <iosfwd>
+#include <string>
+
 #include "../NonCopyable.hpp"
+#include "StatisticsTypeImpl.hpp"
 
 /** @file
  */
@@ -31,6 +36,11 @@
 namespace apache {
 namespace geode {
 namespace statistics {
+
+class StatisticDescriptor;
+class StatisticsFactory;
+class StatisticsType;
+class StatisticsTypeImpl;
 
 using namespace apache::geode::client;
 

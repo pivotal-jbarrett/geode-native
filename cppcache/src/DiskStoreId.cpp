@@ -16,7 +16,7 @@
  */
 
 #include "DiskStoreId.hpp"
-#include <ace/OS.h>
+#include <ace/OS_NS_stdio.h>
 
 namespace apache {
 namespace geode {

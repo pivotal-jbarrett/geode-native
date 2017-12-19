@@ -15,18 +15,21 @@
  * limitations under the License.
  */
 
-#include <string>
-
-#include "VersionStamp.hpp"
-#include "MemberListForVersionStamp.hpp"
 #include "CacheImpl.hpp"
+#include "CachePerfStats.hpp"
 #include "RegionInternal.hpp"
-#include "ThinClientRegion.hpp"
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolDM.hpp"
+#include "ThinClientRegion.hpp"
+#include "VersionStamp.hpp"
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class VersionTag;
 
 void VersionStamp::setVersions(std::shared_ptr<VersionTag> versionTag) {
   int32_t eVersion = versionTag->getEntryVersion();

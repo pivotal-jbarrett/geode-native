@@ -14,27 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
 #include <memory>
-
-#include <geode/DistributedSystem.hpp>
-#include "DistributedSystemImpl.hpp"
-#include "CacheXmlParser.hpp"
-#include "CacheRegionHelper.hpp"
-#include <geode/Cache.hpp>
-#include "CacheImpl.hpp"
-#include "UserAttributes.hpp"
-#include "ProxyRegion.hpp"
-#include <geode/FunctionService.hpp>
-#include "ProxyRemoteQueryService.hpp"
-#include "FunctionServiceImpl.hpp"
-#include "ProxyCache.hpp"
 #include <string>
+
+#include "CacheImpl.hpp"
+#include "ProxyCache.hpp"
+#include "ProxyRemoteQueryService.hpp"
+#include "UserAttributes.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include <geode/PoolManager.hpp>
 #include "ThinClientPoolDM.hpp"
+#include "ProxyRegion.hpp"
 #include "PdxInstanceFactoryImpl.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class PdxInstanceFactory;
+class Pool;
+class Properties;
+class QueryService;
+class Region;
 
 /**
  * Indicates if this cache has been closed.
@@ -174,3 +176,7 @@ std::shared_ptr<PdxInstanceFactory> ProxyCache::createPdxInstanceFactory(
           .getSystemProperties()
           .getEnableTimeStatistics());
  }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

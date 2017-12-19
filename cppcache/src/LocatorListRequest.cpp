@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "LocatorListRequest.hpp"
-#include <geode/DataInput.hpp>
-#include <geode/DataOutput.hpp>
 #include "GeodeTypeIdsImpl.hpp"
-#include <geode/CacheableString.hpp>
+#include "LocatorListRequest.hpp"
+#include <geode/DataOutput.hpp>
 
 using namespace apache::geode::client;
 

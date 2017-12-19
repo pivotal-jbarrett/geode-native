@@ -20,18 +20,34 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include <geode/Properties.hpp>
-#include "TcrEndpoint.hpp"
+#include <_types/_uint64_t.h>
 #include <ace/TSS_T.h>
-#include <string>
+#include <geode/Properties.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <iosfwd>
 #include <map>
+#include <memory>
+#include <string>
+
+#include "TcrEndpoint.hpp"
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+template <class TYPE> class ACE_TSS;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
 class ProxyCache;
 class ThinClientPoolDM;
+class Pool;
+class Properties;
+
 class UserConnectionAttributes {
  public:
   UserConnectionAttributes(TcrEndpoint* endpoint, uint64_t id) {

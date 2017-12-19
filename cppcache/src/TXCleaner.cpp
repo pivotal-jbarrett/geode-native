@@ -21,11 +21,15 @@
  *      Author: sshcherbakov
  */
 
+#include "TSSTXStateWrapper.hpp"
 #include "TXCleaner.hpp"
+#include "TXState.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheTransactionManagerImpl;
 
 TXCleaner::TXCleaner(CacheTransactionManagerImpl* cacheTxMgr) {
   m_txStateWrapper = TSSTXStateWrapper::s_geodeTSSTXState;

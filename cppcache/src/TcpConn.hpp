@@ -20,14 +20,22 @@
 #ifndef GEODE_TCPCONN_H_
 #define GEODE_TCPCONN_H_
 
-#include <geode/geode_globals.hpp>
-#include "util/Log.hpp"
-#include "Connector.hpp"
-
-#include <ace/SOCK_Stream.h>
 #include <ace/OS.h>
+#include <ace/SOCK_Stream.h>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
 
 #include "Assert.hpp"
+#include "Connector.hpp"
+#include <ace/INET_Addr.h>
+#include <ace/OS_NS_errno.h>
+#include <ace/OS_NS_string.h>
+
+
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
@@ -39,8 +47,8 @@ namespace client {
 
 #else
 
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 
 #define TCPLEVEL SOL_TCP
 

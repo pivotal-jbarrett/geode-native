@@ -20,10 +20,17 @@
  * limitations under the License.
  */
 
+
 #include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <iosfwd>
 #include <memory>
+
 #include "ClientProxyMembershipID.hpp"
 #include "VersionTag.hpp"
+#include <geode/geode_base.hpp>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -31,6 +38,10 @@ namespace client {
 /**
  * @brief This class encapsulates Version Stamp for map entries.
  */
+class CacheableKey;
+class RegionInternal;
+class VersionTag;
+
 class CPPCACHE_EXPORT VersionStamp {
  public:
   VersionStamp()

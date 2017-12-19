@@ -20,8 +20,15 @@
 #ifndef GEODE_EVENTSOURCE_H_
 #define GEODE_EVENTSOURCE_H_
 
+
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <cstddef>
 #include <functional>
 #include <memory>
+#include <type_traits>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {

@@ -16,6 +16,7 @@
  */
 
 #include <geode/CqState.hpp>
+#include <string>
 
 namespace apache {
 namespace geode {

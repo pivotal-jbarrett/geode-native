@@ -3,6 +3,8 @@
 #ifndef GEODE_PROXYREMOTEQUERYSERVICE_H_
 #define GEODE_PROXYREMOTEQUERYSERVICE_H_
 
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/QueryService.hpp>
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,14 +22,14 @@
  * limitations under the License.
  */
 #include <geode/geode_globals.hpp>
+#include <iosfwd>
 #include <memory>
+
 #include "CqService.hpp"
-#include "UserAttributes.hpp"
-#include <geode/QueryService.hpp>
 #include "ProxyCache.hpp"
 #include "ThinClientCacheDistributionManager.hpp"
-
-#include <ace/Recursive_Thread_Mutex.h>
+#include "UserAttributes.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -35,6 +37,12 @@ namespace client {
 
 class CacheImpl;
 class ThinClientPoolDM;
+class CacheableArrayList;
+class CqAttributes;
+class CqQuery;
+class CqServiceStatistics;
+class ProxyCache;
+class Query;
 
 class CPPCACHE_EXPORT ProxyRemoteQueryService : public QueryService {
  public:

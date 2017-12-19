@@ -16,18 +16,28 @@
  */
 
 
-#include <mutex>
 
-#include "util/concurrent/spinlock_mutex.hpp"
 
 const char* cqStatsName = "CqQueryStatistics";
 const char* cqStatsDesc = "Statistics for this cq query";
-#include <ace/Thread_Mutex.h>
-#include <ace/Singleton.h>
-
-#include <geode/geode_globals.hpp>
+#include <__mutex_base>
 
 #include "CqQueryVsdStats.hpp"
+#include <geode/statistics/Statistics.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class StatisticsFactory;
+}  // namespace statistics
+namespace util {
+namespace concurrent {
+class spinlock_mutex;
+}  // namespace concurrent
+}  // namespace util
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {

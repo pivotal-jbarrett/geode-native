@@ -15,11 +15,15 @@
  * limitations under the License.
  */
 
-#include "StatisticsTypeImpl.hpp"
-#include "StatisticDescriptorImpl.hpp"
 #include <string>
-#include <ace/OS.h>
+
 #include "../util/Log.hpp"
+#include "StatisticDescriptorImpl.hpp"
+#include "StatisticsTypeImpl.hpp"
+#include "StatsDef.hpp"
+#include <ace/OS_NS_stdio.h>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/statistics/StatisticDescriptor.hpp>
 
 using namespace apache::geode::statistics;
 

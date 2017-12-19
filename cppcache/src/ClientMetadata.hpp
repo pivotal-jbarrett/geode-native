@@ -20,25 +20,35 @@
  * limitations under the License.
  */
 
-#include "util/Log.hpp"
-#include <geode/PartitionResolver.hpp>
-#include "ServerLocation.hpp"
-#include "BucketServerLocation.hpp"
-#include "ReadWriteLock.hpp"
-#include "FixedPartitionAttributesImpl.hpp"
 #include <ace/ACE.h>
 #include <ace/Recursive_Thread_Mutex.h>
-#include <vector>
+#include <geode/PartitionResolver.hpp>
+#include <stddef.h>
+#include <sys/types.h>
 #include <map>
+#include <memory>
+#include <vector>
+
+#include "BucketServerLocation.hpp"
+#include "FixedPartitionAttributesImpl.hpp"
 #include "NonCopyable.hpp"
+#include "ReadWriteLock.hpp"
+#include "ServerLocation.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "NonCopyable.hpp"
+#include "util/Log.hpp"
 
 /*Stores the information such as partition attributes and meta data details*/
 
 namespace apache {
 namespace geode {
 namespace client {
-class ThinClientPoolDM;
 class ClientMetadata;
+class ThinClientPoolDM;
+class CacheableHashSet;
+class CacheableKey;
+class CacheableString;
 
 typedef std::vector<std::shared_ptr<BucketServerLocation>>
     BucketServerLocationsType;

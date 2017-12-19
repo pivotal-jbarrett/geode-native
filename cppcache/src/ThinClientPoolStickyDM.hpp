@@ -3,6 +3,9 @@
 #ifndef GEODE_THINCLIENTPOOLSTICKYDM_H_
 #define GEODE_THINCLIENTPOOLSTICKYDM_H_
 
+#include <sys/types.h>
+#include <memory>
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -21,9 +24,17 @@
  */
 #include "ThinClientPoolDM.hpp"
 #include "ThinClientStickyManager.hpp"
+#include <geode/geode_base.hpp>
+
 namespace apache {
 namespace geode {
 namespace client {
+class BucketServerLocation;
+class PoolAttributes;
+class TcrConnection;
+class TcrConnectionManager;
+class TcrMessage;
+
 class ThinClientPoolStickyDM : public ThinClientPoolDM {
  public:
   ThinClientPoolStickyDM(const char* name,

@@ -20,28 +20,42 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include "TcrMessage.hpp"
-#include "Queue.hpp"
+
 #include <ace/ACE.h>
 #include <ace/Condition_Recursive_Thread_Mutex.h>
-#include <ace/Time_Value.h>
 #include <ace/Guard_T.h>
 #include <ace/Recursive_Thread_Mutex.h>
 #include <ace/Semaphore.h>
+#include <ace/Task.h>
+#include <ace/Time_Value.h>
 #include <geode/CacheableKey.hpp>
 #include <geode/CqOperation.hpp>
 #include <geode/CqQuery.hpp>
-#include "MapWithLock.hpp"
 #include <geode/DistributedSystem.hpp>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
 #include <map>
+#include <memory>
 #include <string>
-#include "Queue.hpp"
-#include <ace/Task.h>
-#include "ThinClientBaseDM.hpp"
-#include "CqServiceVsdStats.hpp"
 
+#include "CqServiceVsdStats.hpp"
+#include "MapWithLock.hpp"
 #include "NonCopyable.hpp"
+#include "Queue.hpp"
+#include "Queue.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
+#include "NonCopyable.hpp"
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticsFactory;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 /**
  * @file
@@ -57,6 +71,18 @@ namespace client {
  * Implements the CqService functionality.
  *
  */
+
+class CacheableArrayList;
+class CacheableBytes;
+class CacheableKey;
+class CqAttributes;
+class CqQuery;
+class CqServiceStatistics;
+class CqServiceVsdStats;
+class EventId;
+class TcrEndpoint;
+class TcrMessage;
+class ThinClientBaseDM;
 
 class CPPCACHE_EXPORT CqService
     : private NonCopyable,

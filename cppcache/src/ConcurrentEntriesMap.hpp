@@ -19,19 +19,30 @@
 
 #ifndef GEODE_CONCURRENTENTRIESMAP_H_
 #define GEODE_CONCURRENTENTRIESMAP_H_
-#include <atomic>
 
-#include <geode/geode_globals.hpp>
-#include "EntriesMap.hpp"
-#include "MapSegment.hpp"
-
-#include "ExpMapEntry.hpp"
 #include <geode/RegionEntry.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <atomic>
+#include <memory>
+
+#include "EntriesMap.hpp"
+#include "ExpMapEntry.hpp"
+#include "MapSegment.hpp"
+#include "MapWithLock.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 class RegionInternal;
+class CacheableHashSet;
+class CacheableKey;
+class DataInput;
+class ExpiryTaskManager;
+class MapEntryImpl;
+class VersionTag;
 
 /**
  * @brief Concurrent entries map.

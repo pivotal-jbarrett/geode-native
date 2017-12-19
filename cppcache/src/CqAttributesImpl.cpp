@@ -15,13 +15,23 @@
  * limitations under the License.
  */
 
-#include "CqAttributesImpl.hpp"
 #include <geode/ExceptionTypes.hpp>
+
+#include "CqAttributesImpl.hpp"
+#include <ace/Guard_T.h>
+#include <geode/CqAttributes.hpp>
+#include <geode/Exception.hpp>
 #include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CqListener;
 
 CqAttributes::listener_container_type CqAttributesImpl::getCqListeners() {
   ACE_Guard<ACE_Recursive_Thread_Mutex> _guard(m_mutex);

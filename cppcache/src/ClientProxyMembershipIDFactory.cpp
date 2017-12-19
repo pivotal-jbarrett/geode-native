@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#include <algorithm>
 #include <random>
 
 #include "ClientProxyMembershipIDFactory.hpp"
+
 #include "util/Log.hpp"
 
 namespace apache {

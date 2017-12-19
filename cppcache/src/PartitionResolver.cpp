@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 #include <geode/PartitionResolver.hpp>
-#include <geode/EntryEvent.hpp>
+#include <string>
 
 namespace apache {
 namespace geode {

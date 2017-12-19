@@ -16,7 +16,6 @@
  */
 
 #include <geode/DiskPolicyType.hpp>
-#include "ace/OS.h"
 
 namespace apache {
 namespace geode {

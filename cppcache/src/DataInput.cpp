@@ -16,9 +16,8 @@
  */
 
 #include <geode/DataInput.hpp>
-
-#include "CacheRegionHelper.hpp"
 #include "SerializationRegistry.hpp"
+#include "CacheRegionHelper.hpp"
 #include "CacheImpl.hpp"
 #include "util/string.hpp"
 

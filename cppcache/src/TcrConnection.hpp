@@ -20,19 +20,37 @@
 #ifndef GEODE_TCRCONNECTION_H_
 #define GEODE_TCRCONNECTION_H_
 
-#include <atomic>
-#include <chrono>
 
 #include <ace/Semaphore.h>
-
-#include <geode/geode_globals.hpp>
-#include <geode/ExceptionTypes.hpp>
 #include <geode/CacheableBuiltins.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <atomic>
+#include <chrono>
+#include <memory>
 
 #include "Connector.hpp"
+#include "DiffieHellman.hpp"
 #include "Set.hpp"
 #include "TcrMessage.hpp"
-#include "DiffieHellman.hpp"
+#include <ace/Time_Value.h>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableBytes;
+class CacheableString;
+class DiffieHellman;
+class TcrMessage;
+class TcrMessageReply;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 #define DEFAULT_TIMEOUT_RETRIES 12
 #define PRIMARY_SERVER_TO_CLIENT 101
@@ -80,10 +98,11 @@ enum ServerQueueStatus {
   PRIMARY_SERVER = 2
 };
 
-class TcrEndpoint;
 class SystemProperties;
-class ThinClientPoolDM;
 class TcrConnectionManager;
+class TcrEndpoint;
+class ThinClientPoolDM;
+
 class CPPCACHE_EXPORT TcrConnection {
  public:
   /** Create one connection, endpoint is in format of hostname:portno

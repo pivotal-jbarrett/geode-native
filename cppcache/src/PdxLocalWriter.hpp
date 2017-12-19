@@ -20,19 +20,33 @@
 #ifndef GEODE_PDXLOCALWRITER_H_
 #define GEODE_PDXLOCALWRITER_H_
 
+#include <geode/CacheableObjectArray.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/PdxWriter.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+#include <string>
 #include <vector>
 
-#include <geode/PdxWriter.hpp>
-#include <geode/DataOutput.hpp>
-#include <geode/CacheableObjectArray.hpp>
-
-#include "PdxType.hpp"
 #include "PdxRemotePreservedData.hpp"
+#include "PdxType.hpp"
 #include "PdxTypeRegistry.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class CacheableObjectArray;
+class PdxRemotePreservedData;
+class PdxType;
+class PdxTypeRegistry;
+class PdxUnreadFields;
+class Serializable;
 
 class PdxLocalWriter : public PdxWriter,
                        public std::enable_shared_from_this<PdxLocalWriter> {

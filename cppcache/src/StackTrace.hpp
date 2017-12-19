@@ -20,11 +20,12 @@
  * limitations under the License.
  */
 
+#include <iosfwd>
 #include <memory>
 #include <string>
 
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
-#include <boost/stacktrace.hpp>
+#include <boost/stacktrace/stacktrace.hpp>
 
 namespace apache {
 namespace geode {

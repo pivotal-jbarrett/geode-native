@@ -15,53 +15,52 @@
  * limitations under the License.
  */
 
-#include <mutex>
-#include <functional>
-
-#include <ace/Singleton.h>
-#include <ace/Thread_Mutex.h>
-
-#include <geode/geode_globals.hpp>
-#include <geode/CacheableBuiltins.hpp>
-#include <geode/CacheableObjectArray.hpp>
-#include <geode/CacheableDate.hpp>
-#include <geode/CacheableFileName.hpp>
-#include <geode/CacheableString.hpp>
-#include <geode/CacheableUndefined.hpp>
-#include <geode/Struct.hpp>
 #include <geode/DataInput.hpp>
-#include <geode/DataOutput.hpp>
-#include <geode/GeodeTypeIds.hpp>
-#include <geode/Region.hpp>
-#include <geode/Properties.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include <geode/RegionAttributes.hpp>
-#include <geode/PoolManager.hpp>
-#include <geode/PdxWrapper.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <iosfwd>
+#include <memory>
+#include <string>
 
-#include "config.h"
-
+#include "CqServiceVsdStats.hpp"
+#include "GeodeTypeIdsImpl.hpp"
 #include "SerializationRegistry.hpp"
+#include <geode/Exception.hpp>
+#include <geode/PdxSerializable.hpp>
+#include <geode/Serializable.hpp>
+#include "SerializationRegistry.hpp"
+#include "util/Log.hpp"
+#include <geode/CacheableFileName.hpp>
+#include <geode/CacheableObjectArray.hpp>
 #include "CacheableToken.hpp"
+#include <geode/RegionAttributes.hpp>
+#include <geode/Properties.hpp>
+#include <geode/CacheableUndefined.hpp>
 #include "EventId.hpp"
-#include "CacheableObjectPartList.hpp"
+#include <geode/Struct.hpp>
 #include "ClientConnectionResponse.hpp"
 #include "QueueConnectionResponse.hpp"
 #include "LocatorListResponse.hpp"
 #include "ClientProxyMembershipID.hpp"
 #include "GetAllServersResponse.hpp"
-#include "TXCommitMessage.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "PdxType.hpp"
 #include "EnumInfo.hpp"
-#include "VersionTag.hpp"
-#include "DiskStoreId.hpp"
-#include "DiskVersionTag.hpp"
 #include <geode/CacheableEnum.hpp>
+#include "DiskStoreId.hpp"
+#include <geode/PdxWrapper.hpp>
+#include "ThinClientPoolDM.hpp"
 
 namespace apache {
 namespace geode {
+
+namespace util {
+namespace concurrent {
+class spinlock_mutex;
+}  // namespace concurrent
+}  // namespace util
+
 namespace client {
+
+class PdxSerializer;
 
 void TheTypeMap::setup() {
   // Register Geode builtins here!!

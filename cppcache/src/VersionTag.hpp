@@ -21,6 +21,11 @@
 #define GEODE_VERSIONTAG_H_
 
 #include <geode/Cacheable.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+
 #include "GeodeTypeIdsImpl.hpp"
 #include "MemberListForVersionStamp.hpp"
 
@@ -28,8 +33,12 @@ namespace apache {
 namespace geode {
 namespace client {
 
-class RegionInternal;
 class CacheImpl;
+class RegionInternal;
+class DataInput;
+class DataOutput;
+class MemberListForVersionStamp;
+class Serializable;
 
 class VersionTag : public Cacheable {
  protected:

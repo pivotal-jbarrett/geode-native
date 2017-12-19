@@ -16,10 +16,21 @@
  */
 
 #include "PutAllPartialResultServerException.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class CacheableString;
+class DataInput;
+class DataOutput;
+class Exception;
+class PutAllPartialResult;
+class VersionedCacheableObjectPartList;
 
 PutAllPartialResultServerException::PutAllPartialResultServerException(
     std::shared_ptr<PutAllPartialResult> result) {

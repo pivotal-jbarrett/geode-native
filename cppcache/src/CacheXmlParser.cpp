@@ -15,26 +15,38 @@
  * limitations under the License.
  */
 
+
+#include <geode/PoolFactory.hpp>
+#include <stdarg.h>
+#include <string.h>
 #include <chrono>
 
-#include <geode/util/chrono/duration.hpp>
-#include <geode/PoolManager.hpp>
-#include <geode/PoolFactory.hpp>
-
-#include "CacheXmlParser.hpp"
-#include "CacheRegionHelper.hpp"
 #include "AutoDelete.hpp"
+#include "CacheXmlCreation.hpp"
+#include "CacheXmlParser.hpp"
+#include <ace/OS_NS_stdio.h>
+
+#include <ace/OS_NS_strings.h>
+#include <geode/AttributesFactory.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExpirationAction.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "libxml/parser.h"
+#include "util/Log.hpp"
 #include "CacheImpl.hpp"
+#include <geode/PoolManager.hpp>
 
 #if defined(_WIN32)
 #include <windows.h>
 #else
-#include <dlfcn.h>
 #endif
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class RegionAttributes;
 
 namespace impl {
 void* getFactoryFunc(const std::string& lib, const std::string& funcName);

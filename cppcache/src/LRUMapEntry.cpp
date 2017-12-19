@@ -22,6 +22,9 @@ namespace apache {
 namespace geode {
 namespace client {
 
+class CacheableKey;
+class ExpiryTaskManager;
+
 void LRUEntryFactory::newMapEntry(ExpiryTaskManager* expiryTaskManager,
                                   const std::shared_ptr<CacheableKey>& key,
                                   std::shared_ptr<MapEntryImpl>& result) const {

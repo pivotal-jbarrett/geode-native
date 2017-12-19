@@ -21,24 +21,41 @@
  *      Author: abhaware
  */
 
-#include "ThinClientRedundancyManager.hpp"
-#include "TcrHADistributionManager.hpp"
-#include "RemoteQueryService.hpp"
+
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <iosfwd>
+
+#include "Assert.hpp"
 #include "CacheImpl.hpp"
-#include "ThinClientRegion.hpp"
-#include <geode/SystemProperties.hpp>
-#include "ClientProxyMembershipID.hpp"
+#include "ExpiryTaskManager.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientPoolDM.hpp"
+#include "ThinClientPoolHADM.hpp"
+#include "ThinClientRedundancyManager.hpp"
+#include "UserAttributes.hpp"
+#include "Utils.hpp"
+#include <ace/Guard_T.h>
+#include <ace/OS_NS_sys_time.h>
+
+
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "ExpiryHandler_T.hpp"
 
-#include "ThinClientPoolHADM.hpp"
-#include "ServerLocation.hpp"
-#include "ThinClientLocatorHelper.hpp"
-#include "UserAttributes.hpp"
-#include "ProxyCache.hpp"
-#include <set>
-#include <algorithm>
+namespace apache {
+namespace geode {
+namespace client {
 
-using namespace apache::geode::client;
+class ClientProxyMembershipID;
+class EventId;
+class ProxyCache;
+class RemoteQueryService;
 
 const char* ThinClientRedundancyManager::NC_PerodicACK = "NC PerodicACK";
 
@@ -1307,3 +1324,7 @@ GfErrType ThinClientRedundancyManager::sendRequestToPrimary(
   }
   return err;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

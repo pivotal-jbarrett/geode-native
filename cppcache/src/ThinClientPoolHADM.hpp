@@ -3,6 +3,11 @@
 #ifndef GEODE_THINCLIENTPOOLHADM_H_
 #define GEODE_THINCLIENTPOOLHADM_H_
 
+#include <memory>
+
+#include "PoolAttributes.hpp"
+#include "TcrConnectionManager.hpp"
+#include "ThinClientHARegion.hpp"
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,13 +25,30 @@
  * limitations under the License.
  */
 #include "ThinClientPoolDM.hpp"
-#include "PoolAttributes.hpp"
-#include "TcrConnectionManager.hpp"
-#include "ThinClientHARegion.hpp"
+#include "ThinClientRedundancyManager.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Semaphore.h>
+
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
+
 //#include "TcrPoolEndPoint.hpp"
 namespace apache {
 namespace geode {
 namespace client {
+
+class EventId;
+class PoolAttributes;
+class TcrConnectionManager;
+class TcrEndpoint;
+class TcrMessage;
+class TcrMessageReply;
+class ThinClientHARegion;
+class ThinClientRegion;
+template <class T> class Task;
 
 class ThinClientPoolHADM : public ThinClientPoolDM {
  public:

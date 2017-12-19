@@ -15,11 +15,22 @@
  * limitations under the License.
  */
 
-#include <vector>
+#include <stddef.h>
 #include <stdexcept>
 
 #include "StructSetImpl.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include <geode/SelectResultsIterator.hpp>
 #include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableVector;
+class Serializable;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

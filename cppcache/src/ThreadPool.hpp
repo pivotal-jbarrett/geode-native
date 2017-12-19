@@ -26,15 +26,28 @@
  *      Author: ankurs
  */
 
-#include <ace/Task.h>
-#include <ace/Method_Request.h>
+
 //#include <ace/Future.h>
 #include <ace/Activation_Queue.h>
 #include <ace/Condition_T.h>
-#include <ace/Singleton.h>
 #include <ace/Guard_T.h>
-#include <mutex>
+#include <ace/Method_Request.h>
+#include <ace/Singleton.h>
+#include <ace/Task.h>
+#include <__mutex_base>
 #include <condition_variable>
+#include <mutex>
+
+#include <ace/Condition_Thread_Mutex.h>
+#include <ace/Thread_Mutex.h>
+#include <ace/Unbounded_Queue.h>
+#include <ace/os_include/os_pthread.h>
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+template <class TYPE, class ACE_LOCK> class ACE_Singleton;
+}  // namespace ACE_6_4_5
+
 namespace apache {
 namespace geode {
 namespace client {

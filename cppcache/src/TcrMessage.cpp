@@ -15,30 +15,44 @@
  * limitations under the License.
  */
 
-#include <geode/CacheableBuiltins.hpp>
-#include <geode/DistributedSystem.hpp>
-#include <geode/SystemProperties.hpp>
-#include <geode/CacheableObjectArray.hpp>
-
-#include "TcrMessage.hpp"
 #include "Assert.hpp"
-#include "TcrConnection.hpp"
 #include "AutoDelete.hpp"
-#include "TcrChunkedContext.hpp"
-#include "ThinClientRegion.hpp"
-#include "ThinClientBaseDM.hpp"
-#include "StackTrace.hpp"
-#include "TcrConnection.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "TSSTXStateWrapper.hpp"
-#include "TXState.hpp"
 #include "DiskStoreId.hpp"
 #include "DiskVersionTag.hpp"
-#include "CacheRegionHelper.hpp"
-#include "DataInputInternal.hpp"
+#include "EventId.hpp"
+#include "TcrChunkedContext.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/Exception.hpp>
+#include "util/Log.hpp"
+#include <geode/Cache.hpp>
+#include "CacheImpl.hpp"
 #include "DataOutputInternal.hpp"
+#include "TSSTXStateWrapper.hpp"
+#include "TXState.hpp"
+#include "DataInputInternal.hpp"
+#include "CacheableToken.hpp"
+#include <sstream>
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class CacheableBytes;
+class CacheableHashMap;
+class CacheableHashSet;
+class CacheableKey;
+class CacheableVector;
+class DSMemberForVersionStamp;
+class MemberListForVersionStamp;
+class Properties;
+class Region;
+class Serializable;
+class SerializationRegistry;
+class VersionTag;
+
 static const uint32_t REGULAR_EXPRESSION =
     1;  // come from Java InterestType.REGULAR_EXPRESSION
 
@@ -1397,9 +1411,6 @@ void TcrMessage::handleByteArrayResponse(
           "Unknown message type %d in response, possible serialization "
           "mismatch",
           m_msgType);
-      std::stringstream ss;
-      ss << boost::stacktrace::stacktrace();
-      LOGERROR(ss.str().c_str());
       throw MessageException("handleByteArrayResponse: unknown message type");
   }
   LOGDEBUG("handleByteArrayResponse earlyack = %d ", earlyack);
@@ -3002,3 +3013,7 @@ void TcrMessage::readHashSetForGCVersions(
     }
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

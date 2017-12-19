@@ -20,7 +20,9 @@
  * limitations under the License.
  */
 
+#include <iosfwd>
 #include <string>
+
 namespace apache {
 namespace geode {
 namespace client {

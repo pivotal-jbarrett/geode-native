@@ -20,18 +20,25 @@
 #ifndef GEODE_PDXFIELDTYPE_H_
 #define GEODE_PDXFIELDTYPE_H_
 
-#include <geode/geode_globals.hpp>
-#include <geode/Serializable.hpp>
 #include <geode/CacheableString.hpp>
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
+#include <geode/Serializable.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
+#include <memory>
 #include <string>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class PdxFieldType;
+class DataInput;
+class DataOutput;
 
 class CPPCACHE_EXPORT PdxFieldType : public Serializable {
  private:

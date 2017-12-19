@@ -21,11 +21,20 @@
 #define GEODE_REGIONEXPIRYHANDLER_H_
 
 #include <ace/Time_Value_T.h>
-
-#include <geode/geode_globals.hpp>
-#include <geode/Region.hpp>
 #include <geode/ExpirationAction.hpp>
+#include <geode/Region.hpp>
+#include <geode/geode_globals.hpp>
+#include <chrono>
+#include <memory>
+
 #include "RegionInternal.hpp"
+#include <ace/Event_Handler.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 
 /**
  * @file
@@ -44,6 +53,8 @@ namespace client {
  * manager when region is destroyed
  *
  */
+class RegionInternal;
+
 class CPPCACHE_EXPORT RegionExpiryHandler : public ACE_Event_Handler {
  public:
   /**

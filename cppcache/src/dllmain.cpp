@@ -17,16 +17,7 @@
  * limitations under the License.
  */
 
-#include "CppCacheLibrary.hpp"
 #include <cstdlib>
-#include <cstdio>
-#include <string>
-#include "Utils.hpp"
-#include <geode/Exception.hpp>
-#include <ace/TSS_T.h>
-
-#include <string>
-#include "config.h"
 
 void initLibDllEntry(void);
 

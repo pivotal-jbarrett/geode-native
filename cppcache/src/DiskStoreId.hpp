@@ -20,14 +20,26 @@
 #ifndef GEODE_DISKSTOREID_H_
 #define GEODE_DISKSTOREID_H_
 
-#include <geode/geode_globals.hpp>
 #include <geode/DataInput.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <string>
+
 #include "DSMemberForVersionStamp.hpp"
 #include "GeodeTypeIdsImpl.hpp"
+#include <geode/CacheableKey.hpp>
+#include <geode/ExceptionTypes.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class DataOutput;
+class Serializable;
 
 class DiskStoreId : public DSMemberForVersionStamp {
  public:

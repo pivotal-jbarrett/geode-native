@@ -20,15 +20,23 @@
 #ifndef GEODE_GETALLSERVERSRESPONSE_H_
 #define GEODE_GETALLSERVERSRESPONSE_H_
 
-#include <geode/Serializable.hpp>
-#include "ServerLocation.hpp"
+
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
+#include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
 #include <vector>
+
+#include "GeodeTypeIdsImpl.hpp"
+#include "ServerLocation.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class DataInput;
+class DataOutput;
 
 class GetAllServersResponse : public Serializable {
   std::vector<ServerLocation> m_servers;

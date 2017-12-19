@@ -23,10 +23,13 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "CacheConfig.hpp"
-
 #include <libxml/parser.h>
-#include <libxml/tree.h>
+#include <iosfwd>
+#include <string>
+
+#include "CacheConfig.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include "libxml/xmlstring.h"
 
 namespace apache {
 namespace geode {

@@ -16,6 +16,7 @@
  */
 
 #include <geode/PoolManager.hpp>
+#include <string>
 
 #include "PoolManagerImpl.hpp"
 

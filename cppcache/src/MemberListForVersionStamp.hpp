@@ -20,16 +20,20 @@
  * limitations under the License.
  */
 
+
 #include <geode/geode_globals.hpp>
 #include <memory>
-#include "DSMemberForVersionStamp.hpp"
-#include "ace/RW_Thread_Mutex.h"
-#include "ReadWriteLock.hpp"
 #include <unordered_map>
+
+#include "DSMemberForVersionStamp.hpp"
+#include "ReadWriteLock.hpp"
+#include <ace/RW_Thread_Mutex.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+class DSMemberForVersionStamp;
+
 struct DistributedMemberWithIntIdentifier {
  public:
   DistributedMemberWithIntIdentifier(

@@ -15,20 +15,23 @@
  * limitations under the License.
  */
 
-#include <cstdio>
-#include <chrono>
-#include <sstream>
-#include <iomanip>
-
-#include <ace/OS.h>
-#include <ace/Recursive_Thread_Mutex.h>
 #include <ace/INET_Addr.h>
+#include <cstdio>
 
 #include "Utils.hpp"
+#include <ace/OS_NS_errno.h>
+#include <ace/OS_NS_netdb.h>
+#include <ace/OS_NS_stdio.h>
+#include <ace/OS_NS_stdlib.h>
+
+#include <ace/ace_wchar.h>
+#include <geode/statistics/Statistics.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableString;
 
 int RandGen::operator()(size_t max) {
   unsigned int seed = static_cast<unsigned int>(

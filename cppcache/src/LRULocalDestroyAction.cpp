@@ -16,8 +16,17 @@
  */
 
 #include "LRULocalDestroyAction.hpp"
-#include "LRUEntriesMap.hpp"
-#include "CacheImpl.hpp"
+#include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableKey;
+class MapEntryImpl;
+class VersionTag;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

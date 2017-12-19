@@ -1,4 +1,7 @@
+#include <string>
+
 #include "geodeBanner.hpp"
+
 using namespace apache::geode::client;
 std::string geodeBanner::getBanner() {
   std::string str =

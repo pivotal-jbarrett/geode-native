@@ -20,13 +20,22 @@
 #ifndef GEODE_CLIENTHEALTHSTATS_H_
 #define GEODE_CLIENTHEALTHSTATS_H_
 
-#include <geode/Serializable.hpp>
-#include "util/Log.hpp"
 #include <geode/CacheableDate.hpp>
+#include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <memory>
+
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableDate;
+class DataInput;
+class DataOutput;
 
 class ClientHealthStats : public Serializable {
  public:

@@ -20,17 +20,21 @@
 #ifndef GEODE_LOCATORLISTREQUEST_H_
 #define GEODE_LOCATORLISTREQUEST_H_
 
+#include <sys/types.h>
+#include <iosfwd>
 #include <string>
-#include "ServerLocationRequest.hpp"
+
 #include "GeodeTypeIdsImpl.hpp"
+#include "ServerLocationRequest.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 
-class DataOutput;
 class DataInput;
+class DataOutput;
 class Serializable;
+
 class LocatorListRequest : public ServerLocationRequest {
  private:
   std::string m_servergroup;

@@ -26,15 +26,26 @@
  *      Author: ankurs
  */
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cacheable.hpp>
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <memory>
+
 #include "LocalRegion.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class DataInput;
+class MemberListForVersionStamp;
+class Region;
+class Serializable;
+class VersionTag;
 
 enum OPERATION {
   MARKER = 0,

@@ -15,35 +15,37 @@
  * limitations under the License.
  */
 
-#include <set>
-#include <thread>
-#include <chrono>
-
-#include <ace/INET_Addr.h>
-
 #include <geode/SystemProperties.hpp>
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <exception>
 
-#include "TcrConnectionManager.hpp"
-#include "TcrEndpoint.hpp"
-#include "ExpiryHandler_T.hpp"
+#include "Assert.hpp"
 #include "CacheImpl.hpp"
 #include "ExpiryTaskManager.hpp"
-#include "ThinClientBaseDM.hpp"
-#include "ThinClientCacheDistributionManager.hpp"
-#include "ThinClientRedundancyManager.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrEndpoint.hpp"
 #include "TcrHADistributionManager.hpp"
-#include "Utils.hpp"
-#include "ThinClientRegion.hpp"
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientHARegion.hpp"
-#include "TcrConnection.hpp"
-#include "RemoteQueryService.hpp"
-#include "ThinClientLocatorHelper.hpp"
-#include "ServerLocation.hpp"
+#include "ThinClientRedundancyManager.hpp"
+#include "ThinClientRegion.hpp"
+#include <ace/Guard_T.h>
+#include <ace/Semaphore.h>
+#include <geode/DistributedSystem.hpp>
+#include <geode/Exception.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include "ExpiryHandler_T.hpp"
+#include <thread>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class TcrMessageReply;
+template <class T> class Task;
 
 volatile bool TcrConnectionManager::TEST_DURABLE_CLIENT_CRASH = false;
 

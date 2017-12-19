@@ -15,23 +15,33 @@
  * limitations under the License.
  */
 
-#include <ace/Recursive_Thread_Mutex.h>
 #include <ace/INET_Addr.h>
-
 #include <geode/PoolFactory.hpp>
-#include <geode/Pool.hpp>
 #include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
 #include "CacheImpl.hpp"
+#include "CacheRegionHelper.hpp"
+#include <geode/Cache.hpp>
+#include <geode/DistributedSystem.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "PoolAttributes.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "ThinClientPoolHADM.hpp"
+#include <geode/PoolManager.hpp>
 #include "ThinClientPoolStickyDM.hpp"
 #include "ThinClientPoolStickyHADM.hpp"
-#include "CacheRegionHelper.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class Pool;
+class TcrConnectionManager;
+class ThinClientPoolDM;
 
 const std::chrono::milliseconds PoolFactory::DEFAULT_FREE_CONNECTION_TIMEOUT =
     std::chrono::seconds{10};
@@ -317,3 +327,7 @@ PoolFactory& PoolFactory::addCheck(const std::string& host, int port) {
   }
   return *this;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

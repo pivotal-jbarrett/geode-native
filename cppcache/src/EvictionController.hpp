@@ -23,15 +23,22 @@
 #include <ace/ACE.h>
 #include <ace/OS.h>
 #include <ace/Singleton.h>
-#include <ace/Thread_Mutex.h>
 #include <ace/Task.h>
+#include <ace/Thread_Mutex.h>
 #include <geode/DataOutput.hpp>
-#include "util/Log.hpp"
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <iosfwd>
 #include <memory>
-#include "IntQueue.hpp"
-#include "EvictionThread.hpp"
 #include <string>
 #include <vector>
+
+#include "EvictionThread.hpp"
+#include "IntQueue.hpp"
+#include <ace/RW_Thread_Mutex.h>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 
 /**
  * This class ensures that the cache consumes only as much memory as
@@ -65,9 +72,9 @@ namespace client {
 typedef IntQueue<int64_t> HeapSizeInfoQueue;
 typedef std::vector<std::string> VectorOfString;
 
+class CacheImpl;
 class EvictionController;
 class EvictionThread;
-class CacheImpl;
 
 class CPPCACHE_EXPORT EvictionController : public ACE_Task_Base {
  public:

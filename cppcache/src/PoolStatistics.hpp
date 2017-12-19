@@ -19,13 +19,28 @@
 #ifndef GEODE_POOLSTATISTICS_H_
 #define GEODE_POOLSTATISTICS_H_
 
-#include <string>
-
 #include <geode/geode_globals.hpp>
+#include <iosfwd>
+#include <string>
 
 #include "statistics/Statistics.hpp"
 #include "statistics/StatisticsFactory.hpp"
 #include "statistics/StatisticsManager.hpp"
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class StatisticsFactory;
+class StatisticsType;
+}  // namespace statistics
+namespace util {
+namespace concurrent {
+class spinlock_mutex;
+}  // namespace concurrent
+}  // namespace util
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {

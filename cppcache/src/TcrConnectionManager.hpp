@@ -20,31 +20,53 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include "Task.hpp"
-#include <string>
-#include <ace/Recursive_Thread_Mutex.h>
 #include <ace/Map_Manager.h>
+#include <ace/Recursive_Thread_Mutex.h>
 #include <ace/Semaphore.h>
-#include <vector>
-#include <unordered_map>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
 #include <list>
-#include "ace/config-lite.h"
-#include "ace/Versioned_Namespace.h"
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 #include "Queue.hpp"
+#include "Task.hpp"
 #include "ThinClientRedundancyManager.hpp"
+
+
+#include <ace/Versioned_Namespace.h>
+#include <ace/config-lite.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class EventId;
+class TcrHADistributionManager;
+class TcrMessageReply;
+template <class T> class Task;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 class ACE_Task_Base;
+
 ACE_END_VERSIONED_NAMESPACE_DECL
 
 namespace apache {
 namespace geode {
 namespace client {
+class CacheImpl;
 class TcrConnection;
 class TcrEndpoint;
 class TcrMessage;
-class CacheImpl;
 class ThinClientBaseDM;
 class ThinClientRegion;
 

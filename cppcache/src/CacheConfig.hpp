@@ -31,19 +31,22 @@
 #pragma warning(disable : 4786)
 #endif  // _MSC_VER > 1000
 
-#include <geode/geode_globals.hpp>
-#include <string>
-#include <map>
-#include "RegionConfig.hpp"
-#include <geode/ExceptionTypes.hpp>
 #include <geode/DistributedSystem.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <map>
+#include <string>
+
+#include "RegionConfig.hpp"
+#include <geode/geode_base.hpp>
 
 //
 // Sneaky structure forward decl;
 //
 
-struct _xmlNode;
 struct _xmlDoc;
+struct _xmlNode;
+
 typedef struct _xmlDoc xmlDoc;
 typedef struct _xmlNode xmlNode;
 

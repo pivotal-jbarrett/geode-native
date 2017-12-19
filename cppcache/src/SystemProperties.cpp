@@ -15,25 +15,29 @@
  * limitations under the License.
  */
 
-#include <string>
-#include <cstdlib>
-#include <string>
 
-#include <ace/OS.h>
-#include <ace/DLL.h>
-
+#include <geode/ExceptionTypes.hpp>
+#include <geode/SystemProperties.hpp>
 #include <geode/geode_globals.hpp>
 #include <geode/util/chrono/duration.hpp>
-#include <geode/SystemProperties.hpp>
-#include <geode/ExceptionTypes.hpp>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
-#include "CppCacheLibrary.hpp"
+#include <ace/OS_NS_unistd.h>
+#include <geode/Cacheable.hpp>
+#include <geode/Exception.hpp>
+#include <geode/Properties.hpp>
+#include <geode/util/LogLevel.hpp>
 #include "util/Log.hpp"
+#include "CppCacheLibrary.hpp"
 
 #if defined(_WIN32)
 #include <windows.h>
 #else
-#include <dlfcn.h>
 #endif
 
 namespace {
@@ -145,9 +149,12 @@ const bool DefaultOnClientDisconnectClearPdxTypeIds = false;
 
 }  // namespace
 
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
 
 namespace impl {
 

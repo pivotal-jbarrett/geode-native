@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 #include "GetAllServersResponse.hpp"
+#include "ServerLocation.hpp"
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include "util/Log.hpp"
 
 using namespace apache::geode::client;
 

@@ -15,15 +15,28 @@
  * limitations under the License.
  */
 
+
+
 #include "RegionInternal.hpp"
-#include <geode/RegionEntry.hpp>
-#include "TombstoneList.hpp"
+#include <geode/Region.hpp>
+#include <geode/ExceptionTypes.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 // Static initializers for CacheEventFlags
+class Cache;
+class CacheListener;
+class CacheLoader;
+class CacheWriter;
+class CacheableKey;
+class PartitionResolver;
+class RegionAttributes;
+class RegionEntry;
+class SelectResults;
+class Serializable;
+
 const CacheEventFlags CacheEventFlags::NORMAL(CacheEventFlags::GF_NORMAL);
 const CacheEventFlags CacheEventFlags::LOCAL(CacheEventFlags::GF_LOCAL);
 const CacheEventFlags CacheEventFlags::NOTIFICATION(

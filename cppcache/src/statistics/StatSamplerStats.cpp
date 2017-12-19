@@ -16,7 +16,16 @@
  */
 
 #include "StatSamplerStats.hpp"
-#include "StatisticsManager.hpp"
+#include <geode/statistics/Statistics.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
+
 using namespace apache::geode::statistics;
 
 /**

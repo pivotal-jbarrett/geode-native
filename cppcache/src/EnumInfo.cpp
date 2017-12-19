@@ -15,12 +15,15 @@
  * limitations under the License.
  */
 #include "EnumInfo.hpp"
-#include "Utils.hpp"
 #include "GeodeTypeIdsImpl.hpp"
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
 
 EnumInfo::~EnumInfo() {}
 

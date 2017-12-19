@@ -15,19 +15,19 @@
  * limitations under the License.
  */
 
-#include <ace/Thread_Mutex.h>
-#include <ace/Singleton.h>
-
-#include <geode/geode_globals.hpp>
-
-#include "WindowsProcessStats.hpp"
-#include "HostStatHelperWin.hpp"
-#include "HostStatHelper.hpp"
 #include "../Assert.hpp"
+#include "WindowsProcessStats.hpp"
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/statistics/Statistics.hpp>
 
 namespace apache {
 namespace geode {
 namespace statistics {
+
+class GeodeStatisticsFactory;
+class StatisticDescriptor;
+class StatisticsFactory;
 
 WindowsProcessStats::WindowsProcessStats(
     GeodeStatisticsFactory* statisticsFactory, int64_t pid, const char* name) {

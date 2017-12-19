@@ -15,18 +15,28 @@
  * limitations under the License.
  */
 
-#include "RemoteQueryService.hpp"
-#include "CacheImpl.hpp"
-#include "RemoteQuery.hpp"
+#include <string>
+
+#include "CqService.hpp"
 #include "ReadWriteLock.hpp"
-#include "CqServiceVsdStats.hpp"
+#include "RemoteQueryService.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientCacheDistributionManager.hpp"
 #include "ThinClientPoolDM.hpp"
-#include "UserAttributes.hpp"
-#include "statistics/StatisticsManager.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include "RemoteQuery.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableArrayList;
+class CqAttributes;
+class CqQuery;
+class CqServiceStatistics;
+class Query;
+class TcrEndpoint;
+class TcrMessage;
 
 RemoteQueryService::RemoteQueryService(CacheImpl* cache,
                                        ThinClientPoolDM* poolDM)

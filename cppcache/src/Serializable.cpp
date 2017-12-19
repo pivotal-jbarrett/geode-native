@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
+
 #include <geode/Serializable.hpp>
-#include "GeodeTypeIdsImpl.hpp"
-#include "SerializationRegistry.hpp"
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <string>
+
 #include "Utils.hpp"
-#include <geode/CacheableString.hpp>
-#include "CacheImpl.hpp"
+#include "GeodeTypeIdsImpl.hpp"
 
 namespace apache {
 namespace geode {

@@ -20,9 +20,19 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
+
 #include <ace/Condition_Recursive_Thread_Mutex.h>
 #include <ace/OS_NS_sys_time.h>
+#include <geode/geode_globals.hpp>
+
+#include <ace/OS_NS_sys_time.h>
+#include <ace/Time_Value.h>
+
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {

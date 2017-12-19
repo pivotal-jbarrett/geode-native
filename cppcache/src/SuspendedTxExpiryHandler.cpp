@@ -14,16 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "ace/Timer_Queue.h"
-#include "ace/Timer_Heap.h"
-#include "ace/Reactor.h"
-#include "ace/svc_export.h"
-#include "ace/Timer_Heap_T.h"
-#include "ace/Timer_Queue_Adapters.h"
-
-#include "CacheImpl.hpp"
-#include "ExpiryTaskManager.hpp"
+#include "CacheTransactionManagerImpl.hpp"
 #include "SuspendedTxExpiryHandler.hpp"
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class TransactionId;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

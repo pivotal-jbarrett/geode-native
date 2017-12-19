@@ -20,32 +20,43 @@
 #ifndef GEODE_TCRENDPOINT_H_
 #define GEODE_TCRENDPOINT_H_
 
-#include <string>
-#include <list>
-#include <atomic>
 
 #include <ace/Recursive_Thread_Mutex.h>
 #include <ace/Semaphore.h>
-
-#include <geode/geode_globals.hpp>
 #include <geode/geode_base.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <atomic>
+#include <chrono>
+#include <iosfwd>
+#include <list>
+#include <memory>
+#include <string>
 
 #include "FairQueue.hpp"
 #include "Set.hpp"
-#include "TcrConnection.hpp"
 #include "Task.hpp"
+#include "TcrConnection.hpp"
+#include <ace/Condition_Recursive_Thread_Mutex.h>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 
-class ThinClientRegion;
+class CacheImpl;
+class QueryService;
 class TcrMessage;
 class ThinClientBaseDM;
-class CacheImpl;
-class ThinClientPoolHADM;
 class ThinClientPoolDM;
-class QueryService;
+class ThinClientPoolHADM;
+class ThinClientRegion;
+class EventId;
+class Properties;
+class TcrMessageReply;
+template <class T> class Task;
 
 class CPPCACHE_EXPORT TcrEndpoint {
  public:

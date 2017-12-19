@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#include "geode/TypeRegistry.hpp"
-#include "CacheRegionHelper.hpp"
+#include <geode/Serializable.hpp>
+#include <geode/TypeRegistry.hpp>
 #include "CacheImpl.hpp"
 
-/**
-  TypeRegistry is the public facing wrapper for the serialization registry.
-**/
+namespace apache {
+namespace geode {
+namespace client {
 
 TypeRegistry::TypeRegistry(CacheImpl* cache) : m_cache(cache) {}
 
@@ -40,3 +40,7 @@ void TypeRegistry::registerPdxSerializer(
   m_cache->getSerializationRegistry()
          ->setPdxSerializer(pdxSerializer);
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

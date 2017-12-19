@@ -16,6 +16,17 @@
  */
 
 #include "ResultSetImpl.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include <geode/SelectResultsIterator.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableVector;
+class Serializable;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 /**
  * @file

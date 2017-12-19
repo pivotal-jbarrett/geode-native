@@ -20,16 +20,25 @@
 #ifndef GEODE_GETALLSERVERSREQUEST_H_
 #define GEODE_GETALLSERVERSREQUEST_H_
 
-#include <geode/Serializable.hpp>
+#include <geode/CacheableString.hpp>
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
-#include <geode/CacheableString.hpp>
-#include "GeodeTypeIdsImpl.hpp"
+#include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
 #include <string>
+
+#include "GeodeTypeIdsImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableString;
+class DataInput;
+class DataOutput;
 
 class GetAllServersRequest : public Serializable {
   std::shared_ptr<CacheableString> m_serverGroup;

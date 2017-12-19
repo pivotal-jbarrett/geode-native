@@ -20,18 +20,26 @@
  * limitations under the License.
  */
 
-#include <string>
-#include <vector>
-#include <geode/geode_globals.hpp>
 #include <geode/ExceptionTypes.hpp>
 #include <geode/Region.hpp>
-#include "RegionXmlCreation.hpp"
 #include <geode/RegionAttributes.hpp>
+#include <geode/geode_globals.hpp>
+#include <iosfwd>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "/Users/jbarrett/Development/geode-native/cppcache/src/RegionXmlCreation.hpp"
+#include "RegionXmlCreation.hpp"
+#include <geode/AttributesFactory.hpp>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 class Cache;
+class Region;
+class RegionAttributes;
 
 /**
  * Represents a {@link Region} that is created declaratively.

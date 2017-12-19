@@ -20,24 +20,37 @@
  * limitations under the License.
  */
 
+#include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Task.h>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <geode/statistics/StatisticDescriptor.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <geode/statistics/StatisticsType.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <chrono>
+#include <iosfwd>
 #include <string>
 #include <vector>
-#include <chrono>
-
-#include <ace/Task.h>
-#include <ace/Recursive_Thread_Mutex.h>
-
-#include <geode/geode_globals.hpp>
-
-#include "Statistics.hpp"
-#include "StatisticDescriptor.hpp"
-#include "StatisticsManager.hpp"
-#include "StatisticsType.hpp"
-#include "StatSamplerStats.hpp"
-#include "StatArchiveWriter.hpp"
-#include <geode/ExceptionTypes.hpp>
 
 #include "../NonCopyable.hpp"
+#include "StatArchiveWriter.hpp"
+#include "StatSamplerStats.hpp"
+#include "StatisticsManager.hpp"
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheImpl;
+}  // namespace client
+namespace statistics {
+class StatSamplerStats;
+class Statistics;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

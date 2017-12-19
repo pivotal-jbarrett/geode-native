@@ -15,17 +15,29 @@
  * limitations under the License.
  */
 
-#include <algorithm>
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
+#include <string>
 
-#include <geode/SystemProperties.hpp>
+#include "Assert.hpp"
+#include "CacheImpl.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientDistributionManager.hpp"
+#include "Utils.hpp"
+#include <ace/Guard_T.h>
+#include "util/Log.hpp"
+#include "util/exception.hpp"
+#include "ThinClientRegion.hpp"
 #include <geode/AuthInitialize.hpp>
 
-#include "ThinClientDistributionManager.hpp"
-#include "ThinClientRegion.hpp"
-#include "DistributedSystemImpl.hpp"
-#include "util/exception.hpp"
+namespace apache {
+namespace geode {
+namespace client {
 
-using namespace apache::geode::client;
+class Properties;
+
 ThinClientDistributionManager::ThinClientDistributionManager(
     TcrConnectionManager& connManager, ThinClientRegion* region)
     : ThinClientBaseDM(connManager, region), m_activeEndpoint(-1) {}
@@ -430,3 +442,7 @@ GfErrType ThinClientDistributionManager::sendRequestToEP(
   }
   return error;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

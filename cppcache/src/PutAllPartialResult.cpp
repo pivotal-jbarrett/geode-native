@@ -15,10 +15,17 @@
  * limitations under the License.
  */
 #include "PutAllPartialResult.hpp"
+#include "ReadWriteLock.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class VersionedCacheableObjectPartList;
 
 PutAllPartialResult::PutAllPartialResult(
     int totalMapSize, ACE_Recursive_Thread_Mutex& responseLock) {

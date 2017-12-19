@@ -21,11 +21,24 @@
  */
 
 #include <geode/geode_globals.hpp>
+#include <geode/statistics/StatisticDescriptor.hpp>
+#include <geode/statistics/Statistics.hpp>
+#include <geode/statistics/StatisticsFactory.hpp>
+#include <geode/statistics/StatisticsType.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
 
-#include "StatisticDescriptor.hpp"
-#include "StatisticsType.hpp"
-#include "Statistics.hpp"
-#include "StatisticsFactory.hpp"
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class StatisticDescriptor;
+class Statistics;
+class StatisticsType;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 
@@ -37,6 +50,7 @@ namespace geode {
 namespace statistics {
 
 class StatisticsFactory;
+
 /**
  * Statistics related to the statistic sampler.
  */

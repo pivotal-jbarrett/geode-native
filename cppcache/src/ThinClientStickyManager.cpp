@@ -14,8 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "ThinClientStickyManager.hpp"
+#include <memory>
+
+#include "TcrEndpoint.hpp"
 #include "ThinClientPoolDM.hpp"
+#include "ThinClientStickyManager.hpp"
+#include <ace/Guard_T.h>
+#include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
+namespace apache {
+namespace geode {
+namespace client {
+class Pool;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
+
 using namespace apache::geode::client;
 bool ThinClientStickyManager::getStickyConnection(
     TcrConnection*& conn, GfErrType* error,

@@ -15,14 +15,21 @@
  * limitations under the License.
  */
 
-#include "DiffieHellman.hpp"
-#include "util/Log.hpp"
 #include <geode/ExceptionTypes.hpp>
-#include <geode/SystemProperties.hpp>
-#include <ace/Guard_T.h>
+
+#include "DiffieHellman.hpp"
+#include <ace/DLL.h>
+#include <ace/OS_NS_stdio.h>
+#include <ace/os_include/os_dlfcn.h>
+#include "util/Log.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableBytes;
+class CacheableString;
+class Properties;
 
 ACE_DLL DiffieHellman::m_dll;
 

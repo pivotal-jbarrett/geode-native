@@ -15,26 +15,17 @@
  * limitations under the License.
  */
 
-#include "CppCacheLibrary.hpp"
-
-#include <ace/OS.h>
-#include <ace/ACE.h>
 #include <ace/Init_ACE.h>
-#include <ace/Log_Msg.h>
-#include <ace/Singleton.h>
-
-#include "config.h"
-#include "MapEntry.hpp"
-#include "ExpMapEntry.hpp"
-#include "LRUMapEntry.hpp"
-#include "LRUExpMapEntry.hpp"
-#include <geode/CacheFactory.hpp>
-#include "SerializationRegistry.hpp"
-#include <geode/DataOutput.hpp>
-#include "TcrMessage.hpp"
-#include "Utils.hpp"
-
+#include <stddef.h>
+#include <sys/syslimits.h>
 #include <string>
+
+#include "Assert.hpp"
+#include "CppCacheLibrary.hpp"
+#include "config.h"
+#include <geode/ExceptionTypes.hpp>
+#include "Utils.hpp"
+#include <ace/OS_NS_string.h>
 
 // called during DLL initialization
 void initLibDllEntry(void) {

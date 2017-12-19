@@ -14,14 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
-
-#include "CacheableToken.hpp"
-
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
-#include <geode/CacheableString.hpp>
+#include <string>
+
+#include "CacheableToken.hpp"
 #include "GeodeTypeIdsImpl.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class Serializable;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

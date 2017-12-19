@@ -15,10 +15,20 @@
  * limitations under the License.
  */
 
-#include "QueueConnectionRequest.hpp"
-#include "GeodeTypeIdsImpl.hpp"
-#include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
+#include <sys/_types/_int32_t.h>
+
+#include "ClientProxyMembershipID.hpp"
+#include "GeodeTypeIdsImpl.hpp"
+#include "QueueConnectionRequest.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class DataInput;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

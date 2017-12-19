@@ -15,14 +15,16 @@
  * limitations under the License.
  */
 
-#include <geode/Region.hpp>
 #include <geode/CacheWriter.hpp>
-#include <geode/EntryEvent.hpp>
-#include <geode/RegionEvent.hpp>
+#include <memory>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class EntryEvent;
+class Region;
+class RegionEvent;
 
 CacheWriter::CacheWriter() {}
 

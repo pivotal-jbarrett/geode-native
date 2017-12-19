@@ -14,9 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "TXState.hpp"
+#include "TcrMessage.hpp"
 #include "ThinClientPoolStickyDM.hpp"
-#include "TssConnectionWrapper.hpp"
-#include <algorithm>
+#include "ThinClientStickyManager.hpp"
+#include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class BucketServerLocation;
+class TcrConnection;
+class TcrEndpoint;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
+
 using namespace apache::geode::client;
 TcrConnection* ThinClientPoolStickyDM::getConnectionFromQueueW(
     GfErrType* error, std::set<ServerLocation>& excludeServers, bool isBGThread,

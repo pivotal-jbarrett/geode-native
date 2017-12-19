@@ -15,23 +15,34 @@
  * limitations under the License.
  */
 
-#include <geode/GeodeTypeIds.hpp>
+#include <stddef.h>
+#include <sys/_types/_int64_t.h>
 
+#include "PoolStatistics.hpp"
+#include "ReadWriteLock.hpp"
 #include "RemoteQuery.hpp"
 #include "TcrMessage.hpp"
-#include "ResultSetImpl.hpp"
-#include "StructSetImpl.hpp"
-#include "ReadWriteLock.hpp"
+#include "ThinClientBaseDM.hpp"
+#include "ThinClientPoolDM.hpp"
 #include "ThinClientRegion.hpp"
 #include "UserAttributes.hpp"
-#include "EventId.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "util/bounds.hpp"
+#include "Utils.hpp"
+#include <ace/OS_NS_stdio.h>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include "util/bounds.hpp"
+#include "ResultSetImpl.hpp"
+#include "StructSetImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableVector;
+class ProxyCache;
+class RemoteQueryService;
+class SelectResults;
 
 RemoteQuery::RemoteQuery(
     std::string querystr,

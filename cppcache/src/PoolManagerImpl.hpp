@@ -20,9 +20,11 @@
 #ifndef GEODE_POOLMANAGERIMPL_H_
 #define GEODE_POOLMANAGERIMPL_H_
 
+#include <iosfwd>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <unordered_map>
 
 namespace apache {
 namespace geode {
@@ -30,6 +32,9 @@ namespace client {
 
 class Pool;
 class PoolFactory;
+class CacheImpl;
+class Region;
+
 typedef std::unordered_map<std::string, std::shared_ptr<Pool>> HashMapOfPools;
 
 class PoolManagerImpl {

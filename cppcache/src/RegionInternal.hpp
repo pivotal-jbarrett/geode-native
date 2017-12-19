@@ -20,14 +20,20 @@
 #ifndef GEODE_REGIONINTERNAL_H_
 #define GEODE_REGIONINTERNAL_H_
 
-#include <string>
-#include <map>
-#include <chrono>
-
 #include <geode/Region.hpp>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <iosfwd>
+#include <map>
+#include <memory>
+#include <string>
 
-#include "RegionStats.hpp"
 #include "EventId.hpp"
+#include "RegionStats.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExpirationAction.hpp>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -41,6 +47,23 @@ namespace client {
  *
  *
  */
+class Cache;
+class CacheImpl;
+class CacheListener;
+class CacheLoader;
+class CacheWriter;
+class CacheableKey;
+class DataInput;
+class EventId;
+class PartitionResolver;
+class PersistenceManager;
+class Pool;
+class RegionAttributes;
+class RegionEntry;
+class RegionStats;
+class SelectResults;
+class Serializable;
+
 class CacheEventFlags {
  private:
   uint8_t m_flags;
@@ -128,9 +151,9 @@ class CacheEventFlags {
   }
 };
 
+class MapEntryImpl;
 class TombstoneList;
 class VersionTag;
-class MapEntryImpl;
 
 /**
  * @class RegionInternal RegionInternal.hpp

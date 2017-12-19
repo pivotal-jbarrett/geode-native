@@ -20,17 +20,26 @@
  * limitations under the License.
  */
 
-#include <geode/geode_base.hpp>
-#include "ThinClientDistributionManager.hpp"
 #include <geode/CacheAttributes.hpp>
+#include <geode/geode_base.hpp>
+#include <memory>
+
+#include "TcrConnectionManager.hpp"
 #include "TcrEndpoint.hpp"
+#include "ThinClientDistributionManager.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
-class ThinClientRegion;
 class ThinClientHARegion;
+class ThinClientRegion;
+class CacheAttributes;
+class TcrEndpoint;
+class TcrMessage;
+class TcrMessageReply;
+
 /**
  * @brief Distribute data between caches
  */

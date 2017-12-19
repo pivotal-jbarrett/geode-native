@@ -14,12 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
-#include <ace/Thread_Mutex.h>
-#include <ace/Singleton.h>
-#include "SolarisProcessStats.hpp"
-#include "HostStatHelperSolaris.hpp"
 #include "../Assert.hpp"
+#include "SolarisProcessStats.hpp"
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/statistics/Statistics.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class GeodeStatisticsFactory;
+class StatisticDescriptor;
+class StatisticsFactory;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::statistics;
 

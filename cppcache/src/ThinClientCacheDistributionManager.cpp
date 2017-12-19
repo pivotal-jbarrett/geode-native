@@ -14,20 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
-#include "ThinClientBaseDM.hpp"
-#include "ThinClientCacheDistributionManager.hpp"
+#include <sys/_types/_int32_t.h>
+
+#include "TcrConnectionManager.hpp"
 #include "TcrMessage.hpp"
-#include "TcrEndpoint.hpp"
+#include "ThinClientCacheDistributionManager.hpp"
+#include <ace/Guard_T.h>
+#include <geode/Exception.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include "ReadWriteLock.hpp"
-#include "ThinClientRegion.hpp"
+#include "util/Log.hpp"
 #include "RemoteQueryService.hpp"
 #include "CacheImpl.hpp"
-#include <geode/CacheAttributes.hpp>
-#include <algorithm>
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class TcrEndpoint;
 
 ThinClientCacheDistributionManager::ThinClientCacheDistributionManager(
     TcrConnectionManager& connManager)
@@ -197,3 +200,7 @@ bool ThinClientCacheDistributionManager::postFailoverAction(
   }
   return true;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

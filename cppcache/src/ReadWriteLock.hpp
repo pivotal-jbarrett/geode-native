@@ -21,7 +21,11 @@
  */
 
 #include <ace/RW_Thread_Mutex.h>
+
 #include "Condition.hpp"
+
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {

@@ -3,6 +3,11 @@
 #ifndef GEODE_PROXYCACHE_H_
 #define GEODE_PROXYCACHE_H_
 
+#include <geode/DistributedSystem.hpp>
+#include <geode/PoolFactory.hpp>
+#include <geode/QueryService.hpp>
+#include <geode/Region.hpp>
+#include <geode/RegionService.hpp>
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,12 +25,11 @@
  * limitations under the License.
  */
 #include <geode/geode_globals.hpp>
-#include <geode/Region.hpp>
-#include <geode/DistributedSystem.hpp>
-#include <geode/QueryService.hpp>
-#include <geode/PoolFactory.hpp>
+#include <iosfwd>
+#include <memory>
+
 #include "UserAttributes.hpp"
-#include <geode/RegionService.hpp>
+#include <geode/geode_base.hpp>
 
 /**
  * @file
@@ -36,6 +40,13 @@ namespace geode {
 namespace client {
 
 class FunctionServiceImpl;
+class CacheImpl;
+class PdxInstanceFactory;
+class Pool;
+class Properties;
+class QueryService;
+class Region;
+class UserAttributes;
 
 /**
  * @class Cache Cache.hpp

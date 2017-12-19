@@ -20,13 +20,25 @@
 #ifndef GEODE_ENUMINFO_H_
 #define GEODE_ENUMINFO_H_
 
-#include <geode/GeodeTypeIds.hpp>
-#include <geode/CacheableString.hpp>
 #include <geode/CacheableKey.hpp>
+#include <geode/CacheableString.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+#include <string>
+
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableString;
+class DataInput;
+class DataOutput;
+class Serializable;
 
 class CPPCACHE_EXPORT EnumInfo : public CacheableKey {
  private:

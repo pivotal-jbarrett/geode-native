@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "ClientConnectionResponse.hpp"
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
+
+#include "ClientConnectionResponse.hpp"
+#include "GeodeTypeIdsImpl.hpp"
 
 using namespace apache::geode::client;
 

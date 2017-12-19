@@ -15,7 +15,17 @@
  * limitations under the License.
  */
 #include "MemberListForVersionStamp.hpp"
+#include "ReadWriteLock.hpp"
+
 #include "util/Log.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class DSMemberForVersionStamp;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

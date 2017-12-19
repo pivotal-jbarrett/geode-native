@@ -20,13 +20,14 @@
 #ifndef GEODE_STATISTICS_STATISTICSTYPEIMPL_H_
 #define GEODE_STATISTICS_STATISTICSTYPEIMPL_H_
 
+#include <geode/ExceptionTypes.hpp>
+#include <geode/statistics/StatisticsFactory.hpp>
+#include <geode/statistics/StatisticsType.hpp>
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
 #include <map>
 #include <string>
 
-#include <geode/ExceptionTypes.hpp>
-
-#include "StatisticsType.hpp"
-#include "StatisticsFactory.hpp"
 #include "StatsDef.hpp"
 
 /** @file
@@ -41,6 +42,8 @@ namespace statistics {
  * into one logical type.
  *
  */
+
+class StatisticDescriptor;
 
 typedef std::map<std::string, StatisticDescriptor*> StatisticsDescMap;
 

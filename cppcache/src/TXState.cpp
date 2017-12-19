@@ -15,18 +15,22 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-
 #include "TXState.hpp"
-#include "TransactionalOperation.hpp"
-#include "TssConnectionWrapper.hpp"
 #include "ThinClientPoolDM.hpp"
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
 #include <geode/CacheTransactionManager.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class TXId;
+class TcrConnection;
 
 TXState::TXState(Cache* cache) {
   m_txId = std::shared_ptr<TXId>(new TXId());

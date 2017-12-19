@@ -20,12 +20,22 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cache.hpp>
-#include <geode/Region.hpp>
 #include <geode/ExpirationAction.hpp>
+#include <geode/Region.hpp>
+#include <geode/geode_globals.hpp>
+#include <chrono>
+#include <memory>
+
 #include "ExpMapEntry.hpp"
 #include "RegionInternal.hpp"
+#include <ace/Event_Handler.h>
+#include <ace/config-macros.h>
+#include <geode/geode_base.hpp>
+
+namespace ACE_6_4_5 {
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 
 /**
  * @file
@@ -43,6 +53,10 @@ namespace client {
  * TODO: TODO: cleanup region entry nodes and handlers from expiry task
  * manager when region is destroyed
  */
+class CacheableKey;
+class MapEntryImpl;
+class RegionInternal;
+
 class CPPCACHE_EXPORT EntryExpiryHandler : public ACE_Event_Handler {
  public:
   /**

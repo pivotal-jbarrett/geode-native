@@ -20,13 +20,18 @@
 #ifndef GEODE_CACHEABLEOBJECTPARTLIST_H_
 #define GEODE_CACHEABLEOBJECTPARTLIST_H_
 
-#include <geode/geode_globals.hpp>
-#include <geode/DataOutput.hpp>
-#include <geode/DataInput.hpp>
-#include <geode/Cacheable.hpp>
-#include "MapWithLock.hpp"
 
+#include <geode/Cacheable.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <memory>
 #include <vector>
+
+#include "MapWithLock.hpp"
+#include <geode/Exception.hpp>
 
 /** @file
  */
@@ -36,6 +41,8 @@ namespace geode {
 namespace client {
 
 class ThinClientRegion;
+class DataInput;
+class DataOutput;
 
 /**
  * Implement an immutable list of object parts that encapsulates an object,

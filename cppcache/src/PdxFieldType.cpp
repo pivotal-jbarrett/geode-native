@@ -21,13 +21,12 @@
  *      Author: npatel
  */
 
+#include <sys/types.h>
+
 #include "PdxFieldType.hpp"
-#include "GeodeTypeIdsImpl.hpp"
 #include "PdxTypes.hpp"
 #include <geode/PdxFieldTypes.hpp>
-//#include <malloc.h>
-
-#include "ace/OS.h"
+#include <ace/OS_NS_stdio.h>
 
 namespace apache {
 namespace geode {

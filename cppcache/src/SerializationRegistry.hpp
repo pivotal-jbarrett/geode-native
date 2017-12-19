@@ -20,26 +20,28 @@
 #ifndef GEODE_SERIALIZATIONREGISTRY_H_
 #define GEODE_SERIALIZATIONREGISTRY_H_
 
-#include <string>
-#include <functional>
-
 #include <ace/Hash_Map_Manager.h>
-#include <ace/Thread_Mutex.h>
 #include <ace/Null_Mutex.h>
-
-#include <geode/geode_globals.hpp>
-#include <geode/Serializable.hpp>
-#include <geode/PdxSerializer.hpp>
-#include <geode/GeodeTypeIds.hpp>
+#include <ace/Thread_Mutex.h>
 #include <geode/DataOutput.hpp>
-#include <geode/ExceptionTypes.hpp>
 #include <geode/Delta.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/GeodeTypeIds.hpp>
 #include <geode/PdxSerializable.hpp>
+#include <geode/PdxSerializer.hpp>
+#include <geode/Serializable.hpp>
+#include <geode/geode_globals.hpp>
+#include <functional>
+#include <string>
 
-#include "util/concurrent/spinlock_mutex.hpp"
-#include "NonCopyable.hpp"
 #include "GeodeTypeIdsImpl.hpp"
 #include "MemberListForVersionStamp.hpp"
+#include "NonCopyable.hpp"
+#include <ace/ACE_export.h>
+#include <ace/config-macros.h>
+#include "config.h"
+#include <geode/geode_base.hpp>
+#include "util/concurrent/spinlock_mutex.hpp"
 
 #if defined(_MACOSX)
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL

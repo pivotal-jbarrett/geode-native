@@ -34,6 +34,10 @@ namespace apache {
 namespace geode {
 namespace client {
 
+class CacheTransactionManagerImpl;
+class TSSTXStateWrapper;
+class TXState;
+
 class TXCleaner {
  public:
   TXCleaner(CacheTransactionManagerImpl* cacheTxMgr);

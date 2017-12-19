@@ -26,15 +26,23 @@
  *      Author: ankurs
  */
 
-#include "TXId.hpp"
-#include "TransactionalOperation.hpp"
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
+#include <memory>
 #include <string>
 #include <vector>
+
+#include "TXId.hpp"
+#include "TransactionalOperation.hpp"
+#include <geode/Cacheable.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 class ThinClientPoolDM;
+class Cache;
+class TXId;
+
 class TXState {
  public:
   TXState(Cache* cache);

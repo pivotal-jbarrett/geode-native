@@ -15,15 +15,18 @@
  * limitations under the License.
  */
 
-#include <geode/Pool.hpp>
-#include <geode/PoolFactory.hpp>
+#include <__mutex_base>
+#include <string>
 
+#include "Assert.hpp"
 #include "PoolManagerImpl.hpp"
 #include "CacheImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Region;
 
 void PoolManagerImpl::removePool(const std::string& name) {
   std::lock_guard<std::recursive_mutex> guard(m_connectionPoolsLock);

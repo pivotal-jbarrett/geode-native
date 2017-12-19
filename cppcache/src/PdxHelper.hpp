@@ -27,13 +27,23 @@
  */
 
 #include <geode/DataOutput.hpp>
+#include <memory>
+
+#include "CacheImpl.hpp"
 #include "EnumInfo.hpp"
 #include "PdxType.hpp"
-#include "CacheImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheImpl;
+class DataInput;
+class DataOutput;
+class EnumInfo;
+class PdxSerializable;
+class PdxType;
+class PdxTypeRegistry;
 
 class PdxHelper {
  private:

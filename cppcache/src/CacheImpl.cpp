@@ -14,37 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <string>
-#include <string>
 
-#include <ace/OS.h>
-#include <geode/CacheStatistics.hpp>
 #include <geode/PoolManager.hpp>
-#include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
-#include <geode/RegionAttributes.hpp>
-#include <geode/PersistenceManager.hpp>
+#include <exception>
+#include <string>
 
 #include "CacheImpl.hpp"
-#include "Utils.hpp"
-#include "LocalRegion.hpp"
-#include "ExpiryTaskManager.hpp"
-#include "RegionExpiryHandler.hpp"
+#include "CachePerfStats.hpp"
+#include "EvictionController.hpp"
+#include "ReadWriteLock.hpp"
 #include "TcrMessage.hpp"
-#include "ThinClientRegion.hpp"
+#include "ThinClientPoolDM.hpp"
+#include <ace/Guard_T.h>
+
+#include <geode/Cache.hpp>
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
+#include "InternalCacheTransactionManager2PC.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+#include "InternalCacheTransactionManager2PCImpl.hpp"
+#include "ThinClientPoolHADM.hpp"
 #include "ThinClientHARegion.hpp"
 #include "ThinClientPoolRegion.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "Version.hpp"
-#include "ClientProxyMembershipID.hpp"
-#include "AutoDelete.hpp"
-#include "ThinClientPoolHADM.hpp"
-#include "InternalCacheTransactionManager2PCImpl.hpp"
-#include "PdxTypeRegistry.hpp"
-#include "SerializationRegistry.hpp"
-#include "ThreadPool.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class AuthInitialize;
+class CacheAttributes;
+class CacheStatistics;
+class CacheTransactionManager;
+class DistributedSystem;
+class MemberListForVersionStamp;
+class QueryService;
+class Region;
+class RegionAttributes;
+class RegionInternal;
 
 CacheImpl::CacheImpl(Cache* c, const std::string& name,
                      std::unique_ptr<DistributedSystem> sys, bool iPUF,
@@ -773,3 +780,7 @@ CacheImpl::getCacheTransactionManager() {
 void CacheImpl::setCache(Cache* cache) {
   m_cache = cache;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

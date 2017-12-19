@@ -14,10 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <iosfwd>
+#include <string>
+
 #include "TssConnectionWrapper.hpp"
-#include "TcrConnection.hpp"
 #include "ThinClientPoolDM.hpp"
-using namespace apache::geode::client;
+
+namespace apache {
+namespace geode {
+namespace client {
+
+class Pool;
+class TcrEndpoint;
+
 ACE_TSS<TssConnectionWrapper>* TssConnectionWrapper::s_geodeTSSConn =
     new ACE_TSS<TssConnectionWrapper>();
 TssConnectionWrapper::TssConnectionWrapper() {
@@ -135,3 +144,7 @@ TcrConnection* PoolWrapper::getAnyConnection() {
   }
   return nullptr;
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

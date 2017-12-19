@@ -20,11 +20,11 @@
  * limitations under the License.
  */
 
-#include <atomic>
-
 #include <geode/geode_globals.hpp>
+#include <atomic>
 #include <memory>
 
+#include <geode/geode_base.hpp>
 #include "util/concurrent/spinlock_mutex.hpp"
 
 namespace apache {

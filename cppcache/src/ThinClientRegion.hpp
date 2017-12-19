@@ -20,21 +20,31 @@
 #ifndef GEODE_THINCLIENTREGION_H_
 #define GEODE_THINCLIENTREGION_H_
 
-#include <unordered_map>
 
 #include <ace/Task.h>
-
 #include <geode/ResultCollector.hpp>
+#include <geode/util/functional.hpp>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+#include <unordered_map>
 
-#include "LocalRegion.hpp"
-#include "TcrMessage.hpp"
-#include "TcrEndpoint.hpp"
-#include "RegionGlobalLocks.hpp"
-#include "Queue.hpp"
-#include "TcrChunkedContext.hpp"
 #include "CacheableObjectPartList.hpp"
 #include "ClientMetadataService.hpp"
-#include <geode/util/functional.hpp>
+#include "InterestResultPolicy.hpp"
+#include "LocalRegion.hpp"
+#include "Queue.hpp"
+#include "RegionGlobalLocks.hpp"
+#include "RegionInternal.hpp"
+#include "TcrChunkedContext.hpp"
+#include "TcrEndpoint.hpp"
+#include "TcrMessage.hpp"
+#include <ace/RW_Thread_Mutex.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Semaphore.h>
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
 /**
  * @file
  */
@@ -44,6 +54,23 @@ namespace geode {
 namespace client {
 
 class ThinClientBaseDM;
+class Cache;
+class CacheImpl;
+class CacheStatistics;
+class CacheableArrayList;
+class CacheableHashSet;
+class CacheableKey;
+class CacheableVector;
+class DataInput;
+class Region;
+class RegionAttributes;
+class ResultCollector;
+class SelectResults;
+class Serializable;
+class TcrMessage;
+class TcrMessageReply;
+class VersionTag;
+class VersionedCacheableObjectPartList;
 
 /**
  * @class ThinClientRegion ThinClientRegion.hpp

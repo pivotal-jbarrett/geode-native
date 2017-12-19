@@ -15,6 +15,18 @@
  * limitations under the License.
  */
 #include "EventIdMap.hpp"
+#include <ace/OS_NS_sys_time.h>
+#include <ace/Time_Value.h>
+
+
+namespace apache {
+namespace geode {
+namespace client {
+class EventId;
+class EventSource;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

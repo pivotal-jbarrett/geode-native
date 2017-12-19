@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 
-#include "config.h"
 #include <geode/CacheableDate.hpp>
-#include <geode/CacheableKeys.hpp>
-#include <geode/DataOutput.hpp>
 #include <geode/DataInput.hpp>
-#include <geode/ExceptionTypes.hpp>
+#include <geode/DataOutput.hpp>
 #include <geode/GeodeTypeIds.hpp>
-
-#include <cwchar>
-#include <ace/OS.h>
-
-#include <chrono>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/_types/_time_t.h>
+#include <sys/types.h>
 #include <ctime>
+#include <iosfwd>
+#include <string>
+
+#include <ace/OS_NS_stdio.h>
+#include <ace/OS_NS_time.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class Serializable;
 
 static CacheableDate::time_point posixEpoch =
     CacheableDate::clock::from_time_t(0);

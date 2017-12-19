@@ -20,18 +20,32 @@
 #ifndef GEODE_PDXINSTANCEFACTORYIMPL_H_
 #define GEODE_PDXINSTANCEFACTORYIMPL_H_
 
-#include <map>
-
-#include <geode/PdxInstanceFactory.hpp>
 #include <geode/CacheableBuiltins.hpp>
+#include <geode/PdxInstanceFactory.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <map>
+#include <memory>
 
+#include "CachePerfStats.hpp"
 #include "PdxType.hpp"
 #include "PdxTypeRegistry.hpp"
-#include "CachePerfStats.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class CachePerfStats;
+class CacheableDate;
+class CacheableObjectArray;
+class PdxType;
+class PdxTypeRegistry;
 
 typedef std::map<std::string, std::shared_ptr<Cacheable>> FieldVsValues;
 

@@ -15,10 +15,21 @@
  * limitations under the License.
  */
 
-#include "SslSockStream.hpp"
-#include <geode/ExceptionTypes.hpp>
 #include <ace/OS_NS_stdio.h>
+#include <geode/ExceptionTypes.hpp>
+#include <sys/_types/_int32_t.h>
+
+#include "SslSockStream.hpp"
+#include <ace/INET_Addr.h>
+#include <ace/OS_NS_errno.h>
+#include <ace/OS_NS_string.h>
+#include <ace/os_include/os_dlfcn.h>
 #include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Addr;
+class ACE_Time_Value;
+}  // namespace ACE_6_4_5
 
 using namespace apache::geode::client;
 

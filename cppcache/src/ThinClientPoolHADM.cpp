@@ -16,12 +16,31 @@
  */
 
 #include <geode/SystemProperties.hpp>
+#include <sys/_types/_int32_t.h>
+#include <chrono>
 
+#include "Assert.hpp"
+#include "CacheImpl.hpp"
+#include "ExpiryTaskManager.hpp"
+#include "TcrConnectionManager.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolHADM.hpp"
-#include "ExpiryHandler_T.hpp"
+#include "ThinClientRegion.hpp"
+#include <ace/Guard_T.h>
+#include <geode/DistributedSystem.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include "ExpiryHandler_T.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class PoolAttributes;
+class TcrEndpoint;
+class ThinClientHARegion;
+
 const char* ThinClientPoolHADM::NC_Redundancy = "NC Redundancy";
 ThinClientPoolHADM::ThinClientPoolHADM(const char* name,
                                        std::shared_ptr<PoolAttributes> poolAttr,
@@ -284,3 +303,7 @@ void ThinClientPoolHADM::sendNotConMesToAllregions() {
     (*it)->receiveNotification(TcrMessage::getAllEPDisMess());
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

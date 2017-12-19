@@ -21,11 +21,24 @@
  *      Author: abhaware
  */
 
-#include "ThinClientPoolRegion.hpp"
-#include "CacheImpl.hpp"
-#include <geode/SystemProperties.hpp>
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolDM.hpp"
+#include "ThinClientPoolRegion.hpp"
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include <geode/PoolManager.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheImpl;
+class CacheStatistics;
+class RegionAttributes;
+class RegionInternal;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

@@ -24,44 +24,87 @@
  * @file
  */
 
-#include <geode/geode_globals.hpp>
-#include <geode/CacheStatistics.hpp>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/CacheableKey.hpp>
-#include <geode/Cacheable.hpp>
-#include <geode/Cache.hpp>
-#include <geode/EntryEvent.hpp>
-#include <geode/RegionEvent.hpp>
-#include "EventType.hpp"
-#include <geode/PersistenceManager.hpp>
-#include <geode/RegionEntry.hpp>
-#include <geode/CacheListener.hpp>
-#include <geode/CacheWriter.hpp>
-#include <geode/CacheLoader.hpp>
-#include <geode/AttributesMutator.hpp>
-#include <geode/AttributesFactory.hpp>
-
-#include "RegionInternal.hpp"
-#include "RegionStats.hpp"
-#include "EntriesMapFactory.hpp"
-#include "SerializationRegistry.hpp"
-#include "MapWithLock.hpp"
-#include "CacheableToken.hpp"
-#include "ExpMapEntry.hpp"
-#include "TombstoneList.hpp"
 
 #include <ace/ACE.h>
 #include <ace/Hash_Map_Manager_T.h>
 #include <ace/Recursive_Thread_Mutex.h>
-
+#include <geode/AttributesFactory.hpp>
+#include <geode/AttributesMutator.hpp>
+#include <geode/Cache.hpp>
+#include <geode/CacheListener.hpp>
+#include <geode/CacheLoader.hpp>
+#include <geode/CacheStatistics.hpp>
+#include <geode/CacheWriter.hpp>
+#include <geode/Cacheable.hpp>
+#include <geode/CacheableKey.hpp>
+#include <geode/EntryEvent.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/PersistenceManager.hpp>
+#include <geode/RegionEntry.hpp>
+#include <geode/RegionEvent.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
 #include <string>
+#include <typeinfo>
 #include <unordered_map>
+
+#include "CacheableToken.hpp"
+#include "EntriesMapFactory.hpp"
+#include "EventType.hpp"
+#include "ExpMapEntry.hpp"
+#include "MapWithLock.hpp"
+#include "RegionInternal.hpp"
+#include "RegionStats.hpp"
+#include "SerializationRegistry.hpp"
 #include "TSSTXStateWrapper.hpp"
+#include "TombstoneList.hpp"
+
+#include <ace/RW_Thread_Mutex.h>
+#include <geode/Exception.hpp>
+#include <geode/ExpirationAction.hpp>
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class Statistics;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {
 namespace client {
 
+class AttributesMutator;
+class CacheImpl;
+class CacheListener;
+class CacheLoader;
+class CacheStatistics;
+class CacheWriter;
+class CacheableHashMap;
+class CacheableHashSet;
+class CacheableKey;
+class DataInput;
+class EntriesMap;
+class EventId;
+class LocalRegion;
+class MapEntryImpl;
+class PersistenceManager;
+class Pool;
+class Region;
+class RegionAttributes;
+class RegionEntry;
+class RegionService;
+class Serializable;
+class TXState;
+class TombstoneList;
+class VersionTag;
+class VersionedCacheableObjectPartList;
 #ifndef CHECK_DESTROY_PENDING
 #define CHECK_DESTROY_PENDING(lock, function)                      \
   lock checkGuard(m_rwLock, m_destroyPending);                     \
@@ -80,12 +123,12 @@ namespace client {
   }
 #endif
 
-class PutActions;
-class PutActionsTx;
 class CreateActions;
 class DestroyActions;
-class RemoveActions;
 class InvalidateActions;
+class PutActions;
+class PutActionsTx;
+class RemoveActions;
 
 typedef std::unordered_map<std::shared_ptr<CacheableKey>,
                            std::pair<std::shared_ptr<Cacheable>, int>>

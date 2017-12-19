@@ -14,33 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "config.h"
-#include <geode/geode_globals.hpp>
-
-#include <geode/DistributedSystem.hpp>
-#include "statistics/StatisticsManager.hpp"
-#include <geode/SystemProperties.hpp>
-
-#include "CppCacheLibrary.hpp"
-#include "Utils.hpp"
-#include "util/Log.hpp"
-#include <geode/CacheFactory.hpp>
-#include <ace/OS.h>
 
 #include <ace/Guard_T.h>
 #include <ace/Recursive_Thread_Mutex.h>
+#include <geode/DistributedSystem.hpp>
+#include <sys/syslimits.h>
+#include <exception>
+#include <iosfwd>
+#include <string>
 
-#include "ExpiryTaskManager.hpp"
-#include "CacheImpl.hpp"
-#include "geode/DataOutput.hpp"
-#include "TcrMessage.hpp"
-#include "DistributedSystemImpl.hpp"
-#include "RegionStats.hpp"
-#include "PoolStatistics.hpp"
 #include "CacheRegionHelper.hpp"
+#include "CppCacheLibrary.hpp"
 #include "DiffieHellman.hpp"
+#include "DistributedSystemImpl.hpp"
 
+#include <ace/OS_NS_sys_utsname.h>
+#include <ace/OS_NS_unistd.h>
+#include <ace/ace_wchar.h>
+#include "config.h"
+#include <geode/Exception.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "version.h"
+#include <geode/SystemProperties.hpp>
+#include "statistics/StatisticsManager.hpp"
+#include "CacheImpl.hpp"
 
 using namespace apache::geode::client;
 using namespace apache::geode::statistics;
@@ -231,3 +229,7 @@ SystemProperties& DistributedSystem::getSystemProperties() const {
 }
 
 const std::string& DistributedSystem::getName() const { return m_name; }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

@@ -15,20 +15,39 @@
  * limitations under the License.
  */
 
-#include <unordered_set>
-#include <iterator>
 #include <cstdlib>
-#include <climits>
+#include <string>
 
-#include <geode/FixedPartitionResolver.hpp>
-
-#include "TcrMessage.hpp"
+#include "CacheImpl.hpp"
 #include "ClientMetadataService.hpp"
+#include "DistributedSystemImpl.hpp"
+#include "LocalRegion.hpp"
+#include "Queue.hpp"
+#include "ReadWriteLock.hpp"
+#include "RegionStats.hpp"
+#include "TcrMessage.hpp"
 #include "ThinClientPoolDM.hpp"
+#include "ThinClientRegion.hpp"
+#include "Utils.hpp"
+
+#include <geode/Cacheable.hpp>
+#include <geode/EntryEvent.hpp>
+#include <geode/Pool.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+#include <geode/FixedPartitionResolver.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+class CacheableKey;
+class CacheableString;
+class CacheableVector;
+class ClientMetadata;
+class Region;
+class Serializable;
+
 const char* ClientMetadataService::NC_CMDSvcThread = "NC CMDSvcThread";
 ClientMetadataService::~ClientMetadataService() {
   delete m_regionQueue;

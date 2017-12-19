@@ -14,17 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "PdxInstanceImpl.hpp"
-#include "PdxTypeRegistry.hpp"
-#include "PdxHelper.hpp"
-#include "PdxTypes.hpp"
 #include <geode/PdxFieldTypes.hpp>
-#include "PdxLocalWriter.hpp"
-#include <geode/PdxReader.hpp>
-#include "CacheRegionHelper.hpp"
-#include <geode/Cache.hpp>
+#include <stddef.h>
+
+#include "CachePerfStats.hpp"
+#include "PdxInstanceImpl.hpp"
 #include "Utils.hpp"
-#include <algorithm>
+#include <ace/OS_NS_stdio.h>
+#include <geode/CacheableKey.hpp>
+#include <geode/CacheableString.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "PdxHelper.hpp"
 
 /* adongre  - Coverity II
  * CID 29255: Calling risky function (SECURE_CODING)[VERY RISKY]. Using
@@ -37,6 +39,41 @@
 namespace apache {
 namespace geode {
 namespace client {
+
+class BooleanArray;
+class Cache;
+class CacheableArrayList;
+class CacheableBoolean;
+class CacheableByte;
+class CacheableBytes;
+class CacheableDate;
+class CacheableDouble;
+class CacheableDoubleArray;
+class CacheableFloat;
+class CacheableFloatArray;
+class CacheableHashMap;
+class CacheableHashSet;
+class CacheableHashTable;
+class CacheableInt16;
+class CacheableInt16Array;
+class CacheableInt32;
+class CacheableInt32Array;
+class CacheableInt64;
+class CacheableInt64Array;
+class CacheableLinkedHashSet;
+class CacheableLinkedList;
+class CacheableObjectArray;
+class CacheableStringArray;
+class CacheableVector;
+class CharArray;
+class PdxFieldType;
+class PdxLocalWriter;
+class PdxReader;
+class PdxSerializable;
+class PdxType;
+class PdxTypeRegistry;
+class PdxWriter;
+class WritablePdxInstance;
 
 int8_t PdxInstanceImpl::m_BooleanDefaultBytes[] = {0};
 int8_t PdxInstanceImpl::m_ByteDefaultBytes[] = {0};

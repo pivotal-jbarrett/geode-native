@@ -15,17 +15,23 @@
  * limitations under the License.
  */
 
-#include "ClientProxyMembershipID.hpp"
 #include <ctime>
-#include <ace/OS.h>
-#include <geode/DistributedSystem.hpp>
-#include <geode/GeodeTypeIds.hpp>
-#include "GeodeTypeIdsImpl.hpp"
-#include <geode/CacheableBuiltins.hpp>
-#include "DataOutputInternal.hpp"
-#include "Version.hpp"
-#include <string>
 #include <memory>
+#include <string>
+
+#include "ClientProxyMembershipID.hpp"
+#include "DataOutputInternal.hpp"
+#include <ace/OS_NS_stdlib.h>
+#include <ace/OS_NS_sys_time.h>
+
+#include <ace/Time_Value.h>
+
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
+#include <geode/CacheableBuiltins.hpp>
+#include "Version.hpp"
 
 #define ADDRSIZE 4
 #define DCPORT 12334
@@ -51,6 +57,13 @@ static class RandomInitializer {
   }
 } oneTimeRandomInitializer;
 }  // namespace
+
+namespace apache {
+namespace geode {
+namespace client {
+
+class CacheableString;
+class Serializable;
 
 const int ClientProxyMembershipID::VERSION_MASK = 0x8;
 const int8_t ClientProxyMembershipID::TOKEN_ORDINAL = -1;
@@ -402,3 +415,7 @@ void ClientProxyMembershipID::writeVersion(int16_t ordinal,
     LOGDEBUG("ClientProxyMembershipID::writeVersion ordinal = %d ", ordinal);
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

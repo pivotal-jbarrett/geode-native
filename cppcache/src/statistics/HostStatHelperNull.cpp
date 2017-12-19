@@ -15,4 +15,3 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>

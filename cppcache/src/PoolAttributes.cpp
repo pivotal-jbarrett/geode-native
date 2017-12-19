@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <geode/PoolFactory.hpp>
+
 #include "PoolAttributes.hpp"
 #include <geode/ExceptionTypes.hpp>
-#include <geode/PoolFactory.hpp>
 
 using namespace apache::geode::client;
 

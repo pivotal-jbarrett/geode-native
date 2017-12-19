@@ -15,10 +15,16 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-#include <geode/PoolManager.hpp>
-
 #include "PoolXmlCreation.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class Pool;
+class PoolFactory;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

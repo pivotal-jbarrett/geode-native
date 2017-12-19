@@ -15,15 +15,34 @@
  * limitations under the License.
  */
 
-#include <ace/Hash_Map_Manager.h>
-#include <ace/Recursive_Thread_Mutex.h>
-#include <ace/Guard_T.h>
-#include <ace/config-lite.h>
-#include <ace/Versioned_Namespace.h>
-#include <ace/OS_NS_stdio.h>
 
-#include <geode/Properties.hpp>
+#include <ace/Guard_T.h>
 #include <geode/GeodeTypeIds.hpp>
+#include <geode/Properties.hpp>
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <memory>
+#include <string>
+
+#include <ace/Hash_Map_Manager_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include <geode/Cacheable.hpp>
+#include <geode/DataInput.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/Serializable.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class CacheableKey;
+class CacheableString;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 

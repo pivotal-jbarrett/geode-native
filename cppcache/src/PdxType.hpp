@@ -20,22 +20,34 @@
 #ifndef GEODE_PDXTYPE_H_
 #define GEODE_PDXTYPE_H_
 
-#include <geode/Serializable.hpp>
-#include "PdxFieldType.hpp"
-#include <geode/CacheableBuiltins.hpp>
-#include <map>
-#include <vector>
-#include <list>
-#include <string>
+
 #include <ace/ACE.h>
 #include <ace/Recursive_Thread_Mutex.h>
-#include "ReadWriteLock.hpp"
+#include <geode/CacheableBuiltins.hpp>
+#include <geode/Serializable.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <iosfwd>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
+#include "NonCopyable.hpp"
+#include "PdxFieldType.hpp"
+#include "ReadWriteLock.hpp"
+#include <ace/RW_Thread_Mutex.h>
+#include <geode/GeodeTypeIds.hpp>
 #include "NonCopyable.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class DataInput;
+class DataOutput;
+class PdxFieldType;
 
 typedef std::map<std::string, std::shared_ptr<PdxFieldType>> NameVsPdxType;
 class PdxType;

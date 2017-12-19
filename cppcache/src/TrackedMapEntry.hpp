@@ -20,11 +20,20 @@
  * limitations under the License.
  */
 
+#include <memory>
+#include <utility>
+
 #include "MapEntry.hpp"
+#include "RegionInternal.hpp"
+#include <geode/Cacheable.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableKey;
+class LRUEntryProperties;
+class VersionStamp;
 
 class TrackedMapEntry : public MapEntry {
  public:

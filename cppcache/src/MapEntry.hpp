@@ -20,29 +20,32 @@
 #ifndef GEODE_MAPENTRY_H_
 #define GEODE_MAPENTRY_H_
 
-#include <atomic>
-#include <memory>
-#include <utility>
-
-#include <geode/geode_globals.hpp>
 #include <geode/Cacheable.hpp>
 #include <geode/CacheableKey.hpp>
 #include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
+#include <atomic>
+#include <chrono>
+#include <memory>
+#include <utility>
 
 #include "CacheImpl.hpp"
+#include "CacheableToken.hpp"
 #include "ExpiryTaskManager.hpp"
 #include "RegionInternal.hpp"
-#include "CacheableToken.hpp"
 #include "VersionStamp.hpp"
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+class CPPCACHE_EXPORT LRUEntryProperties;
 class CPPCACHE_EXPORT MapEntry;
 class CPPCACHE_EXPORT MapEntryImpl;
-
-class CPPCACHE_EXPORT LRUEntryProperties;
 class CacheImpl;
+class CacheableKey;
 
 /**
  * @brief This class encapsulates expiration specific properties for

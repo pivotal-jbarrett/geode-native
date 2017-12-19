@@ -20,18 +20,29 @@
 #ifndef GEODE_CLIENTPROXYMEMBERSHIPID_H_
 #define GEODE_CLIENTPROXYMEMBERSHIPID_H_
 
-#include <geode/geode_globals.hpp>
-#include <geode/DataOutput.hpp>
-#include "GeodeTypeIdsImpl.hpp"
-#include "DSMemberForVersionStamp.hpp"
+
 #include <ace/OS.h>
+#include <geode/DataOutput.hpp>
+#include <geode/geode_globals.hpp>
+#include <sys/_types/_int16_t.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <chrono>
+#include <iosfwd>
 #include <string>
+
+#include "DSMemberForVersionStamp.hpp"
+#include "GeodeTypeIdsImpl.hpp"
+#include <geode/CacheableKey.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class ClientProxyMembershipID;
+class DataInput;
+class DataOutput;
+class Serializable;
 
 class ClientProxyMembershipID : public DSMemberForVersionStamp {
  public:

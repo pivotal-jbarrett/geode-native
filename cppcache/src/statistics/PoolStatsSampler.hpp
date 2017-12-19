@@ -22,16 +22,29 @@
 
 #include <ace/Task.h>
 #include <geode/geode_globals.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/_types/_int64_t.h>
+#include <memory>
 
 #include "GeodeStatisticsFactory.hpp"
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class GeodeStatisticsFactory;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 namespace apache {
 namespace geode {
 namespace client {
 
+class AdminRegion;
 class CacheImpl;
 class ThinClientBaseDM;
-class AdminRegion;
 class ThinClientPoolDM;
 
 }  // namespace client
@@ -42,6 +55,7 @@ using client::ThinClientPoolDM;
 using client::AdminRegion;
 
 class StatisticsManager;
+
 class CPPCACHE_EXPORT PoolStatsSampler : public ACE_Task_Base {
  public:
   PoolStatsSampler(int64_t sampleRate, CacheImpl* cache,

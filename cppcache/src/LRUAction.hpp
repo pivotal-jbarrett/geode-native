@@ -20,13 +20,17 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
 #include <geode/Cache.hpp>
 #include <geode/PersistenceManager.hpp>
-#include "MapEntry.hpp"
+#include <geode/geode_globals.hpp>
+#include <memory>
+
 #include "CacheableToken.hpp"
+#include "MapEntry.hpp"
 #include "RegionInternal.hpp"
 #include "Utils.hpp"
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
@@ -36,6 +40,10 @@ namespace client {
  * @brief abstract behavior for different eviction actions.
  */
 class LRUEntriesMap;
+class CacheableKey;
+class MapEntryImpl;
+class VersionTag;
+
 class CPPCACHE_EXPORT LRUAction {
  protected:
   bool m_invalidates;

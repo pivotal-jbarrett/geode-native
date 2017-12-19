@@ -15,13 +15,7 @@
  * limitations under the License.
  */
 
-#include <ace/OS.h>
-#include <geode/geode_globals.hpp>
-
 #include "HostStatHelperWin.hpp"
-
-#include "ProcessStats.hpp"
-#include "WindowsProcessStats.hpp"
 
 /**
  * Windows2000 Implementation of code to fetch operating system stats.

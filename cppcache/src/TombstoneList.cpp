@@ -14,12 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <sys/_types/_int32_t.h>
+
+#include "CacheImpl.hpp"
+#include "CachePerfStats.hpp"
 #include "TombstoneList.hpp"
+#include <ace/OS_NS_sys_time.h>
+#include <ace/Time_Value.h>
 #include "TombstoneExpiryHandler.hpp"
 #include "MapSegment.hpp"
-#include <unordered_map>
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
+class CacheableHashSet;
+class CacheableKey;
+class MapEntryImpl;
 
 #define SIZEOF_PTR (sizeof(void*))
 #define SIZEOF_SHAREDPTR (SIZEOF_PTR + 4)
@@ -175,3 +186,7 @@ void TombstoneList::cleanUp() {
     delete queIter.second->getHandler();
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

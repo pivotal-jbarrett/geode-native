@@ -20,11 +20,14 @@
  * limitations under the License.
  */
 
-#include <atomic>
 #include <geode/geode_globals.hpp>
+#include <atomic>
+#include <memory>
+
 #include "LRUAction.hpp"
-#include "RegionInternal.hpp"
 #include "MapEntry.hpp"
+#include "RegionInternal.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
@@ -33,6 +36,10 @@ namespace client {
 /**
  * @brief LRUAction for localDestroy.
  */
+class LRUEntriesMap;
+class MapEntryImpl;
+class RegionInternal;
+
 class CPPCACHE_EXPORT LRULocalDestroyAction : public virtual LRUAction {
  private:
   RegionInternal* m_regionPtr;

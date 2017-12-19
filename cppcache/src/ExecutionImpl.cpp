@@ -17,20 +17,29 @@
 
 #include <sstream>
 
-#include <geode/geode_globals.hpp>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/DefaultResultCollector.hpp>
-
 #include "ExecutionImpl.hpp"
-#include "ThinClientRegion.hpp"
+#include "TcrMessage.hpp"
+#include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolDM.hpp"
-#include "NoResult.hpp"
+#include "ThinClientRegion.hpp"
 #include "UserAttributes.hpp"
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include "NoResult.hpp"
+#include <geode/DefaultResultCollector.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableString;
+class CacheableVector;
+class Execution;
+class ResultCollector;
+class TXState;
 
 FunctionToFunctionAttributes ExecutionImpl::m_func_attrs;
 ACE_Recursive_Thread_Mutex ExecutionImpl::m_func_attrs_lock;

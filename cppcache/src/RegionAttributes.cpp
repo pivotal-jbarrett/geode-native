@@ -15,21 +15,35 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-#include "Utils.hpp"
-#include <geode/DataOutput.hpp>
-#include <string>
-#include <cstdlib>
-#include <geode/GeodeTypeIds.hpp>
-#include "CacheXmlParser.hpp"
+
 #include <ace/DLL.h>
-#include <ace/OS.h>
 #include <geode/DataInput.hpp>
-#include <geode/Properties.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/GeodeTypeIds.hpp>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+
+#include <ace/os_include/os_dlfcn.h>
+#include <geode/DiskPolicyType.hpp>
+#include <geode/ExpirationAction.hpp>
+#include <geode/RegionAttributes.hpp>
+#include <geode/Serializable.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "CacheXmlParser.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheListener;
+class CacheLoader;
+class CacheWriter;
+class PartitionResolver;
+class PersistenceManager;
+class Properties;
 
 RegionAttributes::RegionAttributes()
     : Serializable(),

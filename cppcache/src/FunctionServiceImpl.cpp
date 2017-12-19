@@ -16,8 +16,15 @@
  */
 
 #include "FunctionServiceImpl.hpp"
-#include "ExecutionImpl.hpp"
-#include <geode/PoolManager.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class FunctionService;
+class ProxyCache;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

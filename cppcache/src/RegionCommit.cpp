@@ -21,11 +21,17 @@
  *      Author: ankurs
  */
 
+#include <sys/_types/_int32_t.h>
+
 #include "RegionCommit.hpp"
+#include <geode/DataInput.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class DSMemberForVersionStamp;
 
 void RegionCommit::fromData(DataInput& input) {
   m_regionPath = input.readObject<CacheableString>();

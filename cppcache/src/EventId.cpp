@@ -14,17 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include <geode/DataInput.hpp>
+#include <atomic>
+
 #include "EventId.hpp"
 #include "GeodeTypeIdsImpl.hpp"
-#include "ClientProxyMembershipID.hpp"
 
-#include <cstring>
-#include <atomic>
+#include <geode/DataOutput.hpp>
+#include <ace/OS_Memory.h>
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Serializable;
 
 class EventIdTSS {
  private:

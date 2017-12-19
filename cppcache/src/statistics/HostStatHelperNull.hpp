@@ -29,6 +29,8 @@ namespace apache {
 namespace geode {
 namespace statistics {
 
+class ProcessStats;
+
 class HostStatHelperNull {
  public:
   static void refreshProcess(ProcessStats* processStats) {}

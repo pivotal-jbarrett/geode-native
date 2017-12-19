@@ -22,6 +22,8 @@
 
 #include <geode/CacheTransactionManager.hpp>
 
+#include <geode/geode_base.hpp>
+
 namespace apache {
 namespace geode {
 namespace client {

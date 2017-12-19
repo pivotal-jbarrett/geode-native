@@ -20,15 +20,23 @@
 #ifndef GEODE_QUEUECONNECTIONREQUEST_H_
 #define GEODE_QUEUECONNECTIONREQUEST_H_
 
-#include "ServerLocationRequest.hpp"
-#include "ServerLocation.hpp"
-#include "ClientProxyMembershipID.hpp"
+
+#include <sys/types.h>
+#include <iosfwd>
 #include <set>
 #include <string>
+
+#include "ClientProxyMembershipID.hpp"
+#include "ServerLocation.hpp"
+#include "ServerLocationRequest.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class ClientProxyMembershipID;
+class DataInput;
+class DataOutput;
 
 class QueueConnectionRequest : public ServerLocationRequest {
  public:

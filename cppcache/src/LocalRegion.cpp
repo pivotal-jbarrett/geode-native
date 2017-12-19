@@ -15,31 +15,65 @@
  * limitations under the License.
  */
 
-#include <sstream>
-#include <vector>
-
 #include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
+#include <stddef.h>
+#include <sstream>
 
-#include "LocalRegion.hpp"
+#include "Assert.hpp"
 #include "CacheImpl.hpp"
-#include "CacheRegionHelper.hpp"
+#include "CachePerfStats.hpp"
 #include "CacheableToken.hpp"
-#include "Utils.hpp"
-#include "EntryExpiryHandler.hpp"
-#include "RegionExpiryHandler.hpp"
-#include "ExpiryTaskManager.hpp"
+#include "EntriesMap.hpp"
 #include "LRUEntriesMap.hpp"
+#include "LocalRegion.hpp"
+#include "MapEntry.hpp"
+#include "ReadWriteLock.hpp"
 #include "RegionGlobalLocks.hpp"
 #include "TXState.hpp"
-#include "VersionTag.hpp"
-#include "util/bounds.hpp"
+#include "TcrConnectionManager.hpp"
+#include "Utils.hpp"
+#include <ace/Guard_T.h>
+
+#include <geode/Cacheable.hpp>
+#include <geode/DistributedSystem.hpp>
+#include <geode/EntryEvent.hpp>
+#include <geode/RegionEvent.hpp>
+#include <geode/ExceptionTypes.hpp>
 #include "util/Log.hpp"
 #include "util/exception.hpp"
+#include <geode/PoolManager.hpp>
+#include "util/bounds.hpp"
+#include "RegionExpiryHandler.hpp"
+#include "EntryExpiryHandler.hpp"
 
 namespace apache {
 namespace geode {
+
+namespace statistics {
+class Statistics;
+}  // namespace statistics
+
 namespace client {
+
+class CacheListener;
+class CacheLoader;
+class CacheStatistics;
+class CacheWriter;
+class CacheableHashMap;
+class CacheableHashSet;
+class CacheableKey;
+class CacheableString;
+class DataInput;
+class EventId;
+class PersistenceManager;
+class Region;
+class RegionAttributes;
+class RegionEntry;
+class RegionService;
+class Serializable;
+class TombstoneList;
+class VersionTag;
+class VersionedCacheableObjectPartList;
 
 LocalRegion::LocalRegion(const std::string& name, CacheImpl* cache,
                          const std::shared_ptr<RegionInternal>& rPtr,

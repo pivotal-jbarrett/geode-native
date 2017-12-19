@@ -16,10 +16,13 @@
  */
 
 #include "StatisticDescriptorImpl.hpp"
+#include <geode/ExceptionTypes.hpp>
 
 namespace apache {
 namespace geode {
 namespace statistics {
+
+class StatisticDescriptor;
 
 const std::string StatisticDescriptorImpl::IntTypeName = "int_t";
 const std::string StatisticDescriptorImpl::LongTypeName = "Long";

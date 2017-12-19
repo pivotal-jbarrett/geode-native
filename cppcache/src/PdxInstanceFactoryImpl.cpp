@@ -14,15 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <stddef.h>
+#include <string>
+
 #include "PdxInstanceFactoryImpl.hpp"
-#include "PdxType.hpp"
-#include "PdxTypes.hpp"
+#include <geode/ExceptionTypes.hpp>
 #include "PdxInstanceImpl.hpp"
-#include <ace/OS_NS_stdio.h>
+#include "PdxTypes.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class CachePerfStats;
+class CacheableDate;
+class CacheableObjectArray;
+class CacheableString;
+class PdxInstanceFactory;
+class PdxTypeRegistry;
 
 PdxInstanceFactoryImpl::~PdxInstanceFactoryImpl() {}
 

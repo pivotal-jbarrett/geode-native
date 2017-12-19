@@ -15,21 +15,24 @@
  * limitations under the License.
  */
 
-#include <geode/TransactionId.hpp>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/PoolManager.hpp>
-
-#include "InternalCacheTransactionManager2PCImpl.hpp"
 #include "CacheTransactionManagerImpl.hpp"
-#include "TcrMessage.hpp"
-#include "ThinClientPoolDM.hpp"
-#include "CacheRegionHelper.hpp"
+#include "InternalCacheTransactionManager2PCImpl.hpp"
 #include "TXCleaner.hpp"
+#include "TXState.hpp"
+#include "TcrMessage.hpp"
+#include <geode/Exception.hpp>
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
 #include "util/exception.hpp"
+#include "ThinClientPoolDM.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheImpl;
+class TSSTXStateWrapper;
+class ThinClientPoolDM;
 
 InternalCacheTransactionManager2PCImpl::InternalCacheTransactionManager2PCImpl(
     CacheImpl* cache)

@@ -20,17 +20,22 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include "RegionXmlCreation.hpp"
-#include "PoolXmlCreation.hpp"
+#include <geode/geode_globals.hpp>
+#include <memory>
 #include <vector>
+
+#include "PoolXmlCreation.hpp"
+#include "RegionXmlCreation.hpp"
+#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
 
 class Cache;
+class PoolXmlCreation;
+class RegionXmlCreation;
 /**
  * Represents a {@link Cache} that is created declaratively.
  *

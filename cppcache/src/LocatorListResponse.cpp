@@ -15,9 +15,19 @@
  * limitations under the License.
  */
 
-#include "LocatorListResponse.hpp"
 #include <geode/DataInput.hpp>
-#include <vector>
+
+#include "GeodeTypeIdsImpl.hpp"
+#include "LocatorListResponse.hpp"
+#include "ServerLocation.hpp"
+
+namespace apache {
+namespace geode {
+namespace client {
+class Serializable;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::client;
 

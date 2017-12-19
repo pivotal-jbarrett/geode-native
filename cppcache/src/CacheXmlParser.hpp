@@ -20,21 +20,28 @@
  * limitations under the License.
  */
 
-#include <stack>
-#include <map>
-#include <libxml/parser.h>
 #include <geode/Cache.hpp>
 #include <geode/CacheAttributes.hpp>
-#include "CacheXml.hpp"
-#include "RegionXmlCreation.hpp"
-#include "CacheXmlCreation.hpp"
+#include <geode/CacheListener.hpp>
+#include <geode/CacheLoader.hpp>
+#include <geode/ExceptionTypes.hpp>
 #include <geode/ExpirationAction.hpp>
 #include <geode/ExpirationAttributes.hpp>
-#include <geode/CacheLoader.hpp>
-#include <geode/CacheListener.hpp>
 #include <geode/PartitionResolver.hpp>
-#include <geode/ExceptionTypes.hpp>
 #include <geode/RegionShortcut.hpp>
+#include <libxml/parser.h>
+#include <sys/_types/_int32_t.h>
+#include <iosfwd>
+#include <map>
+#include <memory>
+#include <stack>
+#include <string>
+
+#include "CacheXml.hpp"
+#include "CacheXmlCreation.hpp"
+#include "RegionXmlCreation.hpp"
+#include <geode/geode_base.hpp>
+#include "libxml/xmlstring.h"
 
 namespace apache {
 namespace geode {
@@ -42,6 +49,16 @@ namespace client {
 
 // Factory function typedefs to register the managed
 // cacheloader/writer/listener/resolver
+class Cache;
+class CacheListener;
+class CacheLoader;
+class CacheWriter;
+class CacheXmlCreation;
+class PartitionResolver;
+class PersistenceManager;
+class PoolFactory;
+class Properties;
+
 typedef CacheLoader* (*LibraryCacheLoaderFn)(const char* assemblyPath,
                                              const char* factFuncName);
 typedef CacheListener* (*LibraryCacheListenerFn)(const char* assemblyPath,

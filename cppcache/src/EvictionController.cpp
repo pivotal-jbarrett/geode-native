@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
+#include "DistributedSystemImpl.hpp"
 #include "EvictionController.hpp"
-#include "CacheImpl.hpp"
-#include "CacheRegionHelper.hpp"
-#include "RegionInternal.hpp"
-#include <geode/DistributedSystem.hpp>
 #include "ReadWriteLock.hpp"
-#include <string>
+
+#include <geode/geode_base.hpp>
+#include "util/Log.hpp"
+#include <geode/Region.hpp>
+#include "CacheImpl.hpp"
+#include "RegionInternal.hpp"
 
 namespace apache {
 namespace geode {
@@ -158,8 +160,7 @@ void EvictionController::evict(int32_t percentage) {
     std::shared_ptr<Region> rptr;
     m_cacheImpl->getRegion(str.c_str(), rptr);
     if (rptr != nullptr) {
-      RegionInternal* rimpl = dynamic_cast<RegionInternal*>(rptr.get());
-      if (rimpl != nullptr) {
+      if (auto rimpl = std::dynamic_pointer_cast<RegionInternal>(rptr)) {
         rimpl->evict(percentage);
       }
     }

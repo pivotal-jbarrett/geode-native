@@ -20,13 +20,16 @@
  * limitations under the License.
  */
 
-#include <geode/CqAttributes.hpp>
-#include <geode/CqAttributesMutator.hpp>
 #include <ace/ACE.h>
 #include <ace/Condition_Recursive_Thread_Mutex.h>
-#include <ace/Time_Value.h>
 #include <ace/Guard_T.h>
 #include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Time_Value.h>
+#include <geode/CqAttributes.hpp>
+#include <geode/CqAttributesMutator.hpp>
+#include <memory>
+
+#include <geode/geode_base.hpp>
 
 /**
  * @file
@@ -47,6 +50,8 @@ namespace client {
  *
  * For compatibility rules and default values, see {@link CqAttributesFactory}.
  */
+class CqListener;
+
 class CPPCACHE_EXPORT CqAttributesImpl : public CqAttributes {
  public:
   listener_container_type getCqListeners() override;

@@ -15,12 +15,28 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include "config.h"
 #include <ace/OS_NS_sys_utsname.h>
-#include "HostStatHelper.hpp"
-#include "GeodeStatisticsFactory.hpp"
+#include <iosfwd>
+#include <string>
+
 #include "../Assert.hpp"
+#include "HostStatHelper.hpp"
+#include "HostStatHelperNull.hpp"
+#include "LinuxProcessStats.hpp"
+#include "NullProcessStats.hpp"
+#include "ProcessStats.hpp"
+#include "SolarisProcessStats.hpp"
+#include "WindowsProcessStats.hpp"
+#include "config.h"
+#include <geode/ExceptionTypes.hpp>
+
+namespace apache {
+namespace geode {
+namespace statistics {
+class GeodeStatisticsFactory;
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache
 
 using namespace apache::geode::statistics;
 

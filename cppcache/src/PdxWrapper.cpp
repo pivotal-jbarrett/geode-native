@@ -21,14 +21,21 @@
  *      Author: vrao
  */
 
+
+#include <_types/_uint64_t.h>
 #include <geode/PdxWrapper.hpp>
-#include "Utils.hpp"
+#include <stdint.h>
+
+#include <geode/CacheableKey.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include "util/Log.hpp"
 #include "PdxHelper.hpp"
-#include "SerializationRegistry.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class PdxSerializer;
 
 PdxWrapper::PdxWrapper(void *userObject, std::string className,
                        std::shared_ptr<PdxSerializer> pdxSerializerPtr)

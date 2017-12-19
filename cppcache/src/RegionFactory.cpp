@@ -15,25 +15,35 @@
  * limitations under the License.
  */
 
-#include <geode/CacheFactory.hpp>
+
 #include <geode/RegionFactory.hpp>
-#include "CppCacheLibrary.hpp"
-#include <geode/Cache.hpp>
-#include "CacheImpl.hpp"
-#include <geode/SystemProperties.hpp>
-#include <geode/PoolManager.hpp>
-#include "CacheConfig.hpp"
-#include "CacheRegionHelper.hpp"
-#include <ace/Recursive_Thread_Mutex.h>
-#include <ace/Guard_T.h>
-#include <map>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
 #include <string>
+
+#include "CacheImpl.hpp"
+#include <ace/OS_NS_stdio.h>
+#include <geode/DiskPolicyType.hpp>
+#include <geode/ExpirationAction.hpp>
+#include <geode/RegionShortcut.hpp>
+#include <geode/ExceptionTypes.hpp>
+#include <geode/PoolManager.hpp>
 
 extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheListener;
+class CacheLoader;
+class CacheWriter;
+class PartitionResolver;
+class PersistenceManager;
+class Properties;
+class Region;
+class RegionAttributes;
 
 RegionFactory::RegionFactory(RegionShortcut preDefinedRegion,
                              CacheImpl* cacheImpl)
@@ -211,6 +221,7 @@ RegionFactory& RegionFactory::setCloningEnabled(bool isClonable) {
   m_attributeFactory->setCloningEnabled(isClonable);
   return *this;
 }
+
 }  // namespace client
 }  // namespace geode
 }  // namespace apache

@@ -20,34 +20,63 @@
 #ifndef GEODE_CACHEIMPL_H_
 #define GEODE_CACHEIMPL_H_
 
-#include <atomic>
-
-#include <geode/geode_globals.hpp>
-#include <memory>
-
+#include <ace/ACE.h>
+#include <ace/Guard_T.h>
+#include <ace/Recursive_Thread_Mutex.h>
+#include <ace/Time_Value.h>
 #include <geode/Cache.hpp>
 #include <geode/CacheAttributes.hpp>
 #include <geode/DistributedSystem.hpp>
-#include "MapWithLock.hpp"
-#include <ace/ACE.h>
-#include <ace/Time_Value.h>
-#include <ace/Guard_T.h>
-#include <ace/Recursive_Thread_Mutex.h>
-#include "Condition.hpp"
-#include "TcrConnectionManager.hpp"
-#include "EvictionController.hpp"
-#include "RemoteQueryService.hpp"
+#include <geode/geode_globals.hpp>
+#include <sys/types.h>
+#include <atomic>
+#include <iosfwd>
+#include <map>
+#include <memory>
+#include <string>
+#include <string>
+
 #include "AdminRegion.hpp"
 #include "CachePerfStats.hpp"
-#include "PdxTypeRegistry.hpp"
-#include "MemberListForVersionStamp.hpp"
 #include "ClientProxyMembershipIDFactory.hpp"
-
-#include <string>
-#include <string>
-#include <map>
-
+#include "Condition.hpp"
+#include "EvictionController.hpp"
+#include "MapWithLock.hpp"
+#include "MemberListForVersionStamp.hpp"
 #include "NonCopyable.hpp"
+#include "PdxTypeRegistry.hpp"
+#include "RemoteQueryService.hpp"
+#include "TcrConnectionManager.hpp"
+#include <ace/RW_Thread_Mutex.h>
+#include <ace/Thread_Mutex.h>
+#include <geode/RegionFactory.hpp>
+#include <geode/RegionShortcut.hpp>
+#include <geode/geode_base.hpp>
+
+namespace apache {
+namespace geode {
+namespace client {
+class AdminRegion;
+class AuthInitialize;
+class Cache;
+class CacheAttributes;
+class CachePerfStats;
+class CacheStatistics;
+class CacheTransactionManager;
+class DistributedSystem;
+class EvictionController;
+class MemberListForVersionStamp;
+class Pool;
+class PoolManager;
+class QueryService;
+class Region;
+class RegionAttributes;
+class RegionInternal;
+class RemoteQueryService;
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
+
 #define DEFAULT_LRU_MAXIMUM_ENTRIES 100000
 /** @todo period '.' consistency */
 /** @todo fix returns to param documentation of result ptr... */
@@ -60,11 +89,11 @@ namespace apache {
 namespace geode {
 namespace client {
 
-class ThreadPool;
 class CacheFactory;
 class ExpiryTaskManager;
 class PdxTypeRegistry;
 class SerializationRegistry;
+class ThreadPool;
 
 /**
  * @class Cache Cache.hpp

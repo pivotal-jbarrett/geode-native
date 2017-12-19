@@ -20,11 +20,24 @@
 #ifndef GEODE_VERSIONEDCACHEABLEOBJECTPARTLIST_H_
 #define GEODE_VERSIONEDCACHEABLEOBJECTPARTLIST_H_
 
-#include "CacheableObjectPartList.hpp"
-#include "VersionTag.hpp"
+
 #include <ace/Task.h>
+#include <stddef.h>
+#include <sys/_types/_int32_t.h>
+#include <sys/types.h>
+#include <memory>
 #include <vector>
+
+#include "CacheableObjectPartList.hpp"
+#include "MapWithLock.hpp"
+#include "VersionTag.hpp"
+#include <geode/Cacheable.hpp>
+#include <geode/Exception.hpp>
 #include "util/Log.hpp"
+
+namespace ACE_6_4_5 {
+class ACE_Recursive_Thread_Mutex;
+}  // namespace ACE_6_4_5
 
 /** @file
  */
@@ -34,6 +47,9 @@ namespace geode {
 namespace client {
 
 class ThinClientRegion;
+class CacheableKey;
+class DataInput;
+class DataOutput;
 
 /**
  * Implement an immutable list of object parts that encapsulates an object,

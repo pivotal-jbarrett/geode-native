@@ -17,6 +17,8 @@
 
 #include <geode/DefaultResultCollector.hpp>
 
+#include <geode/ExceptionTypes.hpp>
+
 using namespace apache::geode::client;
 
 DefaultResultCollector::DefaultResultCollector()

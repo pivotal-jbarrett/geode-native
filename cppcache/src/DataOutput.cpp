@@ -15,24 +15,23 @@
  * limitations under the License.
  */
 
-#include <vector>
-
-#include <ace/TSS_T.h>
 #include <ace/Recursive_Thread_Mutex.h>
-
-#include <geode/DataOutput.hpp>
-#include <geode/SystemProperties.hpp>
-#include "SerializationRegistry.hpp"
 #include <ace/TSS_T.h>
+#include <geode/DataOutput.hpp>
 
-#include "CacheImpl.hpp"
-#include "CacheRegionHelper.hpp"
+
+#include <geode/ExceptionTypes.hpp>
+#include "SerializationRegistry.hpp"
 #include "util/Log.hpp"
-#include "util/string.hpp"
+#include "CacheRegionHelper.hpp"
+#include "CacheImpl.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class Cache;
+class Serializable;
 
 ACE_Recursive_Thread_Mutex g_bigBufferLock;
 uint32_t DataOutput::m_highWaterMark = 50 * 1024 * 1024;

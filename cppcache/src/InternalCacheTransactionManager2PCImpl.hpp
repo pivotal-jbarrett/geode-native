@@ -20,12 +20,16 @@
 #ifndef GEODE_INTERNALCACHETRANSACTIONMANAGER2PCIMPL_H_
 #define GEODE_INTERNALCACHETRANSACTIONMANAGER2PCIMPL_H_
 
-#include "InternalCacheTransactionManager2PC.hpp"
+#include <sys/_types/_int32_t.h>
+
 #include "CacheTransactionManagerImpl.hpp"
+#include "InternalCacheTransactionManager2PC.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheImpl;
 
 class InternalCacheTransactionManager2PCImpl
     : public apache::geode::client::CacheTransactionManagerImpl,

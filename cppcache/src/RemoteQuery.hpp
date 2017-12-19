@@ -20,19 +20,21 @@
 #ifndef GEODE_REMOTEQUERY_H_
 #define GEODE_REMOTEQUERY_H_
 
-#include <string>
-#include <memory>
-
-#include <geode/geode_globals.hpp>
 #include <geode/ExceptionTypes.hpp>
 #include <geode/Query.hpp>
-#include <geode/SelectResults.hpp>
 #include <geode/ResultSet.hpp>
+#include <geode/SelectResults.hpp>
 #include <geode/StructSet.hpp>
+#include <geode/geode_globals.hpp>
+#include <chrono>
+#include <iosfwd>
+#include <memory>
+#include <string>
 
 #include "CacheImpl.hpp"
-#include "ThinClientBaseDM.hpp"
 #include "ProxyCache.hpp"
+#include "ThinClientBaseDM.hpp"
+#include <geode/geode_base.hpp>
 
 /**
  * @file
@@ -41,6 +43,13 @@
 namespace apache {
 namespace geode {
 namespace client {
+
+class CacheableVector;
+class ProxyCache;
+class RemoteQueryService;
+class SelectResults;
+class TcrMessageReply;
+class ThinClientBaseDM;
 
 class CPPCACHE_EXPORT RemoteQuery : public Query {
   std::string m_queryString;

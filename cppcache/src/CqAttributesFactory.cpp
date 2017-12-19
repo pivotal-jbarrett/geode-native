@@ -15,8 +15,10 @@
  * limitations under the License.
  */
 #include <geode/CqAttributesFactory.hpp>
-#include "CqAttributesImpl.hpp"
 #include <geode/ExceptionTypes.hpp>
+
+#include "CqAttributesImpl.hpp"
+#include <geode/CqAttributes.hpp>
 
 using namespace apache::geode::client;
 

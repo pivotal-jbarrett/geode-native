@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <geode/geode_globals.hpp>
-#include <geode/CacheableBuiltins.hpp>
 
 #include <ace/OS.h>
-#include <cstdarg>
+#include <geode/CacheableBuiltins.hpp>
 
 namespace apache {
 namespace geode {
@@ -36,6 +34,7 @@ _GF_CACHEABLE_KEY_DEF_(CacheableInt16, "%" PRIi16);
 _GF_CACHEABLE_KEY_DEF_(CacheableInt32, "%" PRIi32);
 _GF_CACHEABLE_KEY_DEF_(CacheableInt64, "%" PRIi64);
 _GF_CACHEABLE_KEY_DEF_(CacheableCharacter, "%lc");
+
 }  // namespace client
 }  // namespace geode
 }  // namespace apache
