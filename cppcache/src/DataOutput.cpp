@@ -17,14 +17,15 @@
 
 #include <ace/Recursive_Thread_Mutex.h>
 #include <ace/TSS_T.h>
+
 #include <geode/DataOutput.hpp>
-
-
 #include <geode/ExceptionTypes.hpp>
+
 #include "SerializationRegistry.hpp"
 #include "util/Log.hpp"
 #include "CacheRegionHelper.hpp"
 #include "CacheImpl.hpp"
+#include "util/string.hpp"
 
 namespace apache {
 namespace geode {

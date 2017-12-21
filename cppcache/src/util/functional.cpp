@@ -15,22 +15,23 @@
  * limitations under the License.
  */
 
-#include "ProcessStats.hpp"
+#include <string>
+#include <codecvt>
+#include <locale>
+
+#include <geode/util/functional.hpp>
+
+#include "string.hpp"
 
 namespace apache {
 namespace geode {
-namespace statistics {
+namespace client {
 
-/**
- * Creates a new <code>ProcessStats</code> that wraps the given
- * <code>Statistics</code>.
- */
-ProcessStats::ProcessStats() {}
+int32_t geode_hash<std::string>::operator()(const std::string& val) {
+  // TODO string optimize without conversion to UTF-16
+  return geode_hash<std::u16string>{}(to_utf16(val));
+}
 
-int64_t ProcessStats::getProcessSize() { return 0; }
-
-ProcessStats::~ProcessStats() {}
-
-}  // namespace statistics
+}  // namespace client
 }  // namespace geode
 }  // namespace apache

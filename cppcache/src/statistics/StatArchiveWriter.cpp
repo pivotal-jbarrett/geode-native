@@ -15,23 +15,21 @@
  * limitations under the License.
  */
 
-#include <ace/OS_NS_sys_utsname.h>
 #include <stddef.h>
-#include <sys/_types/_time_t.h>
 
+#include <ace/OS_NS_sys_utsname.h>
+#include <ace/Guard_T.h>
+#include <ace/OS_NS_time.h>
+
+#include <geode/ExceptionTypes.hpp>
+
+#include "StatArchiveWriter.hpp"
+#include "HostStatSampler.hpp"
+#include "StatisticDescriptorImpl.hpp"
+#include "StatsDef.hpp"
 #include "../Assert.hpp"
 #include "../SerializationRegistry.hpp"
 #include "../util/Log.hpp"
-#include "HostStatSampler.hpp"
-#include "StatArchiveWriter.hpp"
-#include "StatisticDescriptorImpl.hpp"
-#include "StatsDef.hpp"
-#include <ace/Guard_T.h>
-#include <ace/OS_NS_time.h>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsType.hpp>
 #include "../CacheImpl.hpp"
 
 namespace apache {

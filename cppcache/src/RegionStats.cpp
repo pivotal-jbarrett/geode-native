@@ -16,27 +16,22 @@
  */
 
 #include "RegionStats.hpp"
-#include <geode/statistics/Statistics.hpp>
+#include "statistics/StatisticsFactory.hpp"
+#include "statistics/StatisticDescriptor.hpp"
 
 namespace apache {
 namespace geode {
-namespace statistics {
-class StatisticDescriptor;
-class StatisticsFactory;
-}  // namespace statistics
+
 namespace util {
 namespace concurrent {
 class spinlock_mutex;
 }  // namespace concurrent
 }  // namespace util
-}  // namespace geode
-}  // namespace apache
 
-namespace apache {
-namespace geode {
 namespace client {
 
 using statistics::StatisticsFactory;
+using statistics::StatisticDescriptor;
 using util::concurrent::spinlock_mutex;
 
 constexpr const char* RegionStats::STATS_NAME;

@@ -30,8 +30,8 @@
 #include "PoolFactory.hpp"
 #include "RegionShortcut.hpp"
 #include "RegionFactory.hpp"
-#include "statistics/StatisticsFactory.hpp"
 #include "TypeRegistry.hpp"
+
 /**
  * @file
  */

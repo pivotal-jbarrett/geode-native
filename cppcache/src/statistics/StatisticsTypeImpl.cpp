@@ -17,41 +17,17 @@
 
 #include <string>
 
+#include <ace/OS_NS_stdio.h>
+
+#include <geode/ExceptionTypes.hpp>
+
+#include "StatisticsTypeImpl.hpp"
 #include "../util/Log.hpp"
 #include "StatisticDescriptorImpl.hpp"
-#include "StatisticsTypeImpl.hpp"
-#include "StatsDef.hpp"
-#include <ace/OS_NS_stdio.h>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
 
-using namespace apache::geode::statistics;
-
-/**
- * Gathers together a number of {@link StatisticDescriptor statistics}
- * into one logical type.
- *
- */
-
-/**
- * Creates a new <code>StatisticsType</code> with the given name,
- * description, and statistics.
- *
- * @param name
- *        The name of this statistics type (for example,
- *        <code>"DatabaseStatistics"</code>)
- * @param description
- *        A description of this statistics type (for example,
- *        "Information about the application's use of the
- *        database").
- * @param stats
- *        Descriptions of the individual statistics grouped together
- *        in this statistics type{@link StatisticDescriptor}.
- *
- * @throws NullPointerException
- *         If either <code>name</code> or <code>stats</code> is
- *         <code>null</code>.
- */
+namespace apache {
+namespace geode {
+namespace statistics {
 
 StatisticsTypeImpl::StatisticsTypeImpl(std::string nameArg,
                                        std::string descriptionArg,
@@ -195,3 +171,7 @@ int32_t StatisticsTypeImpl::getDoubleStatCount() const {
  * Gets the total number of statistic descriptors.
  */
 int32_t StatisticsTypeImpl::getDescriptorsCount() const { return statsLength; }
+
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache

@@ -35,11 +35,11 @@
 
 #define DEFAULT_CACHE_NAME "default_GeodeCache"
 
-extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
-
 namespace apache {
 namespace geode {
 namespace client {
+
+extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 
 class AuthInitialize;
 class CacheAttributes;

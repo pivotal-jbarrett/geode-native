@@ -14,35 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #pragma once
 
 #ifndef GEODE_STATISTICS_SOLARISPROCESSSTATS_H_
 #define GEODE_STATISTICS_SOLARISPROCESSSTATS_H_
 
 #include <geode/geode_globals.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsType.hpp>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
 
 #include "GeodeStatisticsFactory.hpp"
 #include "HostStatHelper.hpp"
 #include "ProcessStats.hpp"
-#include <geode/geode_base.hpp>
-
-namespace apache {
-namespace geode {
-namespace statistics {
-class GeodeStatisticsFactory;
-class Statistics;
-class StatisticsFactory;
-class StatisticsType;
-}  // namespace statistics
-}  // namespace geode
-}  // namespace apache
-
-using namespace apache::geode::client;
 
 /** @file
  */
@@ -50,12 +32,19 @@ using namespace apache::geode::client;
 namespace apache {
 namespace geode {
 namespace statistics {
+
+using namespace apache::geode::client;
+
+class GeodeStatisticsFactory;
+class Statistics;
+class StatisticsFactory;
+class StatisticsType;
+
 /**
  * <P>This class provides the interface for statistics about a
  * Solaris operating system process that is using a Geode system.
  *
  */
-
 class CPPCACHE_EXPORT SolarisProcessStats : public ProcessStats {
  private:
   /** The Static Type for Solaris Process Stats */

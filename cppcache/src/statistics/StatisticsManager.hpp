@@ -20,20 +20,19 @@
 #ifndef GEODE_STATISTICS_STATISTICSMANAGER_H_
 #define GEODE_STATISTICS_STATISTICSMANAGER_H_
 
-#include <geode/ExceptionTypes.hpp>
-#include <geode/geode_globals.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
 #include <chrono>
 #include <memory>
 #include <vector>
+
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include <geode/ExceptionTypes.hpp>
+#include <geode/geode_globals.hpp>
 
 #include "../AdminRegion.hpp"
 #include "GeodeStatisticsFactory.hpp"
 #include "HostStatSampler.hpp"
 #include "StatisticsTypeImpl.hpp"
-#include <ace/Recursive_Thread_Mutex.h>
 
 namespace apache {
 namespace geode {

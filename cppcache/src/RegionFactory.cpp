@@ -30,11 +30,11 @@
 #include <geode/ExceptionTypes.hpp>
 #include <geode/PoolManager.hpp>
 
-extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
-
 namespace apache {
 namespace geode {
 namespace client {
+
+extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 
 class CacheListener;
 class CacheLoader;

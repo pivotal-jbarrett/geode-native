@@ -15,15 +15,10 @@
  * limitations under the License.
  */
 
-
-
+#include "CqQueryVsdStats.hpp"
 
 const char* cqStatsName = "CqQueryStatistics";
 const char* cqStatsDesc = "Statistics for this cq query";
-#include <__mutex_base>
-
-#include "CqQueryVsdStats.hpp"
-#include <geode/statistics/Statistics.hpp>
 
 namespace apache {
 namespace geode {

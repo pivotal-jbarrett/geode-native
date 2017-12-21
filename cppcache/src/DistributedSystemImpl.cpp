@@ -28,11 +28,6 @@ namespace apache {
 namespace geode {
 namespace client {
 class Cache;
-}  // namespace client
-}  // namespace geode
-}  // namespace apache
-
-using namespace apache::geode::client;
 
 // guard for connect/disconnect
 extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
@@ -119,3 +114,7 @@ void DistributedSystemImpl::unregisterCliCallback(int appdomainId) {
     LOGFINE("Removing cliCallback %d", appdomainId);
   }
 }
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache

@@ -20,15 +20,14 @@
 #ifndef GEODE_STATISTICS_STATISTICSTYPEIMPL_H_
 #define GEODE_STATISTICS_STATISTICSTYPEIMPL_H_
 
-#include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/StatisticsFactory.hpp>
-#include <geode/statistics/StatisticsType.hpp>
-#include <sys/_types/_int32_t.h>
 #include <iosfwd>
 #include <map>
 #include <string>
 
+#include <geode/ExceptionTypes.hpp>
+
 #include "StatsDef.hpp"
+#include "StatisticsType.hpp"
 
 /** @file
  */

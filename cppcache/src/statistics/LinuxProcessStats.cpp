@@ -14,29 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "../Assert.hpp"
-#include "LinuxProcessStats.hpp"
+
 #include <geode/Exception.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/Statistics.hpp>
+
+#include "../Assert.hpp"
+#include "LinuxProcessStats.hpp"
 
 namespace apache {
 namespace geode {
 namespace statistics {
+
 class GeodeStatisticsFactory;
 class StatisticDescriptor;
 class StatisticsFactory;
-}  // namespace statistics
-}  // namespace geode
-}  // namespace apache
-
-using namespace apache::geode::statistics;
-
-/**
- * <P>This class provides the interface for statistics about a
- * Linux operating system process that is using a Geode system.
- *
- */
 
 LinuxProcessStats::LinuxProcessStats(GeodeStatisticsFactory* statFactory,
                                      int64_t pid, const char* name) {
@@ -53,11 +44,6 @@ LinuxProcessStats::LinuxProcessStats(GeodeStatisticsFactory* statFactory,
 #endif  // if defined(_LINUX)
 }
 
-/**
- * Creates the StatisticsType for collecting the Stats of a Linux process
- * This function is called by the class HostStatHelper before objects of
- * LinuxProcessStatistics are created by it.
- */
 void LinuxProcessStats::createType(StatisticsFactory* statFactory) {
   try {
     StatisticDescriptor** statDescriptorArr = new StatisticDescriptor*[6];
@@ -130,3 +116,7 @@ LinuxProcessStats::~LinuxProcessStats() {
   m_statsType = nullptr;
   stats = nullptr;
 }
+
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache

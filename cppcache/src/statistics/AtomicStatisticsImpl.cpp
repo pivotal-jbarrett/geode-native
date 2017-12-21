@@ -15,17 +15,16 @@
  * limitations under the License.
  */
 
-#include <ace/OS_NS_stdio.h>
 #include <atomic>
 
-#include "../Assert.hpp"
+#include <ace/OS_NS_stdio.h>
+
+#include <geode/ExceptionTypes.hpp>
+
 #include "AtomicStatisticsImpl.hpp"
+#include "../Assert.hpp"
 #include "StatisticDescriptorImpl.hpp"
 #include "StatisticsTypeImpl.hpp"
-#include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/StatisticsFactory.hpp>
-#include <geode/statistics/StatisticsType.hpp>
 
 
 namespace apache {

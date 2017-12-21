@@ -28,7 +28,6 @@
 
 #include "StatisticDescriptor.hpp"
 #include "StatisticsType.hpp"
-#include "geode/statistics/../geode_base.hpp"
 
 /** @file
  */

@@ -15,29 +15,27 @@
  * limitations under the License.
  */
 
-#include <ace/Guard_T.h>
-#include <geode/Exception.hpp>
 #include <exception>
 #include <iosfwd>
 #include <string>
 
+#include <ace/Guard_T.h>
+
+#include <geode/Exception.hpp>
+
+#include "StatisticsManager.hpp"
 #include "../util/Log.hpp"
 #include "AtomicStatisticsImpl.hpp"
 #include "HostStatSampler.hpp"
 #include "OsStatisticsImpl.hpp"
-#include "StatisticsManager.hpp"
-#include <geode/statistics/Statistics.hpp>
 
 namespace apache {
 namespace geode {
+
 namespace client {
 class CacheImpl;
 }  // namespace client
-}  // namespace geode
-}  // namespace apache
 
-namespace apache {
-namespace geode {
 namespace statistics {
 
 class StatisticsType;

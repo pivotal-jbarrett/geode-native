@@ -25,7 +25,7 @@
 
 #include "Assert.hpp"
 #include "DataOutputInternal.hpp"
-#include <geode/geode_base.hpp>
+#include "util/string.hpp"
 
 namespace apache {
 namespace geode {

@@ -16,7 +16,6 @@
  */
 
 #include "PoolStatistics.hpp"
-#include <geode/statistics/Statistics.hpp>
 
 namespace apache {
 namespace geode {

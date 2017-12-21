@@ -22,14 +22,18 @@
 
 #include <geode/geode_globals.hpp>
 
+#include "statistics/Statistics.hpp"
 
 namespace apache {
 namespace geode {
-namespace client {
 
-using statistics::StatisticDescriptor;
-using statistics::StatisticsType;
-using statistics::Statistics;
+namespace statistics {
+
+class StatisticsFactory;
+
+}  // namespace statistics
+
+namespace client {
 
 class CPPCACHE_EXPORT RegionStats {
  public:

@@ -20,18 +20,11 @@
 #ifndef GEODE_STATISTICS_WINDOWSPROCESSSTATS_H_
 #define GEODE_STATISTICS_WINDOWSPROCESSSTATS_H_
 
-#include <geode/ExceptionTypes.hpp>
 #include <geode/geode_globals.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsFactory.hpp>
-#include <geode/statistics/StatisticsType.hpp>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
+#include <geode/ExceptionTypes.hpp>
 
 #include "GeodeStatisticsFactory.hpp"
 #include "ProcessStats.hpp"
-#include <geode/geode_base.hpp>
 
 /** @file
  */

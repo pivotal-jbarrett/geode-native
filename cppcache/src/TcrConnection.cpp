@@ -44,7 +44,6 @@
 #include <geode/Exception.hpp>
 #include <geode/GeodeTypeIds.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/../geode_globals.hpp>
 #include "util/Log.hpp"
 #include <geode/AuthInitialize.hpp>
 #include "TcpSslConn.hpp"

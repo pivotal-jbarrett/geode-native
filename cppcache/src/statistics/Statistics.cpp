@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-#include <geode/statistics/Statistics.hpp>
 #include <string>
+
+#include "Statistics.hpp"
 
 namespace apache {
 namespace geode {

@@ -1,8 +1,3 @@
-#pragma once
-
-#ifndef GEODE_STATISTICS_STATARCHIVEWRITER_H_
-#define GEODE_STATISTICS_STATARCHIVEWRITER_H_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,22 +15,21 @@
  * limitations under the License.
  */
 
-#include <geode/Cache.hpp>
-#include <geode/DataOutput.hpp>
-#include <geode/ExceptionTypes.hpp>
-#include <geode/geode_globals.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsType.hpp>
-#include <sys/_types/_int16_t.h>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
-#include <sys/types.h>
+#pragma once
+
+#ifndef GEODE_STATISTICS_STATARCHIVEWRITER_H_
+#define GEODE_STATISTICS_STATARCHIVEWRITER_H_
+
 #include <chrono>
 #include <iosfwd>
 #include <list>
 #include <map>
 #include <string>
+
+#include <geode/geode_globals.hpp>
+#include <geode/Cache.hpp>
+#include <geode/DataOutput.hpp>
+#include <geode/ExceptionTypes.hpp>
 
 #include "../NonCopyable.hpp"
 #include "../SerializationRegistry.hpp"
@@ -43,7 +37,6 @@
 #include "HostStatSampler.hpp"
 #include "StatisticDescriptorImpl.hpp"
 #include "StatsDef.hpp"
-#include <geode/geode_base.hpp>
 
 namespace apache {
 namespace geode {

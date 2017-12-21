@@ -1,8 +1,3 @@
-#pragma once
-
-#ifndef GEODE_STATISTICS_STATSAMPLERSTATS_H_
-#define GEODE_STATISTICS_STATSAMPLERSTATS_H_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,15 +15,12 @@
  * limitations under the License.
  */
 
-#include <geode/geode_globals.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsFactory.hpp>
-#include <geode/statistics/StatisticsType.hpp>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
+#pragma once
 
-#include <geode/geode_base.hpp>
+#ifndef GEODE_STATISTICS_STATSAMPLERSTATS_H_
+#define GEODE_STATISTICS_STATSAMPLERSTATS_H_
+
+#include <geode/geode_globals.hpp>
 
 namespace apache {
 namespace geode {

@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-#include "../Assert.hpp"
-#include "WindowsProcessStats.hpp"
 #include <geode/Exception.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/Statistics.hpp>
+
+#include "../Assert.hpp"
+#include "WindowsProcessStats.hpp"
 
 namespace apache {
 namespace geode {

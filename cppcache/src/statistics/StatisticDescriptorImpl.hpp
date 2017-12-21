@@ -20,11 +20,12 @@
 #ifndef GEODE_STATISTICS_STATISTICDESCRIPTORIMPL_H_
 #define GEODE_STATISTICS_STATISTICDESCRIPTORIMPL_H_
 
-#include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <sys/_types/_int32_t.h>
 #include <iosfwd>
 #include <string>
+
+#include <geode/ExceptionTypes.hpp>
+
+#include "StatisticDescriptor.hpp"
 
 /** @file
  */

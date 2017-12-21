@@ -20,15 +20,12 @@
 #ifndef GEODE_STATISTICS_OSSTATISTICSIMPL_H_
 #define GEODE_STATISTICS_OSSTATISTICSIMPL_H_
 
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsFactory.hpp>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
 #include <iosfwd>
 #include <string>
 
 #include "../NonCopyable.hpp"
 #include "StatisticsTypeImpl.hpp"
+#include "Statistics.hpp"
 
 /** @file
  */

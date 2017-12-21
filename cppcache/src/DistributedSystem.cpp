@@ -40,7 +40,10 @@
 #include "statistics/StatisticsManager.hpp"
 #include "CacheImpl.hpp"
 
-using namespace apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+
 using namespace apache::geode::statistics;
 
 ACE_Recursive_Thread_Mutex* g_disconnectLock = new ACE_Recursive_Thread_Mutex();

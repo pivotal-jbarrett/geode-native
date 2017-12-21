@@ -34,13 +34,13 @@
 #include <geode/PoolManager.hpp>
 #include "PdxInstanceFactoryImpl.hpp"
 
-extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
-
 #define DEFAULT_DS_NAME "default_GeodeDS"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+extern ACE_Recursive_Thread_Mutex* g_disconnectLock;
 
 class AuthInitialize;
 class CacheTransactionManager;

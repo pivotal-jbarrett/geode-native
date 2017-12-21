@@ -14,29 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "../Assert.hpp"
-#include "SolarisProcessStats.hpp"
+
 #include <geode/Exception.hpp>
 #include <geode/ExceptionTypes.hpp>
-#include <geode/statistics/Statistics.hpp>
+
+#include "SolarisProcessStats.hpp"
+#include "../Assert.hpp"
 
 namespace apache {
 namespace geode {
 namespace statistics {
+
 class GeodeStatisticsFactory;
 class StatisticDescriptor;
 class StatisticsFactory;
-}  // namespace statistics
-}  // namespace geode
-}  // namespace apache
 
-using namespace apache::geode::statistics;
-
-/**
- * <P>This class provides the interface for statistics about a
- * Solaris operating system process that is using a Geode system.
- *
- */
 
 SolarisProcessStats::SolarisProcessStats(GeodeStatisticsFactory* statFactory,
                                          int64_t pid, const char* name) {
@@ -53,11 +45,6 @@ SolarisProcessStats::SolarisProcessStats(GeodeStatisticsFactory* statFactory,
 #endif  // if def(_SOLARIS)
 }
 
-/**
- * Creates the StatisticsType for collecting the Stats of a Solaris process
- * This function is called by the class HostStatHelper before objects of
- * SolarisProcessStatistics are created by it.
- */
 void SolarisProcessStats::createType(StatisticsFactory* statFactory) {
   try {
     StatisticDescriptor** statDescriptorArr = new StatisticDescriptor*[7];
@@ -120,10 +107,13 @@ int64_t SolarisProcessStats::getProcessSize() {
 int32_t SolarisProcessStats::getCpuUsage() {
   return stats->getInt(hostCpuUsageINT);
 }
+
 int64_t SolarisProcessStats::getCPUTime() { return stats->getInt(userTimeINT); }
+
 int32_t SolarisProcessStats::getNumThreads() {
   return stats->getInt(threadsINT);
 }
+
 int64_t SolarisProcessStats::getAllCpuTime() {
   return ((stats->getInt(userTimeINT)) + (stats->getInt(systemTimeINT)));
 }
@@ -138,3 +128,7 @@ SolarisProcessStats::~SolarisProcessStats() {
   m_statsType = nullptr;
   stats = nullptr;
 }
+
+}  // namespace statistics
+}  // namespace geode
+}  // namespace apache

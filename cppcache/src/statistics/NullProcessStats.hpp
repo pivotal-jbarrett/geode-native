@@ -1,8 +1,3 @@
-#pragma once
-
-#ifndef GEODE_STATISTICS_NULLPROCESSSTATS_H_
-#define GEODE_STATISTICS_NULLPROCESSSTATS_H_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,18 +15,15 @@
  * limitations under the License.
  */
 
+#pragma once
+
+#ifndef GEODE_STATISTICS_NULLPROCESSSTATS_H_
+#define GEODE_STATISTICS_NULLPROCESSSTATS_H_
+
 #include <geode/geode_globals.hpp>
-#include <geode/statistics/StatisticDescriptor.hpp>
-#include <geode/statistics/Statistics.hpp>
-#include <geode/statistics/StatisticsType.hpp>
-#include <sys/_types/_int32_t.h>
-#include <sys/_types/_int64_t.h>
 
 #include "HostStatHelper.hpp"
 #include "ProcessStats.hpp"
-#include <geode/geode_base.hpp>
-
-using namespace apache::geode::client;
 
 /** @file
  */
