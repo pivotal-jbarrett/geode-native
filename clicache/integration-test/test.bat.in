@@ -45,7 +45,6 @@ set GF_CLASSPATH=%GF_CLASSPATH%;$<SHELL_PATH:${CMAKE_BINARY_DIR}>\tests\javaobje
 set PROFILERCMD=
 set BUG481=
 set TESTNAME=${TEST}
-set LOG=${TEST}.log
 
 rmdir /q /s "%TEST_DIR%" 2>nul
 mkdir "%TEST_DIR%"

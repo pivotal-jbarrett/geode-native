@@ -39,7 +39,6 @@ set GF_CLASSPATH=%GF_CLASSPATH%;${CMAKE_BINARY_DIR}/tests/javaobject/javaobject.
 set PROFILERCMD=
 set BUG481=
 set TESTNAME=${TEST}
-set LOG=${TEST}.log
 
 set
 
