@@ -51,7 +51,8 @@ class DataInput;
 class DataOutput;
 class Serializable;
 
-class _GEODE_EXPORT CacheableEnum : public CacheableKey {
+class _GEODE_EXPORT CacheableEnum : public CacheableKey,
+                                    public DataSerializablePrimitive {
  private:
   std::string m_enumClassName;
   std::string m_enumName;
@@ -68,17 +69,11 @@ class _GEODE_EXPORT CacheableEnum : public CacheableKey {
   static std::shared_ptr<Serializable> createDeserializable() {
     return std::make_shared<CacheableEnum>();
   }
-  /**
-   * @brief serialize this object
-   **/
+
   void toData(DataOutput& output) const override;
 
-  /**
-   * @brief deserialize this object
-   **/
   virtual void fromData(DataInput& input) override;
 
-  /** @return the size of the object in bytes */
   virtual size_t objectSize() const override {
     auto size = sizeof(CacheableEnum);
     size += m_enumClassName.length();
@@ -86,20 +81,7 @@ class _GEODE_EXPORT CacheableEnum : public CacheableKey {
     return size;
   }
 
-  /**
-   * @brief Return the classId of the instance being serialized.
-   * This is used by deserialization to determine what instance
-   * type to create and deserialize into.
-   */
-  virtual int32_t classId() const override { return 0; }
-
-  /**
-   * @brief return the typeId byte of the instance being serialized.
-   * This is used by deserialization to determine what instance
-   * type to create and deserialize into.
-   */
-  virtual int8_t typeId() const override {
-    // return 0;
+  virtual int8_t getDsCode() const override {
     return static_cast<int8_t>(GeodeTypeIds::CacheableEnum);
   }
 

@@ -107,29 +107,6 @@ class PutAllPartialResult : public Serializable {
     return std::string(stringBuf);
   }
 
-  void toData(DataOutput& output) const override {
-    throw IllegalStateException(
-        "PutAllPartialResult::toData is not intended for use.");
-  }
-
-  void fromData(DataInput& input) override {
-    throw IllegalStateException(
-        "PutAllPartialResult::fromData is not intended for use.");
-  }
-
-  int32_t classId() const override {
-    throw IllegalStateException(
-        "PutAllPartialResult::classId is not intended for use.");
-    return 0;
-  }
-
-  size_t objectSize() const override {
-    throw IllegalStateException(
-        "PutAllPartialResult::objectSize is not intended for use.");
-    return 0;
-  }
-
-  int8_t typeId() const override { return static_cast<int8_t>(0); }
 };
 
 }  // namespace client

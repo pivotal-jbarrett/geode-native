@@ -88,16 +88,6 @@ void PdxWrapper::fromData(PdxReader &input) {
   m_userObject = m_serializer->fromData(m_className.c_str(), input);
 }
 
-void PdxWrapper::toData(DataOutput &output) const {
-  PdxHelper::serializePdx(output, *this);
-}
-
-void PdxWrapper::fromData(DataInput &input) {
-  LOGERROR("PdxWrapper fromData should not have been called");
-  throw IllegalStateException(
-      "PdxWrapper fromData should not have been called");
-}
-
 size_t PdxWrapper::objectSize() const {
   if (m_sizer == nullptr || m_userObject == nullptr) {
     return 0;
@@ -107,9 +97,7 @@ size_t PdxWrapper::objectSize() const {
 }
 
 std::string PdxWrapper::toString() const {
-  std::string message = "PdxWrapper for ";
-  message += m_className;
-  return message.c_str();
+  return "PdxWrapper for " + m_className;
 }
 
 }  // namespace client

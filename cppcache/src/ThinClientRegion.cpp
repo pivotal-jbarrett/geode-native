@@ -818,7 +818,7 @@ bool ThinClientRegion::containsKeyOnServer(
 
   auto rptr = CacheableBoolean::create(ret);
 
-  rptr = std::static_pointer_cast<CacheableBoolean>(handleReplay(err, rptr));
+  rptr = std::dynamic_pointer_cast<CacheableBoolean>(handleReplay(err, rptr));
   GfErrTypeToException("Region::containsKeyOnServer ", err);
   return rptr->value();
 }
@@ -865,7 +865,7 @@ bool ThinClientRegion::containsValueForKey_remote(
 
   auto rptr = CacheableBoolean::create(ret);
 
-  rptr = std::static_pointer_cast<CacheableBoolean>(handleReplay(err, rptr));
+  rptr = std::dynamic_pointer_cast<CacheableBoolean>(handleReplay(err, rptr));
 
   GfErrTypeToException("Region::containsValueForKey ", err);
   return rptr->value();
@@ -2022,7 +2022,7 @@ uint32_t ThinClientRegion::size_remote() {
 
   switch (reply.getMessageType()) {
     case TcrMessage::RESPONSE: {
-      auto size = std::static_pointer_cast<CacheableInt32>(reply.getValue());
+      auto size = std::dynamic_pointer_cast<CacheableInt32>(reply.getValue());
       return size->value();
       // LOGINFO("Map is written into remote server at region %s",
       // m_fullPath.c_str());
@@ -3469,7 +3469,8 @@ void ChunkedQueryResponse::handleChunk(const uint8_t* chunk, int32_t chunkLen,
     // special case for scalar result
     partLen = input->readInt32();
     input->read();
-    auto intVal = std::static_pointer_cast<CacheableInt32>(input->readObject());
+    auto intVal =
+        std::dynamic_pointer_cast<CacheableInt32>(input->readObject());
     m_queryResults->push_back(intVal);
 
     // TODO:
@@ -3926,7 +3927,7 @@ void ChunkedDurableCQListResponse::handleChunk(const uint8_t* chunk,
 
   for (int i = 0; i < stringParts; i++) {
     m_resultList->push_back(
-        std::static_pointer_cast<CacheableString>(input->readObject()));
+        std::dynamic_pointer_cast<CacheableString>(input->readObject()));
   }
 }
 

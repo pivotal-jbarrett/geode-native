@@ -56,11 +56,8 @@ class DiskStoreId : public DSMemberForVersionStamp {
     m_mostSig = input.readInt64();
     m_leastSig = input.readInt64();
   }
-  int32_t classId() const override { return 0; }
 
-  int8_t typeId() const override {
-    return static_cast<int8_t>(GeodeTypeIdsImpl::DiskStoreId);
-  }
+  int32_t getDSFID() const override { return GeodeTypeIdsImpl::DiskStoreId; }
 
   int16_t compareTo(const DSMemberForVersionStamp& tagID) const override {
     const DiskStoreId& otherDiskStoreId =

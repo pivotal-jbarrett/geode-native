@@ -55,11 +55,7 @@ class DiskVersionTag : public VersionTag {
   DiskVersionTag(MemberListForVersionStamp& memberListForVersionStamp)
       : VersionTag(memberListForVersionStamp) {}
 
-  int32_t classId() const override { return 0; }
-
-  int8_t typeId() const override {
-    return static_cast<int8_t>(GeodeTypeIdsImpl::DiskVersionTag);
-  }
+  int32_t getDSFID() const override { return GeodeTypeIdsImpl::DiskVersionTag; }
 
   static std::shared_ptr<Serializable> createDeserializable(
       MemberListForVersionStamp& memberListForVersionStamp) {

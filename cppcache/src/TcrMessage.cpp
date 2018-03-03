@@ -343,7 +343,7 @@ int64_t TcrMessage::getConnectionId(TcrConnection* conn) {
 
 int64_t TcrMessage::getUniqueId(TcrConnection* conn) {
   if (m_value != nullptr) {
-    auto encryptBytes = std::static_pointer_cast<CacheableBytes>(m_value);
+    auto encryptBytes = std::dynamic_pointer_cast<CacheableBytes>(m_value);
 
     auto tmp = conn->decryptBytes(encryptBytes);
 
@@ -370,9 +370,9 @@ inline void TcrMessage::readKeyPart(DataInput& input) {
   const auto isObj = input.readBoolean();
   if (lenObj > 0) {
     if (isObj) {
-      m_key = std::static_pointer_cast<CacheableKey>(input.readObject());
+      m_key = std::dynamic_pointer_cast<CacheableKey>(input.readObject());
     } else {
-      m_key = std::static_pointer_cast<CacheableKey>(
+      m_key = std::dynamic_pointer_cast<CacheableKey>(
           readCacheableString(input, lenObj));
     }
   }
@@ -493,32 +493,34 @@ void TcrMessage::writeObjectPart(
   // check if the type is a CacheableBytes
   int8_t isObject = 1;
 
-  if (se != nullptr && se->typeId() == GeodeTypeIds::CacheableBytes) {
-    // for an emty byte array write EMPTY_BYTEARRAY_CODE(2) to is object
-    try {
-      int byteArrLength = -1;
-
-      if (auto cacheableBytes = std::dynamic_pointer_cast<CacheableBytes>(se)) {
-        byteArrLength = cacheableBytes->length();
-      } else {
-        auto classname =
-            Utils::nullSafeToString(std::static_pointer_cast<CacheableKey>(se));
-        if (classname.find("apache::geode::client::ManagedCacheableKey") !=
-            std::string::npos) {
-          byteArrLength = se->objectSize();
-        }
-      }
-
-      if (byteArrLength == 0) {
-        isObject = 2;
-        m_request->write(isObject);
-        return;
-      }
-    } catch (const apache::geode::client::Exception& ex) {
-      LOGDEBUG("Exception in writing EMPTY_BYTE_ARRAY : %s", ex.what());
-    }
-    isObject = 0;
-  }
+  throw UnsupportedOperationException("");
+  //  if (se != nullptr && se->typeId() == GeodeTypeIds::CacheableBytes) {
+  //    // for an emty byte array write EMPTY_BYTEARRAY_CODE(2) to is object
+  //    try {
+  //      int byteArrLength = -1;
+  //
+  //      if (auto cacheableBytes =
+  //      std::dynamic_pointer_cast<CacheableBytes>(se)) {
+  //        byteArrLength = cacheableBytes->length();
+  //      } else {
+  //        auto classname =
+  //            Utils::nullSafeToString(std::static_pointer_cast<CacheableKey>(se));
+  //        if (classname.find("apache::geode::client::ManagedCacheableKey") !=
+  //            std::string::npos) {
+  //          byteArrLength = se->objectSize();
+  //        }
+  //      }
+  //
+  //      if (byteArrLength == 0) {
+  //        isObject = 2;
+  //        m_request->write(isObject);
+  //        return;
+  //      }
+  //    } catch (const apache::geode::client::Exception& ex) {
+  //      LOGDEBUG("Exception in writing EMPTY_BYTE_ARRAY : %s", ex.what());
+  //    }
+  //    isObject = 0;
+  //  }
 
   if (isDelta) {
     m_request->write(static_cast<int8_t>(0));
@@ -545,7 +547,8 @@ void TcrMessage::writeObjectPart(
         m_request->writeObject(se, isDelta);
       }
     } else {
-      se->toData(*m_request);
+      throw UnsupportedOperationException("implment serialization");
+      //      se->toData(*m_request);
     }
   } else {
     // TODO::
@@ -2408,7 +2411,7 @@ TcrMessageExecuteRegionFunction::TcrMessageExecuteRegionFunction(
 
   if (routingObj && routingObj->size() == 1) {
     LOGDEBUG("setting up key");
-    m_key = std::static_pointer_cast<CacheableKey>(routingObj->at(0));
+    m_key = std::dynamic_pointer_cast<CacheableKey>(routingObj->at(0));
   }
 
   uint32_t numOfParts =
@@ -2916,7 +2919,7 @@ void TcrMessage::readEventIdPart(DataInput& input, bool skip, int32_t parts) {
 
   GF_D_ASSERT(isObj != 0);
 
-  m_eventid = std::static_pointer_cast<EventId>(input.readObject());
+  m_eventid = std::dynamic_pointer_cast<EventId>(input.readObject());
 }
  std::shared_ptr<DSMemberForVersionStamp> TcrMessage::readDSMember(
     apache::geode::client::DataInput& input) {
@@ -2983,19 +2986,15 @@ void TcrMessage::readHashMapForGCVersions(
 void TcrMessage::readHashSetForGCVersions(
     apache::geode::client::DataInput& input,
     std::shared_ptr<CacheableHashSet>& value) {
-  uint8_t hashsettypeid = input.read();
+  auto hashsettypeid = input.read();
   if (hashsettypeid != GeodeTypeIds::CacheableHashSet) {
     throw Exception(
         "Reading HashSet For GC versions. Expecting type id of hash set. ");
   }
-  int32_t len = input.readArrayLen();
 
-  if (len > 0) {
-    std::shared_ptr<CacheableKey> key;
-    std::shared_ptr<Cacheable> val;
-    for (int32_t index = 0; index < len; index++) {
-      auto keyPtr = std::static_pointer_cast<CacheableKey>(input.readObject());
-      value->insert(keyPtr);
-    }
+  auto len = input.readArrayLen();
+  for (decltype(len) index = 0; index < len; index++) {
+    auto keyPtr = std::dynamic_pointer_cast<CacheableKey>(input.readObject());
+    value->insert(keyPtr);
   }
 }

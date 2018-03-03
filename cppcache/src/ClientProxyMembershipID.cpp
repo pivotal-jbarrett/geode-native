@@ -214,32 +214,26 @@ void ClientProxyMembershipID::toData(DataOutput& output) const {
 
 void ClientProxyMembershipID::fromData(DataInput& input) {
   // deserialization for PR FX HA
-  uint8_t* hostAddr;
-  int32_t len, hostPort, dcport, vPID;
-  std::shared_ptr<CacheableString> hostname, dsName, uniqueTag, durableClientId;
-  int8_t splitbrain, vmKind;
 
-  len = input.readArrayLen();  // inetaddress len
+  auto len = input.readArrayLen();  // inetaddress len
   m_hostAddrLocalMem = true;
-  /* adongre  - Coverity II
-   * CID 29184: Out-of-bounds access (OVERRUN_DYNAMIC)
-   */
-  // hostAddr = new uint8_t(len);
-  hostAddr = new uint8_t[len];
-
+  auto hostAddr = new uint8_t[len];
   input.readBytesOnly(hostAddr, len);  // inetaddress
-  hostPort = input.readInt32();        // port
-  hostname = std::static_pointer_cast<CacheableString>(input.readObject());
-  splitbrain = input.read();                       // splitbrain
-  dcport = input.readInt32();                      // port
-  vPID = input.readInt32();                        // pid
-  vmKind = input.read();                           // vmkind
+
+  auto hostPort = input.readInt32();  // port
+  auto hostname =
+      std::dynamic_pointer_cast<CacheableString>(input.readObject());
+  auto splitbrain = input.read();   // splitbrain
+  auto dcport = input.readInt32();  // port
+  auto vPID = input.readInt32();    // pid
+  auto vmKind = input.read();       // vmkind
   auto aStringArray = CacheableStringArray::create();
   aStringArray->fromData(input);
-  dsName = std::static_pointer_cast<CacheableString>(input.readObject());
-  uniqueTag = std::static_pointer_cast<CacheableString>(input.readObject());
-  durableClientId =
-      std::static_pointer_cast<CacheableString>(input.readObject());
+  auto dsName = std::dynamic_pointer_cast<CacheableString>(input.readObject());
+  auto uniqueTag =
+      std::dynamic_pointer_cast<CacheableString>(input.readObject());
+  auto durableClientId =
+      std::dynamic_pointer_cast<CacheableString>(input.readObject());
   auto durableClntTimeOut = std::chrono::seconds(input.readInt32());  // durable client timeout
   int32_t vmViewId = 0;
   readVersion(splitbrain, input);
@@ -284,13 +278,14 @@ Serializable* ClientProxyMembershipID::readEssentialData(DataInput& input) {
   const auto vmKind = input.read();  // vmkind
 
   if (vmKind == ClientProxyMembershipID::LONER_DM_TYPE) {
-    uniqueTag = std::static_pointer_cast<CacheableString>(input.readObject());
+    uniqueTag = std::dynamic_pointer_cast<CacheableString>(input.readObject());
   } else {
-    vmViewIdstr = std::static_pointer_cast<CacheableString>(input.readObject());
+    vmViewIdstr =
+        std::dynamic_pointer_cast<CacheableString>(input.readObject());
     vmViewId = atoi(vmViewIdstr.get()->value().c_str());
   }
 
-  dsName = std::static_pointer_cast<CacheableString>(input.readObject());
+  dsName = std::dynamic_pointer_cast<CacheableString>(input.readObject());
 
   if (vmKind != ClientProxyMembershipID::LONER_DM_TYPE) {
     // initialize the object with the values read and some dummy values

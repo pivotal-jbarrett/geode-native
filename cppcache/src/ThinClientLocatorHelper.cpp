@@ -136,7 +136,7 @@ GfErrType ThinClientLocatorHelper::getAllServers(
       di->rewindCursor(1);
 
       auto response =
-          std::static_pointer_cast<GetAllServersResponse>(di->readObject());
+          std::dynamic_pointer_cast<GetAllServersResponse>(di->readObject());
       servers = response->getServers();
       return GF_NOERR;
     } catch (const AuthenticationRequiredException&) {
@@ -227,7 +227,7 @@ GfErrType ThinClientLocatorHelper::getEndpointForNewCallBackConn(
       }
       di->rewindCursor(1);
       auto response =
-          std::static_pointer_cast<QueueConnectionResponse>(di->readObject());
+          std::dynamic_pointer_cast<QueueConnectionResponse>(di->readObject());
       outEndpoint = response->getServers();
       return GF_NOERR;
     } catch (const AuthenticationRequiredException& excp) {
@@ -329,7 +329,7 @@ GfErrType ThinClientLocatorHelper::getEndpointForNewFwdConn(
       di->rewindCursor(1);
 
       auto response =
-          std::static_pointer_cast<ClientConnectionResponse>(di->readObject());
+          std::dynamic_pointer_cast<ClientConnectionResponse>(di->readObject());
       response->printInfo();
       if (!response->serverFound()) {
         LOGFINE("Server not found");
@@ -420,7 +420,7 @@ GfErrType ThinClientLocatorHelper::updateLocators(
       di->rewindCursor(1);
 
       auto response =
-          std::static_pointer_cast<LocatorListResponse>(di->readObject());
+          std::dynamic_pointer_cast<LocatorListResponse>(di->readObject());
       auto locators = response->getLocators();
       if (locators.size() > 0) {
         RandGen randGen;

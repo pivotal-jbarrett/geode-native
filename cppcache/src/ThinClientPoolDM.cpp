@@ -950,8 +950,8 @@ int32_t ThinClientPoolDM::GetPDXIdForType(
     throw IllegalStateException("Failed to register PdxSerializable Type");
   }
 
-  int32_t pdxTypeId =
-      static_cast<CacheableInt32*>(reply.getValue().get())->value();
+  auto pdxTypeId =
+      std::dynamic_pointer_cast<CacheableInt32>(reply.getValue())->value();
 
   // need to broadcast this id to all other pool
   {
@@ -1036,8 +1036,8 @@ int32_t ThinClientPoolDM::GetEnumValue(std::shared_ptr<Serializable> enumInfo) {
     throw IllegalStateException("Failed to register Pdx enum Type");
   }
 
-  int32_t enumVal =
-      static_cast<CacheableInt32*>(reply.getValue().get())->value();
+  auto enumVal =
+      std::dynamic_pointer_cast<CacheableInt32>(reply.getValue())->value();
 
   // need to broadcast this id to all other pool
   {

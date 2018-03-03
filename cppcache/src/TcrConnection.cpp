@@ -448,7 +448,7 @@ bool TcrConnection::InitTcrConnection(
         auto diForClient = cacheImpl->createDataInput(
             reinterpret_cast<const uint8_t*>(recvMessage.data()),
             recvMessage.size());
-        auto member = std::static_pointer_cast<ClientProxyMembershipID>(
+        auto member = std::dynamic_pointer_cast<ClientProxyMembershipID>(
             diForClient->readObject());
         auto memId = cacheImpl->getMemberListForVersionStamp()->add(member);
         getEndpointObject()->setDistributedMemberID(memId);

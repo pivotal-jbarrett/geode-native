@@ -1359,37 +1359,37 @@ class RemoveActions {
     GfErrType err = GF_NOERR;
     if (!allowNULLValue && m_region.getAttributes()->getCachingEnabled()) {
       m_region.getEntry(key, valuePtr);
-      std::unique_ptr<DataOutput> out1 =
-          m_region.getCacheImpl()->getCache()->createDataOutput();
-      std::unique_ptr<DataOutput> out2 =
-          m_region.getCacheImpl()->getCache()->createDataOutput();
+      auto out1 = m_region.getCacheImpl()->getCache()->createDataOutput();
+      auto out2 = m_region.getCacheImpl()->getCache()->createDataOutput();
 
-      if (valuePtr != nullptr && value != nullptr) {
-        if (valuePtr->classId() != value->classId() ||
-            valuePtr->typeId() != value->typeId()) {
-          err = GF_ENOENT;
-          return err;
-        }
-        valuePtr->toData(*out1);
-        value->toData(*out2);
-        if (out1->getBufferLength() != out2->getBufferLength()) {
-          err = GF_ENOENT;
-          return err;
-        }
-        if (memcmp(out1->getBuffer(), out2->getBuffer(),
-                   out1->getBufferLength()) != 0) {
-          err = GF_ENOENT;
-          return err;
-        }
-      } else if ((valuePtr == nullptr || CacheableToken::isInvalid(valuePtr))) {
-        m_ServerResponse = m_region.removeNoThrow_remote(
-            key, value, aCallbackArgument, versionTag);
-
-        return m_ServerResponse;
-      } else if (valuePtr != nullptr && value == nullptr) {
-        err = GF_ENOENT;
-        return err;
-      }
+      throw Exception("not implmented");
+      //      if (valuePtr != nullptr && value != nullptr) {
+      //        if (valuePtr->classId() != value->classId() ||
+      //            valuePtr->typeId() != value->typeId()) {
+      //          err = GF_ENOENT;
+      //          return err;
+      //        }
+      //        valuePtr->toData(*out1);
+      //        value->toData(*out2);
+      //        if (out1->getBufferLength() != out2->getBufferLength()) {
+      //          err = GF_ENOENT;
+      //          return err;
+      //        }
+      //        if (memcmp(out1->getBuffer(), out2->getBuffer(),
+      //                   out1->getBufferLength()) != 0) {
+      //          err = GF_ENOENT;
+      //          return err;
+      //        }
+      //      } else if ((valuePtr == nullptr ||
+      //      CacheableToken::isInvalid(valuePtr))) {
+      //        m_ServerResponse = m_region.removeNoThrow_remote(
+      //            key, value, aCallbackArgument, versionTag);
+      //
+      //        return m_ServerResponse;
+      //      } else if (valuePtr != nullptr && value == nullptr) {
+      //        err = GF_ENOENT;
+      //        return err;
+      //      }
     }
     if (allowNULLValue) {
       m_ServerResponse =
@@ -1413,47 +1413,53 @@ class RemoveActions {
     GfErrType err = GF_NOERR;
     if (!allowNULLValue && cachingEnabled) {
       m_region.getEntry(key, valuePtr);
-      std::unique_ptr<DataOutput> out1 =
-          m_region.getCacheImpl()->getCache()->createDataOutput();
-      std::unique_ptr<DataOutput> out2 =
-          m_region.getCacheImpl()->getCache()->createDataOutput();
-      if (valuePtr != nullptr && value != nullptr) {
-        if (valuePtr->classId() != value->classId() ||
-            valuePtr->typeId() != value->typeId()) {
-          err = GF_ENOENT;
-          return err;
-        }
-        valuePtr->toData(*out1);
-        value->toData(*out2);
-        if (out1->getBufferLength() != out2->getBufferLength()) {
-          err = GF_ENOENT;
-          return err;
-        }
-        if (memcmp(out1->getBuffer(), out2->getBuffer(),
-                   out1->getBufferLength()) != 0) {
-          err = GF_ENOENT;
-          return err;
-        }
-      } else if (value == nullptr && (!CacheableToken::isInvalid(valuePtr) ||
-                                      valuePtr == nullptr)) {
-        err = (m_ServerResponse == 0 && valuePtr == nullptr) ? GF_NOERR
-                                                             : GF_ENOENT;
-        if (updateCount >= 0 &&
-            !m_region.getAttributes()
-                 ->getConcurrencyChecksEnabled()) {  // This means server has
-                                                     // deleted an entry &
-                                                     // same entry has been
-                                                     // destroyed locally
-          // So call removeTrackerForEntry to remove key that was added in the
-          // map during addTrackerForEntry call.
-          m_region.m_entries->removeTrackerForEntry(key);
-        }
-        return err;
-      } else if (valuePtr == nullptr && value != nullptr &&
-                 m_ServerResponse != 0) {
-        err = GF_ENOENT;
-        return err;
-      }
+      auto out1 = m_region.getCacheImpl()->getCache()->createDataOutput();
+      auto out2 = m_region.getCacheImpl()->getCache()->createDataOutput();
+      throw Exception("not implmented");
+      //      if (valuePtr != nullptr && value != nullptr) {
+      //        if (valuePtr->classId() != value->classId() ||
+      //            valuePtr->typeId() != value->typeId()) {
+      //          err = GF_ENOENT;
+      //          return err;
+      //        }
+      //        valuePtr->toData(*out1);
+      //        value->toData(*out2);
+      //        if (out1->getBufferLength() != out2->getBufferLength()) {
+      //          err = GF_ENOENT;
+      //          return err;
+      //        }
+      //        if (memcmp(out1->getBuffer(), out2->getBuffer(),
+      //                   out1->getBufferLength()) != 0) {
+      //          err = GF_ENOENT;
+      //          return err;
+      //        }
+      //      } else if (value == nullptr &&
+      //      (!CacheableToken::isInvalid(valuePtr) ||
+      //                                      valuePtr == nullptr)) {
+      //        err = (m_ServerResponse == 0 && valuePtr == nullptr) ? GF_NOERR
+      //                                                             :
+      //                                                             GF_ENOENT;
+      //        if (updateCount >= 0 &&
+      //            !m_region.getAttributes()
+      //                 ->getConcurrencyChecksEnabled()) {  // This means
+      //                 server has
+      //                                                     // deleted an entry
+      //                                                     &
+      //                                                     // same entry has
+      //                                                     been
+      //                                                     // destroyed
+      //                                                     locally
+      //          // So call removeTrackerForEntry to remove key that was added
+      //          in the
+      //          // map during addTrackerForEntry call.
+      //          m_region.m_entries->removeTrackerForEntry(key);
+      //        }
+      //        return err;
+      //      } else if (valuePtr == nullptr && value != nullptr &&
+      //                 m_ServerResponse != 0) {
+      //        err = GF_ENOENT;
+      //        return err;
+      //      }
     }
     auto& cachePerfStats = m_region.m_cacheImpl->getCachePerfStats();
 

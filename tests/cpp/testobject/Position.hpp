@@ -42,7 +42,7 @@ namespace testobject {
 
 using namespace apache::geode::client;
 
-class TESTOBJECT_EXPORT Position : public Serializable {
+class TESTOBJECT_EXPORT Position : public DataSerializable {
  private:
   int64_t avg20DaysVol;
   std::shared_ptr<CacheableString> bondRating;
@@ -76,7 +76,7 @@ class TESTOBJECT_EXPORT Position : public Serializable {
   ~Position() override = default;
   void toData(DataOutput& output) const override;
   void fromData(DataInput& input) override;
-  int32_t classId() const override { return 0x02; }
+  int32_t getClassId() const override { return 0x02; }
   std::string toString() const override;
 
   size_t objectSize() const override {

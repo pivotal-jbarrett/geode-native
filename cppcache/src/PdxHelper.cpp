@@ -187,7 +187,7 @@ std::shared_ptr<PdxSerializable> PdxHelper::deserializePdx(
   } else {
     // type not found; need to get from server
     if (pType == nullptr) {
-      pType = std::static_pointer_cast<PdxType>(
+      pType = std::dynamic_pointer_cast<PdxType>(
           serializationRegistry->GetPDXTypeById(
               cacheImpl->getCache()->getPoolManager().find(
                   DataInputInternal::getPoolName(dataInput)),
@@ -296,7 +296,7 @@ std::shared_ptr<PdxSerializable> PdxHelper::deserializePdx(
 
     if (pType == nullptr) {
       // TODO shared_ptr why redef?
-      auto pType = std::static_pointer_cast<PdxType>(
+      auto pType = std::dynamic_pointer_cast<PdxType>(
           serializationRegistry->GetPDXTypeById(
               cacheImpl->getCache()->getPoolManager().find(
                   DataInputInternal::getPoolName(dataInput)),

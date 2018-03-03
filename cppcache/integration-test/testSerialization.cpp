@@ -67,7 +67,7 @@ struct CData {
   uint64_t e;
 };
 
-class OtherType : public Serializable {
+class OtherType : public DataSerializable {
  public:
   CData m_struct;
   int32_t m_classIdToReturn;
@@ -105,7 +105,7 @@ class OtherType : public Serializable {
     return std::make_shared<OtherType>(g_classIdToReturn4);
   }
 
-  int32_t classId() const override { return m_classIdToReturn; }
+  int32_t getClassId() const override { return m_classIdToReturn; }
 
   uint32_t size() const { return sizeof(CData); }
 
@@ -130,7 +130,7 @@ class OtherType : public Serializable {
     sprintf(logmsg, "validateCT for %d", i);
     LOG(logmsg);
     XASSERT(otPtr != nullptr);
-    auto ot = std::static_pointer_cast<OtherType>(otPtr);
+    auto ot = std::dynamic_pointer_cast<OtherType>(otPtr);
     XASSERT(ot != nullptr);
 
     printf("Validating OtherType: %d, %s, %c, %e\n", ot->m_struct.a,
