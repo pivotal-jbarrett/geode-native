@@ -488,12 +488,24 @@ void TcrMessage::writeObjectPart(
     const std::vector<std::shared_ptr<CacheableKey>>* getAllKeyList) {
   //  no nullptr check since for some messages nullptr object may be valid
   uint32_t size = 0;
-  m_request->writeInt(
-      static_cast<int32_t>(size));  // write a dummy size of 4 bytes.
-  // check if the type is a CacheableBytes
+  // write a dummy size of 4 bytes.
+  m_request->writeInt(static_cast<int32_t>(size));
+
   int8_t isObject = 1;
 
-  throw UnsupportedOperationException("");
+  // check if the type is a CacheableBytes
+  // TODO serializable - ManagedCacheableKey
+  if (auto cacheableBytes = std::dynamic_pointer_cast<CacheableBytes>(se)) {
+    // for an emty byte array write EMPTY_BYTEARRAY_CODE(2) to is object
+    auto byteArrLength = cacheableBytes->length();
+    if (byteArrLength == 0) {
+      isObject = 2;
+      m_request->write(isObject);
+      return;
+    }
+    isObject = 0;
+  }
+
   //  if (se != nullptr && se->typeId() == GeodeTypeIds::CacheableBytes) {
   //    // for an emty byte array write EMPTY_BYTEARRAY_CODE(2) to is object
   //    try {
@@ -1895,20 +1907,24 @@ TcrMessageRegisterInterestList::TcrMessageRegisterInterestList(
   m_isDurable = isDurable;
   m_receiveValues = receiveValues;
 
-  uint32_t numInItrestList = static_cast<int32_t>(keys.size());
+  uint32_t numInItrestList = static_cast<uint32_t>(keys.size());
   GF_R_ASSERT(numInItrestList != 0);
-  uint32_t numOfParts = 2 + numInItrestList;
 
-  numOfParts += 2 - numInItrestList;
+  uint32_t numOfParts = 5 + numInItrestList;
 
-  numOfParts += 2;
   writeHeader(m_msgType, numOfParts);
+
+  // Part 1
   writeRegionPart(m_regionName);
+
+  // Part 2
   writeInterestResultPolicyPart(interestPolicy);
 
+  // Part 3
   writeBytePart(isDurable ? 1 : 0);  // keepalive
-  auto cal = CacheableArrayList::create();
 
+  // Part 3 + numInItrestList
+  auto cal = CacheableArrayList::create();
   for (uint32_t i = 0; i < numInItrestList; i++) {
     if (keys[i] == nullptr) {
       throw IllegalArgumentException(
@@ -1916,18 +1932,21 @@ TcrMessageRegisterInterestList::TcrMessageRegisterInterestList(
     }
     cal->push_back(keys[i]);
   }
-
   writeObjectPart(cal);
 
+  // Part 4 + numInItrestList
   int8_t bytes[2];
   std::shared_ptr<CacheableBytes> byteArr = nullptr;
   bytes[0] = receiveValues ? 0 : 1;  // reveive values
   byteArr = CacheableBytes::create(std::vector<int8_t>(bytes, bytes + 1));
   writeObjectPart(byteArr);
+
+  // Part 5 + numInItrestList
   bytes[0] = isCachingEnabled ? 1 : 0;  // region policy
   bytes[1] = 0;                         // serialize values
   byteArr = CacheableBytes::create(std::vector<int8_t>(bytes, bytes + 2));
   writeObjectPart(byteArr);
+
   writeMessageLength();
   m_interestPolicy = interestPolicy.ordinal;
 }
