@@ -119,97 +119,145 @@ void TheTypeMap::setup() {
 /** This starts at reading the typeid.. assumes the length has been read. */
 std::shared_ptr<Serializable> SerializationRegistry::deserialize(
     DataInput& input, int8_t typeId) const {
-  //  bool findinternal = false;
-  //  auto currentTypeId = typeId;
-  //
-  //  if (typeId == -1) currentTypeId = input.read();
-  //  int64_t compId = currentTypeId;
-  //
-  //  LOGDEBUG("SerializationRegistry::deserialize typeid = %d currentTypeId= %d
-  //  ",
-  //           typeId, currentTypeId);
-  //
-  //  switch (compId) {
-  //    case GeodeTypeIds::NullObj: {
-  //      return nullptr;
-  //      break;
-  //    }
-  //    case GeodeTypeIds::CacheableNullString: {
-  //      return std::shared_ptr<Serializable>(
-  //          CacheableString::createDeserializable());
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::PDX: {
-  //      return pdxTypeHandler(input);
-  //      break;
-  //    }
-  //    case GeodeTypeIds::CacheableEnum: {
-  //      auto enumObject = CacheableEnum::create(" ", " ", 0);
-  //      enumObject->fromData(input);
-  //      return enumObject;
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::CacheableUserData: {
-  //      compId |= ((static_cast<int64_t>(input.read())) << 32);
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::CacheableUserData2: {
-  //      compId |= ((static_cast<int64_t>(input.readInt16())) << 32);
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::CacheableUserData4: {
-  //      int32_t classId = input.readInt32();
-  //      compId |= ((static_cast<int64_t>(classId)) << 32);
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::FixedIDByte: {
-  //      compId = input.read();
-  //      findinternal = true;
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::FixedIDShort: {
-  //      compId = input.readInt16();
-  //      findinternal = true;
-  //      break;
-  //    }
-  //    case GeodeTypeIdsImpl::FixedIDInt: {
-  //      int32_t fixedId = input.readInt32();
-  //      compId = fixedId;
-  //      findinternal = true;
-  //      break;
-  //    }
-  //  }
-  //
-  //  TypeFactoryMethod createType = nullptr;
-  //
-  //  if (findinternal) {
-  //    theTypeMap.find2(compId, createType);
-  //  } else {
-  //    theTypeMap.find(compId, createType);
-  //  }
-  //
-  //  if (createType == nullptr) {
-  //    if (findinternal) {
-  //      LOGERROR(
-  //          "Unregistered class ID %d during deserialization: Did the "
-  //          "application register serialization types?",
-  //          compId);
-  //    } else {
-  //      LOGERROR(
-  //          "Unregistered class ID %d during deserialization: Did the "
-  //          "application register serialization types?",
-  //          (compId >> 32));
-  //    }
-  //
-  //    // instead of a null key or null value... an Exception should be
-  //    thrown.. throw IllegalStateException("Unregistered class ID in
-  //    deserialization");
-  //  }
-  //
-  //  std::shared_ptr<Serializable> obj(createType());
-  //  obj->fromData(input);
-  //  return obj;
+  bool findinternal = false;
+  auto currentTypeId = typeId;
+
+  if (typeId == -1) {
+    currentTypeId = input.read();
+  }
+  int64_t compId = currentTypeId;
+
+  LOGDEBUG("SerializationRegistry::deserialize typeid = %d currentTypeId= %d",
+           typeId, currentTypeId);
+
+  switch (compId) {
+    case GeodeTypeIds::NullObj: {
+      return nullptr;
+      break;
+    }
+    case GeodeTypeIds::CacheableNullString: {
+      return std::shared_ptr<Serializable>(
+          CacheableString::createDeserializable());
+      break;
+    }
+    case GeodeTypeIdsImpl::PDX: {
+      return pdxTypeHandler(input);
+      break;
+    }
+    case GeodeTypeIds::CacheableEnum: {
+      auto enumObject = CacheableEnum::create(" ", " ", 0);
+      enumObject->fromData(input);
+      return enumObject;
+      break;
+    }
+    case GeodeTypeIdsImpl::CacheableUserData: {
+      compId |= ((static_cast<int64_t>(input.read())) << 32);
+      break;
+    }
+    case GeodeTypeIdsImpl::CacheableUserData2: {
+      compId |= ((static_cast<int64_t>(input.readInt16())) << 32);
+      break;
+    }
+    case GeodeTypeIdsImpl::CacheableUserData4: {
+      int32_t classId = input.readInt32();
+      compId |= ((static_cast<int64_t>(classId)) << 32);
+      break;
+    }
+    case GeodeTypeIdsImpl::FixedIDByte: {
+      compId = input.read();
+      findinternal = true;
+      break;
+    }
+    case GeodeTypeIdsImpl::FixedIDShort: {
+      compId = input.readInt16();
+      findinternal = true;
+      break;
+    }
+    case GeodeTypeIdsImpl::FixedIDInt: {
+      int32_t fixedId = input.readInt32();
+      compId = fixedId;
+      findinternal = true;
+      break;
+    }
+  }
+
+  TypeFactoryMethod createType = nullptr;
+
+  if (findinternal) {
+    theTypeMap.find2(compId, createType);
+  } else {
+    theTypeMap.find(compId, createType);
+  }
+
+  if (createType == nullptr) {
+    if (findinternal) {
+      LOGERROR(
+          "Unregistered class ID %d during deserialization: Did the "
+          "application register serialization types?",
+          compId);
+    } else {
+      LOGERROR(
+          "Unregistered class ID %d during deserialization: Did the "
+          "application register serialization types?",
+          (compId >> 32));
+    }
+
+    // instead of a null key or null value... an Exception should be thrown
+    throw IllegalStateException("Unregistered class ID in deserialization");
+  }
+
+  std::shared_ptr<Serializable> obj(createType());
+
+  deserialize(input, obj);
+
+  return obj;
   throw UnsupportedOperationException("SerializationRegistry::deserialize");
+}
+
+void SerializationRegistry::deserialize(
+    DataInput& input, std::shared_ptr<Serializable> obj) const {
+  if (!obj) {
+    // nothing to read
+  } else if (const auto dataSerializableFixedId =
+                 std::dynamic_pointer_cast<DataSerializableFixedId>(obj)) {
+    deserialize(input, dataSerializableFixedId);
+  } else if (const auto dataSerializablePrimitive =
+                 std::dynamic_pointer_cast<DataSerializablePrimitive>(obj)) {
+    deserialize(input, dataSerializablePrimitive);
+  } else if (const auto dataSerializable =
+                 std::dynamic_pointer_cast<DataSerializable>(obj)) {
+    deserialize(input, dataSerializable);
+  } else if (const auto pdxSerializable =
+                 std::dynamic_pointer_cast<PdxSerializable>(obj)) {
+    deserialize(input, pdxSerializable);
+  } else {
+    throw UnsupportedOperationException("Serialization type not implemented.");
+  }
+}
+
+void SerializationRegistry::deserialize(
+    DataInput& input,
+    std::shared_ptr<DataSerializableFixedId> dataSerializableFixedId) const {
+  dataSerializableFixedId->fromData(input);
+}
+
+void SerializationRegistry::deserialize(
+    DataInput& input,
+    std::shared_ptr<DataSerializablePrimitive> dataSerializablePrimitive)
+    const {
+  dataSerializablePrimitive->fromData(input);
+}
+
+void SerializationRegistry::deserialize(
+    DataInput& input,
+    std::shared_ptr<DataSerializable> dataSerializable) const {
+  dataSerializable->fromData(input);
+}
+
+void SerializationRegistry::deserialize(
+    DataInput& input, std::shared_ptr<PdxSerializable> pdxSerializable) const {
+  throw UnsupportedOperationException(
+      "SerializationRegistry::deserialize<PdxSerializable> not implemented");
 }
 
 void SerializationRegistry::addType(TypeFactoryMethod func) {
