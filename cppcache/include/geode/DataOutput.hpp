@@ -37,9 +37,11 @@
 namespace apache {
 namespace geode {
 namespace client {
+
 class SerializationRegistry;
 class DataOutputInternal;
 class CacheImpl;
+class TcrMessage;
 
 /**
  * Provide operations for writing primitive data values, byte arrays,
@@ -757,6 +759,7 @@ class _GEODE_EXPORT DataOutput {
   friend CacheImpl;
   friend DataOutputInternal;
   friend CacheableString;
+  friend TcrMessage;
 };
 
 template void DataOutput::writeJavaModifiedUtf8(const std::u16string&);
