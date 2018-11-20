@@ -26,107 +26,162 @@
 
 #include "TimerQueue.hpp"
 
+using apache::geode::client::TimerQueue;
+
+class TestableTimerEvent {
+ private:
+  std::vector<TestableTimerEvent*>& order_;
+  std::mutex& mutex_;
+
+ public:
+  std::condition_variable condition_;
+  bool called_;
+
+  inline TestableTimerEvent(std::vector<TestableTimerEvent*>& order,
+                            std::mutex& mutex)
+      : order_(order), mutex_(mutex), called_(false) {}
+
+  inline void operator()() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    order_.push_back(this);
+    called_ = true;
+    condition_.notify_all();
+  }
+
+  template <class... Args>
+  inline bool wait_for(std::chrono::duration<Args...> duration) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    return condition_.wait_for(lock, duration, [&] { return called_; });
+  }
+};
+
 TEST(TimerQueueTest, oneEventSpecficTime) {
   TimerQueue timerQueue;
 
-  std::condition_variable called;
+  std::vector<TestableTimerEvent*> order;
+  std::mutex mutex;
 
+  TestableTimerEvent event(order, mutex);
   auto id = timerQueue.schedule(
       std::chrono::steady_clock::now() + std::chrono::seconds(1),
-      TimerEntry::packaged_task([&] { called.notify_all(); }));
+      [&] { event(); });
+  EXPECT_EQ(1, id);
 
-  ASSERT_EQ(1, id);
-
-  std::mutex mutex;
-  std::unique_lock<decltype(mutex)> lock(mutex);
-  auto status = called.wait_for(lock, std::chrono::seconds(10));
-  EXPECT_EQ(std::cv_status::no_timeout, status);
+  auto called = event.wait_for(std::chrono::seconds(3));
+  EXPECT_TRUE(called);
+  ASSERT_EQ(1, order.size());
+  EXPECT_EQ(&event, order[0]);
 }
 
-TEST(TimerQueueTest, twoEventsSpecficTimeAddedInOrder) {
+TEST(TimerQueueTest, oneEventByDruation) {
   TimerQueue timerQueue;
 
-  std::vector<int> order;
+  std::vector<TestableTimerEvent*> order;
   std::mutex mutex;
 
-  std::condition_variable condition1;
-  bool called1 = false;
-  auto id = timerQueue.schedule(
-      std::chrono::steady_clock::now() + std::chrono::seconds(1), [&] {
-        std::lock_guard<decltype(mutex)> lock(mutex);
-        order.push_back(1);
-        called1 = true;
-        condition1.notify_all();
-      });
-  ASSERT_EQ(1, id);
+  TestableTimerEvent event(order, mutex);
+  auto id = timerQueue.schedule(std::chrono::seconds(1), [&] { event(); });
+  EXPECT_EQ(1, id);
 
-  std::condition_variable condition2;
-  bool called2 = false;
-  id = timerQueue.schedule(std::chrono::seconds(2), [&] {
-    std::lock_guard<decltype(mutex)> lock(mutex);
-    order.push_back(2);
-    called2 = true;
-    condition2.notify_all();
-  });
-  ASSERT_EQ(2, id);
+  auto called = event.wait_for(std::chrono::seconds(3));
+  EXPECT_TRUE(called);
+  ASSERT_EQ(1, order.size());
+  EXPECT_EQ(&event, order[0]);
+}
 
-  std::unique_lock<decltype(mutex)> lock(mutex);
-  auto called = condition1.wait_for(lock, std::chrono::seconds(3),
-                                    [&] { return called1; });
-  ASSERT_TRUE(called);
+TEST(TimerQueueTest, twoEventsAddedInOrder) {
+  TimerQueue timerQueue;
+
+  std::vector<TestableTimerEvent*> order;
+  std::mutex mutex;
+
+  TestableTimerEvent event1(order, mutex);
+  auto id1 = timerQueue.schedule(std::chrono::seconds(1), [&] { event1(); });
+  EXPECT_EQ(1, id1);
+
+  TestableTimerEvent event2(order, mutex);
+  auto id2 = timerQueue.schedule(std::chrono::seconds(5), [&] { event2(); });
+  EXPECT_EQ(2, id2);
+
+  auto called1 = event1.wait_for(std::chrono::seconds(3));
   EXPECT_TRUE(called1);
-  EXPECT_EQ(1, order.size());
-  EXPECT_EQ(1, order[0]);
+  ASSERT_EQ(1, order.size());
+  EXPECT_EQ(&event1, order[0]);
 
-  called = condition2.wait_for(lock, std::chrono::seconds(10),
-                               [&] { return called2; });
-  ASSERT_TRUE(called);
+  auto called2 = event2.wait_for(std::chrono::seconds(10));
   EXPECT_TRUE(called2);
-  EXPECT_EQ(2, order.size());
-  EXPECT_EQ(2, order[1]);
+  ASSERT_EQ(2, order.size());
+  EXPECT_EQ(&event2, order[1]);
 }
 
-TEST(TimerQueueTest, twoEventsSpecficTimeAddedOutOfOrder) {
+TEST(TimerQueueTest, twoEventsAddedOutOfOrder) {
   TimerQueue timerQueue;
 
-  std::vector<int> order;
+  std::vector<TestableTimerEvent*> order;
   std::mutex mutex;
 
-  std::condition_variable condition2;
-  bool called2 = false;
-  auto id = timerQueue.schedule(
-      std::chrono::steady_clock::now() + std::chrono::seconds(5), [&] {
-        std::lock_guard<decltype(mutex)> lock(mutex);
-        order.push_back(2);
-        called2 = true;
-        condition2.notify_all();
-      });
-  ASSERT_EQ(1, id);
+  TestableTimerEvent event2(order, mutex);
+  auto id2 = timerQueue.schedule(std::chrono::seconds(5), [&] { event2(); });
+  EXPECT_EQ(1, id2);
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  std::condition_variable condition1;
-  bool called1 = false;
-  id = timerQueue.schedule(std::chrono::seconds(1), [&] {
-    std::lock_guard<decltype(mutex)> lock(mutex);
-    order.push_back(1);
-    called1 = true;
-    condition1.notify_all();
-  });
-  ASSERT_EQ(2, id);
+  TestableTimerEvent event1(order, mutex);
+  auto id1 = timerQueue.schedule(std::chrono::seconds(1), [&] { event1(); });
+  EXPECT_EQ(2, id1);
 
-  std::unique_lock<decltype(mutex)> lock(mutex);
-  auto called = condition1.wait_for(lock, std::chrono::seconds(3),
-                                    [&] { return called1; });
-  ASSERT_TRUE(called);
+  auto called1 = event1.wait_for(std::chrono::seconds(3));
   EXPECT_TRUE(called1);
-  EXPECT_EQ(1, order.size());
-  EXPECT_EQ(1, order[0]);
+  ASSERT_EQ(1, order.size());
+  EXPECT_EQ(&event1, order[0]);
 
-  called = condition2.wait_for(lock, std::chrono::seconds(10),
-                               [&] { return called2; });
-  ASSERT_TRUE(called);
+  auto called2 = event2.wait_for(std::chrono::seconds(10));
   EXPECT_TRUE(called2);
-  EXPECT_EQ(2, order.size());
-  EXPECT_EQ(2, order[1]);
+  ASSERT_EQ(2, order.size());
+  EXPECT_EQ(&event2, order[1]);
+}
+
+TEST(TimerQueueTest, cancelTimer) {
+  TimerQueue timerQueue;
+
+  std::vector<TestableTimerEvent*> order;
+  std::mutex mutex;
+
+  TestableTimerEvent event(order, mutex);
+  auto id = timerQueue.schedule(std::chrono::seconds(1), [&] { event(); });
+  EXPECT_EQ(1, id);
+
+  auto canceled = timerQueue.cancel(id);
+  EXPECT_TRUE(canceled);
+
+  auto called = event.wait_for(std::chrono::seconds(3));
+  EXPECT_FALSE(called);
+  EXPECT_EQ(0, order.size());
+}
+
+TEST(TimerQueueTest, cancelTimeNextEventFires) {
+  TimerQueue timerQueue;
+
+  std::vector<TestableTimerEvent*> order;
+  std::mutex mutex;
+
+  TestableTimerEvent event1(order, mutex);
+  auto id1 = timerQueue.schedule(std::chrono::seconds(1), [&] { event1(); });
+  EXPECT_EQ(1, id1);
+
+  TestableTimerEvent event2(order, mutex);
+  auto id2 = timerQueue.schedule(std::chrono::seconds(5), [&] { event2(); });
+  EXPECT_EQ(2, id2);
+
+  auto canceled = timerQueue.cancel(id1);
+  EXPECT_TRUE(canceled);
+
+  auto called1 = event1.wait_for(std::chrono::seconds(3));
+  EXPECT_FALSE(called1);
+  EXPECT_EQ(0, order.size());
+
+  auto called2 = event2.wait_for(std::chrono::seconds(10));
+  EXPECT_TRUE(called2);
+  ASSERT_EQ(1, order.size());
+  EXPECT_EQ(&event2, order[0]);
 }
