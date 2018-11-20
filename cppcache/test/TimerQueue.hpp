@@ -43,7 +43,7 @@ class TimerEntry {
 
   inline const time_point& getWhen() const { return when_; }
 
-  inline const std::shared_ptr<packaged_task>& getTask() const { return task_; }
+  inline packaged_task& getTask() const { return *task_; }
 
   inline bool operator==(const TimerEntry& other) const {
     return id_ == other.id_ && when_ == other.when_;
@@ -67,13 +67,14 @@ struct TimerCompare {
   }
 };
 
-class TimerQueue {
+class TimerQueue
+    : private std::priority_queue<TimerEntry, std::vector<TimerEntry>,
+                                  TimerCompare> {
  private:
   TimerEntry::id_type id_;
   std::thread thread_;
   std::mutex mutex_;
   std::condition_variable condition_;
-  std::priority_queue<TimerEntry, std::vector<TimerEntry>, TimerCompare> queue_;
   std::atomic<bool> stop_;
 
  public:
@@ -82,34 +83,36 @@ class TimerQueue {
       while (true) {
         std::unique_lock<decltype(mutex_)> lock(mutex_);
 
-        condition_.wait(lock, [this] { return stop_ || !queue_.empty(); });
+        condition_.wait(lock, [this] { return stop_ || !empty(); });
         if (stop_) {
           break;
         }
 
-        const auto& timerEntry = queue_.top();
+        auto timerEntry = top();
         //        std::cout << "TimerQueue: waiting id=" << timerEntry.getId()
         //                  << ", when="
         //                  << timerEntry.getWhen().time_since_epoch().count()
         //                  << std::endl;
         if (auto status = condition_.wait_until(
                 lock, timerEntry.getWhen(),
-                [&] { return stop_ || queue_.top() != timerEntry; })) {
+                [&] { return stop_ || (!empty() && top() != timerEntry); })) {
+          // Currently sleeping timer is not the next timer, try again.
           //          std::cout << "TimerQueue: resetting next timer " <<
           //          std::endl;
           continue;
         }
 
-        auto task = timerEntry.getTask();
+        // Current/top timer has expired.
+        pop();
+        lock.unlock();
+
+        auto& task = timerEntry.getTask();
         //        std::cout << "TimerQueue: executing id=" << timerEntry.getId()
         //                  << ", locked=" << lock.owns_lock()
         //                  << ", task=" << static_cast<void*>(task.get()) <<
         //                  std::endl;
-        queue_.pop();
-        lock.unlock();
-
-        auto future = task->get_future();
-        (*task)();
+        auto future = task.get_future();
+        task();
         future.get();
       }
     });
@@ -122,7 +125,7 @@ class TimerQueue {
                                       Function&& task) {
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
-      queue_.emplace(
+      emplace(
           ++id_, when,
           TimerEntry::packaged_task(std::bind(std::forward<Function>(task))));
     }
