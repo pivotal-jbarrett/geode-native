@@ -26,6 +26,10 @@
 #include <queue>
 #include <vector>
 
+namespace apache {
+namespace geode {
+namespace client {
+
 struct TimerCompare;
 
 class TimerEntry {
@@ -70,14 +74,11 @@ struct TimerCompare {
 class TimerQueue
     : private std::priority_queue<TimerEntry, std::vector<TimerEntry>,
                                   TimerCompare> {
- private:
-  TimerEntry::id_type id_;
-  std::thread thread_;
-  std::mutex mutex_;
-  std::condition_variable condition_;
-  std::atomic<bool> stop_;
-
  public:
+  typedef uint64_t id_type;
+  typedef std::chrono::steady_clock::time_point time_point;
+  typedef std::packaged_task<void(void)> packaged_task;
+
   inline TimerQueue() : id_(0), stop_(false) {
     thread_ = std::thread([this] {
       while (true) {
@@ -88,29 +89,19 @@ class TimerQueue
           break;
         }
 
-        auto timerEntry = top();
-        //        std::cout << "TimerQueue: waiting id=" << timerEntry.getId()
-        //                  << ", when="
-        //                  << timerEntry.getWhen().time_since_epoch().count()
-        //                  << std::endl;
-        if (auto status = condition_.wait_until(
-                lock, timerEntry.getWhen(),
-                [&] { return stop_ || (!empty() && top() != timerEntry); })) {
-          // Currently sleeping timer is not the next timer, try again.
-          //          std::cout << "TimerQueue: resetting next timer " <<
-          //          std::endl;
+        auto nextTimer = top();
+        if (condition_.wait_until(lock, nextTimer.getWhen(), [&] {
+              return stop_ || (!empty() && top() != nextTimer);
+            })) {
+          // Next timer replaced before expiring.
           continue;
         }
 
-        // Current/top timer has expired.
+        // Next/top timer has expired.
         pop();
         lock.unlock();
 
-        auto& task = timerEntry.getTask();
-        //        std::cout << "TimerQueue: executing id=" << timerEntry.getId()
-        //                  << ", locked=" << lock.owns_lock()
-        //                  << ", task=" << static_cast<void*>(task.get()) <<
-        //                  std::endl;
+        auto& task = nextTimer.getTask();
         auto future = task.get_future();
         task();
         future.get();
@@ -121,18 +112,12 @@ class TimerQueue
   inline ~TimerQueue() noexcept { stop(); }
 
   template <class Function>
-  inline TimerEntry::id_type schedule(TimerEntry::time_point when,
-                                      Function&& task) {
+  inline id_type schedule(time_point when, Function&& task) {
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
-      emplace(
-          ++id_, when,
-          TimerEntry::packaged_task(std::bind(std::forward<Function>(task))));
+      emplace(++id_, when,
+              packaged_task(std::bind(std::forward<Function>(task))));
     }
-
-    //    std::cout << "TimerQueue: added id=" << id_
-    //              << ", when=" << when.time_since_epoch().count() <<
-    //              std::endl;
 
     condition_.notify_one();
 
@@ -140,12 +125,30 @@ class TimerQueue
   }
 
   template <class... Args, class Function>
-  inline TimerEntry::id_type schedule(std::chrono::duration<Args...> duration,
-                                      Function&& task) {
-    return schedule(TimerEntry::time_point::clock::now() + duration,
+  inline id_type schedule(std::chrono::duration<Args...> duration,
+                          Function&& task) {
+    return schedule(time_point::clock::now() + duration,
                     std::forward<Function>(task));
   }
 
+  inline bool cancel(TimerEntry::id_type id) {
+    std::unique_lock<decltype(mutex_)> lock(mutex_);
+
+    const auto& found = std::find_if(
+        c.begin(), c.end(),
+        [&](const TimerEntry& entry) { return entry.getId() == id; });
+
+    if (found != c.end()) {
+      c.erase(found);
+      lock.unlock();
+      condition_.notify_one();
+      return true;
+    }
+
+    return false;
+  }
+
+ protected:
   inline void stop() {
     if (!stop_.exchange(true)) {
       condition_.notify_one();
@@ -156,6 +159,17 @@ class TimerQueue
       // ignore
     }
   }
+
+ private:
+  id_type id_;
+  std::thread thread_;
+  std::mutex mutex_;
+  std::condition_variable condition_;
+  std::atomic<bool> stop_;
 };
+
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
 
 #endif  // NATIVECLIENT_TIMERQUEUE_H
