@@ -49,7 +49,8 @@ add_executable(apache-geode_unittests
   util/chrono/durationTest.cpp
   LocalRegionTest.cpp
   util/queueTest.cpp
-  ThreadPoolTest.cpp TimerQueue.cpp TimerQueue.hpp TimerQueueTest.cpp)
+  ThreadPoolTest.cpp
+  TimerQueueTest.cpp)
 
 target_compile_definitions(apache-geode_unittests
   PUBLIC
