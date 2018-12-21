@@ -188,7 +188,7 @@ TEST_F(CacheableStringTests, TestFromDataAsciiHuge) {
 
 TEST_F(CacheableStringTests, TestToDataNonAsciiHuge) {
   std::string utf8(std::numeric_limits<uint16_t>::max(), 'a');
-  utf8.append(u8"\u00E4");
+  utf8.append(u8"\u00E4\U00000838\U00010000");
   auto&& utf16 =
       std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
           .from_bytes(utf8);
@@ -205,7 +205,8 @@ TEST_F(CacheableStringTests, TestToDataNonAsciiHuge) {
   // 0x0061 - first 'a'
   // 0x006100E4 - last 'a\u00e4'
   // EXPECT_MATCH("000100000061.*006100e4", to_hex(out));
-  EXPECT_BYTEARRAY_EQ("000100000061\\h{262132}006100E4", out.getByteArray());
+  EXPECT_BYTEARRAY_EQ("000100030061\\h{262132}006100E40838D800DC00",
+                      out.getByteArray());
 }
 
 TEST_F(CacheableStringTests, TestFromDataNonAsciiHuge) {

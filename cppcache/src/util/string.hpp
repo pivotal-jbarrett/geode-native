@@ -167,6 +167,35 @@ inline bool equal_ignore_case(const std::string& str1,
                      }));
 }
 
+template <class Callback, size_t BufferSize = 64>
+inline void to_utf16(const char* begin, const char* end, Callback callback) {
+  std::codecvt_utf8_utf16<char16_t> codecvt;
+  std::mbstate_t mb;
+
+  auto next = begin;
+
+  char16_t to[BufferSize];
+  const auto toBegin = &to[0];
+  const auto toEnd = &to[BufferSize];
+  auto toNext = toBegin;
+
+  while (begin < end) {
+    codecvt.in(mb, begin, end, next, toBegin, toEnd, toNext);
+    if (!callback(toBegin, toNext)) {
+      break;
+    }
+    begin = next;
+  }
+}
+
+template <class Callback, size_t BufferSize = 64, class _Traits,
+          class _Allocator>
+inline void to_utf16(const std::basic_string<char, _Traits, _Allocator>& value,
+                     Callback callback) {
+  to_utf16<Callback, BufferSize>(value.data(), value.data() + value.size(),
+                                 callback);
+}
+
 }  // namespace client
 }  // namespace geode
 }  // namespace apache

@@ -140,65 +140,29 @@ Cache* DataOutput::getCache() const { return m_cache->getCache(); }
 template <class _Traits, class _Allocator>
 void DataOutput::writeJavaModifiedUtf8(
     const std::basic_string<char, _Traits, _Allocator>& value) {
-  /*
-   * OPTIMIZE convert from UTF-8 to CESU-8/Java Modified UTF-8 directly
-   * http://www.unicode.org/reports/tr26/
-   */
-  if (value.empty()) {
-    writeInt(static_cast<uint16_t>(0));
-  } else {
+  // Save room for length, to be set at end
+  writeInt(static_cast<uint16_t>(0));
+
+  if (!value.empty()) {
     // Save room to come back later for length
     auto maxEncodedLength =
         static_cast<size_t>(std::numeric_limits<uint16_t>::max());
-    writeInt(static_cast<uint16_t>(0));
-    // Assume UTF-8 to JMUTF-8 will produce the same length
-    ensureCapacity(std::min(value.size(), maxEncodedLength));
+
     size_t encodedLength = 0;
 
-    for (auto&& it = value.cbegin(); it < value.cend(); it++) {
-      auto cp = static_cast<uint32_t>(0xff & *it);
-      if (cp < 0x80) {
-        // 1 byte
-      } else if ((cp >> 5) == 0x6) {
-        // 2 bytes
-        ++it;
-        cp = ((cp << 6) & 0x7ff) + ((*it) & 0x3f);
-      } else if ((cp >> 4) == 0xe) {
-        // 3 bytes
-        ++it;
-        cp = ((cp << 12) & 0xffff) + (((0xff & *it) << 6) & 0xfff);
-        ++it;
-        cp += (*it) & 0x3f;
-      } else if ((cp >> 3) == 0x1e) {
-        // 4 bytes
-        ++it;
-        cp = ((cp << 18) & 0x1fffff) + (((0xff & *it) << 12) & 0x3ffff);
-        ++it;
-        cp += ((0xff & *it) << 6) & 0xfff;
-        ++it;
-        cp += (*it) & 0x3f;
-      } else {
-        // TODO throw exception
-      }
-
-      if (cp > 0xffff) {
-        // surrogate pair UTF-16 code units
-        ensureCapacity(6);
-        encodedLength += encodeJavaModifiedUtf8(
-            static_cast<char16_t>((cp >> 10) + (0xD800 - (0x10000 >> 10))));
-        encodedLength += encodeJavaModifiedUtf8(
-            static_cast<char16_t>((cp & 0x3ff) + 0xdc00u));
-      } else {
-        // single UTF-16 code unit
-        ensureCapacity(3);
-        encodedLength += encodeJavaModifiedUtf8(static_cast<char16_t>(cp));
+    to_utf16(value, [&](const char16_t* begin, const char16_t* end) {
+      ensureCapacity((end - begin) * 3);
+      for (; begin < end; begin++) {
+        encodedLength += encodeJavaModifiedUtf8(*begin);
       }
 
       if (encodedLength >= maxEncodedLength) {
         encodedLength = maxEncodedLength;
-        break;
+        return false;
       }
-    }
+
+      return true;
+    });
 
     // Rewrite encoded length
     auto tmp = m_buf;
@@ -302,52 +266,19 @@ template APACHE_GEODE_EXPLICIT_TEMPLATE_EXPORT void DataOutput::writeUtf16(
 size_t DataOutput::writeUtf16(const char* utf8, size_t utf8Length,
                               size_t maxUtf16Length) {
   size_t utf16Length = 0;
-  auto end = utf8 + utf8Length;
-  for (; utf8 < end; utf8++) {
-    auto cp = static_cast<uint32_t>(0xff & *utf8);
-    if (cp < 0x80) {
-      // 1 byte
-    } else if ((cp >> 5) == 0x6) {
-      // 2 bytes
-      ++utf8;
-      cp = ((cp << 6) & 0x7ff) + ((*utf8) & 0x3f);
-    } else if ((cp >> 4) == 0xe) {
-      // 3 bytes
-      ++utf8;
-      cp = ((cp << 12) & 0xffff) + (((0xff & *utf8) << 6) & 0xfff);
-      ++utf8;
-      cp += (*utf8) & 0x3f;
-    } else if ((cp >> 3) == 0x1e) {
-      // 4 bytes
-      ++utf8;
-      cp = ((cp << 18) & 0x1fffff) + (((0xff & *utf8) << 12) & 0x3ffff);
-      ++utf8;
-      cp += ((0xff & *utf8) << 6) & 0xfff;
-      ++utf8;
-      cp += (*utf8) & 0x3f;
-    } else {
-      // TODO throw exception
-    }
 
-    if (cp > 0xffff) {
-      // surrogate pair UTF-16 code units
-      ensureCapacity(4);
-      utf16Length += 2;
-      writeUtf16Unchecked(
-          static_cast<char16_t>((cp >> 10) + (0xD800 - (0x10000 >> 10))));
-      writeUtf16Unchecked(static_cast<char16_t>((cp & 0x3ff) + 0xdc00u));
-    } else {
-      // single UTF-16 code unit
-      ensureCapacity(2);
-      utf16Length += 1;
-      writeUtf16Unchecked(static_cast<char16_t>(cp));
-    }
+  to_utf16(utf8, utf8 + utf8Length,
+           [&](const char16_t* begin, const char16_t* end) {
+             auto length = end - begin;
+             writeUtf16(begin, length);
+             utf16Length += length;
+             if (utf16Length >= maxUtf16Length) {
+               utf16Length = maxUtf16Length;
+               return false;
+             }
 
-    if (utf16Length >= maxUtf16Length) {
-      utf16Length = maxUtf16Length;
-      break;
-    }
-  }
+             return true;
+           });
 
   return utf16Length;
 }

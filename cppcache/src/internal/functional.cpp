@@ -15,29 +15,27 @@
  * limitations under the License.
  */
 
-#pragma once
+#include <geode/internal/functional.hpp>
 
-#ifndef BENCHMARK_UTIL_HPP
-#define BENCHMARK_UTIL_HPP
+#include "../util/string.hpp"
 
-#include "util/string.hpp"
+namespace apache {
+namespace geode {
+namespace client {
+namespace internal {
 
-constexpr char32_t LATIN_CAPITAL_LETTER_C = U'\U00000043';
-constexpr char32_t INVERTED_EXCLAMATION_MARK = U'\U000000A1';
-constexpr char32_t SAMARITAN_PUNCTUATION_ZIQAA = U'\U00000838';
-constexpr char32_t LINEAR_B_SYLLABLE_B008_A = U'\U00010000';
-
-template <class ToString, class FromString>
-ToString convert(const FromString& from);
-
-template <>
-inline std::string convert(const std::u32string& from) {
-  return apache::geode::client::to_utf8(from);
+int32_t geode_hash<std::string>::operator()(const std::string& val) {
+  int32_t hash = 0;
+  to_utf16(val, [&](const char16_t* begin, const char16_t* end) {
+    for (; begin < end; begin++) {
+      hash = 31 * hash + *begin;
+    }
+    return true;
+  });
+  return hash;
 }
 
-template <>
-inline std::u16string convert(const std::u32string& from) {
-  return apache::geode::client::to_utf16(from);
-}
-
-#endif  // BENCHMARK_UTIL_HPP
+}  // namespace internal
+}  // namespace client
+}  // namespace geode
+}  // namespace apache
