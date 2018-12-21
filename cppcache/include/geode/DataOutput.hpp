@@ -598,6 +598,8 @@ class APACHE_GEODE_EXPORT DataOutput {
     writeUtf16(data, length);
   }
 
+  void writeUtf16Huge(const char* data, size_t length);
+
   void writeUtf16Huge(const char32_t* data, size_t len);
 
   template <class _CharT, class _Traits, class _Allocator>
@@ -623,16 +625,23 @@ class APACHE_GEODE_EXPORT DataOutput {
     writeUtf16(reinterpret_cast<const _Convert*>(value.data()), value.length());
   }
 
+  inline void writeUtf16Unchecked(char16_t value) {
+    *reinterpret_cast<uint16_t*>(m_buf) =
+        internal::endian_convert::native_to_big(static_cast<uint16_t>(value));
+    m_buf += 2;
+  }
+
   inline void writeUtf16(const char16_t* data, size_t length) {
     ensureCapacity(length * 2);
     for (; length > 0; length--, data++) {
-      *reinterpret_cast<uint16_t*>(m_buf) =
-          internal::endian_convert::native_to_big(static_cast<uint16_t>(*data));
-      m_buf += 2;
+      writeUtf16Unchecked(*data);
     }
   }
 
   void writeUtf16(const char32_t* data, size_t len);
+
+  size_t writeUtf16(const char* utf8, size_t utf8Length,
+                    size_t maxUtf16Length = std::numeric_limits<size_t>::max());
 
   static size_t getJavaModifiedUtf8EncodedLength(const char16_t* data,
                                                  size_t length);

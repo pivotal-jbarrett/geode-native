@@ -247,11 +247,27 @@ void DataOutput::writeUtf16Huge(
   if (value.empty()) {
     writeInt(static_cast<uint16_t>(0));
   } else {
-    writeUtf16Huge(to_utf16(value));
+    writeUtf16Huge(value.data(), value.length());
   }
 }
 template APACHE_GEODE_EXPLICIT_TEMPLATE_EXPORT void DataOutput::writeUtf16Huge(
     const std::string&);
+
+void DataOutput::writeUtf16Huge(const char* utf8, size_t utf8Length) {
+  size_t utf16Length = 0;
+
+  // save space for length later;
+  writeInt(static_cast<uint32_t>(utf16Length));
+
+  utf16Length =
+      writeUtf16(utf8, utf8Length, std::numeric_limits<uint32_t>::max());
+
+  // Rewrite encoded length
+  auto tmp = m_buf;
+  m_buf -= sizeof(uint32_t) + (utf16Length * sizeof(char16_t));
+  writeInt(static_cast<uint32_t>(utf16Length));
+  m_buf = tmp;
+}
 
 template <class _Traits, class _Allocator>
 void DataOutput::writeUtf16Huge(
@@ -278,13 +294,63 @@ void DataOutput::writeUtf16Huge(const char32_t* data, size_t len) {
 template <class _Traits, class _Allocator>
 void DataOutput::writeUtf16(
     const std::basic_string<char, _Traits, _Allocator>& value) {
-  // TODO string OPTIMIZE convert from UTF-8 to UTF-16 directly
-  if (!value.empty()) {
-    writeUtf16(to_utf16(value));
-  }
+  writeUtf16(value.data(), value.length());
 }
 template APACHE_GEODE_EXPLICIT_TEMPLATE_EXPORT void DataOutput::writeUtf16(
     const std::string&);
+
+size_t DataOutput::writeUtf16(const char* utf8, size_t utf8Length,
+                              size_t maxUtf16Length) {
+  size_t utf16Length = 0;
+  auto end = utf8 + utf8Length;
+  for (; utf8 < end; utf8++) {
+    auto cp = static_cast<uint32_t>(0xff & *utf8);
+    if (cp < 0x80) {
+      // 1 byte
+    } else if ((cp >> 5) == 0x6) {
+      // 2 bytes
+      ++utf8;
+      cp = ((cp << 6) & 0x7ff) + ((*utf8) & 0x3f);
+    } else if ((cp >> 4) == 0xe) {
+      // 3 bytes
+      ++utf8;
+      cp = ((cp << 12) & 0xffff) + (((0xff & *utf8) << 6) & 0xfff);
+      ++utf8;
+      cp += (*utf8) & 0x3f;
+    } else if ((cp >> 3) == 0x1e) {
+      // 4 bytes
+      ++utf8;
+      cp = ((cp << 18) & 0x1fffff) + (((0xff & *utf8) << 12) & 0x3ffff);
+      ++utf8;
+      cp += ((0xff & *utf8) << 6) & 0xfff;
+      ++utf8;
+      cp += (*utf8) & 0x3f;
+    } else {
+      // TODO throw exception
+    }
+
+    if (cp > 0xffff) {
+      // surrogate pair UTF-16 code units
+      ensureCapacity(4);
+      utf16Length += 2;
+      writeUtf16Unchecked(
+          static_cast<char16_t>((cp >> 10) + (0xD800 - (0x10000 >> 10))));
+      writeUtf16Unchecked(static_cast<char16_t>((cp & 0x3ff) + 0xdc00u));
+    } else {
+      // single UTF-16 code unit
+      ensureCapacity(2);
+      utf16Length += 1;
+      writeUtf16Unchecked(static_cast<char16_t>(cp));
+    }
+
+    if (utf16Length >= maxUtf16Length) {
+      utf16Length = maxUtf16Length;
+      break;
+    }
+  }
+
+  return utf16Length;
+}
 
 template <class _Traits, class _Allocator>
 void DataOutput::writeUtf16(
