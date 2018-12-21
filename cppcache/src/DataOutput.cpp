@@ -147,7 +147,64 @@ void DataOutput::writeJavaModifiedUtf8(
   if (value.empty()) {
     writeInt(static_cast<uint16_t>(0));
   } else {
-    writeJavaModifiedUtf8(to_utf16(value));
+    // Save room to come back later for length
+    auto maxEncodedLength =
+        static_cast<size_t>(std::numeric_limits<uint16_t>::max());
+    writeInt(static_cast<uint16_t>(0));
+    // Assume UTF-8 to JMUTF-8 will produce the same length
+    ensureCapacity(std::min(value.size(), maxEncodedLength));
+    size_t encodedLength = 0;
+
+    for (auto&& it = value.cbegin(); it < value.cend(); it++) {
+      auto cp = static_cast<uint32_t>(0xff & *it);
+      if (cp < 0x80) {
+        // 1 byte
+      } else if ((cp >> 5) == 0x6) {
+        // 2 bytes
+        ++it;
+        cp = ((cp << 6) & 0x7ff) + ((*it) & 0x3f);
+      } else if ((cp >> 4) == 0xe) {
+        // 3 bytes
+        ++it;
+        cp = ((cp << 12) & 0xffff) + (((0xff & *it) << 6) & 0xfff);
+        ++it;
+        cp += (*it) & 0x3f;
+      } else if ((cp >> 3) == 0x1e) {
+        // 4 bytes
+        ++it;
+        cp = ((cp << 18) & 0x1fffff) + (((0xff & *it) << 12) & 0x3ffff);
+        ++it;
+        cp += ((0xff & *it) << 6) & 0xfff;
+        ++it;
+        cp += (*it) & 0x3f;
+      } else {
+        // TODO throw exception
+      }
+
+      if (cp > 0xffff) {
+        // surrogate pair UTF-16 code units
+        ensureCapacity(6);
+        encodedLength += encodeJavaModifiedUtf8(
+            static_cast<char16_t>((cp >> 10) + (0xD800 - (0x10000 >> 10))));
+        encodedLength += encodeJavaModifiedUtf8(
+            static_cast<char16_t>((cp & 0x3ff) + 0xdc00u));
+      } else {
+        // single UTF-16 code unit
+        ensureCapacity(3);
+        encodedLength += encodeJavaModifiedUtf8(static_cast<char16_t>(cp));
+      }
+
+      if (encodedLength >= maxEncodedLength) {
+        encodedLength = maxEncodedLength;
+        break;
+      }
+    }
+
+    // Rewrite encoded length
+    auto tmp = m_buf;
+    m_buf -= sizeof(uint16_t) + encodedLength;
+    writeInt(static_cast<uint16_t>(encodedLength));
+    m_buf = tmp;
   }
 }
 template APACHE_GEODE_EXPLICIT_TEMPLATE_EXPORT void

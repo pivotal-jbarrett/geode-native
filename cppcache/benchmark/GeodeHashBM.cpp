@@ -19,24 +19,9 @@
 
 #include <geode/CacheableString.hpp>
 
-#include "util/string.hpp"
+#include "util.hpp"
 
-using apache::geode::client::to_utf16;
-using apache::geode::client::to_utf8;
 using apache::geode::client::internal::geode_hash;
-
-template <class ToString, class FromString>
-ToString convert(const FromString& from);
-
-template <>
-std::string convert(const std::u32string& from) {
-  return to_utf8(from);
-}
-
-template <>
-std::u16string convert(const std::u32string& from) {
-  return to_utf16(from);
-}
 
 template <class String, char32_t UnicodeChar>
 void GeodeHashBM(benchmark::State& state) {
@@ -48,11 +33,6 @@ void GeodeHashBM(benchmark::State& state) {
     benchmark::DoNotOptimize(hashcode = geode_hash<String>{}(string));
   }
 }
-
-constexpr char32_t LATIN_CAPITAL_LETTER_C = U'\U00000043';
-constexpr char32_t INVERTED_EXCLAMATION_MARK = U'\U000000A1';
-constexpr char32_t SAMARITAN_PUNCTUATION_ZIQAA = U'\U00000838';
-constexpr char32_t LINEAR_B_SYLLABLE_B008_A = U'\U00010000';
 
 BENCHMARK_TEMPLATE(GeodeHashBM, std::string, LATIN_CAPITAL_LETTER_C)
     ->Range(8, 8 << 10);

@@ -25,6 +25,8 @@
 #include <cstring>
 #include <string>
 
+#include <geode/internal/endian.hpp>
+
 #include "CacheableString.hpp"
 #include "ExceptionTypes.hpp"
 #include "Serializable.hpp"
@@ -54,7 +56,7 @@ class APACHE_GEODE_EXPORT DataOutput {
    */
   inline void write(uint8_t value) {
     ensureCapacity(1);
-    writeNoCheck(value);
+    *(m_buf++) = value;
   }
 
   /**
@@ -139,8 +141,9 @@ class APACHE_GEODE_EXPORT DataOutput {
    */
   inline void writeInt(uint16_t value) {
     ensureCapacity(2);
-    *(m_buf++) = static_cast<uint8_t>(value >> 8);
-    *(m_buf++) = static_cast<uint8_t>(value);
+    *reinterpret_cast<uint16_t*>(m_buf) =
+        internal::endian_convert::native_to_big(value);
+    m_buf += 2;
   }
 
   /**
@@ -148,11 +151,7 @@ class APACHE_GEODE_EXPORT DataOutput {
    *
    * @param value the 16-bit wchar_t value to be written
    */
-  inline void writeChar(uint16_t value) {
-    ensureCapacity(2);
-    *(m_buf++) = static_cast<uint8_t>(value >> 8);
-    *(m_buf++) = static_cast<uint8_t>(value);
-  }
+  inline void writeChar(uint16_t value) { writeInt(value); }
 
   /**
    * Write a 32-bit unsigned integer value to the <code>DataOutput</code>.
@@ -161,10 +160,9 @@ class APACHE_GEODE_EXPORT DataOutput {
    */
   inline void writeInt(uint32_t value) {
     ensureCapacity(4);
-    *(m_buf++) = static_cast<uint8_t>(value >> 24);
-    *(m_buf++) = static_cast<uint8_t>(value >> 16);
-    *(m_buf++) = static_cast<uint8_t>(value >> 8);
-    *(m_buf++) = static_cast<uint8_t>(value);
+    *reinterpret_cast<uint32_t*>(m_buf) =
+        internal::endian_convert::native_to_big(value);
+    m_buf += 4;
   }
 
   /**
@@ -174,14 +172,9 @@ class APACHE_GEODE_EXPORT DataOutput {
    */
   inline void writeInt(uint64_t value) {
     ensureCapacity(8);
-    *(m_buf++) = static_cast<uint8_t>(value >> 56);
-    *(m_buf++) = static_cast<uint8_t>(value >> 48);
-    *(m_buf++) = static_cast<uint8_t>(value >> 40);
-    *(m_buf++) = static_cast<uint8_t>(value >> 32);
-    *(m_buf++) = static_cast<uint8_t>(value >> 24);
-    *(m_buf++) = static_cast<uint8_t>(value >> 16);
-    *(m_buf++) = static_cast<uint8_t>(value >> 8);
-    *(m_buf++) = static_cast<uint8_t>(value);
+    *reinterpret_cast<uint64_t*>(m_buf) =
+        internal::endian_convert::native_to_big(value);
+    m_buf += 8;
   }
 
   /**
@@ -463,8 +456,6 @@ class APACHE_GEODE_EXPORT DataOutput {
     return result;
   }
 
-  static void safeDelete(uint8_t* src) { _GEODE_SAFE_DELETE(src); }
-
   virtual Cache* getCache() const;
 
   DataOutput() = delete;
@@ -635,8 +626,9 @@ class APACHE_GEODE_EXPORT DataOutput {
   inline void writeUtf16(const char16_t* data, size_t length) {
     ensureCapacity(length * 2);
     for (; length > 0; length--, data++) {
-      writeNoCheck(static_cast<uint8_t>(*data >> 8));
-      writeNoCheck(static_cast<uint8_t>(*data));
+      *reinterpret_cast<uint16_t*>(m_buf) =
+          internal::endian_convert::native_to_big(static_cast<uint16_t>(*data));
+      m_buf += 2;
     }
   }
 
@@ -645,81 +637,29 @@ class APACHE_GEODE_EXPORT DataOutput {
   static size_t getJavaModifiedUtf8EncodedLength(const char16_t* data,
                                                  size_t length);
 
-  inline static void getEncodedLength(const char val, int32_t& encodedLen) {
-    if ((val == 0) || (val & 0x80)) {
-      // two byte.
-      encodedLen += 2;
-    } else {
-      // one byte.
-      encodedLen++;
-    }
-  }
-
-  inline static void getEncodedLength(const wchar_t val, int32_t& encodedLen) {
-    if (val == 0) {
-      encodedLen += 2;
-    } else if (val < 0x80)  // ASCII character
-    {
-      encodedLen++;
-    } else if (val < 0x800) {
-      encodedLen += 2;
-    } else {
-      encodedLen += 3;
-    }
-  }
-
-  inline void encodeChar(const char value) {
-    uint8_t tmp = static_cast<uint8_t>(value);
-    if ((tmp == 0) || (tmp & 0x80)) {
-      // two byte.
-      *(m_buf++) = static_cast<uint8_t>(0xc0 | ((tmp & 0xc0) >> 6));
-      *(m_buf++) = static_cast<uint8_t>(0x80 | (tmp & 0x3f));
-    } else {
-      // one byte.
-      *(m_buf++) = tmp;
-    }
-  }
-
-  // this will lose the character set encoding.
-  inline void encodeChar(const wchar_t value) {
-    uint16_t c = static_cast<uint16_t>(value);
-    if (c == 0) {
-      *(m_buf++) = 0xc0;
-      *(m_buf++) = 0x80;
-    } else if (c < 0x80) {  // ASCII character
-      *(m_buf++) = static_cast<uint8_t>(c);
-    } else if (c < 0x800) {
-      *(m_buf++) = static_cast<uint8_t>(0xC0 | c >> 6);
-      *(m_buf++) = static_cast<uint8_t>(0x80 | (c & 0x3F));
-    } else {
-      *(m_buf++) = static_cast<uint8_t>(0xE0 | c >> 12);
-      *(m_buf++) = static_cast<uint8_t>(0x80 | ((c >> 6) & 0x3F));
-      *(m_buf++) = static_cast<uint8_t>(0x80 | (c & 0x3F));
-    }
-  }
-
-  inline void encodeJavaModifiedUtf8(const char16_t c) {
+  inline size_t encodeJavaModifiedUtf8(const char16_t c) {
     if (c == 0) {
       // NUL
-      *(m_buf++) = 0xc0;
-      *(m_buf++) = 0x80;
+      m_buf[0] = 0xc0;
+      m_buf[1] = 0x80;
+      m_buf += 2;
+      return 2;
     } else if (c < 0x80) {
       // ASCII character
       *(m_buf++) = static_cast<uint8_t>(c);
+      return 1;
     } else if (c < 0x800) {
-      *(m_buf++) = static_cast<uint8_t>(0xC0 | c >> 6);
-      *(m_buf++) = static_cast<uint8_t>(0x80 | (c & 0x3F));
+      m_buf[0] = static_cast<uint8_t>(0xC0 | c >> 6);
+      m_buf[1] = static_cast<uint8_t>(0x80 | (c & 0x3F));
+      m_buf += 2;
+      return 2;
     } else {
-      *(m_buf++) = static_cast<uint8_t>(0xE0 | c >> 12);
-      *(m_buf++) = static_cast<uint8_t>(0x80 | ((c >> 6) & 0x3F));
-      *(m_buf++) = static_cast<uint8_t>(0x80 | (c & 0x3F));
+      m_buf[0] = static_cast<uint8_t>(0xE0 | c >> 12);
+      m_buf[1] = static_cast<uint8_t>(0x80 | ((c >> 6) & 0x3F));
+      m_buf[2] = static_cast<uint8_t>(0x80 | (c & 0x3F));
+      m_buf += 3;
+      return 3;
     }
-  }
-
-  inline void writeNoCheck(uint8_t value) { *(m_buf++) = value; }
-
-  inline void writeNoCheck(int8_t value) {
-    writeNoCheck(static_cast<uint8_t>(value));
   }
 
   Pool* getPool() const { return m_pool; }

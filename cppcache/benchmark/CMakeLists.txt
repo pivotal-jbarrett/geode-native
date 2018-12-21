@@ -16,7 +16,8 @@
 add_executable(cpp-benchmark
   main.cpp
   GeodeHashBM.cpp
-  )
+  DataOutputBM.cpp
+  util.hpp)
 
 target_link_libraries(cpp-benchmark
   PUBLIC

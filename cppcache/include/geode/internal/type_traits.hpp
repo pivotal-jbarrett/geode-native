@@ -23,6 +23,7 @@
 namespace apache {
 namespace geode {
 namespace client {
+namespace internal {
 
 // basic implementation of std::endian from C++20
 enum class endian {
@@ -37,6 +38,7 @@ enum class endian {
 #endif
 };
 
+}  // namespace internal
 }  // namespace client
 }  // namespace geode
 }  // namespace apache

@@ -25,7 +25,7 @@
 #include <locale>
 #include <string>
 
-#include "type_traits.hpp"
+#include <geode/internal/type_traits.hpp>
 
 namespace apache {
 namespace geode {
@@ -35,8 +35,9 @@ namespace client {
  * Native codecvt_mode endianess
  */
 constexpr std::codecvt_mode codecvt_mode_native_endian =
-    endian::native == endian::little ? std::little_endian
-                                     : static_cast<std::codecvt_mode>(0);
+    internal::endian::native == internal::endian::little
+        ? std::little_endian
+        : static_cast<std::codecvt_mode>(0);
 
 inline std::u16string to_utf16(const std::string& utf8) {
 #if defined(_MSC_VER) && _MSC_VER >= 1900

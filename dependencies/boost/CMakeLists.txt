@@ -141,3 +141,4 @@ add_boost_library(thread DEPENDENCIES Threads::Threads Boost::atomic Boost::boos
 add_boost_library(filesystem DEPENDENCIES Boost::system Boost::boost)
 add_boost_library(log DEPENDENCIES Boost::thread Boost::filesystem Boost::boost)
 add_boost_library(log_setup DEPENDENCIES Boost::log)
+add_boost_library(endian DEPENDENCIES Boost::boost)
