@@ -167,32 +167,77 @@ inline bool equal_ignore_case(const std::string& str1,
                      }));
 }
 
-template <class Callback, size_t BufferSize = 64>
+template <class Callback>
 inline void to_utf16(const char* begin, const char* end, Callback callback) {
-  std::codecvt_utf8_utf16<char16_t> codecvt;
-  std::mbstate_t mb;
-
-  auto next = begin;
-
-  char16_t to[BufferSize];
-  const auto toBegin = &to[0];
-  const auto toEnd = &to[BufferSize];
-  auto toNext = toBegin;
-
   while (begin < end) {
-    codecvt.in(mb, begin, end, next, toBegin, toEnd, toNext);
-    if (!callback(toBegin, toNext)) {
-      break;
+    auto codePoint = static_cast<uint32_t>(0xff & *begin);
+    ++begin;
+    if (codePoint < 0x80) {
+      // 1 byte
+    } else if ((codePoint >> 5) == 0x6) {
+      // 2 bytes
+      if (begin < end) {
+        codePoint = ((codePoint << 6) & 0x7ff) + ((*begin) & 0x3f);
+        ++begin;
+      } else {
+        // not enough chars in buffer, done.
+        break;
+      }
+    } else if ((codePoint >> 4) == 0xe) {
+      // 3 bytes
+      if (begin + 1 < end) {
+        codePoint =
+            ((codePoint << 12) & 0xffff) + (((0xff & *begin) << 6) & 0xfff);
+        ++begin;
+        codePoint += (*begin) & 0x3f;
+        ++begin;
+      } else {
+        // not enough chars in buffer, done.
+        break;
+      }
+    } else if ((codePoint >> 3) == 0x1e) {
+      // 4 bytes
+      if (begin + 2 < end) {
+        codePoint = ((codePoint << 18) & 0x1fffff) +
+                    (((0xff & *begin) << 12) & 0x3ffff);
+        ++begin;
+        codePoint += ((0xff & *begin) << 6) & 0xfff;
+        ++begin;
+        codePoint += (*begin) & 0x3f;
+        ++begin;
+      } else {
+        // not enough chars in buffer, done.
+        break;
+      }
+    } else {
+      // ignore this code unit and keep trying
+      continue;
     }
-    begin = next;
+
+    if (codePoint > 0xffff) {
+      // surrogate pair UTF-16 code units
+      const char16_t codeUnits[2] = {
+          static_cast<char16_t>((codePoint >> 10) + (0xD800 - (0x10000 >> 10))),
+          static_cast<char16_t>((codePoint & 0x3ff) + 0xdc00u)};
+
+      if (!callback(&codeUnits[0], &codeUnits[2])) {
+        break;
+      }
+    } else {
+      // single UTF-16 code unit
+      const auto codeUnits = reinterpret_cast<char16_t*>(&codePoint);
+      if (!callback(&codeUnits[0], &codeUnits[1])) {
+        break;
+      }
+    }
   }
 }
 
-template <class Callback, size_t BufferSize = 64, class _Traits,
+template <class Callback, class _Traits,
           class _Allocator>
 inline void to_utf16(const std::basic_string<char, _Traits, _Allocator>& value,
                      Callback callback) {
-  to_utf16<Callback, BufferSize>(value.data(), value.data() + value.size(),
+  to_utf16<Callback>(value.data(), value.data() + value.size(),
                                  callback);
 }
 
