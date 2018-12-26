@@ -1044,7 +1044,7 @@ namespace Apache
             if (m_own)
             {
               m_own = false;
-              apache::geode::client::DataOutput::safeDelete(m_buffer);
+              delete m_buffer;
             }
           }
 

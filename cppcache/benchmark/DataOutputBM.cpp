@@ -151,7 +151,7 @@ BENCHMARK(DataOutputBMWriteDouble);
 static void DataOutputBMWriteArrayLen(benchmark::State& state) {
   DataOutputInternal dataOutput;
   for (auto _ : state) {
-    dataOutput.writeArrayLen(state.range(0));
+    dataOutput.writeArrayLen(static_cast<int32_t>(state.range(0)));
     dataOutput.reset();
   }
 }
@@ -166,7 +166,7 @@ static void DataOutputBMWriteBytesUnsigned(benchmark::State& state) {
 
   DataOutputInternal dataOutput;
   for (auto _ : state) {
-    dataOutput.writeBytes(bytes.data(), bytes.size());
+    dataOutput.writeBytes(bytes.data(), static_cast<int32_t>(bytes.size()));
     dataOutput.reset();
   }
 }
@@ -177,7 +177,7 @@ static void DataOutputBMWriteBytesSigned(benchmark::State& state) {
 
   DataOutputInternal dataOutput;
   for (auto _ : state) {
-    dataOutput.writeBytes(bytes.data(), bytes.size());
+    dataOutput.writeBytes(bytes.data(), static_cast<int32_t>(bytes.size()));
     dataOutput.reset();
   }
 }
