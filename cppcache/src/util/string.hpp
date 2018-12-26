@@ -233,12 +233,10 @@ inline void to_utf16(const char* begin, const char* end, Callback callback) {
   }
 }
 
-template <class Callback, class _Traits,
-          class _Allocator>
+template <class Callback, class _Traits, class _Allocator>
 inline void to_utf16(const std::basic_string<char, _Traits, _Allocator>& value,
                      Callback callback) {
-  to_utf16<Callback>(value.data(), value.data() + value.size(),
-                                 callback);
+  to_utf16<Callback>(value.data(), value.data() + value.size(), callback);
 }
 
 }  // namespace client

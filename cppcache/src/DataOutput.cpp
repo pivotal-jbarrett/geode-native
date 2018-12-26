@@ -207,7 +207,6 @@ size_t DataOutput::getJavaModifiedUtf8EncodedLength(const char16_t* data,
 template <class _Traits, class _Allocator>
 void DataOutput::writeUtf16Huge(
     const std::basic_string<char, _Traits, _Allocator>& value) {
-  // TODO string OPTIMIZE convert from UTF-8 to UTF-16 directly
   if (value.empty()) {
     writeInt(static_cast<uint16_t>(0));
   } else {
