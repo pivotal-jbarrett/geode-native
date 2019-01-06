@@ -41,8 +41,8 @@
 #include "PdxTypeRegistry.hpp"
 #include "RemoteQueryService.hpp"
 #include "ThreadPool.hpp"
-#include "util/synchronized_map.hpp"
 #include "TimerQueue.hpp"
+#include "util/synchronized_map.hpp"
 
 #define DEFAULT_LRU_MAXIMUM_ENTRIES 100000
 /** @todo period '.' consistency */
@@ -228,7 +228,7 @@ class APACHE_GEODE_EXPORT CacheImpl : private NonCopyable,
 
   ExpiryTaskManager& getExpiryTaskManager() { return *m_expiryTaskManager; }
 
-  TimerQueue& getTimerService() {return m_timerService;}
+  TimerQueue& getTimerService() { return m_timerService; }
 
   ClientProxyMembershipIDFactory& getClientProxyMembershipIDFactory() {
     return m_clientProxyMembershipIDFactory;
