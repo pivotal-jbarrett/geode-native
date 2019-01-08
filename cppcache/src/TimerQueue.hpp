@@ -20,6 +20,7 @@
 #ifndef NATIVECLIENT_TIMERQUEUE_H
 #define NATIVECLIENT_TIMERQUEUE_H
 
+#include <algorithm>
 #include <future>
 #include <iostream>
 #include <mutex>
