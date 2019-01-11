@@ -63,7 +63,7 @@ TEST(TimerQueueTest, oneEventSpecficTime) {
 
   TestableTimerEvent event(order, mutex);
   auto id = timerQueue.schedule(
-      std::chrono::steady_clock::now() + std::chrono::seconds(5),
+      std::chrono::steady_clock::now() + std::chrono::seconds(3),
       [&] { event(); });
   EXPECT_EQ(1, id);
 
@@ -83,7 +83,7 @@ TEST(TimerQueueTest, oneEventByDruation) {
   std::mutex mutex;
 
   TestableTimerEvent event(order, mutex);
-  auto id = timerQueue.schedule(std::chrono::seconds(5), [&] { event(); });
+  auto id = timerQueue.schedule(std::chrono::seconds(3), [&] { event(); });
   EXPECT_EQ(1, id);
 
   auto called = event.wait_for(std::chrono::seconds(1));
@@ -134,7 +134,7 @@ TEST(TimerQueueTest, twoEventsAddedOutOfOrder) {
   auto id1 = timerQueue.schedule(std::chrono::seconds(1), [&] { event1(); });
   EXPECT_EQ(2, id1);
 
-  auto called1 = event1.wait_for(std::chrono::seconds(2));
+  auto called1 = event1.wait_for(std::chrono::seconds(3));
   EXPECT_TRUE(called1);
   auto called2 = event2.wait_for(std::chrono::seconds(1));
   EXPECT_FALSE(called2);
@@ -152,7 +152,7 @@ TEST(TimerQueueTest, cancelTimer) {
   std::mutex mutex;
 
   TestableTimerEvent event(order, mutex);
-  auto id = timerQueue.schedule(std::chrono::seconds(2), [&] { event(); });
+  auto id = timerQueue.schedule(std::chrono::seconds(3), [&] { event(); });
   EXPECT_EQ(1, id);
 
   auto canceled = timerQueue.cancel(id);
@@ -171,11 +171,11 @@ TEST(TimerQueueTest, cancelTimeNextEventFires) {
   std::mutex mutex;
 
   TestableTimerEvent event1(order, mutex);
-  auto id1 = timerQueue.schedule(std::chrono::seconds(2), [&] { event1(); });
+  auto id1 = timerQueue.schedule(std::chrono::seconds(3), [&] { event1(); });
   EXPECT_EQ(1, id1);
 
   TestableTimerEvent event2(order, mutex);
-  auto id2 = timerQueue.schedule(std::chrono::seconds(5), [&] { event2(); });
+  auto id2 = timerQueue.schedule(std::chrono::seconds(7), [&] { event2(); });
   EXPECT_EQ(2, id2);
 
   auto canceled = timerQueue.cancel(id1);
