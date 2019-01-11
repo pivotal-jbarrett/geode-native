@@ -28,7 +28,6 @@
 
 #include "PdxRemotePreservedData.hpp"
 #include "PdxType.hpp"
-#include "PdxTypeRegistry.hpp"
 
 namespace apache {
 namespace geode {

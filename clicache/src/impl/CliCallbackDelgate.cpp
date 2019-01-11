@@ -20,6 +20,7 @@
 
 #include "../begin_native.hpp"
 #include "CacheRegionHelper.hpp"
+#include <PdxTypeRegistry.hpp>
 #include "../end_native.hpp"
 
 #include "../Cache.hpp"

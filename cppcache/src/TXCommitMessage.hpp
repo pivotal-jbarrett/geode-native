@@ -29,8 +29,8 @@ namespace apache {
 namespace geode {
 namespace client {
 
-class TXCommitMessage
-    : public DataSerializableFixedId_t<DSFid::TXCommitMessage> {
+class TXCommitMessage : public internal::DataSerializableFixedId_t<
+                            internal::DSFid::TXCommitMessage> {
  public:
   explicit TXCommitMessage(
       MemberListForVersionStamp& memberListForVersionStamp);
@@ -41,12 +41,10 @@ class TXCommitMessage
 
   static std::shared_ptr<Serializable> create(
       MemberListForVersionStamp& memberListForVersionStamp);
-  //	VectorOfEntryEvent getEvents(Cache* cache);
 
   void apply(Cache* cache);
 
  private:
-  // UNUSED int32_t m_processorId;
   bool isAckRequired();
   MemberListForVersionStamp& m_memberListForVersionStamp;
   std::vector<std::shared_ptr<RegionCommit>> m_regions;

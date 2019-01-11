@@ -38,7 +38,6 @@
 #include "DistributedSystem.hpp"
 #include "MemberListForVersionStamp.hpp"
 #include "NonCopyable.hpp"
-#include "PdxTypeRegistry.hpp"
 #include "RemoteQueryService.hpp"
 #include "ThreadPool.hpp"
 #include "TimerQueue.hpp"

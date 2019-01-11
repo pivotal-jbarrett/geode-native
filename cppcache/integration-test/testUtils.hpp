@@ -36,9 +36,10 @@
 
 #include <RegionInternal.hpp>
 #include <LocalRegion.hpp>
-// #include <DistributedRegion.hpp>
 #include <DistributedSystemImpl.hpp>
 #include <CacheImpl.hpp>
+
+#include "PdxTypeRegistry.hpp"
 
 namespace { // NOLINT(google-build-namespaces)
 

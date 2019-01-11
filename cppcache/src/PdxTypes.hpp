@@ -1,8 +1,3 @@
-#pragma once
-
-#ifndef GEODE_PDXTYPES_H_
-#define GEODE_PDXTYPES_H_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,7 +15,16 @@
  * limitations under the License.
  */
 
+#pragma once
+
+#ifndef GEODE_PDXTYPES_H_
+#define GEODE_PDXTYPES_H_
+
 #include <geode/internal/geode_globals.hpp>
+
+#if defined(BYTE_SIZE)
+#undef BYTE_SIZE
+#endif
 
 namespace apache {
 namespace geode {
