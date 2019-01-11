@@ -31,14 +31,12 @@ namespace apache {
 namespace geode {
 namespace client {
 
-template <class>
 struct TimerCompare;
 
-template <class Clock = std::chrono::steady_clock>
 class TimerEntry {
  public:
   typedef uint64_t id_type;
-  typedef Clock clock;
+  typedef std::chrono::steady_clock clock;
   typedef typename clock::time_point time_point;
   typedef std::packaged_task<void(void)> packaged_task;
 
@@ -66,24 +64,21 @@ class TimerEntry {
   time_point when_;
   std::shared_ptr<packaged_task> task_;
 
-  friend TimerCompare<Clock>;
+  friend TimerCompare;
 };
 
-template <class Clock = std::chrono::steady_clock>
 struct TimerCompare {
-  inline bool operator()(const TimerEntry<Clock>& lhs,
-                         const TimerEntry<Clock>& rhs) const {
+  inline bool operator()(const TimerEntry& lhs, const TimerEntry& rhs) const {
     return lhs.when_ > rhs.when_;
   }
 };
 
-template <class Clock = std::chrono::steady_clock>
-class TimerQueue : private std::priority_queue<TimerEntry<Clock>,
-                                               std::vector<TimerEntry<Clock>>,
-                                               TimerCompare<Clock>> {
+class TimerQueue
+    : private std::priority_queue<TimerEntry, std::vector<TimerEntry>,
+                                  TimerCompare> {
  public:
   typedef uint64_t id_type;
-  typedef Clock clock;
+  typedef std::chrono::steady_clock clock;
   typedef typename clock::time_point time_point;
   typedef std::packaged_task<void(void)> packaged_task;
 
@@ -92,22 +87,21 @@ class TimerQueue : private std::priority_queue<TimerEntry<Clock>,
       while (true) {
         std::unique_lock<decltype(mutex_)> lock(mutex_);
 
-        condition_.wait(lock, [this] { return this->stop_ || !this->empty(); });
+        condition_.wait(lock, [this] { return stop_ || !empty(); });
         if (stop_) {
           break;
         }
 
-        auto nextTimer = this->top();
+        auto nextTimer = top();
         if (condition_.wait_until(lock, nextTimer.getWhen(), [&] {
-              return this->stop_ ||
-                     (!this->empty() && this->top() != nextTimer);
+              return stop_ || (!empty() && top() != nextTimer);
             })) {
           // Next timer replaced before expiring.
           continue;
         }
 
         // Next/top timer has expired.
-        this->pop();
+        pop();
         lock.unlock();
 
         auto& task = nextTimer.getTask();
@@ -126,8 +120,7 @@ class TimerQueue : private std::priority_queue<TimerEntry<Clock>,
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
       id = ++id_;
-      this->emplace(id, when,
-                    packaged_task(std::bind(std::forward<Function>(task))));
+      emplace(id, when, packaged_task(std::bind(std::forward<Function>(task))));
     }
 
     condition_.notify_one();
@@ -142,15 +135,15 @@ class TimerQueue : private std::priority_queue<TimerEntry<Clock>,
                     std::forward<Function>(task));
   }
 
-  inline bool cancel(typename TimerEntry<Clock>::id_type id) {
+  inline bool cancel(typename TimerEntry::id_type id) {
     std::unique_lock<decltype(mutex_)> lock(mutex_);
 
     const auto& found = std::find_if(
-        this->c.begin(), this->c.end(),
-        [&](const TimerEntry<Clock>& entry) { return entry.getId() == id; });
+        c.begin(), c.end(),
+        [&](const TimerEntry& entry) { return entry.getId() == id; });
 
-    if (found != this->c.end()) {
-      this->c.erase(found);
+    if (found != c.end()) {
+      c.erase(found);
       lock.unlock();
       condition_.notify_one();
       return true;

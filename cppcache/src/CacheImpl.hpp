@@ -228,10 +228,7 @@ class APACHE_GEODE_EXPORT CacheImpl : private NonCopyable,
 
   ExpiryTaskManager& getExpiryTaskManager() { return *m_expiryTaskManager; }
 
-  template <class... Args>
-  TimerQueue<Args...>& getTimerService() {
-    return m_timerService;
-  }
+  TimerQueue& getTimerService() { return m_timerService; }
 
   ClientProxyMembershipIDFactory& getClientProxyMembershipIDFactory() {
     return m_clientProxyMembershipIDFactory;
@@ -348,7 +345,7 @@ class APACHE_GEODE_EXPORT CacheImpl : private NonCopyable,
   bool m_ignorePdxUnreadFields;
   bool m_readPdxSerialized;
   std::unique_ptr<ExpiryTaskManager> m_expiryTaskManager;
-  TimerQueue<> m_timerService;
+  TimerQueue m_timerService;
 
   // CachePerfStats
   CachePerfStats* m_cacheStats;
