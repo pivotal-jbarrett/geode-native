@@ -94,7 +94,7 @@ class TimerQueue
 
         auto nextTimer = top();
         if (condition_.wait_until(lock, nextTimer.getWhen(), [&] {
-              return stop_ || (!empty() && top() != nextTimer);
+              return stop_ || empty() || top() != nextTimer;
             })) {
           // Next timer replaced before expiring.
           continue;
