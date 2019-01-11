@@ -45,6 +45,9 @@ class TimerEntry {
         when_(when),
         task_(std::make_shared<packaged_task>(std::move(task))) {}
 
+  inline TimerEntry(const TimerEntry& from, time_point when)
+      : id_(from.id_), when_(when), task_(from.task_) {}
+
   inline id_type getId() const { return id_; }
 
   inline const time_point& getWhen() const { return when_; }
@@ -82,51 +85,17 @@ class TimerQueue
   typedef typename clock::time_point time_point;
   typedef std::packaged_task<void(void)> packaged_task;
 
-  inline TimerQueue() : id_(0), stop_(false) {
-    thread_ = std::thread([this] {
-      while (true) {
-        std::unique_lock<decltype(mutex_)> lock(mutex_);
-
-        condition_.wait(lock, [this] { return stop_ || !empty(); });
-        if (stop_) {
-          break;
-        }
-
-        auto nextTimer = top();
-        if (condition_.wait_until(lock, nextTimer.getWhen(), [&] {
-              return stop_ || empty() || top() != nextTimer;
-            })) {
-          // Next timer replaced before expiring.
-          continue;
-        }
-
-        // Next/top timer has expired.
-        pop();
-        lock.unlock();
-
-        auto& task = nextTimer.getTask();
-        auto future = task.get_future();
-        task();
-        future.get();
-      }
-    });
-  }
+  TimerQueue();
 
   inline ~TimerQueue() noexcept { stop(); }
 
   template <class Function>
   inline id_type schedule(time_point when, Function&& task) {
-    id_type id;
-    {
-      std::lock_guard<decltype(mutex_)> lock(mutex_);
-      id = ++id_;
-      emplace(id, when, packaged_task(std::bind(std::forward<Function>(task))));
-    }
-
-    condition_.notify_one();
-
-    return id;
+    return schedule(when,
+                    packaged_task(std::bind(std::forward<Function>(task))));
   }
+
+  id_type schedule(const time_point& when, packaged_task&& packagedTask);
 
   template <class... Args, class Function>
   inline id_type schedule(std::chrono::duration<Args...> duration,
@@ -135,42 +104,17 @@ class TimerQueue
                     std::forward<Function>(task));
   }
 
-  inline bool cancel(typename TimerEntry::id_type id) {
-    std::unique_lock<decltype(mutex_)> lock(mutex_);
+  bool reschedule(id_type id, time_point when);
 
-    const auto& found = std::find_if(
-        c.begin(), c.end(),
-        [&](const TimerEntry& entry) { return entry.getId() == id; });
-
-    if (found != c.end()) {
-      c.erase(found);
-      lock.unlock();
-      condition_.notify_one();
-      return true;
-    }
-
-    return false;
+  template <class... Args>
+  inline bool reschedule(id_type id, std::chrono::duration<Args...> duration) {
+    return reschedule(id, time_point::clock::now() + duration);
   }
+
+  bool cancel(typename TimerEntry::id_type id);
 
  protected:
-  inline void stop() {
-    std::unique_lock<decltype(mutex_)> lock(mutex_);
-
-    if (stop_) {
-      return;
-    }
-
-    stop_ = true;
-
-    lock.unlock();
-
-    condition_.notify_one();
-    try {
-      thread_.join();
-    } catch (...) {
-      // ignore
-    }
-  }
+  void stop();
 
  private:
   id_type id_;
