@@ -25,6 +25,7 @@
 
 #include "CacheRegionHelper.hpp"
 #include "PdxHelper.hpp"
+#include "PdxTypeRegistry.hpp"
 #include "util/string.hpp"
 
 namespace apache {

@@ -25,7 +25,7 @@
 #include <geode/PdxUnreadFields.hpp>
 #include <geode/Serializable.hpp>
 
-#include "ExpiryTaskManager.hpp"
+#include "TimerQueue.hpp"
 
 namespace apache {
 namespace geode {
@@ -39,7 +39,7 @@ class PdxRemotePreservedData : public PdxUnreadFields {
   int32_t m_mergedTypeId;
   int32_t m_currentIndex;
   std::shared_ptr<Serializable> /*Object^*/ m_owner;
-  ExpiryTaskManager::id_type m_expiryTakId;
+  TimerQueue::id_type m_expiryTakId;
 
  public:
   PdxRemotePreservedData()
@@ -77,11 +77,11 @@ class PdxRemotePreservedData : public PdxUnreadFields {
 
   inline int32_t getMergedTypeId() { return m_mergedTypeId; }
 
-  inline void setPreservedDataExpiryTaskId(ExpiryTaskManager::id_type expId) {
+  inline void setPreservedDataExpiryTaskId(TimerQueue::id_type expId) {
     m_expiryTakId = expId;
   }
 
-  inline ExpiryTaskManager::id_type getPreservedDataExpiryTaskId() {
+  inline TimerQueue::id_type getPreservedDataExpiryTaskId() {
     return m_expiryTakId;
   }
 

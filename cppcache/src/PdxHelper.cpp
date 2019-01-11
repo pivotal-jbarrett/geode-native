@@ -169,10 +169,9 @@ std::shared_ptr<PdxSerializable> PdxHelper::deserializePdx(DataInput& dataInput,
 
       auto preserveData = prr.getPreservedData(mergedVersion, pdxObjectptr);
       if (preserveData != nullptr) {
-        pdxTypeRegistry->setPreserveData(
-            pdxObjectptr, preserveData,
-            cacheImpl
-                ->getExpiryTaskManager());  // it will set data in weakhashmap
+        // it will set data in weakhashmap
+        pdxTypeRegistry->setPreserveData(pdxObjectptr, preserveData,
+                                         cacheImpl->getTimerService());
       }
       prr.moveStream();
     }
@@ -231,7 +230,7 @@ std::shared_ptr<PdxSerializable> PdxHelper::deserializePdx(DataInput& dataInput,
         if (auto preserveData =
                 prtc.getPreservedData(mergedVersion, pdxObjectptr)) {
           pdxTypeRegistry->setPreserveData(pdxObjectptr, preserveData,
-                                           cacheImpl->getExpiryTaskManager());
+                                           cacheImpl->getTimerService());
         }
       }
       prtc.moveStream();
@@ -252,7 +251,7 @@ std::shared_ptr<PdxSerializable> PdxHelper::deserializePdx(DataInput& dataInput,
       auto preserveData = prr.getPreservedData(mergedVersion, pdxObjectptr);
       if (preserveData != nullptr) {
         pdxTypeRegistry->setPreserveData(pdxObjectptr, preserveData,
-                                         cacheImpl->getExpiryTaskManager());
+                                         cacheImpl->getTimerService());
       }
       prr.moveStream();
     }

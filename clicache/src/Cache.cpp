@@ -19,6 +19,7 @@
 #include "begin_native.hpp"
 #include <CacheRegionHelper.hpp>
 #include <CacheImpl.hpp>
+#include <PdxTypeRegistry.hpp>
 #include "end_native.hpp"
 
 #include "Cache.hpp"
@@ -124,7 +125,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
         finally
         {
-					CacheRegionHelper::getCacheImpl(m_nativeptr->get())->getPdxTypeRegistry()->clear();
+	  CacheRegionHelper::getCacheImpl(m_nativeptr->get())->getPdxTypeRegistry()->clear();
           m_typeRegistry->Clear();
           Apache::Geode::Client::DistributedSystem::unregisterCliCallback();
           GC::KeepAlive(m_nativeptr);

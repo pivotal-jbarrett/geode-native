@@ -23,22 +23,21 @@
 #include <map>
 #include <unordered_map>
 
-#include <ace/RW_Thread_Mutex.h>
+#include <boost/thread/shared_mutex.hpp>
 
 #include <geode/Cache.hpp>
 #include <geode/PdxSerializable.hpp>
 #include <geode/internal/functional.hpp>
 
-#include "EnumInfo.hpp"
-#include "ExpiryTaskManager.hpp"
-#include "PdxRemotePreservedData.hpp"
 #include "PdxType.hpp"
-#include "PreservedDataExpiryHandler.hpp"
-#include "ReadWriteLock.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class TimerQueue;
+class EnumInfo;
+class PdxRemotePreservedData;
 
 struct PdxTypeLessThan {
   bool operator()(std::shared_ptr<PdxType> const& n1,
@@ -58,8 +57,7 @@ typedef std::unordered_map<std::shared_ptr<PdxSerializable>,
 typedef std::map<std::shared_ptr<PdxType>, int32_t, PdxTypeLessThan>
     PdxTypeToTypeIdMap;
 
-class APACHE_GEODE_EXPORT PdxTypeRegistry
-    : public std::enable_shared_from_this<PdxTypeRegistry> {
+class APACHE_GEODE_EXPORT PdxTypeRegistry {
  private:
   CacheImpl* cache;
 
@@ -74,9 +72,9 @@ class APACHE_GEODE_EXPORT PdxTypeRegistry
   // TODO:: preserveData need to be of type WeakHashMap
   PreservedHashMap preserveData;
 
-  mutable ACE_RW_Thread_Mutex g_readerWriterLock;
+  mutable boost::shared_mutex readerWriterMutex_;
 
-  mutable ACE_RW_Thread_Mutex g_preservedDataLock;
+  mutable boost::shared_mutex preservedDataMutex_;
 
   bool pdxIgnoreUnreadFields;
 
@@ -111,7 +109,7 @@ class APACHE_GEODE_EXPORT PdxTypeRegistry
 
   void setPreserveData(std::shared_ptr<PdxSerializable> obj,
                        std::shared_ptr<PdxRemotePreservedData> preserveDataPtr,
-                       ExpiryTaskManager& expiryTaskManager);
+                       TimerQueue& timerQueue);
 
   std::shared_ptr<PdxRemotePreservedData> getPreserveData(
       std::shared_ptr<PdxSerializable> obj) const;
@@ -129,19 +127,11 @@ class APACHE_GEODE_EXPORT PdxTypeRegistry
 
   bool getPdxReadSerialized() const { return pdxReadSerialized; }
 
-  inline const PreservedHashMap& getPreserveDataMap() const {
-    return preserveData;
-  };
-
   int32_t getEnumValue(std::shared_ptr<EnumInfo> ei);
 
   std::shared_ptr<EnumInfo> getEnum(int32_t enumVal);
 
   int32_t getPDXIdForType(std::shared_ptr<PdxType> nType, Pool* pool);
-
-  ACE_RW_Thread_Mutex& getPreservedDataLock() const {
-    return g_preservedDataLock;
-  }
 };
 
 }  // namespace client

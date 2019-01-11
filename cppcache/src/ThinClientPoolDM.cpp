@@ -31,6 +31,7 @@
 #include "ExpiryHandler_T.hpp"
 #include "ExpiryTaskManager.hpp"
 #include "NonCopyable.hpp"
+#include "PdxTypeRegistry.hpp"
 #include "TcrConnectionManager.hpp"
 #include "TcrEndpoint.hpp"
 #include "ThinClientRegion.hpp"

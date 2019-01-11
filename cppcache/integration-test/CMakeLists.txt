@@ -25,6 +25,7 @@ add_library(test-cppcache-utils STATIC
 target_link_libraries(test-cppcache-utils
   PRIVATE
     ACE::ACE
+    Boost::boost
     _WarningsAsError
   PUBLIC
     apache-geode
@@ -50,6 +51,7 @@ add_library(unit_test_callbacks SHARED LibraryCallbacks.cpp)
 target_link_libraries(unit_test_callbacks
   PRIVATE
     ACE::ACE
+    Boost::boost
     _WarningsAsError
   PUBLIC
     apache-geode
@@ -100,6 +102,7 @@ foreach(FILE ${SOURCES})
   target_link_libraries(${TEST}
     PRIVATE
       ACE::ACE
+      Boost::boost
       test-cppcache-utils
       _WarningsAsError
       _CppCodeCoverage

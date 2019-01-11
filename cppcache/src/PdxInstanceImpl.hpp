@@ -30,11 +30,13 @@
 
 #include "PdxLocalWriter.hpp"
 #include "PdxType.hpp"
-#include "PdxTypeRegistry.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class PdxTypeRegistry;
+class CachePerfStats;
 
 typedef std::map<std::string, std::shared_ptr<Cacheable>> FieldVsValues;
 

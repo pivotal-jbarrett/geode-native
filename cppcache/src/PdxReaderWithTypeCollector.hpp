@@ -21,11 +21,12 @@
  */
 
 #include "PdxLocalReader.hpp"
-#include "PdxTypeRegistry.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class PdxTypeRegistry;
 
 class PdxReaderWithTypeCollector : public PdxLocalReader {
  private:
