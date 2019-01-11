@@ -189,3 +189,25 @@ TEST(TimerQueueTest, cancelTimeNextEventFires) {
 
   EXPECT_EQ(std::vector<TestableTimerEvent*>({&event2}), order);
 }
+
+TEST(TimerQueueTest, rescheduleTimer) {
+  TimerQueue timerQueue;
+
+  std::vector<TestableTimerEvent*> order;
+  std::mutex mutex;
+
+  TestableTimerEvent event(order, mutex);
+  auto id = timerQueue.schedule(std::chrono::seconds(2), [&] { event(); });
+  EXPECT_EQ(1, id);
+
+  auto canceled = timerQueue.reschedule(id, std::chrono::seconds(6));
+  EXPECT_TRUE(canceled);
+
+  auto called = event.wait_for(std::chrono::seconds(4));
+  EXPECT_FALSE(called);
+
+  called = event.wait_for(std::chrono::seconds(8));
+  EXPECT_TRUE(called);
+
+  EXPECT_EQ(std::vector<TestableTimerEvent*>({&event}), order);
+}
