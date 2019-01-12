@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-#include "ExpiryTaskManager.hpp"
+#include "TimerQueue.hpp"
 #include "TXId.hpp"
 #include "TransactionalOperation.hpp"
 
@@ -54,10 +54,10 @@ class TXState {
   ThinClientPoolDM* getPoolDM() { return m_pooldm; }
   void setPoolDM(ThinClientPoolDM* dm) { m_pooldm = dm; }
   void setSuspendedExpiryTaskId(
-      ExpiryTaskManager::id_type suspendedExpiryTaskId) {
+      TimerQueue::id_type suspendedExpiryTaskId) {
     m_suspendedExpiryTaskId = suspendedExpiryTaskId;
   }
-  ExpiryTaskManager::id_type getSuspendedExpiryTaskId() {
+  TimerQueue::id_type getSuspendedExpiryTaskId() {
     return m_suspendedExpiryTaskId;
   }
 
@@ -84,7 +84,7 @@ class TXState {
   std::vector<std::shared_ptr<TransactionalOperation>> m_operations;
   CacheImpl* m_cache;
   ThinClientPoolDM* m_pooldm;
-  ExpiryTaskManager::id_type m_suspendedExpiryTaskId;
+  TimerQueue::id_type m_suspendedExpiryTaskId;
   class ReplayControl {
    public:
     explicit ReplayControl(TXState* txState) : m_txState(txState) {
@@ -96,6 +96,7 @@ class TXState {
     TXState* m_txState;
   };
 };
+
 }  // namespace client
 }  // namespace geode
 }  // namespace apache
