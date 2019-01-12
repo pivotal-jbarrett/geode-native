@@ -23,8 +23,8 @@
 #include <string>
 #include <vector>
 
-#include "TimerQueue.hpp"
 #include "TXId.hpp"
+#include "TimerQueue.hpp"
 #include "TransactionalOperation.hpp"
 
 namespace apache {
@@ -53,8 +53,7 @@ class TXState {
 
   ThinClientPoolDM* getPoolDM() { return m_pooldm; }
   void setPoolDM(ThinClientPoolDM* dm) { m_pooldm = dm; }
-  void setSuspendedExpiryTaskId(
-      TimerQueue::id_type suspendedExpiryTaskId) {
+  void setSuspendedExpiryTaskId(TimerQueue::id_type suspendedExpiryTaskId) {
     m_suspendedExpiryTaskId = suspendedExpiryTaskId;
   }
   TimerQueue::id_type getSuspendedExpiryTaskId() {
