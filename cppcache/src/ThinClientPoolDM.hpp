@@ -295,8 +295,8 @@ class ThinClientPoolDM
   std::unique_ptr<Task<ThinClientPoolDM>> m_updateLocatorListTask;
   std::unique_ptr<Task<ThinClientPoolDM>> m_cliCallbackTask;
   TimerQueue::id_type m_pingTaskId;
-  ExpiryTaskManager::id_type m_updateLocatorListTaskId;
-  ExpiryTaskManager::id_type m_connManageTaskId;
+  TimerQueue::id_type m_updateLocatorListTaskId;
+  TimerQueue::id_type m_connManageTaskId;
   void manageConnections(std::atomic<bool>& isRunning);
   int doPing(const ACE_Time_Value&, const void*);
   int doUpdateLocatorList(const ACE_Time_Value&, const void*);

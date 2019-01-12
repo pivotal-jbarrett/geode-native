@@ -307,19 +307,13 @@ void ThinClientPoolDM::startBackgroundThreads() {
     m_updateLocatorListTask->start();
 
     LOGDEBUG(
-        "ThinClientPoolDM::startBackgroundThreads: Creating updateLocatorList "
-        "task");
-    auto updateLocatorListHandler = new ExpiryHandler_T<ThinClientPoolDM>(
-        this, &ThinClientPoolDM::doUpdateLocatorList);
-
-    LOGDEBUG(
         "ThinClientPoolDM::startBackgroundThreads: Scheduling updater Locator "
         "task at %ld",
         updateLocatorListInterval.count());
     m_updateLocatorListTaskId =
-        m_connManager.getCacheImpl()->getExpiryTaskManager().scheduleExpiryTask(
-            updateLocatorListHandler, std::chrono::seconds(1),
-            updateLocatorListInterval, false);
+        m_connManager.getCacheImpl()->getTimerService().schedule(
+            std::chrono::seconds(1), updateLocatorListInterval,
+            [this] { m_updateLocatorListSema.release(); });
   }
 
   LOGDEBUG(
@@ -342,17 +336,11 @@ void ThinClientPoolDM::startBackgroundThreads() {
 
   if (idle > std::chrono::milliseconds::zero()) {
     LOGDEBUG(
-        "ThinClientPoolDM::startBackgroundThreads: Starting manageConnections "
-        "task");
-    ACE_Event_Handler* connHandler = new ExpiryHandler_T<ThinClientPoolDM>(
-        this, &ThinClientPoolDM::doManageConnections);
-
-    LOGDEBUG(
         "ThinClientPoolDM::startBackgroundThreads: Scheduling "
         "manageConnections task");
     m_connManageTaskId =
-        m_connManager.getCacheImpl()->getExpiryTaskManager().scheduleExpiryTask(
-            connHandler, std::chrono::seconds(1), idle, false);
+        m_connManager.getCacheImpl()->getTimerService().schedule(
+            std::chrono::seconds(1), idle, [this] { m_connSema.release(); });
   }
 
   LOGDEBUG(
@@ -488,7 +476,7 @@ void ThinClientPoolDM::cleanStaleConnections(std::atomic<bool>& isRunning) {
     }
   }
   if (m_connManageTaskId >= 0 && isRunning &&
-      m_connManager.getCacheImpl()->getExpiryTaskManager().resetTask(
+      m_connManager.getCacheImpl()->getTimerService().reschedule(
           m_connManageTaskId, _nextIdle)) {
     LOGERROR("Failed to reschedule connection manager");
   } else {
@@ -751,8 +739,7 @@ void ThinClientPoolDM::stopPingThread() {
     m_pingTask->wait();
     m_pingTask = nullptr;
     if (m_pingTaskId >= 0) {
-      m_connManager.getCacheImpl()->getTimerService().cancel(
-          m_pingTaskId);
+      m_connManager.getCacheImpl()->getTimerService().cancel(m_pingTaskId);
     }
   }
 }
@@ -765,7 +752,7 @@ void ThinClientPoolDM::stopUpdateLocatorListThread() {
     m_updateLocatorListTask->wait();
     m_updateLocatorListTask = nullptr;
     if (m_updateLocatorListTaskId >= 0) {
-      m_connManager.getCacheImpl()->getExpiryTaskManager().cancelTask(
+      m_connManager.getCacheImpl()->getTimerService().cancel(
           m_updateLocatorListTaskId);
     }
   }
@@ -806,7 +793,7 @@ void ThinClientPoolDM::destroy(bool keepAlive) {
       m_connManageTask->wait();
       m_connManageTask = nullptr;
       if (m_connManageTaskId >= 0) {
-        cacheImpl->getExpiryTaskManager().cancelTask(m_connManageTaskId);
+        cacheImpl->getTimerService().cancel(m_connManageTaskId);
       }
     }
 
@@ -2126,16 +2113,6 @@ void ThinClientPoolDM::cliCallback(std::atomic<bool>& isRunning) {
     }
   }
   LOGFINE("Ending cliCallback thread for pool %s", m_poolName.c_str());
-}
-
-int ThinClientPoolDM::doUpdateLocatorList(const ACE_Time_Value&, const void*) {
-  m_updateLocatorListSema.release();
-  return 0;
-}
-
-int ThinClientPoolDM::doManageConnections(const ACE_Time_Value&, const void*) {
-  m_connSema.release();
-  return 0;
 }
 
 void ThinClientPoolDM::releaseThreadLocalConnection() {
