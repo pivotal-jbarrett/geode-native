@@ -751,7 +751,7 @@ void ThinClientPoolDM::stopPingThread() {
     m_pingTask->wait();
     m_pingTask = nullptr;
     if (m_pingTaskId >= 0) {
-      m_connManager.getCacheImpl()->getExpiryTaskManager().cancelTask(
+      m_connManager.getCacheImpl()->getTimerService().cancel(
           m_pingTaskId);
     }
   }
