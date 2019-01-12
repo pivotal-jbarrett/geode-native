@@ -22,8 +22,8 @@
 #include <geode/TransactionId.hpp>
 
 #include "CacheRegionHelper.hpp"
-#include "CacheTransactionManagerImpl.hpp"
 #include "TXCleaner.hpp"
+#include "TXCommitMessage.hpp"
 #include "TcrConnectionManager.hpp"
 #include "TcrMessage.hpp"
 #include "ThinClientPoolDM.hpp"

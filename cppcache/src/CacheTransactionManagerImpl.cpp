@@ -25,6 +25,7 @@
 #include "CacheRegionHelper.hpp"
 #include "TSSTXStateWrapper.hpp"
 #include "TXCleaner.hpp"
+#include "TXCommitMessage.hpp"
 #include "TcrMessage.hpp"
 #include "ThinClientBaseDM.hpp"
 #include "ThinClientPoolDM.hpp"
@@ -220,10 +221,20 @@ TransactionId& CacheTransactionManagerImpl::suspend() {
   auto suspendedTxTimeout = m_cache->getDistributedSystem()
                                 .getSystemProperties()
                                 .suspendedTxTimeout();
-  auto handler =
-      new SuspendedTxExpiryHandler(this, txState->getTransactionId());
-  auto id = m_cache->getExpiryTaskManager().scheduleExpiryTask(
-      handler, suspendedTxTimeout, std::chrono::seconds::zero(), false);
+  auto id = m_cache->getTimerService().schedule(suspendedTxTimeout, [this,
+                                                                     txState] {
+    LOGDEBUG("Entered SuspendedTxExpiryHandler");
+    try {
+      if (this->tryResume(txState->getTransactionId(), false)) {
+        this->rollback();
+      }
+    } catch (...) {
+      // Ignore whatever exception comes
+      LOGFINE(
+          "Error while rollbacking expired suspended transaction. Ignoring the "
+          "error");
+    }
+  });
   txState->setSuspendedExpiryTaskId(id);
 
   // add the transaction state to the list of suspended transactions
