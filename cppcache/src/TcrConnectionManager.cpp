@@ -332,11 +332,6 @@ bool TcrConnectionManager::removeRefToEndpoint(TcrEndpoint *ep,
   return hasRemovedEndpoint;
 }
 
-int TcrConnectionManager::processEventIdMap(const ACE_Time_Value &currTime,
-                                            const void *) {
-  return m_redundancyManager->processEventIdMap(currTime, nullptr);
-}
-
 int TcrConnectionManager::checkConnection(const ACE_Time_Value &,
                                           const void *) {
   auto &&guard = m_endpoints.make_lock();
