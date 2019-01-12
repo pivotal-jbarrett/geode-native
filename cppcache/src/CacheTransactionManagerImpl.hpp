@@ -21,17 +21,22 @@
 #define GEODE_CACHETRANSACTIONMANAGERIMPL_H_
 
 #include <condition_variable>
+#include <map>
 #include <mutex>
+#include <vector>
 
 #include <geode/CacheTransactionManager.hpp>
 
-#include "SuspendedTxExpiryHandler.hpp"
-#include "TXCommitMessage.hpp"
-#include "util/Log.hpp"
+#include "ErrType.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
+class TXState;
+class ThinClientPoolDM;
+class Cache;
+class CacheImpl;
 
 enum status { STATUS_COMMITTED = 3, STATUS_ROLLEDBACK = 4 };
 enum commitOp { BEFORE_COMMIT, AFTER_COMMIT };
