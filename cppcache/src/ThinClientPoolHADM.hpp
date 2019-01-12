@@ -28,6 +28,7 @@
 #include "Task.hpp"
 #include "ThinClientHARegion.hpp"
 #include "ThinClientPoolDM.hpp"
+#include "TimerQueue.hpp"
 
 namespace apache {
 namespace geode {
@@ -112,8 +113,7 @@ class ThinClientPoolHADM : public ThinClientPoolDM {
 
   void redundancy(std::atomic<bool>& isRunning);
 
-  ExpiryTaskManager::id_type m_servermonitorTaskId;
-  int checkRedundancy(const ACE_Time_Value&, const void*);
+  TimerQueue::id_type m_servermonitorTaskId;
 
   TcrEndpoint* createEP(const char* endpointName) override;
 
