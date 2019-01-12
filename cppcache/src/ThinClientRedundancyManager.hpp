@@ -32,10 +32,10 @@
 
 #include "ErrType.hpp"
 #include "EventIdMap.hpp"
-#include "ExpiryTaskManager.hpp"
 #include "ServerLocation.hpp"
 #include "Task.hpp"
 #include "TcrMessage.hpp"
+#include "TimerQueue.hpp"
 #include "util/synchronized_map.hpp"
 
 namespace apache {
@@ -135,12 +135,10 @@ class ThinClientRedundancyManager {
                               TcrMessageReply* reply, bool isPrimary);
 
   inline bool isDurable();
-  int processEventIdMap(const ACE_Time_Value&, const void*);
   std::unique_ptr<Task<ThinClientRedundancyManager>> m_periodicAckTask;
   ACE_Semaphore m_periodicAckSema;
-  ExpiryTaskManager::id_type
-      m_processEventIdMapTaskId;  // periodic check eventid map for notify ack
-                                  // and/or expiry
+  // periodic check eventid map for notify ack and/or expiry
+  TimerQueue::id_type m_processEventIdMapTaskId;
   void periodicAck(std::atomic<bool>& isRunning);
   void doPeriodicAck();
   time_point m_nextAck;                    // next ack time

@@ -14,12 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * ThinClientRedundancyManager.cpp
- *
- *  Created on: Dec 1, 2008
- *      Author: abhaware
- */
 
 #include "ThinClientRedundancyManager.hpp"
 
@@ -31,7 +25,6 @@
 
 #include "CacheImpl.hpp"
 #include "ClientProxyMembershipID.hpp"
-#include "ExpiryHandler_T.hpp"
 #include "RemoteQueryService.hpp"
 #include "ServerLocation.hpp"
 #include "TcrHADistributionManager.hpp"
@@ -718,7 +711,7 @@ void ThinClientRedundancyManager::close() {
 
   if (m_periodicAckTask) {
     if (m_processEventIdMapTaskId >= 0) {
-      m_theTcrConnManager->getCacheImpl()->getExpiryTaskManager().cancelTask(
+      m_theTcrConnManager->getCacheImpl()->getTimerService().cancel(
           m_processEventIdMapTaskId);
     }
     m_periodicAckTask->stopNoblock();
@@ -1157,12 +1150,6 @@ void ThinClientRedundancyManager::readyForEvents() {
   m_sentReadyForEvents = true;
 }
 
-int ThinClientRedundancyManager::processEventIdMap(const ACE_Time_Value&,
-                                                   const void*) {
-  m_periodicAckSema.release();
-  return 0;
-}
-
 void ThinClientRedundancyManager::periodicAck(std::atomic<bool>& isRunning) {
   while (isRunning) {
     m_periodicAckSema.acquire();
@@ -1249,13 +1236,9 @@ void ThinClientRedundancyManager::startPeriodicAck() {
                           ->getDistributedSystem()
                           .getSystemProperties();
   // start the periodic ACK task handler
-  auto periodicAckTask = new ExpiryHandler_T<ThinClientRedundancyManager>(
-      this, &ThinClientRedundancyManager::processEventIdMap);
   m_processEventIdMapTaskId =
-      m_theTcrConnManager->getCacheImpl()
-          ->getExpiryTaskManager()
-          .scheduleExpiryTask(periodicAckTask, m_nextAckInc, m_nextAckInc,
-                              false);
+      m_theTcrConnManager->getCacheImpl()->getTimerService().schedule(
+          m_nextAckInc, m_nextAckInc, [this] { m_periodicAckSema.release(); });
   LOGFINE(
       "Registered subscription event "
       "periodic ack task with id = %ld, notify-ack-interval = %ld, "
