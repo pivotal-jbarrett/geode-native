@@ -28,6 +28,7 @@
 #include <geode/CacheTransactionManager.hpp>
 
 #include "ErrType.hpp"
+#include "TXCommitMessage.hpp"
 
 namespace apache {
 namespace geode {
