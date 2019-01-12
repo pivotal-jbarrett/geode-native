@@ -288,11 +288,9 @@ void ThinClientPoolDM::startBackgroundThreads() {
     LOGDEBUG(
         "ThinClientPoolDM::startBackgroundThreads: Scheduling ping task at %ld",
         pingInterval.count());
-    auto pingHandler =
-        new ExpiryHandler_T<ThinClientPoolDM>(this, &ThinClientPoolDM::doPing);
-    m_pingTaskId =
-        m_connManager.getCacheImpl()->getExpiryTaskManager().scheduleExpiryTask(
-            pingHandler, std::chrono::seconds(1), pingInterval, false);
+    m_pingTaskId = m_connManager.getCacheImpl()->getTimerService().schedule(
+        std::chrono::seconds(1), pingInterval,
+        [this]() { m_pingSema.release(); });
   } else {
     LOGDEBUG(
         "ThinClientPoolDM::startBackgroundThreads: Not Scheduling ping task as "
@@ -2128,11 +2126,6 @@ void ThinClientPoolDM::cliCallback(std::atomic<bool>& isRunning) {
     }
   }
   LOGFINE("Ending cliCallback thread for pool %s", m_poolName.c_str());
-}
-
-int ThinClientPoolDM::doPing(const ACE_Time_Value&, const void*) {
-  m_pingSema.release();
-  return 0;
 }
 
 int ThinClientPoolDM::doUpdateLocatorList(const ACE_Time_Value&, const void*) {
