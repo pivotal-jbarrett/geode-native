@@ -28,7 +28,22 @@ TimerQueue::id_type TimerQueue::schedule(
   {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
     id = ++id_;
-    emplace(id, when, std::move(packagedTask));
+    emplace(id, when, std::chrono::nanoseconds::zero(),
+            std::move(packagedTask));
+  }
+
+  condition_.notify_one();
+  return id;
+}
+
+TimerQueue::id_type TimerQueue::_schedule(
+    const TimerQueue::time_point& initial, std::chrono::nanoseconds interval,
+    TimerQueue::packaged_task&& packagedTask) {
+  id_type id;
+  {
+    std::lock_guard<decltype(mutex_)> lock(mutex_);
+    id = ++id_;
+    emplace(id, initial, interval, std::move(packagedTask));
   }
 
   condition_.notify_one();
@@ -117,6 +132,13 @@ TimerQueue::TimerQueue() : id_(0), stop_(false) {
       auto future = task.get_future();
       task();
       future.get();
+
+      if (nextTimer.getInterval() > std::chrono::nanoseconds::zero()) {
+        task.reset();
+        lock.lock();
+        emplace(nextTimer, clock::now() + nextTimer.getInterval());
+        lock.unlock();
+      }
     }
   });
 }
