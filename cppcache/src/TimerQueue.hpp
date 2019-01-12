@@ -38,19 +38,27 @@ class TimerEntry {
   typedef uint64_t id_type;
   typedef std::chrono::steady_clock clock;
   typedef typename clock::time_point time_point;
+  typedef std::chrono::nanoseconds duration;
   typedef std::packaged_task<void(void)> packaged_task;
 
-  inline TimerEntry(id_type id, time_point when, packaged_task&& task)
+  inline TimerEntry(id_type id, time_point when, duration interval,
+                    packaged_task&& task)
       : id_(id),
         when_(when),
+        interval_(interval),
         task_(std::make_shared<packaged_task>(std::move(task))) {}
 
   inline TimerEntry(const TimerEntry& from, time_point when)
-      : id_(from.id_), when_(when), task_(from.task_) {}
+      : id_(from.id_),
+        when_(when),
+        interval_(from.interval_),
+        task_(from.task_) {}
 
   inline id_type getId() const { return id_; }
 
   inline const time_point& getWhen() const { return when_; }
+
+  inline const duration& getInterval() const { return interval_; }
 
   inline packaged_task& getTask() const { return *task_; }
 
@@ -65,6 +73,7 @@ class TimerEntry {
  private:
   id_type id_;
   time_point when_;
+  duration interval_;
   std::shared_ptr<packaged_task> task_;
 
   friend TimerCompare;
@@ -89,18 +98,38 @@ class TimerQueue
 
   inline ~TimerQueue() noexcept { stop(); }
 
+  id_type schedule(const time_point& when, packaged_task&& packagedTask);
+
   template <class Function>
   inline id_type schedule(time_point when, Function&& task) {
     return schedule(when,
                     packaged_task(std::bind(std::forward<Function>(task))));
   }
 
-  id_type schedule(const time_point& when, packaged_task&& packagedTask);
-
   template <class... Args, class Function>
   inline id_type schedule(std::chrono::duration<Args...> duration,
                           Function&& task) {
     return schedule(time_point::clock::now() + duration,
+                    std::forward<Function>(task));
+  }
+
+  id_type _schedule(const time_point& intitial,
+                    std::chrono::nanoseconds interval,
+                    packaged_task&& packagedTask);
+
+  template <class... Args, class Function>
+  inline id_type schedule(time_point intitial,
+                          std::chrono::duration<Args...> interval,
+                          Function&& task) {
+    return _schedule(intitial, interval,
+                     packaged_task(std::bind(std::forward<Function>(task))));
+  }
+
+  template <class... Initial, class... Interval, class Function>
+  inline id_type schedule(std::chrono::duration<Initial...> intitial,
+                          std::chrono::duration<Interval...> interval,
+                          Function&& task) {
+    return schedule(time_point::clock::now() + intitial, interval,
                     std::forward<Function>(task));
   }
 

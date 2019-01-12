@@ -211,3 +211,25 @@ TEST(TimerQueueTest, rescheduleTimer) {
 
   EXPECT_EQ(std::vector<TestableTimerEvent*>({&event}), order);
 }
+
+TEST(TimerQueueTest, oneEventSpecficTimeWithInterval) {
+  TimerQueue timerQueue;
+
+  std::vector<TestableTimerEvent*> order;
+  std::mutex mutex;
+
+  TestableTimerEvent event(order, mutex);
+  auto id = timerQueue.schedule(
+      std::chrono::steady_clock::now() + std::chrono::seconds(1),
+      std::chrono::seconds(4), [&] { event(); });
+  EXPECT_EQ(1, id);
+
+  auto called = event.wait_for(std::chrono::seconds(2));
+  EXPECT_TRUE(called);
+  event.called_ = false;
+
+  called = event.wait_for(std::chrono::seconds(6));
+  EXPECT_TRUE(called);
+
+  EXPECT_EQ(std::vector<TestableTimerEvent*>({&event, &event}), order);
+}
