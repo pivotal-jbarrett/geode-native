@@ -298,9 +298,6 @@ class ThinClientPoolDM
   TimerQueue::id_type m_updateLocatorListTaskId;
   TimerQueue::id_type m_connManageTaskId;
   void manageConnections(std::atomic<bool>& isRunning);
-  int doPing(const ACE_Time_Value&, const void*);
-  int doUpdateLocatorList(const ACE_Time_Value&, const void*);
-  int doManageConnections(const ACE_Time_Value&, const void*);
   void manageConnectionsInternal(std::atomic<bool>& isRunning);
   void cleanStaleConnections(std::atomic<bool>& isRunning);
   void restoreMinConnections(std::atomic<bool>& isRunning);
