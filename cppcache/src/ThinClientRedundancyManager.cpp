@@ -54,7 +54,7 @@ ThinClientRedundancyManager::ThinClientRedundancyManager(
       m_locators(nullptr),
       m_servers(nullptr),
       m_periodicAckTask(nullptr),
-      m_processEventIdMapTaskId(-1),
+      m_processEventIdMapTaskId(0),
       m_nextAckInc(0),
       m_HAenabled(false) {}
 
@@ -710,7 +710,7 @@ void ThinClientRedundancyManager::close() {
   LOGDEBUG("ThinClientRedundancyManager::close(): closing redundancy manager.");
 
   if (m_periodicAckTask) {
-    if (m_processEventIdMapTaskId >= 0) {
+    if (m_processEventIdMapTaskId > 0) {
       m_theTcrConnManager->getCacheImpl()->getTimerService().cancel(
           m_processEventIdMapTaskId);
     }

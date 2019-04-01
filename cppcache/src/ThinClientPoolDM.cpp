@@ -156,9 +156,9 @@ ThinClientPoolDM::ThinClientPoolDM(const char* name,
       m_pingTask(nullptr),
       m_updateLocatorListTask(nullptr),
       m_cliCallbackTask(nullptr),
-      m_pingTaskId(-1),
-      m_updateLocatorListTaskId(-1),
-      m_connManageTaskId(-1),
+      m_pingTaskId(0),
+      m_updateLocatorListTaskId(0),
+      m_connManageTaskId(0),
       m_PoolStatsSampler(nullptr),
       m_clientMetadataService(nullptr),
       m_primaryServerQueueSize(PRIMARY_QUEUE_NOT_AVAILABLE) {
@@ -475,7 +475,7 @@ void ThinClientPoolDM::cleanStaleConnections(std::atomic<bool>& isRunning) {
       put(*iter, false);
     }
   }
-  if (m_connManageTaskId >= 0 && isRunning &&
+  if (m_connManageTaskId > 0 && isRunning &&
       m_connManager.getCacheImpl()->getTimerService().reschedule(
           m_connManageTaskId, _nextIdle)) {
     LOGERROR("Failed to reschedule connection manager");
@@ -738,7 +738,7 @@ void ThinClientPoolDM::stopPingThread() {
     m_pingSema.release();
     m_pingTask->wait();
     m_pingTask = nullptr;
-    if (m_pingTaskId >= 0) {
+    if (m_pingTaskId > 0) {
       m_connManager.getCacheImpl()->getTimerService().cancel(m_pingTaskId);
     }
   }
@@ -751,7 +751,7 @@ void ThinClientPoolDM::stopUpdateLocatorListThread() {
     m_updateLocatorListSema.release();
     m_updateLocatorListTask->wait();
     m_updateLocatorListTask = nullptr;
-    if (m_updateLocatorListTaskId >= 0) {
+    if (m_updateLocatorListTaskId > 0) {
       m_connManager.getCacheImpl()->getTimerService().cancel(
           m_updateLocatorListTaskId);
     }
@@ -792,7 +792,7 @@ void ThinClientPoolDM::destroy(bool keepAlive) {
       m_connSema.release();
       m_connManageTask->wait();
       m_connManageTask = nullptr;
-      if (m_connManageTaskId >= 0) {
+      if (m_connManageTaskId > 0) {
         cacheImpl->getTimerService().cancel(m_connManageTaskId);
       }
     }

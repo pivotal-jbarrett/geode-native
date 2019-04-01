@@ -33,7 +33,7 @@ ThinClientPoolHADM::ThinClientPoolHADM(const char* name,
       m_theTcrConnManager(connManager),
       m_redundancySema(0),
       m_redundancyTask(nullptr),
-      m_servermonitorTaskId(-1) {
+      m_servermonitorTaskId(0) {
   m_redundancyManager = new ThinClientRedundancyManager(
       &connManager, poolAttr->getSubscriptionRedundancy(), this);
 }
@@ -178,7 +178,7 @@ void ThinClientPoolHADM::destroy(bool keepAlive) {
 
 void ThinClientPoolHADM::sendNotificationCloseMsgs() {
   if (m_redundancyTask) {
-    if (m_servermonitorTaskId >= 0) {
+    if (m_servermonitorTaskId > 0) {
       m_connManager.getCacheImpl()->getTimerService().cancel(
           m_servermonitorTaskId);
     }

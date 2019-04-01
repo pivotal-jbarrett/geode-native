@@ -59,8 +59,8 @@ TcrConnectionManager::TcrConnectionManager(CacheImpl *cache)
       m_failoverTask(nullptr),
       m_cleanupSema(0),
       m_cleanupTask(nullptr),
-      m_pingTaskId(-1),
-      m_servermonitorTaskId(-1),
+      m_pingTaskId(0),
+      m_servermonitorTaskId(0),
       // Create the queues with flag to not delete the objects
       m_notifyCleanupSemaList(false),
       m_redundancySema(0),
