@@ -46,6 +46,7 @@ add_executable(apache-geode_unittests
   StructSetTest.cpp
   TcrMessageTest.cpp
   ThreadPoolTest.cpp
+  UtilsTest.cpp
   util/functionalTests.cpp
   util/JavaModifiedUtf8Tests.cpp
   util/queueTest.cpp

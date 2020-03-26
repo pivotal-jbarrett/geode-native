@@ -94,9 +94,8 @@ std::list<ServerLocation> ThinClientRedundancyManager::selectServers(
       if (m_server >= m_servers->length()) {
         m_server = 0;
       }
-      ServerLocation location(Utils::convertHostToCanonicalForm(
-                                  (*m_servers)[m_server++]->value().c_str())
-                                  .c_str());
+      ServerLocation location(
+          Utils::convertHostToCanonicalForm((*m_servers)[m_server++]->value()));
       if (exclEndPts.find(location) != exclEndPts.end()) {
         // exclude this one
         continue;

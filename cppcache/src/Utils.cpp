@@ -21,17 +21,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
-#include <sstream>
 
 #include <ace/DLL.h>
-#include <ace/INET_Addr.h>
-#include <ace/OS.h>
+#include <boost/asio.hpp>
 
 namespace apache {
 namespace geode {
 namespace client {
-
-int32_t Utils::getLastError() { return ACE_OS::last_error(); }
 
 std::string Utils::getEnv(const char* varName) {
   std::string env;
@@ -71,47 +67,33 @@ void Utils::parseEndpointString(const char* endpoints, std::string& host,
   port = atoi(endpointsStr.c_str());
 }
 
-std::string Utils::convertHostToCanonicalForm(const char* endpoints) {
-  if (endpoints == nullptr) return nullptr;
-  std::string hostString("");
-  uint16_t port = 0;
-  std::string endpointsStr(endpoints);
-  std::string endpointsStr1(endpoints);
-  // Parse this string to get all hostnames and port numbers.
-  std::string endpoint;
-  std::string::size_type length = endpointsStr.size();
-  std::string::size_type pos = 0;
-  ACE_TCHAR hostName[256], fullName[512];
-  pos = endpointsStr.find(':', 0);
-  if (pos != std::string::npos) {
-    endpoint = endpointsStr.substr(0, pos);
-    pos += 1;  // skip ':'
-    length -= (pos);
-    endpointsStr = endpointsStr.substr(pos, length);
-  } else {
-    hostString = "";
+std::string Utils::getCanonicalHostname(const std::string& hostname) {
+  if (hostname == "localhost") {
+    return boost::asio::ip::host_name();
+  }
+
+  boost::asio::io_service io_service;
+  boost::asio::ip::tcp::resolver resolver(io_service);
+  try {
+    const auto endpoint = resolver.resolve(
+        hostname, "", boost::asio::ip::resolver_base::canonical_name);
+    const auto canonical = resolver.resolve(endpoint.begin()->endpoint());
+    return canonical.begin()->host_name();
+  } catch (...) {
+    return hostname;
+  }
+}
+
+std::string Utils::convertHostToCanonicalForm(const std::string& endpoint) {
+  const auto pos = endpoint.find(':');
+  if (pos == std::string::npos) {
     return "";
   }
-  hostString = endpoint;
-  port = atoi(endpointsStr.c_str());
-  if (strcmp(hostString.c_str(), "localhost") == 0) {
-    ACE_OS::hostname(hostName, sizeof(hostName) - 1);
-    struct hostent* host;
-    host = ACE_OS::gethostbyname(hostName);
-    if (host) {
-      std::snprintf(fullName, sizeof(fullName), "%s:%d", host->h_name, port);
-      return fullName;
-    }
-  } else {
-    pos = endpointsStr1.find('.', 0);
-    if (pos != std::string::npos) {
-      ACE_INET_Addr addr(endpoints);
-      addr.get_host_name(hostName, 256);
-      std::snprintf(fullName, sizeof(fullName), "%s:%d", hostName, port);
-      return fullName;
-    }
-  }
-  return endpoints;
+
+  const auto hostString = endpoint.substr(0, pos);
+  const auto portString = endpoint.substr(pos + 1);
+
+  return getCanonicalHostname(hostString) + ":" + portString;
 }
 
 void Utils::parseEndpointNamesString(

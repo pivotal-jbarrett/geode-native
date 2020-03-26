@@ -58,7 +58,6 @@ class APACHE_GEODE_EXPORT Utils {
    * On windows the maximum length of value supported is 8191.
    */
   static std::string getEnv(const char* varName);
-  static int32_t getLastError();
 
 #ifdef __GNUC__
   inline static char* _gnuDemangledName(const char* typeIdName, size_t& len) {
@@ -155,7 +154,23 @@ class APACHE_GEODE_EXPORT Utils {
   static void parseEndpointString(const char* endpoints, std::string& host,
                                   uint16_t& port);
 
-  static std::string convertHostToCanonicalForm(const char* endpoints);
+  /**
+   * We consider canonical name to be that of the PTR record for the resolved
+   * IP address for the given hostname. If the PTR record is can't be resolved
+   * then the IP address is canonical name. If hostname can't be resolved then
+   * the hostname is canonical name. If hostname is "localhost" the canonical
+   * name is the local host's name.
+   *
+   * The behavior is consistent with the results of ::getaddrinfo(hostname, ...)
+   * used in ::getnameinfo as was performed by original ACE library.
+   *
+   * @param hostname to resolve canonical name.
+   * @return Fully qualified domain name for the canonical name for the given
+   * hostname.
+   */
+  static std::string getCanonicalHostname(const std::string& hostname);
+
+  static std::string convertHostToCanonicalForm(const std::string& endpoints);
 
   static char* copyString(const char* str);
 
