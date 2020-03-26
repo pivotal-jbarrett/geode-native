@@ -26,8 +26,14 @@
 extern "C" {
 #endif
 
-CCACHE_EXPORT void* createCacheFactory(void);
-CCACHE_EXPORT void destroyCacheFactory(void* cacheFactory);
+typedef void* CacheFactory;
+typedef void* Cache;
+
+CCACHE_EXPORT CacheFactory createCacheFactory(void);
+CCACHE_EXPORT void destroyCacheFactory(CacheFactory cacheFactory);
+
+CCACHE_EXPORT Cache createCache(CacheFactory cacheFactory);
+CCACHE_EXPORT void destroyCache(Cache cache);
 
 #ifdef __cplusplus
 }

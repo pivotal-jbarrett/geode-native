@@ -19,6 +19,10 @@ add_executable(ccache-test
   test.c
 )
 
+set_target_properties(ccache-test PROPERTIES
+  C_STANDARD 11
+)
+
 target_link_libraries(ccache-test
   PRIVATE
   ccache
