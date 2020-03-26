@@ -24,6 +24,6 @@ int main(int argc, char* argv[]) {
   Cache cache = createCache(cacheFactory);
   destroyCacheFactory(cacheFactory);
   destroyCache(cache);
-  destroyCacheFactory(cache);
+  //  destroyCacheFactory(cache);
 }
 #pragma clang diagnostic pop

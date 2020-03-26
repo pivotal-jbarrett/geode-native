@@ -15,7 +15,7 @@
 
 project(ccache LANGUAGES C CXX)
 
-add_library(ccache SHARED
+add_library(ccache STATIC
   include/ccache.h
   ccache.cpp
 )
