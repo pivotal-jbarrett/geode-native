@@ -20,10 +20,10 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 int main(int argc, char* argv[]) {
-  CacheFactory cacheFactory = createCacheFactory();
-  Cache cache = createCache(cacheFactory);
+  CacheFactory* cacheFactory = createCacheFactory();
+  Cache* cache = createCache(cacheFactory);
   destroyCacheFactory(cacheFactory);
   destroyCache(cache);
-  //  destroyCacheFactory(cache);
+  // destroyCacheFactory(cache);
 }
 #pragma clang diagnostic pop
