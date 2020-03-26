@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project(ccache LANGUAGES CXX)
+project(ccache LANGUAGES C CXX)
 
 add_library(ccache SHARED
   include/ccache.h
@@ -26,6 +26,7 @@ generate_export_header(ccache)
 set_target_properties(ccache PROPERTIES
   CXX_VISIBILITY_PRESET hidden
   VISIBILITY_INLINES_HIDDEN ON
+  C_STANDARD 11
 )
 
 target_link_libraries(ccache

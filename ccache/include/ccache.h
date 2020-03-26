@@ -26,8 +26,13 @@
 extern "C" {
 #endif
 
-typedef void* CacheFactory;
-typedef void* Cache;
+typedef struct {
+  void* ptr;
+} CacheFactory;
+
+typedef struct {
+  void* ptr;
+} Cache;
 
 CCACHE_EXPORT CacheFactory createCacheFactory(void);
 CCACHE_EXPORT void destroyCacheFactory(CacheFactory cacheFactory);

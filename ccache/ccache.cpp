@@ -20,19 +20,21 @@
 #include <geode/CacheFactory.hpp>
 
 CacheFactory createCacheFactory() {
-  return new apache::geode::client::CacheFactory();
+  CacheFactory cacheFactory = {new apache::geode::client::CacheFactory()};
+  return cacheFactory;
 }
 
 void destroyCacheFactory(CacheFactory cacheFactory) {
-  delete static_cast<apache::geode::client::CacheFactory*>(cacheFactory);
+  delete static_cast<apache::geode::client::CacheFactory*>(cacheFactory.ptr);
 }
 
 Cache createCache(CacheFactory cacheFactory) {
-  return new apache::geode::client::Cache(
-      static_cast<apache::geode::client::CacheFactory*>(cacheFactory)
-          ->create());
+  Cache cache = {new apache::geode::client::Cache(
+      static_cast<apache::geode::client::CacheFactory*>(cacheFactory.ptr)
+          ->create())};
+  return cache;
 }
 
 void destroyCache(Cache cache) {
-  delete static_cast<apache::geode::client::Cache*>(cache);
+  delete static_cast<apache::geode::client::Cache*>(cache.ptr);
 }
