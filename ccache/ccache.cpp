@@ -19,21 +19,86 @@
 
 #include <geode/CacheFactory.hpp>
 
-CacheFactory* createCacheFactory() {
-  return reinterpret_cast<CacheFactory*>(
-      new apache::geode::client::CacheFactory());
+thread_local std::exception* current_exception = nullptr;
+
+template <typename R>
+R catchUnhandledException(std::function<R(void)> function) {
+  try {
+    return function();
+  } catch (const apache::geode::client::Exception& e) {
+    current_exception = new apache::geode::client::Exception(e);
+  } catch (const std::exception& e) {
+    current_exception = new apache::geode::client::Exception(e.what());
+  }
+
+  return R{};
 }
 
-void destroyCacheFactory(CacheFactory* cacheFactory) {
-  delete reinterpret_cast<apache::geode::client::CacheFactory*>(cacheFactory);
+geode_CacheFactory* geode_createCacheFactory() {
+  return catchUnhandledException<geode_CacheFactory*>([]() {
+    return reinterpret_cast<geode_CacheFactory*>(
+        new apache::geode::client::CacheFactory());
+  });
 }
 
-Cache* createCache(CacheFactory* cacheFactory) {
-  return reinterpret_cast<Cache*>(new apache::geode::client::Cache(
-      reinterpret_cast<apache::geode::client::CacheFactory*>(cacheFactory)
-          ->create()));
+bool geode_destroyCacheFactory(geode_CacheFactory* cacheFactory) {
+  return catchUnhandledException<bool>([&]() {
+    delete reinterpret_cast<apache::geode::client::CacheFactory*>(cacheFactory);
+    return true;
+  });
 }
 
-void destroyCache(Cache* cache) {
-  delete reinterpret_cast<apache::geode::client::Cache*>(cache);
+geode_Cache* geode_CacheFactory_createCache(geode_CacheFactory* cacheFactory) {
+  return catchUnhandledException<geode_Cache*>([&]() {
+    return reinterpret_cast<geode_Cache*>(new apache::geode::client::Cache(
+        reinterpret_cast<apache::geode::client::CacheFactory*>(cacheFactory)
+            ->create()));
+  });
+}
+
+bool geode_destroyCache(geode_Cache* cache) {
+  return catchUnhandledException<bool>([&]() {
+    delete reinterpret_cast<apache::geode::client::Cache*>(cache);
+    return true;
+  });
+}
+
+bool geode_Cache_throwsGeodeException(geode_Cache*) {
+  return catchUnhandledException<bool>([]() -> bool {
+    throw apache::geode::client::Exception("fake exception");
+    //    return true;
+  });
+}
+
+bool geode_Cache_throwsRuntimeException(geode_Cache*) {
+  return catchUnhandledException<bool>([]() -> bool {
+    throw std::runtime_error("fake runtime error");
+    //    return true;
+  });
+}
+
+bool geode_checkException(void) { return current_exception; }
+
+const geode_Exception* geode_getException(void) {
+  return reinterpret_cast<geode_Exception*>(current_exception);
+}
+
+void geode_clearException(void) {
+  if (current_exception) {
+    delete current_exception;
+    current_exception = nullptr;
+  }
+}
+
+const char* geode_Exception_getMessage(const geode_Exception* exception) {
+  auto e = reinterpret_cast<const std::exception*>(exception);
+  return e->what();
+}
+
+const char* geode_Exception_getStackTrace(const geode_Exception* exception) {
+  auto e = reinterpret_cast<const std::exception*>(exception);
+  if (auto g = dynamic_cast<const apache::geode::client::Exception*>(e)) {
+    return g->getStackTrace().c_str();
+  }
+  return "";
 }

@@ -20,23 +20,45 @@
 #ifndef GEODE_CCACHE_H_
 #define GEODE_CCACHE_H_
 
+#include <stdbool.h>
+#include <stddef.h>
+
 #include "ccache_export.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct CacheFactory;
-typedef struct CacheFactory CacheFactory;
+struct geode_CacheFactory;
+typedef struct geode_CacheFactory geode_CacheFactory;
 
-struct Cache;
-typedef struct Cache Cache;
+struct geode_Cache;
+typedef struct geode_Cache geode_Cache;
 
-CCACHE_EXPORT CacheFactory* createCacheFactory(void);
-CCACHE_EXPORT void destroyCacheFactory(CacheFactory* cacheFactory);
+struct geode_Exception;
+typedef struct geode_Exception geode_Exception;
 
-CCACHE_EXPORT Cache* createCache(CacheFactory* cacheFactory);
-CCACHE_EXPORT void destroyCache(Cache* cache);
+struct geode_StackTrace;
+typedef struct geode_StackTrace geode_StackTrace;
+
+CCACHE_EXPORT geode_CacheFactory* geode_createCacheFactory(void);
+CCACHE_EXPORT bool geode_destroyCacheFactory(geode_CacheFactory* cacheFactory);
+
+CCACHE_EXPORT geode_Cache* geode_CacheFactory_createCache(
+    geode_CacheFactory* cacheFactory);
+CCACHE_EXPORT bool geode_destroyCache(geode_Cache* cache);
+
+CCACHE_EXPORT bool geode_Cache_throwsGeodeException(geode_Cache* cache);
+CCACHE_EXPORT bool geode_Cache_throwsRuntimeException(geode_Cache* cache);
+
+CCACHE_EXPORT bool geode_checkException(void);
+CCACHE_EXPORT const geode_Exception* geode_getException(void);
+CCACHE_EXPORT void geode_clearException(void);
+
+CCACHE_EXPORT const char* geode_Exception_getMessage(
+    const geode_Exception* exception);
+CCACHE_EXPORT const char* geode_Exception_getStackTrace(
+    const geode_Exception* exception);
 
 #ifdef __cplusplus
 }
