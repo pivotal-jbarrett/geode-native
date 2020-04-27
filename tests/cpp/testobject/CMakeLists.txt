@@ -83,9 +83,8 @@ target_compile_definitions(testobject
 
 target_include_directories(testobject
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<TARGET_PROPERTY:apache-geode,SOURCE_DIR>/../src
+    # headers for this library are referenced relative to the parent
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 )
 
 target_link_libraries(testobject
@@ -94,6 +93,7 @@ target_link_libraries(testobject
     framework
   PRIVATE
     ACE::ACE
+    apache-geode-internals
     _WarningsAsError
 )
 

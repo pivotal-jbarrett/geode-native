@@ -58,6 +58,7 @@ target_include_directories(cpp-integration-test
 target_link_libraries(cpp-integration-test
   PUBLIC
     apache-geode
+    apache-geode-internals
     integration-framework
     testobject
     ACE::ACE

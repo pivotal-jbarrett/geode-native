@@ -70,16 +70,12 @@ endif()
 target_link_libraries(apache-geode_unittests
   PRIVATE
     apache-geode-static
+    apache-geode-internals
     GTest::gtest
     GTest::gtest_main
     GTest::gmock
     _WarningsAsError
     _CppCodeCoverage
-)
-
-target_include_directories(apache-geode_unittests
-  PRIVATE
-    $<TARGET_PROPERTY:apache-geode,SOURCE_DIR>/../src
 )
 
 add_dependencies(unit-tests apache-geode_unittests)

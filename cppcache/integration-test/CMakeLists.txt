@@ -25,6 +25,7 @@ add_library(test-cppcache-utils STATIC
 target_link_libraries(test-cppcache-utils
   PRIVATE
     ACE::ACE
+    apache-geode-internals
     _WarningsAsError
   PUBLIC
     apache-geode
@@ -39,10 +40,6 @@ target_compile_definitions(test-cppcache-utils
   PRIVATE
     $<MAKE_C_IDENTIFIER:test-cppcache-utils>_static=1
 )
-target_include_directories(test-cppcache-utils
-  PRIVATE
-    $<TARGET_PROPERTY:apache-geode,SOURCE_DIR>/../src
-)
 add_clangformat(test-cppcache-utils)
 
 
@@ -50,13 +47,10 @@ add_library(unit_test_callbacks SHARED LibraryCallbacks.cpp)
 target_link_libraries(unit_test_callbacks
   PRIVATE
     ACE::ACE
+    apache-geode-internals
     _WarningsAsError
   PUBLIC
     apache-geode
-)
-target_include_directories(unit_test_callbacks
-  PRIVATE
-    $<TARGET_PROPERTY:apache-geode,SOURCE_DIR>/../src
 )
 
 set_target_properties(unit_test_callbacks PROPERTIES FOLDER cpp/test/integration)
@@ -108,6 +102,7 @@ foreach(FILE ${SOURCES})
   target_link_libraries(${TEST}
     PRIVATE
       ACE::ACE
+      apache-geode-internals
       test-cppcache-utils
       _WarningsAsError
       _CppCodeCoverage
@@ -116,9 +111,6 @@ foreach(FILE ${SOURCES})
       apache-geode
       testobject
       framework
-  )
-  target_include_directories(${TEST} PRIVATE
-    $<TARGET_PROPERTY:apache-geode,SOURCE_DIR>/../src
   )
 
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")

@@ -18,7 +18,6 @@
 #include <framework/Cluster.h>
 #include <framework/Gfsh.h>
 
-#include <VariousPdxTypes.hpp>
 #include <future>
 #include <initializer_list>
 #include <iostream>
@@ -32,6 +31,8 @@
 #include <geode/RegionFactory.hpp>
 #include <geode/RegionShortcut.hpp>
 #include <geode/TypeRegistry.hpp>
+
+#include "testobject/VariousPdxTypes.hpp"
 
 namespace {
 

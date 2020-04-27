@@ -35,8 +35,6 @@ generate_export_header(security)
 target_include_directories(security
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  PRIVATE
-    $<TARGET_PROPERTY:apache-geode,SOURCE_DIR>/../src
 )
 
 target_link_libraries(security
@@ -46,6 +44,7 @@ target_link_libraries(security
     OpenSSL::Crypto
     OpenSSL::SSL
   PRIVATE
+    apache-geode-internals
     openssl-compat
     ACE::ACE
     _WarningsAsError

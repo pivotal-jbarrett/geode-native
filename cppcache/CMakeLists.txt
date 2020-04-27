@@ -107,6 +107,18 @@ target_include_directories(_apache-geode INTERFACE
 
 add_dependencies(_apache-geode version-header)
 
+# Used by tests that need private includes and libraries
+add_library(apache-geode-internals INTERFACE)
+target_link_libraries(apache-geode-internals
+  INTERFACE
+    _apache-geode
+)
+target_include_directories(apache-geode-internals
+  INTERFACE
+    $<BUILD_INTERFACE:${COMMON_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+)
+
 install(DIRECTORY ${COMMON_INCLUDE_DIR} DESTINATION .)
 add_subdirectory(shared)
 add_subdirectory(static)

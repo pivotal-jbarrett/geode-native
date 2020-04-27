@@ -34,8 +34,8 @@
 #include <geode/TypeRegistry.hpp>
 
 #include "LocalRegion.hpp"
-#include "NestedPdxObject.hpp"
-#include "PdxType.hpp"
+#include "testobject/NestedPdxObject.hpp"
+#include "testobject/PdxType.hpp"
 
 namespace {
 

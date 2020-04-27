@@ -36,9 +36,11 @@ target_link_libraries(apache-geode
   PUBLIC
     c++11)
 
+# Must manually export each publicly because imported privately
 target_include_directories(apache-geode
   PUBLIC
-    $<TARGET_PROPERTY:_apache-geode,INTERFACE_INCLUDE_DIRECTORIES>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+#    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
