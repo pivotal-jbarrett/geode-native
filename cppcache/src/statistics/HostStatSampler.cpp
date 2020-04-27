@@ -275,8 +275,8 @@ void HostStatSampler::putStatsInAdminRegion() {
     if (conn_man->isNetDown()) {
       return;
     }
-    client::TryReadGuard _guard(adminRgn->getRWLock(), adminRgn->isDestroyed());
-    if (!adminRgn->isDestroyed()) {
+
+    adminRgn->doIfNotDestroyed([&]() {
       if (conn_man->getNumEndPoints() > 0) {
         if (!initDone) {
           adminRgn->init();
@@ -315,7 +315,7 @@ void HostStatSampler::putStatsInAdminRegion() {
         auto keyPtr = client::CacheableString::create(clientId.c_str());
         adminRgn->put(keyPtr, obj);
       }
-    }
+    });
   } catch (const Exception&) {
     m_adminError = true;
   }

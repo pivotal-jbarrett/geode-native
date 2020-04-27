@@ -23,7 +23,6 @@
 #include "TcrConnectionManager.hpp"
 #include "ThinClientPoolDM.hpp"
 #include "ThinClientRegion.hpp"
-#include "statistics/StatisticsManager.hpp"
 #include "util/exception.hpp"
 
 namespace apache {
@@ -51,14 +50,9 @@ std::shared_ptr<AdminRegion> AdminRegion::create(CacheImpl* cache,
 }
 
 void AdminRegion::init() {
-  /*TryWriteGuard _guard(m_rwLock, m_destroyPending);
-  if (m_destroyPending) {
-    return;
-  }
-  */
   // Init distribution manager if it is not a pool
-  ThinClientPoolDM* pool = dynamic_cast<ThinClientPoolDM*>(m_distMngr);
-  if (pool == nullptr) {
+  auto pool = dynamic_cast<ThinClientPoolDM*>(m_distMngr);
+  if (!pool) {
     m_distMngr->init();
   }
 }
@@ -75,9 +69,6 @@ void AdminRegion::put(const std::shared_ptr<CacheableKey>& keyPtr,
 
 GfErrType AdminRegion::putNoThrow(const std::shared_ptr<CacheableKey>& keyPtr,
                                   const std::shared_ptr<Cacheable>& valuePtr) {
-  // put obj to region
-  GfErrType err = GF_NOERR;
-
   TcrMessagePut request(
       new DataOutput(m_connectionMgr->getCacheImpl()->createDataOutput()),
       nullptr, keyPtr, valuePtr, nullptr, false, m_distMngr, true, false,
@@ -85,7 +76,7 @@ GfErrType AdminRegion::putNoThrow(const std::shared_ptr<CacheableKey>& keyPtr,
   request.setMetaRegion(true);
   TcrMessageReply reply(true, m_distMngr);
   reply.setMetaRegion(true);
-  err = m_distMngr->sendSyncRequest(request, reply, true, true);
+  auto err = m_distMngr->sendSyncRequest(request, reply, true, true);
   if (err != GF_NOERR) {
     return err;
   }
@@ -100,9 +91,8 @@ GfErrType AdminRegion::putNoThrow(const std::shared_ptr<CacheableKey>& keyPtr,
       break;
     }
     case TcrMessage::EXCEPTION: {
-      const auto& exceptionMsg = reply.getException();
       err = ThinClientRegion::handleServerException("AdminRegion::put",
-                                                    exceptionMsg);
+                                                    reply.getException());
       break;
     }
     case TcrMessage::PUT_DATA_ERROR: {
@@ -120,29 +110,24 @@ GfErrType AdminRegion::putNoThrow(const std::shared_ptr<CacheableKey>& keyPtr,
 }
 
 void AdminRegion::close() {
-  TryWriteGuard _guard(m_rwLock, m_destroyPending);
-  if (m_destroyPending) {
-    return;
-  }
-  m_destroyPending = true;
+  doIfNotDestroyed([&]() {
+    m_destroyPending = true;
 
-  // Close distribution manager if it is not a pool
-  ThinClientPoolDM* pool = dynamic_cast<ThinClientPoolDM*>(m_distMngr);
-  if (pool == nullptr) {
-    m_distMngr->destroy();
-    _GEODE_SAFE_DELETE(m_distMngr);
-  }
+    // Close distribution manager if it is not a pool
+    auto pool = dynamic_cast<ThinClientPoolDM*>(m_distMngr);
+    if (pool == nullptr) {
+      m_distMngr->destroy();
+      _GEODE_SAFE_DELETE(m_distMngr);
+    }
+  });
 }
 
-AdminRegion::~AdminRegion() {
-  // destructor should be single threaded in any case, so no need of guard
-  if (m_distMngr != nullptr) {
-    close();
-  }
-}
+AdminRegion::~AdminRegion() { close(); }
 
-const bool& AdminRegion::isDestroyed() { return m_destroyPending; }
-ACE_RW_Thread_Mutex& AdminRegion::getRWLock() { return m_rwLock; }
+bool AdminRegion::isDestroyed() {
+  std::unique_lock<decltype(mutex_)> lock(mutex_, std::defer_lock);
+  return m_destroyPending;
+}
 
 }  // namespace client
 }  // namespace geode

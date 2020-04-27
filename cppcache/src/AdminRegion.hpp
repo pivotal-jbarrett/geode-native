@@ -21,6 +21,7 @@
 #define GEODE_ADMINREGION_H_
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include <geode/Serializable.hpp>
@@ -48,7 +49,7 @@ class AdminRegion : public std::enable_shared_from_this<AdminRegion> {
   ThinClientBaseDM* m_distMngr;
   std::string m_fullPath;
   TcrConnectionManager* m_connectionMgr;
-  ACE_RW_Thread_Mutex m_rwLock;
+  std::mutex mutex_;
   bool m_destroyPending;
 
   GfErrType putNoThrow(const std::shared_ptr<CacheableKey>& keyPtr,
@@ -67,13 +68,30 @@ class AdminRegion : public std::enable_shared_from_this<AdminRegion> {
 
   static std::shared_ptr<AdminRegion> create(
       CacheImpl* cache, ThinClientBaseDM* distMan = nullptr);
-  ACE_RW_Thread_Mutex& getRWLock();
-  const bool& isDestroyed();
+
+  bool isDestroyed();
+
   void close();
+
   void init();
+
   void put(const std::shared_ptr<CacheableKey>& keyPtr,
            const std::shared_ptr<Cacheable>& valuePtr);
+
   TcrConnectionManager* getConnectionManager();
+
+  template <typename Function>
+  void doIfNotDestroyed(Function function) {
+    std::unique_lock<decltype(mutex_)> lock(mutex_, std::defer_lock);
+    while (!lock.try_lock()) {
+      if (m_destroyPending) {
+        break;
+      }
+    }
+    if (!m_destroyPending) {
+      function();
+    }
+  }
 };
 
 }  // namespace client
