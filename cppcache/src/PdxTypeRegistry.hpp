@@ -32,7 +32,7 @@
 #include "PdxRemotePreservedData.hpp"
 #include "PdxType.hpp"
 #include "PreservedDataExpiryHandler.hpp"
-#include "ReadWriteLock.hpp"
+#include "util/shared_mutex.hpp"
 
 namespace apache {
 namespace geode {
@@ -46,43 +46,42 @@ struct PdxTypeLessThan {
   }
 };
 
-typedef std::map<int32_t, std::shared_ptr<PdxType>> TypeIdVsPdxType;
-typedef std::map<std::string, std::shared_ptr<PdxType>> TypeNameVsPdxType;
-typedef std::unordered_map<std::shared_ptr<PdxSerializable>,
-                           std::shared_ptr<PdxRemotePreservedData>,
-                           dereference_hash<std::shared_ptr<CacheableKey>>,
-                           dereference_equal_to<std::shared_ptr<CacheableKey>>>
-    PreservedHashMap;
-typedef std::map<std::shared_ptr<PdxType>, int32_t, PdxTypeLessThan>
-    PdxTypeToTypeIdMap;
+using TypeIdVsPdxType = std::map<int32_t, std::shared_ptr<PdxType>>;
+using TypeNameVsPdxType = std::map<std::string, std::shared_ptr<PdxType>>;
+using PreservedHashMap =
+    std::unordered_map<std::shared_ptr<PdxSerializable>,
+                       std::shared_ptr<PdxRemotePreservedData>,
+                       dereference_hash<std::shared_ptr<CacheableKey>>,
+                       dereference_equal_to<std::shared_ptr<CacheableKey>>>;
+using PdxTypeToTypeIdMap =
+    std::map<std::shared_ptr<PdxType>, int32_t, PdxTypeLessThan>;
 
 class APACHE_GEODE_EXPORT PdxTypeRegistry
     : public std::enable_shared_from_this<PdxTypeRegistry> {
  private:
-  CacheImpl* cache;
+  CacheImpl* cache_;
 
-  TypeIdVsPdxType typeIdToPdxType;
+  TypeIdVsPdxType typeIdToPdxType_;
 
-  TypeIdVsPdxType remoteTypeIdToMergedPdxType;
+  TypeIdVsPdxType remoteTypeIdToMergedPdxType_;
 
-  TypeNameVsPdxType localTypeToPdxType;
+  TypeNameVsPdxType localTypeToPdxType_;
 
-  PdxTypeToTypeIdMap pdxTypeToTypeIdMap;
+  PdxTypeToTypeIdMap pdxTypeToTypeIdMap_;
 
-  // TODO:: preserveData need to be of type WeakHashMap
-  PreservedHashMap preserveData;
+  mutable boost::shared_mutex mutex_;
 
-  mutable ACE_RW_Thread_Mutex g_readerWriterLock;
+  PreservedHashMap preserveData_;
 
-  mutable ACE_RW_Thread_Mutex g_preservedDataLock;
+  mutable boost::shared_mutex preserveDataMutex_;
 
-  bool pdxIgnoreUnreadFields;
+  bool pdxIgnoreUnreadFields_;
 
-  bool pdxReadSerialized;
+  bool pdxReadSerialized_;
 
-  std::shared_ptr<CacheableHashMap> enumToInt;
+  std::shared_ptr<CacheableHashMap> enumToInt_;
 
-  std::shared_ptr<CacheableHashMap> intToEnum;
+  std::shared_ptr<CacheableHashMap> intToEnum_;
 
  public:
   explicit PdxTypeRegistry(CacheImpl* cache);
@@ -100,7 +99,6 @@ class APACHE_GEODE_EXPORT PdxTypeRegistry
   void addLocalPdxType(const std::string& localType,
                        std::shared_ptr<PdxType> pdxType);
 
-  // newly added
   std::shared_ptr<PdxType> getLocalPdxType(const std::string& localType) const;
 
   void setMergedType(int32_t remoteTypeId, std::shared_ptr<PdxType> mergedType);
@@ -112,34 +110,28 @@ class APACHE_GEODE_EXPORT PdxTypeRegistry
                        ExpiryTaskManager& expiryTaskManager);
 
   std::shared_ptr<PdxRemotePreservedData> getPreserveData(
-      std::shared_ptr<PdxSerializable> obj) const;
+      const std::shared_ptr<PdxSerializable>& obj) const;
+
+  void removePreserveData(const std::shared_ptr<PdxSerializable>& obj);
 
   void clear();
 
   int32_t getPDXIdForType(const std::string& type, Pool* pool,
                           std::shared_ptr<PdxType> nType, bool checkIfThere);
 
-  bool getPdxIgnoreUnreadFields() const { return pdxIgnoreUnreadFields; }
+  bool getPdxIgnoreUnreadFields() const { return pdxIgnoreUnreadFields_; }
 
-  void setPdxIgnoreUnreadFields(bool value) { pdxIgnoreUnreadFields = value; }
+  void setPdxIgnoreUnreadFields(bool value) { pdxIgnoreUnreadFields_ = value; }
 
-  void setPdxReadSerialized(bool value) { pdxReadSerialized = value; }
+  void setPdxReadSerialized(bool value) { pdxReadSerialized_ = value; }
 
-  bool getPdxReadSerialized() const { return pdxReadSerialized; }
-
-  inline const PreservedHashMap& getPreserveDataMap() const {
-    return preserveData;
-  }
+  bool getPdxReadSerialized() const { return pdxReadSerialized_; }
 
   int32_t getEnumValue(std::shared_ptr<EnumInfo> ei);
 
   std::shared_ptr<EnumInfo> getEnum(int32_t enumVal);
 
-  int32_t getPDXIdForType(std::shared_ptr<PdxType> nType, Pool* pool);
-
-  ACE_RW_Thread_Mutex& getPreservedDataLock() const {
-    return g_preservedDataLock;
-  }
+  int32_t getPDXIdForType(std::shared_ptr<PdxType> pdxType, Pool* pool);
 };
 
 }  // namespace client

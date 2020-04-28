@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+#include <CacheImpl.hpp>
 #include <CachePerfStats.hpp>
 #include <PdxInstanceImpl.hpp>
 #include <statistics/StatisticsFactory.hpp>

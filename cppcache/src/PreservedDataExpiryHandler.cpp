@@ -14,43 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * PreservedDataExpiryHandler.cpp
- *
- *  Created on: Apr 5, 2012
- *      Author: npatel
- */
-#include "PreservedDataExpiryHandler.hpp"
 
-#include "PdxTypeRegistry.hpp"
+#include "PreservedDataExpiryHandler.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
 
 PreservedDataExpiryHandler::PreservedDataExpiryHandler(
-    const std::shared_ptr<PdxTypeRegistry>& pdxTypeRegistry,
-    const std::shared_ptr<PdxSerializable>& pdxObjectPtr)
-    : m_pdxTypeRegistry(pdxTypeRegistry), m_pdxObjectPtr(pdxObjectPtr) {}
+    std::shared_ptr<PdxTypeRegistry> pdxTypeRegistry,
+    std::shared_ptr<PdxSerializable> pdxSerializable)
+    : pdxTypeRegistry_(std::move(pdxTypeRegistry)),
+      pdxSerializable_(std::move(pdxSerializable)) {}
 
 int PreservedDataExpiryHandler::handle_timeout(const ACE_Time_Value&,
                                                const void*) {
-  WriteGuard guard(m_pdxTypeRegistry->getPreservedDataLock());
-  auto map = m_pdxTypeRegistry->getPreserveDataMap();
-  LOGDEBUG(
-      "Entered PreservedDataExpiryHandler "
-      "PdxTypeRegistry::getPreserveDataMap().size() = %zu",
-      map.size());
-
-  try {
-    // remove the entry from the map
-    map.erase(m_pdxObjectPtr);
-  } catch (...) {
-    // Ignore whatever exception comes
-    LOGDEBUG(
-        "PreservedDataExpiry:: Error while Clearing PdxObject and its "
-        "preserved data. Ignoring the error");
-  }
+  pdxTypeRegistry_->removePreserveData(pdxSerializable_);
   return 0;
 }
 
