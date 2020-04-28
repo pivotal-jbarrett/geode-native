@@ -48,7 +48,7 @@ class TcrEndpoint;
  * region. It will inherit from DistributedRegion and overload some methods
  *
  */
-class APACHE_GEODE_EXPORT ThinClientRegion : public LocalRegion {
+class ThinClientRegion : public LocalRegion {
  public:
   /**
    * @brief constructor/initializer/destructor
@@ -65,9 +65,6 @@ class APACHE_GEODE_EXPORT ThinClientRegion : public LocalRegion {
   virtual void initTCR();
   ~ThinClientRegion() noexcept override;
 
-  /** @brief Public Methods from Region
-   */
-  // Unhide function to prevent SunPro Warnings
   using RegionInternal::registerKeys;
   void registerKeys(const std::vector<std::shared_ptr<CacheableKey>>& keys,
                     bool isDurable = false, bool getInitialValues = false,
@@ -99,9 +96,6 @@ class APACHE_GEODE_EXPORT ThinClientRegion : public LocalRegion {
       std::chrono::milliseconds timeout =
           DEFAULT_QUERY_RESPONSE_TIMEOUT) override;
 
-  /** @brief Public Methods from RegionInternal
-   *  These are all virtual methods
-   */
   GfErrType putAllNoThrow_remote(
       const HashMapOfCacheable& map,
       std::shared_ptr<VersionedCacheableObjectPartList>& versionedObjPartList,
@@ -275,7 +269,6 @@ class APACHE_GEODE_EXPORT ThinClientRegion : public LocalRegion {
   bool isDurableClient() { return m_isDurableClnt; }
   std::shared_ptr<ThinClientBaseDM> m_tcrdm;
   std::recursive_mutex m_keysLock;
-  mutable ACE_RW_Thread_Mutex m_rwDestroyLock;
   std::unordered_map<std::shared_ptr<CacheableKey>, InterestResultPolicy>
       m_interestList;
   std::unordered_map<std::string, InterestResultPolicy> m_interestListRegex;
@@ -321,7 +314,10 @@ class APACHE_GEODE_EXPORT ThinClientRegion : public LocalRegion {
       const std::shared_ptr<CacheableKey>& keyPtr,
       const std::shared_ptr<Cacheable>& cvalue,
       const std::shared_ptr<Serializable>& aCallbackArgument);
-  // method to get the values for a register interest
+
+  /**
+   *  method to get the values for a register interest
+   */
   void registerInterestGetValues(
       const char* method,
       const std::vector<std::shared_ptr<CacheableKey>>* keys,
