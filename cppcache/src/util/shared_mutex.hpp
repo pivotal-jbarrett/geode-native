@@ -17,38 +17,20 @@
 
 #pragma once
 
-#ifndef GEODE_PDXTYPES_H_
-#define GEODE_PDXTYPES_H_
+#ifndef GEODE_UTIL_SHARED_MUTED_H_
+#define GEODE_UTIL_SHARED_MUTED_H_
 
-#include <geode/internal/geode_globals.hpp>
+/*
+ * Hiding Boost shared_mutex because it leaks system headers on some platforms.
+ *
+ * Replace with std::shared_mutex in C++14
+ */
 
-namespace apache {
-namespace geode {
-namespace client {
+#include <boost/thread/shared_mutex.hpp>
 
-class PdxTypes {
- public:
-  static constexpr int8_t BYTE_SIZE = 1;
+// Leaked from system header on MacOS
+#ifdef BYTE_SIZE
+#undef BYTE_SIZE
+#endif
 
-  static constexpr int8_t BOOLEAN_SIZE = 1;
-
-  static constexpr int8_t CHAR_SIZE = 2;
-
-  static constexpr int8_t SHORT_SIZE = 2;
-
-  static constexpr int8_t INTEGER_SIZE = 4;
-
-  static constexpr int8_t FLOAT_SIZE = 4;
-
-  static constexpr int8_t LONG_SIZE = 8;
-
-  static constexpr int8_t DOUBLE_SIZE = 8;
-
-  static constexpr int8_t DATE_SIZE = 8;
-};
-
-}  // namespace client
-}  // namespace geode
-}  // namespace apache
-
-#endif  // GEODE_PDXTYPES_H_
+#endif  // GEODE_UTIL_SHARED_MUTED_H_

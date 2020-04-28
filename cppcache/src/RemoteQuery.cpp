@@ -124,62 +124,68 @@ GfErrType RemoteQuery::executeNoThrow(
     ThinClientBaseDM* tcdm, std::shared_ptr<CacheableVector> paramList) {
   LOGFINEST("%s: executing query: %s", func, m_queryString.c_str());
 
-  TryReadGuard guard(m_queryService->getLock(), m_queryService->invalid());
+  try {
+    return m_queryService->doIfNotDestroyed<GfErrType>([&]() {
+      LOGDEBUG("%s: creating QUERY TcrMessage for query: %s", func,
+               m_queryString.c_str());
+      if (paramList != nullptr) {
+        // QUERY_WITH_PARAMETERS
+        TcrMessageQueryWithParameters msg(
+            new DataOutput(m_tccdm->getConnectionManager()
+                               .getCacheImpl()
+                               ->createDataOutput()),
+            m_queryString, nullptr, paramList, timeout, tcdm);
+        msg.setTimeout(timeout);
+        reply.setTimeout(timeout);
 
-  if (m_queryService->invalid()) {
+        GfErrType err = GF_NOERR;
+        LOGFINEST("%s: sending request for query: %s", func,
+                  m_queryString.c_str());
+        if (tcdm == nullptr) {
+          tcdm = m_tccdm;
+        }
+        err = tcdm->sendSyncRequest(msg, reply);
+        if (err != GF_NOERR) {
+          return err;
+        }
+        if (reply.getMessageType() == TcrMessage::EXCEPTION) {
+          err = ThinClientRegion::handleServerException(func,
+                                                        reply.getException());
+          if (err == GF_CACHESERVER_EXCEPTION) {
+            err = GF_REMOTE_QUERY_EXCEPTION;
+          }
+        }
+        return err;
+      } else {
+        TcrMessageQuery msg(new DataOutput(m_tccdm->getConnectionManager()
+                                               .getCacheImpl()
+                                               ->createDataOutput()),
+                            m_queryString, timeout, tcdm);
+        msg.setTimeout(timeout);
+        reply.setTimeout(timeout);
+
+        GfErrType err = GF_NOERR;
+        LOGFINEST("%s: sending request for query: %s", func,
+                  m_queryString.c_str());
+        if (tcdm == nullptr) {
+          tcdm = m_tccdm;
+        }
+        err = tcdm->sendSyncRequest(msg, reply);
+        if (err != GF_NOERR) {
+          return err;
+        }
+        if (reply.getMessageType() == TcrMessage::EXCEPTION) {
+          err = ThinClientRegion::handleServerException(func,
+                                                        reply.getException());
+          if (err == GF_CACHESERVER_EXCEPTION) {
+            err = GF_REMOTE_QUERY_EXCEPTION;
+          }
+        }
+        return err;
+      }
+    });
+  } catch (const CacheClosedException&) {
     return GF_CACHE_CLOSED_EXCEPTION;
-  }
-  LOGDEBUG("%s: creating QUERY TcrMessage for query: %s", func,
-           m_queryString.c_str());
-  if (paramList != nullptr) {
-    // QUERY_WITH_PARAMETERS
-    TcrMessageQueryWithParameters msg(
-        new DataOutput(
-            m_tccdm->getConnectionManager().getCacheImpl()->createDataOutput()),
-        m_queryString, nullptr, paramList, timeout, tcdm);
-    msg.setTimeout(timeout);
-    reply.setTimeout(timeout);
-
-    GfErrType err = GF_NOERR;
-    LOGFINEST("%s: sending request for query: %s", func, m_queryString.c_str());
-    if (tcdm == nullptr) {
-      tcdm = m_tccdm;
-    }
-    err = tcdm->sendSyncRequest(msg, reply);
-    if (err != GF_NOERR) {
-      return err;
-    }
-    if (reply.getMessageType() == TcrMessage::EXCEPTION) {
-      err = ThinClientRegion::handleServerException(func, reply.getException());
-      if (err == GF_CACHESERVER_EXCEPTION) {
-        err = GF_REMOTE_QUERY_EXCEPTION;
-      }
-    }
-    return err;
-  } else {
-    TcrMessageQuery msg(
-        new DataOutput(
-            m_tccdm->getConnectionManager().getCacheImpl()->createDataOutput()),
-        m_queryString, timeout, tcdm);
-    msg.setTimeout(timeout);
-    reply.setTimeout(timeout);
-
-    GfErrType err = GF_NOERR;
-    LOGFINEST("%s: sending request for query: %s", func, m_queryString.c_str());
-    if (tcdm == nullptr) {
-      tcdm = m_tccdm;
-    }
-    err = tcdm->sendSyncRequest(msg, reply);
-    if (err != GF_NOERR) {
-      return err;
-    }
-    if (reply.getMessageType() == TcrMessage::EXCEPTION) {
-      err = ThinClientRegion::handleServerException(func, reply.getException());
-      if (err == GF_CACHESERVER_EXCEPTION) {
-        err = GF_REMOTE_QUERY_EXCEPTION;
-      }
-    }
-    return err;
   }
 }
 

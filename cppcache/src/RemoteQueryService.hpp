@@ -29,6 +29,7 @@
 #include "CqService.hpp"
 #include "ThinClientCacheDistributionManager.hpp"
 #include "statistics/StatisticsManager.hpp"
+#include "util/shared_mutex.hpp"
 
 namespace apache {
 namespace geode {
@@ -46,8 +47,6 @@ class APACHE_GEODE_EXPORT RemoteQueryService
   virtual ~RemoteQueryService() = default;
 
   void init();
-
-  inline ACE_RW_Thread_Mutex& getLock() { return m_rwLock; }
 
   inline const volatile bool& invalid() { return m_invalid; }
 
@@ -89,23 +88,36 @@ class APACHE_GEODE_EXPORT RemoteQueryService
   GfErrType executeAllCqs(TcrEndpoint* endpoint);
   void receiveNotification(TcrMessage* msg);
   void invokeCqConnectedListeners(ThinClientPoolDM* pool, bool connected);
-  // For Lazy Cq Start-no use, no start
-  inline void initCqService() {
-    if (m_cqService == nullptr) {
-      LOGFINE("RemoteQueryService: starting cq service");
-      m_cqService = std::make_shared<CqService>(m_tccdm, m_statisticsFactory);
-      LOGFINE("RemoteQueryService: started cq service");
+
+  template <typename _Return, typename _Function>
+  inline _Return doIfNotDestroyed(_Function function) const {
+    boost::shared_lock<boost::shared_mutex> lock(mutex_, boost::defer_lock);
+    while (!lock.try_lock()) {
+      if (m_invalid) {
+        break;
+      }
     }
+
+    if (m_invalid) {
+      throw CacheClosedException("QueryService: Cache has been closed.");
+    }
+
+    return function();
   }
 
  private:
   volatile bool m_invalid;
-  mutable ACE_RW_Thread_Mutex m_rwLock;
+  mutable boost::shared_mutex mutex_;
 
   ThinClientBaseDM* m_tccdm;
   std::shared_ptr<CqService> m_cqService;
   CqPoolsConnected m_CqPoolsConnected;
   statistics::StatisticsFactory* m_statisticsFactory;
+
+  /**
+   *   For Lazy Cq Start-no use, no start
+   */
+  void initCqService();
 };
 
 }  // namespace client
