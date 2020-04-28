@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "PutAllPartialResult.hpp"
 
 namespace apache {
@@ -22,48 +23,69 @@ namespace client {
 
 PutAllPartialResult::PutAllPartialResult(int totalMapSize,
                                          std::recursive_mutex& responseLock) {
-  m_succeededKeys = std::make_shared<VersionedCacheableObjectPartList>(
+  succeededKeys_ = std::make_shared<VersionedCacheableObjectPartList>(
       std::make_shared<std::vector<std::shared_ptr<CacheableKey>>>(),
       responseLock);
-  m_totalMapSize = totalMapSize;
+  totalMapSize_ = totalMapSize;
 }
 
-// Add all succeededKeys and firstfailedKey.
-// Before calling this, we must read PutAllPartialResultServerException and
-// formulate obj of type PutAllPartialResult.
 void PutAllPartialResult::consolidate(
     std::shared_ptr<PutAllPartialResult> other) {
-  {
-    WriteGuard guard(g_readerWriterLock);
-    m_succeededKeys->addAll(other->getSucceededKeysAndVersions());
-  }
-  saveFailedKey(other->m_firstFailedKey, other->m_firstCauseOfFailure);
+  succeededKeys_->addAll(other->getSucceededKeysAndVersions());
+  saveFailedKey(other->firstFailedKey_, other->firstCauseOfFailure_);
 }
 
 void PutAllPartialResult::addKeysAndVersions(
     std::shared_ptr<VersionedCacheableObjectPartList> keysAndVersion) {
-  this->m_succeededKeys->addAll(keysAndVersion);
+  this->succeededKeys_->addAll(keysAndVersion);
 }
 
 void PutAllPartialResult::addKeys(
     std::shared_ptr<std::vector<std::shared_ptr<CacheableKey>>> m_keys) {
-  {
-    WriteGuard guard(g_readerWriterLock);
-    if (m_succeededKeys->getVersionedTagsize() > 0) {
-      throw IllegalStateException(
-          "attempt to store versionless keys when there are already versioned "
-          "results");
-    }
-    this->m_succeededKeys->addAllKeys(m_keys);
+  if (succeededKeys_->getVersionedTagsize() > 0) {
+    throw IllegalStateException(
+        "attempt to store versionless keys when there are already versioned "
+        "results");
   }
-}
-std::shared_ptr<VersionedCacheableObjectPartList>
-PutAllPartialResult::getSucceededKeysAndVersions() {
-  return m_succeededKeys;
+  this->succeededKeys_->addAllKeys(m_keys);
 }
 
-bool PutAllPartialResult::hasSucceededKeys() {
-  return this->m_succeededKeys->size() > 0;
+std::shared_ptr<VersionedCacheableObjectPartList>
+PutAllPartialResult::getSucceededKeysAndVersions() {
+  return succeededKeys_;
+}
+
+void PutAllPartialResult::saveFailedKey(std::shared_ptr<CacheableKey> key,
+                                        std::shared_ptr<Exception> cause) {
+  if (!key) {
+    return;
+  }
+
+  if (!firstFailedKey_) {
+    firstFailedKey_ = key;
+    firstCauseOfFailure_ = cause;
+  }
+}
+
+std::string PutAllPartialResult::toString() const {
+  std::string toString =
+      "PutAllPartialResult: [ Key = " + firstFailedKey_->toString() + " ]";
+
+  if (totalMapSize_ > 0) {
+    const auto size = succeededKeys_->size();
+    const auto failedKeyNum = totalMapSize_ - size;
+    if (failedKeyNum > 0) {
+      toString += "The putAll operation failed to put " +
+                  std::to_string(failedKeyNum) + " out of " +
+                  std::to_string(totalMapSize_) + " entries ";
+    } else {
+      toString += "The putAll operation successfully put " +
+                  std::to_string(size) + " out of " +
+                  std::to_string(totalMapSize_) + " entries ";
+    }
+  }
+
+  return toString;
 }
 }  // namespace client
 }  // namespace geode
