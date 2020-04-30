@@ -1343,7 +1343,6 @@ GfErrType ThinClientPoolDM::sendSyncRequest(
             "Need to refresh pr-meta-data timeout in client only  with refresh "
             "metadata");
         auto* tcrRegion = dynamic_cast<ThinClientRegion*>(region.get());
-        tcrRegion->setMetaDataRefreshed(false);
         m_clientMetadataService->enqueueForMetadataRefresh(
             region->getFullPath(), reply.getserverGroupVersion());
       }
@@ -1461,21 +1460,15 @@ GfErrType ThinClientPoolDM::sendSyncRequest(
           (reply.getMetaDataVersion() != 0 ||
            (request.getMessageType() == TcrMessage::EXECUTE_REGION_FUNCTION &&
             request.getKeyRef() != nullptr && reply.isFEAnotherHop()))) {
-        // Need to get direct access to Region's name to avoid referencing
-        // temp data and causing crashes
-        auto region =
-            m_connManager.getCacheImpl()->getRegion(request.getRegionName());
-
-        if (region != nullptr) {
-          if (!connFound)  // max limit case then don't refresh otherwise always
-                           // refresh
-          {
-            LOGFINE("Need to refresh pr-meta-data");
-            auto* tcrRegion = dynamic_cast<ThinClientRegion*>(region.get());
-            tcrRegion->setMetaDataRefreshed(false);
+        if (!connFound) {
+          // max limit case then don't refresh otherwise always refresh
+          LOGFINE("Need to refresh pr-meta-data");
+          if (auto region = std::dynamic_pointer_cast<ThinClientRegion>(
+                  m_connManager.getCacheImpl()->getRegion(
+                      request.getRegionName()))) {
+            m_clientMetadataService->enqueueForMetadataRefresh(
+                region->getFullPath(), reply.getserverGroupVersion());
           }
-          m_clientMetadataService->enqueueForMetadataRefresh(
-              region->getFullPath(), reply.getserverGroupVersion());
         }
       }
     }

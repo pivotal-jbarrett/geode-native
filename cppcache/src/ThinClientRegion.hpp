@@ -164,14 +164,6 @@ class ThinClientRegion : public LocalRegion {
   GfErrType getFuncAttributes(const std::string& func,
                               std::shared_ptr<std::vector<int8_t>>* attr);
 
-  ACE_RW_Thread_Mutex& getMataDataMutex() { return m_RegionMutex; }
-
-  bool const& getMetaDataRefreshed() { return m_isMetaDataRefreshed; }
-
-  void setMetaDataRefreshed(bool aMetaDataRefreshed) {
-    m_isMetaDataRefreshed = aMetaDataRefreshed;
-  }
-
   uint32_t size_remote() override;
 
   void txDestroy(const std::shared_ptr<CacheableKey>& key,
@@ -347,9 +339,6 @@ class ThinClientRegion : public LocalRegion {
       const std::vector<std::shared_ptr<CacheableKey>>& keys,
       std::shared_ptr<VersionedCacheableObjectPartList>& versionedObjPartList,
       const std::shared_ptr<Serializable>& aCallbackArgument = nullptr);
-
-  ACE_RW_Thread_Mutex m_RegionMutex;
-  bool m_isMetaDataRefreshed;
 
   typedef std::unordered_map<
       std::shared_ptr<BucketServerLocation>, std::shared_ptr<Serializable>,

@@ -290,14 +290,8 @@ void ClientMetadataService::enqueueForMetadataRefresh(
   if (region != nullptr) {
     auto tcrRegion = dynamic_cast<ThinClientRegion*>(region.get());
     {
-      TryWriteGuard guardRegionMetaDataRefresh(
-          tcrRegion->getMataDataMutex(), tcrRegion->getMetaDataRefreshed());
-      if (tcrRegion->getMetaDataRefreshed()) {
-        return;
-      }
       LOGFINE("Network hop so fetching single hop metadata from the server");
       m_cache->setNetworkHopFlag(true);
-      tcrRegion->setMetaDataRefreshed(true);
       {
         std::lock_guard<decltype(m_regionQueueMutex)> lock(m_regionQueueMutex);
         m_regionQueue.push_back(regionFullPath);

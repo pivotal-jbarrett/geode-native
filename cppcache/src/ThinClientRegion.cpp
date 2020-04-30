@@ -347,8 +347,7 @@ ThinClientRegion::ThinClientRegion(
     const std::shared_ptr<CacheStatistics>& stats, bool shared)
     : LocalRegion(name, cacheImpl, rPtr, attributes, stats, shared),
       m_tcrdm(nullptr),
-      m_notifyRelease(false),
-      m_isMetaDataRefreshed(false) {
+      m_notifyRelease(false) {
   m_transactionEnabled = true;
   m_isDurableClnt = !cacheImpl->getDistributedSystem()
                          .getSystemProperties()
