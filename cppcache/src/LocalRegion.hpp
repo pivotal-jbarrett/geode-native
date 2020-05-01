@@ -48,29 +48,12 @@
 #include "SerializationRegistry.hpp"
 #include "TSSTXStateWrapper.hpp"
 #include "TombstoneList.hpp"
+#include "util/shared_mutex.hpp"
 #include "util/synchronized_map.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
-
-#ifndef CHECK_DESTROY_PENDING
-#define CHECK_DESTROY_PENDING(lock, function)           \
-  lock checkGuard(m_rwLock, m_destroyPending);          \
-  if (m_destroyPending) {                               \
-    std::string err_msg = #function;                    \
-    err_msg += ": region " + m_fullPath + " destroyed"; \
-    throw RegionDestroyedException(err_msg.c_str());    \
-  }
-#endif
-
-#ifndef CHECK_DESTROY_PENDING_NOTHROW
-#define CHECK_DESTROY_PENDING_NOTHROW(lock)     \
-  lock checkGuard(m_rwLock, m_destroyPending);  \
-  if (m_destroyPending) {                       \
-    return GF_CACHE_REGION_DESTROYED_EXCEPTION; \
-  }
-#endif
 
 class PutActions;
 class PutActionsTx;
@@ -113,9 +96,6 @@ typedef std::unordered_map<std::shared_ptr<CacheableKey>,
  */
 
 class APACHE_GEODE_EXPORT LocalRegion : public RegionInternal {
-  /**
-   * @brief Public Methods for Region
-   */
  public:
   LocalRegion(const std::string& name, CacheImpl* cache,
               const std::shared_ptr<RegionInternal>& rPtr,
@@ -247,9 +227,6 @@ class APACHE_GEODE_EXPORT LocalRegion : public RegionInternal {
   std::vector<std::shared_ptr<CacheableString>> getInterestListRegex()
       const override;
 
-  /** @brief Public Methods from RegionInternal
-   *  There are all virtual methods
-   */
   std::shared_ptr<PersistenceManager> getPersistenceManager() override {
     return m_persistenceManager;
   }
@@ -352,8 +329,8 @@ class APACHE_GEODE_EXPORT LocalRegion : public RegionInternal {
                             std::shared_ptr<VersionTag> versionTag);
 
   void setRegionExpiryTask() override;
-  void acquireReadLock() override { m_rwLock.acquire_read(); }
-  void releaseReadLock() override { m_rwLock.release(); }
+  void acquireReadLock() override { mutex_.lock_shared(); }
+  void releaseReadLock() override { mutex_.unlock_shared(); }
 
   // behaviors for attributes mutator
   uint32_t adjustLruEntriesLimit(uint32_t limit) override;
@@ -406,7 +383,6 @@ class APACHE_GEODE_EXPORT LocalRegion : public RegionInternal {
   std::shared_ptr<TombstoneList> getTombstoneList() override;
 
  protected:
-  /* virtual protected methods */
   virtual void release(bool invokeCallbacks = true);
   virtual GfErrType getNoThrow_remote(
       const std::shared_ptr<CacheableKey>& keyPtr,
@@ -522,7 +498,7 @@ class APACHE_GEODE_EXPORT LocalRegion : public RegionInternal {
   std::shared_ptr<Pool> m_attachedPool;
   bool m_enableTimeStatistics;
 
-  mutable ACE_RW_Thread_Mutex m_rwLock;
+  mutable boost::shared_mutex mutex_;
   std::vector<std::shared_ptr<CacheableKey>> keys_internal();
   bool containsKey_internal(const std::shared_ptr<CacheableKey>& keyPtr) const;
   void removeRegion(const std::string& name);
@@ -569,6 +545,19 @@ class APACHE_GEODE_EXPORT LocalRegion : public RegionInternal {
   virtual GfErrType getNoThrow_FullObject(
       std::shared_ptr<EventId> eventId, std::shared_ptr<Cacheable>& fullObject,
       std::shared_ptr<VersionTag>& versionTag);
+
+  void checkNotDestroyed() const;
+
+  template <typename _Function>
+  GfErrType doReadIfNotDestroyingOtherwiseReturnError(
+      _Function function) const {
+    boost::shared_lock<decltype(mutex_)> lock(mutex_);
+    if (m_destroyPending) {
+      throw GF_CACHE_REGION_DESTROYED_EXCEPTION;
+    }
+
+    return function();
+  }
 
  private:
   std::shared_ptr<Region> findSubRegion(const std::string& name);

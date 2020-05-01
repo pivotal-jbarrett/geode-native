@@ -21,9 +21,9 @@
 #include <geode/SystemProperties.hpp>
 
 #include "CacheImpl.hpp"
-#include "ReadWriteLock.hpp"
 #include "TcrHADistributionManager.hpp"
 #include "ThinClientPoolHADM.hpp"
+
 namespace apache {
 namespace geode {
 namespace client {
@@ -80,7 +80,7 @@ void ThinClientHARegion::releaseGlobals(bool isFailover) {
 }
 
 void ThinClientHARegion::handleMarker() {
-  TryReadGuard guard(m_rwLock, m_destroyPending);
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
   if (m_destroyPending) {
     return;
   }

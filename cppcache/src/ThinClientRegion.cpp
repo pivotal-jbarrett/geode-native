@@ -18,7 +18,6 @@
 #include "ThinClientRegion.hpp"
 
 #include <algorithm>
-#include <limits>
 #include <regex>
 
 #include <geode/PoolManager.hpp>
@@ -31,7 +30,6 @@
 #include "CacheRegionHelper.hpp"
 #include "DataInputInternal.hpp"
 #include "PutAllPartialResultServerException.hpp"
-#include "ReadWriteLock.hpp"
 #include "RegionGlobalLocks.hpp"
 #include "RemoteQuery.hpp"
 #include "TcrConnectionManager.hpp"
@@ -607,7 +605,8 @@ std::shared_ptr<SelectResults> ThinClientRegion::query(
     const std::string& predicate, std::chrono::milliseconds timeout) {
   util::PROTOCOL_OPERATION_TIMEOUT_BOUNDS(timeout);
 
-  CHECK_DESTROY_PENDING(TryReadGuard, Region::query);
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
+  checkNotDestroyed();
 
   if (predicate.empty()) {
     LOGERROR("Region query predicate string is empty");
@@ -716,7 +715,8 @@ std::shared_ptr<Serializable> ThinClientRegion::selectValue(
 }
 
 std::vector<std::shared_ptr<CacheableKey>> ThinClientRegion::serverKeys() {
-  CHECK_DESTROY_PENDING(TryReadGuard, Region::serverKeys);
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
+  checkNotDestroyed();
 
   TcrMessageReply reply(true, m_tcrdm.get());
   TcrMessageKeySet request(new DataOutput(m_cacheImpl->createDataOutput()),
@@ -1001,12 +1001,12 @@ GfErrType ThinClientRegion::putNoThrow_remote(
     m_cacheImpl->getCachePerfStats().incDeltaPut();
     if (reply->getMessageType() == TcrMessage::PUT_DELTA_ERROR) {
       // Try without delta
-      TcrMessagePut request(new DataOutput(m_cacheImpl->createDataOutput()),
-                            this, keyPtr, valuePtr, aCallbackArgument, false,
-                            m_tcrdm.get(), false, true);
+      TcrMessagePut requestWithoutDelta(
+          new DataOutput(m_cacheImpl->createDataOutput()), this, keyPtr,
+          valuePtr, aCallbackArgument, false, m_tcrdm.get(), false, true);
       reply = std::unique_ptr<TcrMessageReply>(
           new TcrMessageReply(true, m_tcrdm.get()));
-      err = m_tcrdm->sendSyncRequest(request, *reply);
+      err = m_tcrdm->sendSyncRequest(requestWithoutDelta, *reply);
     }
   }
   if (err != GF_NOERR) return err;
@@ -2218,71 +2218,73 @@ GfErrType ThinClientRegion::registerKeysNoThrow(
     TcrMessageReply* reply) {
   RegionGlobalLocks acquireLocksRedundancy(this, false);
   RegionGlobalLocks acquireLocksFailover(this);
-  CHECK_DESTROY_PENDING_NOTHROW(TryReadGuard);
-  GfErrType err = GF_NOERR;
+  return doReadIfNotDestroyingOtherwiseReturnError([&]() {
+    auto err = GF_NOERR;
 
-  std::lock_guard<decltype(m_keysLock)> keysGuard(m_keysLock);
-  if (keys.empty()) {
-    return err;
-  }
-
-  TcrMessageReply replyLocal(true, m_tcrdm.get());
-  bool needToCreateRC = true;
-  if (reply == nullptr) {
-    reply = &replyLocal;
-  } else {
-    needToCreateRC = false;
-  }
-
-  LOGDEBUG("ThinClientRegion::registerKeysNoThrow : interestpolicy is %d",
-           interestPolicy.ordinal);
-
-  TcrMessageRegisterInterestList request(
-      new DataOutput(m_cacheImpl->createDataOutput()), this, keys, isDurable,
-      getAttributes().getCachingEnabled(), receiveValues, interestPolicy,
-      m_tcrdm.get());
-  std::recursive_mutex responseLock;
-  TcrChunkedResult* resultCollector = nullptr;
-  if (interestPolicy.ordinal == InterestResultPolicy::KEYS_VALUES.ordinal) {
-    auto values = std::make_shared<HashMapOfCacheable>();
-    auto exceptions = std::make_shared<HashMapOfException>();
-    MapOfUpdateCounters trackers;
-    int32_t destroyTracker = 1;
-    if (needToCreateRC) {
-      resultCollector = (new ChunkedGetAllResponse(
-          request, this, &keys, values, exceptions, nullptr, trackers,
-          destroyTracker, true, responseLock));
-      reply->setChunkedResultHandler(resultCollector);
+    std::lock_guard<decltype(m_keysLock)> keysGuard(m_keysLock);
+    if (keys.empty()) {
+      return err;
     }
-  } else {
-    if (needToCreateRC) {
-      resultCollector = (new ChunkedInterestResponse(request, nullptr, *reply));
-      reply->setChunkedResultHandler(resultCollector);
+
+    TcrMessageReply replyLocal(true, m_tcrdm.get());
+    bool needToCreateRC = true;
+    if (reply == nullptr) {
+      reply = &replyLocal;
+    } else {
+      needToCreateRC = false;
     }
-  }
 
-  err = m_tcrdm->sendSyncRequestRegisterInterest(
-      request, *reply, attemptFailover, this, endpoint);
+    LOGDEBUG("ThinClientRegion::registerKeysNoThrow : interestpolicy is %d",
+             interestPolicy.ordinal);
 
-  if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
-    if (reply->getMessageType() == TcrMessage::RESPONSE_FROM_SECONDARY &&
-        endpoint) {
-      LOGFINER(
-          "registerKeysNoThrow - got response from secondary for "
-          "endpoint %s, ignoring.",
-          endpoint->name().c_str());
-    } else if (attemptFailover) {
-      addKeys(keys, isDurable, receiveValues, interestPolicy);
-      if (!(interestPolicy.ordinal ==
-            InterestResultPolicy::KEYS_VALUES.ordinal)) {
-        localInvalidateForRegisterInterest(keys);
+    TcrMessageRegisterInterestList request(
+        new DataOutput(m_cacheImpl->createDataOutput()), this, keys, isDurable,
+        getAttributes().getCachingEnabled(), receiveValues, interestPolicy,
+        m_tcrdm.get());
+    std::recursive_mutex responseLock;
+    TcrChunkedResult* resultCollector = nullptr;
+    if (interestPolicy.ordinal == InterestResultPolicy::KEYS_VALUES.ordinal) {
+      auto values = std::make_shared<HashMapOfCacheable>();
+      auto exceptions = std::make_shared<HashMapOfException>();
+      MapOfUpdateCounters trackers;
+      int32_t destroyTracker = 1;
+      if (needToCreateRC) {
+        resultCollector = (new ChunkedGetAllResponse(
+            request, this, &keys, values, exceptions, nullptr, trackers,
+            destroyTracker, true, responseLock));
+        reply->setChunkedResultHandler(resultCollector);
+      }
+    } else {
+      if (needToCreateRC) {
+        resultCollector =
+            (new ChunkedInterestResponse(request, nullptr, *reply));
+        reply->setChunkedResultHandler(resultCollector);
       }
     }
-  }
-  if (needToCreateRC) {
-    delete resultCollector;
-  }
-  return err;
+
+    err = m_tcrdm->sendSyncRequestRegisterInterest(
+        request, *reply, attemptFailover, this, endpoint);
+
+    if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
+      if (reply->getMessageType() == TcrMessage::RESPONSE_FROM_SECONDARY &&
+          endpoint) {
+        LOGFINER(
+            "registerKeysNoThrow - got response from secondary for "
+            "endpoint %s, ignoring.",
+            endpoint->name().c_str());
+      } else if (attemptFailover) {
+        addKeys(keys, isDurable, receiveValues, interestPolicy);
+        if (!(interestPolicy.ordinal ==
+              InterestResultPolicy::KEYS_VALUES.ordinal)) {
+          localInvalidateForRegisterInterest(keys);
+        }
+      }
+    }
+    if (needToCreateRC) {
+      delete resultCollector;
+    }
+    return err;
+  });
 }
 
 GfErrType ThinClientRegion::unregisterKeysNoThrow(
@@ -2290,36 +2292,37 @@ GfErrType ThinClientRegion::unregisterKeysNoThrow(
     bool attemptFailover) {
   RegionGlobalLocks acquireLocksRedundancy(this, false);
   RegionGlobalLocks acquireLocksFailover(this);
-  CHECK_DESTROY_PENDING_NOTHROW(TryReadGuard);
-  GfErrType err = GF_NOERR;
-  std::lock_guard<decltype(m_keysLock)> keysGuard(m_keysLock);
-  TcrMessageReply reply(true, m_tcrdm.get());
-  if (keys.empty()) {
-    return err;
-  }
+  return doReadIfNotDestroyingOtherwiseReturnError([&]() {
+    GfErrType err = GF_NOERR;
+    std::lock_guard<decltype(m_keysLock)> keysGuard(m_keysLock);
+    TcrMessageReply reply(true, m_tcrdm.get());
+    if (keys.empty()) {
+      return err;
+    }
 
-  if (m_interestList.empty() && m_durableInterestList.empty() &&
-      m_interestListForUpdatesAsInvalidates.empty() &&
-      m_durableInterestListForUpdatesAsInvalidates.empty()) {
-    // did not register any keys before.
-    return GF_CACHE_ILLEGAL_STATE_EXCEPTION;
-  }
+    if (m_interestList.empty() && m_durableInterestList.empty() &&
+        m_interestListForUpdatesAsInvalidates.empty() &&
+        m_durableInterestListForUpdatesAsInvalidates.empty()) {
+      // did not register any keys before.
+      return GF_CACHE_ILLEGAL_STATE_EXCEPTION;
+    }
 
-  TcrMessageUnregisterInterestList request(
-      new DataOutput(m_cacheImpl->createDataOutput()), this, keys, false, true,
-      InterestResultPolicy::NONE, m_tcrdm.get());
-  err = m_tcrdm->sendSyncRequestRegisterInterest(request, reply);
-  if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
-    if (attemptFailover) {
-      for (const auto& key : keys) {
-        m_interestList.erase(key);
-        m_durableInterestList.erase(key);
-        m_interestListForUpdatesAsInvalidates.erase(key);
-        m_durableInterestListForUpdatesAsInvalidates.erase(key);
+    TcrMessageUnregisterInterestList request(
+        new DataOutput(m_cacheImpl->createDataOutput()), this, keys, false,
+        true, InterestResultPolicy::NONE, m_tcrdm.get());
+    err = m_tcrdm->sendSyncRequestRegisterInterest(request, reply);
+    if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
+      if (attemptFailover) {
+        for (const auto& key : keys) {
+          m_interestList.erase(key);
+          m_durableInterestList.erase(key);
+          m_interestListForUpdatesAsInvalidates.erase(key);
+          m_durableInterestListForUpdatesAsInvalidates.erase(key);
+        }
       }
     }
-  }
-  return err;
+    return err;
+  });
 }
 
 GfErrType ThinClientRegion::unregisterKeysNoThrowLocalDestroy(
@@ -2376,137 +2379,140 @@ GfErrType ThinClientRegion::registerRegexNoThrow(
     TcrMessageReply* reply) {
   RegionGlobalLocks acquireLocksRedundancy(this, false);
   RegionGlobalLocks acquireLocksFailover(this);
-  CHECK_DESTROY_PENDING_NOTHROW(TryReadGuard);
-  GfErrType err = GF_NOERR;
+  return doReadIfNotDestroyingOtherwiseReturnError([&]() {
+    GfErrType err = GF_NOERR;
 
-  bool allKeys = (regex == ".*");
-  std::lock_guard<decltype(m_keysLock)> keysGuard(m_keysLock);
+    bool allKeys = (regex == ".*");
+    std::lock_guard<decltype(m_keysLock)> keysGuard(m_keysLock);
 
-  if (attemptFailover) {
-    if ((isDurable &&
-         (isRegexRegistered(m_durableInterestListRegex, regex, allKeys) ||
-          isRegexRegistered(m_durableInterestListRegexForUpdatesAsInvalidates,
-                            regex, allKeys))) ||
-        (!isDurable &&
-         (isRegexRegistered(m_interestListRegex, regex, allKeys) ||
-          isRegexRegistered(m_interestListRegexForUpdatesAsInvalidates, regex,
-                            allKeys)))) {
-      return err;
-    }
-  }
-
-  ChunkedInterestResponse* resultCollector = nullptr;
-  ChunkedGetAllResponse* getAllResultCollector = nullptr;
-  if (reply != nullptr) {
-    // need to check
-    resultCollector = dynamic_cast<ChunkedInterestResponse*>(
-        reply->getChunkedResultHandler());
-    if (resultCollector != nullptr) {
-      resultKeys = resultCollector->getResultKeys();
-    } else {
-      getAllResultCollector = dynamic_cast<ChunkedGetAllResponse*>(
-          reply->getChunkedResultHandler());
-      resultKeys = getAllResultCollector->getResultKeys();
-    }
-  }
-
-  bool isRCCreatedLocally = false;
-  LOGDEBUG("ThinClientRegion::registerRegexNoThrow : interestpolicy is %d",
-           interestPolicy.ordinal);
-
-  // TODO:
-  TcrMessageRegisterInterest request(
-      new DataOutput(m_cacheImpl->createDataOutput()), m_fullPath,
-      regex.c_str(), interestPolicy, isDurable,
-      getAttributes().getCachingEnabled(), receiveValues, m_tcrdm.get());
-  std::recursive_mutex responseLock;
-  if (reply == nullptr) {
-    TcrMessageReply replyLocal(true, m_tcrdm.get());
-    auto values = std::make_shared<HashMapOfCacheable>();
-    auto exceptions = std::make_shared<HashMapOfException>();
-
-    reply = &replyLocal;
-    if (interestPolicy.ordinal == InterestResultPolicy::KEYS_VALUES.ordinal) {
-      MapOfUpdateCounters trackers;
-      int32_t destroyTracker = 1;
-      if (resultKeys == nullptr) {
-        resultKeys =
-            std::shared_ptr<std::vector<std::shared_ptr<CacheableKey>>>(
-                new std::vector<std::shared_ptr<CacheableKey>>());
+    if (attemptFailover) {
+      if ((isDurable &&
+           (isRegexRegistered(m_durableInterestListRegex, regex, allKeys) ||
+            isRegexRegistered(m_durableInterestListRegexForUpdatesAsInvalidates,
+                              regex, allKeys))) ||
+          (!isDurable &&
+           (isRegexRegistered(m_interestListRegex, regex, allKeys) ||
+            isRegexRegistered(m_interestListRegexForUpdatesAsInvalidates, regex,
+                              allKeys)))) {
+        return err;
       }
-      // need to check
-      getAllResultCollector = (new ChunkedGetAllResponse(
-          request, this, nullptr, values, exceptions, resultKeys, trackers,
-          destroyTracker, true, responseLock));
-      reply->setChunkedResultHandler(getAllResultCollector);
-      isRCCreatedLocally = true;
-    } else {
-      isRCCreatedLocally = true;
-      // need to check
-      resultCollector =
-          new ChunkedInterestResponse(request, resultKeys, replyLocal);
-      reply->setChunkedResultHandler(resultCollector);
     }
-    err = m_tcrdm->sendSyncRequestRegisterInterest(
-        request, replyLocal, attemptFailover, this, endpoint);
-  } else {
-    err = m_tcrdm->sendSyncRequestRegisterInterest(
-        request, *reply, attemptFailover, this, endpoint);
-  }
-  if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
-    if (reply->getMessageType() == TcrMessage::RESPONSE_FROM_SECONDARY &&
-        endpoint) {
-      LOGFINER(
-          "registerRegexNoThrow - got response from secondary for "
-          "endpoint %s, ignoring.",
-          endpoint->name().c_str());
-    } else if (attemptFailover) {
-      addRegex(regex, isDurable, receiveValues, interestPolicy);
-      if (interestPolicy.ordinal != InterestResultPolicy::KEYS_VALUES.ordinal) {
-        if (allKeys) {
-          localInvalidateRegion_internal();
-        } else {
-          const std::shared_ptr<std::vector<std::shared_ptr<CacheableKey>>>&
-              keys = resultCollector != nullptr
-                         ? resultCollector->getResultKeys()
-                         : getAllResultCollector->getResultKeys();
-          if (keys != nullptr) {
-            localInvalidateForRegisterInterest(*keys);
+
+    ChunkedInterestResponse* resultCollector = nullptr;
+    ChunkedGetAllResponse* getAllResultCollector = nullptr;
+    if (reply != nullptr) {
+      // need to check
+      resultCollector = dynamic_cast<ChunkedInterestResponse*>(
+          reply->getChunkedResultHandler());
+      if (resultCollector != nullptr) {
+        resultKeys = resultCollector->getResultKeys();
+      } else {
+        getAllResultCollector = dynamic_cast<ChunkedGetAllResponse*>(
+            reply->getChunkedResultHandler());
+        resultKeys = getAllResultCollector->getResultKeys();
+      }
+    }
+
+    bool isRCCreatedLocally = false;
+    LOGDEBUG("ThinClientRegion::registerRegexNoThrow : interestpolicy is %d",
+             interestPolicy.ordinal);
+
+    // TODO:
+    TcrMessageRegisterInterest request(
+        new DataOutput(m_cacheImpl->createDataOutput()), m_fullPath,
+        regex.c_str(), interestPolicy, isDurable,
+        getAttributes().getCachingEnabled(), receiveValues, m_tcrdm.get());
+    std::recursive_mutex responseLock;
+    if (reply == nullptr) {
+      TcrMessageReply replyLocal(true, m_tcrdm.get());
+      auto values = std::make_shared<HashMapOfCacheable>();
+      auto exceptions = std::make_shared<HashMapOfException>();
+
+      reply = &replyLocal;
+      if (interestPolicy.ordinal == InterestResultPolicy::KEYS_VALUES.ordinal) {
+        MapOfUpdateCounters trackers;
+        int32_t destroyTracker = 1;
+        if (resultKeys == nullptr) {
+          resultKeys =
+              std::shared_ptr<std::vector<std::shared_ptr<CacheableKey>>>(
+                  new std::vector<std::shared_ptr<CacheableKey>>());
+        }
+        // need to check
+        getAllResultCollector = (new ChunkedGetAllResponse(
+            request, this, nullptr, values, exceptions, resultKeys, trackers,
+            destroyTracker, true, responseLock));
+        reply->setChunkedResultHandler(getAllResultCollector);
+        isRCCreatedLocally = true;
+      } else {
+        isRCCreatedLocally = true;
+        // need to check
+        resultCollector =
+            new ChunkedInterestResponse(request, resultKeys, replyLocal);
+        reply->setChunkedResultHandler(resultCollector);
+      }
+      err = m_tcrdm->sendSyncRequestRegisterInterest(
+          request, replyLocal, attemptFailover, this, endpoint);
+    } else {
+      err = m_tcrdm->sendSyncRequestRegisterInterest(
+          request, *reply, attemptFailover, this, endpoint);
+    }
+    if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
+      if (reply->getMessageType() == TcrMessage::RESPONSE_FROM_SECONDARY &&
+          endpoint) {
+        LOGFINER(
+            "registerRegexNoThrow - got response from secondary for "
+            "endpoint %s, ignoring.",
+            endpoint->name().c_str());
+      } else if (attemptFailover) {
+        addRegex(regex, isDurable, receiveValues, interestPolicy);
+        if (interestPolicy.ordinal !=
+            InterestResultPolicy::KEYS_VALUES.ordinal) {
+          if (allKeys) {
+            localInvalidateRegion_internal();
+          } else {
+            const std::shared_ptr<std::vector<std::shared_ptr<CacheableKey>>>&
+                keys = resultCollector != nullptr
+                           ? resultCollector->getResultKeys()
+                           : getAllResultCollector->getResultKeys();
+            if (keys != nullptr) {
+              localInvalidateForRegisterInterest(*keys);
+            }
           }
         }
       }
     }
-  }
 
-  if (isRCCreatedLocally == true) {
-    if (resultCollector != nullptr) delete resultCollector;
-    if (getAllResultCollector != nullptr) delete getAllResultCollector;
-  }
-  return err;
+    if (isRCCreatedLocally == true) {
+      if (resultCollector != nullptr) delete resultCollector;
+      if (getAllResultCollector != nullptr) delete getAllResultCollector;
+    }
+    return err;
+  });
 }
 
 GfErrType ThinClientRegion::unregisterRegexNoThrow(const std::string& regex,
                                                    bool attemptFailover) {
   RegionGlobalLocks acquireLocksRedundancy(this, false);
   RegionGlobalLocks acquireLocksFailover(this);
-  CHECK_DESTROY_PENDING_NOTHROW(TryReadGuard);
-  GfErrType err = GF_NOERR;
+  return doReadIfNotDestroyingOtherwiseReturnError([&]() {
+    GfErrType err = GF_NOERR;
 
-  err = findRegex(regex);
+    err = findRegex(regex);
 
-  if (err == GF_NOERR) {
-    TcrMessageReply reply(false, m_tcrdm.get());
-    TcrMessageUnregisterInterest request(
-        new DataOutput(m_cacheImpl->createDataOutput()), m_fullPath, regex,
-        InterestResultPolicy::NONE, false, true, m_tcrdm.get());
-    err = m_tcrdm->sendSyncRequestRegisterInterest(request, reply);
-    if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
-      if (attemptFailover) {
-        clearRegex(regex);
+    if (err == GF_NOERR) {
+      TcrMessageReply reply(false, m_tcrdm.get());
+      TcrMessageUnregisterInterest request(
+          new DataOutput(m_cacheImpl->createDataOutput()), m_fullPath, regex,
+          InterestResultPolicy::NONE, false, true, m_tcrdm.get());
+      err = m_tcrdm->sendSyncRequestRegisterInterest(request, reply);
+      if (err == GF_NOERR /*|| err == GF_CACHE_REDUNDANCY_FAILURE*/) {
+        if (attemptFailover) {
+          clearRegex(regex);
+        }
       }
     }
-  }
-  return err;
+    return err;
+  });
 }
 
 GfErrType ThinClientRegion::findRegex(const std::string& regex) {
@@ -2605,7 +2611,8 @@ std::vector<std::shared_ptr<CacheableKey>> ThinClientRegion::getInterestList()
   auto nthis = const_cast<ThinClientRegion*>(this);
   RegionGlobalLocks acquireLocksRedundancy(nthis, false);
   RegionGlobalLocks acquireLocksFailover(nthis);
-  CHECK_DESTROY_PENDING(TryReadGuard, getInterestList);
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
+  checkNotDestroyed();
   std::lock_guard<decltype(m_keysLock)> keysGuard(nthis->m_keysLock);
 
   std::vector<std::shared_ptr<CacheableKey>> vlist;
@@ -2628,7 +2635,10 @@ ThinClientRegion::getInterestListRegex() const {
   auto nthis = const_cast<ThinClientRegion*>(this);
   RegionGlobalLocks acquireLocksRedundancy(nthis, false);
   RegionGlobalLocks acquireLocksFailover(nthis);
-  CHECK_DESTROY_PENDING(TryReadGuard, getInterestListRegex);
+
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
+  checkNotDestroyed();
+
   std::lock_guard<decltype(m_keysLock)> keysGuard(nthis->m_keysLock);
 
   std::vector<std::shared_ptr<CacheableString>> vlist;
@@ -2777,7 +2787,7 @@ GfErrType ThinClientRegion::handleServerException(
 void ThinClientRegion::receiveNotification(TcrMessage* msg) {
   std::unique_lock<std::mutex> lock(m_notificationMutex, std::defer_lock);
   {
-    TryReadGuard guard(m_rwLock, m_destroyPending);
+    boost::shared_lock<decltype(mutex_)> shared(mutex_);
     if (m_destroyPending) {
       if (msg != TcrMessage::getAllEPDisMess()) {
         _GEODE_SAFE_DELETE(msg);
@@ -2824,8 +2834,8 @@ void ThinClientRegion::invalidateInterestList(
 }
 
 void ThinClientRegion::localInvalidateFailover() {
-  CHECK_DESTROY_PENDING(TryReadGuard,
-                        ThinClientRegion::localInvalidateFailover);
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
+  checkNotDestroyed();
 
   //  No need to invalidate from the "m_xxxForUpdatesAsInvalidates" lists?
   if (m_interestListRegex.empty() && m_durableInterestListRegex.empty()) {
@@ -2838,8 +2848,8 @@ void ThinClientRegion::localInvalidateFailover() {
 
 void ThinClientRegion::localInvalidateForRegisterInterest(
     const std::vector<std::shared_ptr<CacheableKey>>& keys) {
-  CHECK_DESTROY_PENDING(TryReadGuard,
-                        ThinClientRegion::localInvalidateForRegisterInterest);
+  boost::shared_lock<decltype(mutex_)> lock(mutex_);
+  checkNotDestroyed();
 
   if (!m_regionAttributes.getCachingEnabled()) {
     return;
@@ -2918,7 +2928,7 @@ void ThinClientRegion::release(bool invokeCallbacks) {
 }
 
 ThinClientRegion::~ThinClientRegion() noexcept {
-  TryWriteGuard guard(m_rwLock, m_destroyPending);
+  boost::unique_lock<decltype(mutex_)> lock(mutex_);
   if (!m_destroyPending) {
     release(false);
   }
