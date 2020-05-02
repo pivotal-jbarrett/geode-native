@@ -41,6 +41,11 @@ add_executable(cpp-integration-test
   TransactionCleaningTest.cpp
   CleanIdleConnections.cpp
   BasicIPv6Test.cpp
+  SniProxyTest.cpp
+  Socket.hpp
+  SocketTest.cpp
+  PlainSocketTest.cpp
+  SimpleProxySocketTest.cpp
 )
 
 target_compile_definitions(cpp-integration-test
@@ -59,8 +64,10 @@ target_link_libraries(cpp-integration-test
     integration-framework
     testobject
     ACE::ACE
+    ACE::ACE_SSL
     GTest::gtest
     GTest::gtest_main
+    GTest::gmock
     Boost::boost
     Boost::system
     Boost::log
