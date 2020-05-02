@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "MemberListForVersionStamp.hpp"
+
+#include <boost/thread/locks.hpp>
 
 #include "util/Log.hpp"
 
@@ -26,35 +29,41 @@ MemberListForVersionStamp::MemberListForVersionStamp() { m_memberCounter = 0; }
 
 MemberListForVersionStamp::~MemberListForVersionStamp() {}
 
-// Two hash maps are needed in this class as we have two primary keys on which
-// we want a search - integer counter and the hash key of the member.
-// Add function searches whether the member is already added to the hash maps.
-// If yes, return the integer counter. If not, add it to both the hash maps.
-// This function is protected  using readers/writer lock
+/**
+ * Add function searches whether the member is already added to the hash maps.
+ */
 uint16_t MemberListForVersionStamp::add(
     std::shared_ptr<DSMemberForVersionStamp> member) {
-  WriteGuard guard(m_mapLock);
-  std::unordered_map<std::string, DistributedMemberWithIntIdentifier>::iterator
-      it = m_members2.find(member->getHashKey());
-  if (it != m_members2.end()) return (*it).second.m_identifier;
-  DistributedMemberWithIntIdentifier dmwithIntId(member, ++m_memberCounter);
-  m_members1[m_memberCounter] = member;
-  m_members2[member->getHashKey()] = dmwithIntId;
+  boost::upgrade_lock<boost::shared_mutex> upgradeLock(mutex_);
+
+  const auto& it = distributedMembers_.find(member->getHashKey());
+  if (it != distributedMembers_.end()) {
+    return it->second.id_;
+  }
+
+  boost::upgrade_to_unique_lock<boost::shared_mutex> lock(upgradeLock);
+  const auto id = ++m_memberCounter;
+  DistributedMemberWithIntIdentifier dmWithIntId(member, id);
+  members_.emplace(id, member);
+  distributedMembers_.emplace(member->getHashKey(), dmWithIntId);
+
   LOGDEBUG(
       "Adding a new member to the member list maintained for version stamps "
-      "member Ids. HashKey: %s MemberCounter: %d",
-      member->getHashKey().c_str(), m_memberCounter);
-  return m_memberCounter;
+      "member Ids. HashKey: " +
+      member->getHashKey() + " MemberCounter: " + std::to_string(id));
+
+  return id;
 }
 
-// This function is protected  using readers/writer lock
 std::shared_ptr<DSMemberForVersionStamp> MemberListForVersionStamp::getDSMember(
-    uint16_t memberId) {
-  ReadGuard guard(m_mapLock);
-  std::unordered_map<uint32_t,
-                     std::shared_ptr<DSMemberForVersionStamp>>::iterator it =
-      m_members1.find(memberId);
-  if (it != m_members1.end()) return (*it).second;
+    uint16_t memberId) const {
+  boost::shared_lock<boost::shared_mutex> lock(mutex_);
+
+  const auto& it = members_.find(memberId);
+  if (it != members_.end()) {
+    return it->second;
+  }
+
   return nullptr;
 }
 

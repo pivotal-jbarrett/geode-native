@@ -1,8 +1,3 @@
-#pragma once
-
-#ifndef GEODE_MEMBERLISTFORVERSIONSTAMP_H_
-#define GEODE_MEMBERLISTFORVERSIONSTAMP_H_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,43 +15,52 @@
  * limitations under the License.
  */
 
+#pragma once
+
+#ifndef GEODE_MEMBERLISTFORVERSIONSTAMP_H_
+#define GEODE_MEMBERLISTFORVERSIONSTAMP_H_
+
 #include <memory>
 #include <unordered_map>
 
 #include <geode/internal/geode_globals.hpp>
 
 #include "DSMemberForVersionStamp.hpp"
-#include "ReadWriteLock.hpp"
+#include "util/shared_mutex.hpp"
 
 namespace apache {
 namespace geode {
 namespace client {
+
 struct DistributedMemberWithIntIdentifier {
  public:
   explicit DistributedMemberWithIntIdentifier(
       std::shared_ptr<DSMemberForVersionStamp> dsmember = nullptr,
-      uint16_t id = 0) {
-    this->m_member = dsmember;
-    this->m_identifier = id;
-  }
-  std::shared_ptr<DSMemberForVersionStamp> m_member;
-  uint16_t m_identifier;
+      uint16_t id = 0)
+      : member_(dsmember), id_(id) {}
+  std::shared_ptr<DSMemberForVersionStamp> member_;
+  uint16_t id_;
 };
 
+/**
+ * Two hash maps are needed in this class as we have two primary keys on which
+ * we want a search - integer counter and the hash key of the member.
+ */
 class MemberListForVersionStamp {
  public:
   MemberListForVersionStamp();
   virtual ~MemberListForVersionStamp();
+
   uint16_t add(std::shared_ptr<DSMemberForVersionStamp> member);
-  std::shared_ptr<DSMemberForVersionStamp> getDSMember(uint16_t memberId);
+
+  std::shared_ptr<DSMemberForVersionStamp> getDSMember(uint16_t memberId) const;
 
  private:
+  mutable boost::shared_mutex mutex_;
   std::unordered_map<uint32_t, std::shared_ptr<DSMemberForVersionStamp>>
-      m_members1;
+      members_;
   std::unordered_map<std::string, DistributedMemberWithIntIdentifier>
-      m_members2;
-
-  ACE_RW_Thread_Mutex m_mapLock;
+      distributedMembers_;
   uint32_t m_memberCounter;
 };
 
