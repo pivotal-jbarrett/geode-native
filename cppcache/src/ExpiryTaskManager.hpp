@@ -33,7 +33,6 @@
 #include <geode/internal/chrono/duration.hpp>
 #include <geode/internal/geode_globals.hpp>
 
-#include "ReadWriteLock.hpp"
 #include "util/Log.hpp"
 
 namespace apache {

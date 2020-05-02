@@ -23,7 +23,6 @@
 #include <geode/internal/geode_globals.hpp>
 
 #include "CacheImpl.hpp"
-#include "ReadWriteLock.hpp"
 #include "RemoteQueryService.hpp"
 #include "TcrConnectionManager.hpp"
 #include "TcrEndpoint.hpp"

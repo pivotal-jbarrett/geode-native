@@ -27,7 +27,6 @@
 #include <geode/Serializable.hpp>
 
 #include "ErrType.hpp"
-#include "ReadWriteLock.hpp"
 
 namespace apache {
 namespace geode {

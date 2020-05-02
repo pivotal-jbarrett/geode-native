@@ -24,7 +24,6 @@
 #include "CacheImpl.hpp"
 #include "CacheRegionHelper.hpp"
 #include "DistributedSystem.hpp"
-#include "ReadWriteLock.hpp"
 #include "RegionInternal.hpp"
 #include "util/Log.hpp"
 
