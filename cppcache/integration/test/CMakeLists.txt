@@ -46,6 +46,7 @@ add_executable(cpp-integration-test
   SocketTest.cpp
   PlainSocketTest.cpp
   SimpleProxySocketTest.cpp
+  SslSocketTest.cpp
 )
 
 target_compile_definitions(cpp-integration-test

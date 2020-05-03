@@ -53,62 +53,113 @@ class StreamSocket : public Socket {
  protected:
   _Stream stream_;
 
- protected:
   void writeVoid(const void* buffer, size_t length) override {
     if (stream_.send(buffer, length) == -1) {
       throw std::runtime_error(GEODE_ACE_LAST_ERROR);
     }
   }
 
+ public:
   _Stream& getStream() { return stream_; }
 };
 
 template <typename _Stream = ACE_SOCK_Stream>
 class PlainSocket : public StreamSocket<_Stream> {
- private:
-  using StreamSocket<_Stream>::stream_;
-  void doClose() { stream_.close(); }
-
  protected:
-  std::string hostname_;
-  uint16_t port_;
+  using base_type = StreamSocket<_Stream>;
+  using base_type::stream_;
 
-  PlainSocket(const std::string& hostname, uint16_t port)
-      : hostname_(hostname), port_(port) {}
+ public:
+  using stream_type = _Stream;
 
-  void connect() {
+  PlainSocket() = default;
+  ~PlainSocket() noexcept override { doClose(); };
+
+  void connect(const std::string& hostname, uint16_t port) override {
     ACE_SOCK_Connector connector;
-    ACE_INET_Addr address(port_, hostname_.c_str());
+    ACE_INET_Addr address(port, hostname.c_str());
     if (connector.connect(stream_, address) == -1) {
       throw std::runtime_error(GEODE_ACE_LAST_ERROR);
     }
   }
 
- public:
-  PlainSocket() = default;
-  ~PlainSocket() noexcept override = default;
-
-  void connect(const std::string& hostname, uint16_t port) override {
-    hostname_ = hostname;
-    port_ = port;
-
-    connect();
-  }
-
   void close() override { doClose(); }
+
+ private:
+  void doClose() { stream_.close(); }
 };
 
-template <typename _Stream = ACE_SOCK_Stream>
-class SimpleProxySocket : public PlainSocket<_Stream> {
- protected:
-  using PlainSocket<_Stream>::connect;
+template <typename _Stream = ACE_SOCK_Stream,
+          typename _Base = PlainSocket<_Stream>>
+class SimpleProxySocket : public _Base {
+ private:
+  std::string hostname_;
+  uint16_t port_;
 
  public:
   SimpleProxySocket(const std::string& hostname, uint16_t port)
-      : PlainSocket<_Stream>(hostname, port) {}
+      : hostname_(hostname), port_(port) {}
   ~SimpleProxySocket() noexcept override = default;
 
-  void connect(const std::string&, uint16_t) override { connect(); }
+  void connect(const std::string&, uint16_t) override {
+    _Base::connect(hostname_, port_);
+  }
 };
 
+template <typename _Stream = ACE_SSL_SOCK_Stream,
+          typename _PlainSocket = PlainSocket<>,
+          typename _PlainStream = typename _PlainSocket::stream_type>
+class SslSocket : public StreamSocket<_Stream> {
+ protected:
+  using stream_type = _Stream;
+  using base_type = StreamSocket<_Stream>;
+  using plain_stream_type = StreamSocket<_PlainStream>;
+  using base_type::stream_;
+
+ private:
+  std::unique_ptr<plain_stream_type> plainConnection_;
+
+  void doClose() {
+    stream_.close();
+    if (plainConnection_) {
+      plainConnection_->close();
+    }
+  }
+
+  plain_stream_type& getOrCreatePlainConnection() {
+    if (!plainConnection_) {
+      plainConnection_ = std::unique_ptr<plain_stream_type>(new _PlainSocket());
+    }
+    return *plainConnection_;
+  }
+
+ public:
+  SslSocket() = default;
+  explicit SslSocket(std::unique_ptr<plain_stream_type> plainSocket)
+      : plainConnection_(std::move(plainSocket)) {}
+  ~SslSocket() noexcept override { doClose(); }
+
+  void connect(const std::string& hostname, uint16_t port) override {
+    auto& plainConnection = getOrCreatePlainConnection();
+
+    plainConnection.connect(hostname, port);
+
+    stream_.set_handle(plainConnection.getStream().get_handle());
+    SSL_set_tlsext_host_name(stream_.ssl(),
+                             const_cast<char*>(hostname.c_str()));
+    complete();
+  }
+
+  void close() override { doClose(); }
+
+ protected:
+  virtual void complete() {
+    ACE_SSL_SOCK_Connector sslConnector;
+    if (sslConnector.complete(stream_) == -1) {
+      throw std::runtime_error(GEODE_ACE_LAST_ERROR);
+    }
+  }
+
+  virtual SSL* getSsl() { return stream_.ssl(); }
+};
 #endif  // GEODE_SOCKET_H

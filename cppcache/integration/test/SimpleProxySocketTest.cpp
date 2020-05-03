@@ -44,21 +44,36 @@ class MockACE_SOCK_Stream : public ACE_SOCK_Stream {
   MOCK_METHOD(int, close, ());
 };
 
-class MockSimpleProxySocket
-    : public SimpleProxySocket<StrictMock<MockACE_SOCK_Stream>> {
+class MockPlainSocket : public PlainSocket<StrictMock<MockACE_SOCK_Stream>> {
  public:
-  using SimpleProxySocket::SimpleProxySocket;
+  using PlainSocket::PlainSocket;
   MOCK_METHOD(void, connect, (const std::string&, uint16_t), (override));
   MOCK_METHOD(void, close, (), (override));
   using PlainSocket::getStream;
+};
+
+class MockSimpleProxySocket : public SimpleProxySocket<void, MockPlainSocket> {
+ public:
+  using base_type = SimpleProxySocket<void, MockPlainSocket>;
+  using base_type::base_type;
+  MockSimpleProxySocket(const std::string& hostname, uint16_t port)
+      : base_type(hostname, port) {
+    ON_CALL(*this, connect)
+        .WillByDefault([&](const std::string& hostname, uint16_t port) {
+          base_type::connect(hostname, port);
+        });
+  }
+  MOCK_METHOD(void, connect, (const std::string&, uint16_t), (override));
+  using base_type::getStream;
 };
 
 #pragma clang diagnostic pop
 
 TEST_F(SimpleProxySocketTest, connect) {
   StrictMock<MockSimpleProxySocket> socket("proxy.invalid", 456);
-
   EXPECT_CALL(socket, connect("something.invalid", 123));
+  EXPECT_CALL(dynamic_cast<decltype(socket)::base_type&>(socket),
+              connect("proxy.invalid", 456));
 
   socket.connect("something.invalid", 123);
 }
