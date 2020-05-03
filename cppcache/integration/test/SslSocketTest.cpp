@@ -26,17 +26,6 @@ using ::testing::Return;
 using ::testing::StrEq;
 using ::testing::StrictMock;
 
-class SslSocketTest : public ::testing::Test {
- protected:
-  SslSocketTest() {}
-
-  ~SslSocketTest() override = default;
-
-  void SetUp() override {}
-
-  void TearDown() override{};
-};
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 
@@ -57,14 +46,13 @@ class MockPlainSocket : public _Base {
  public:
   using base_type = _Base;
   using base_type::base_type;
-  //  using PlainSocket::PlainSocket;
   MOCK_METHOD(void, connect, (const std::string&, uint16_t), (override));
   MOCK_METHOD(void, close, (), (override));
   using base_type::getStream;
 };
 
-template <typename _Base =
-              SslSocket<StrictMock<MockACE_SSL_SOCK_Stream>, MockPlainSocket<>>>
+template <typename _Base = SslSocket<StrictMock<MockACE_SSL_SOCK_Stream>,
+                                     StrictMock<MockPlainSocket<>>>>
 class MockSslSocket : public _Base {
  public:
   using base_type = _Base;
@@ -76,7 +64,7 @@ class MockSslSocket : public _Base {
 
 #pragma clang diagnostic pop
 
-TEST_F(SslSocketTest, connect) {
+TEST(SslSocketTest, connect) {
   auto plainSocket = std::unique_ptr<StrictMock<MockPlainSocket<>>>(
       new StrictMock<MockPlainSocket<>>());
   EXPECT_CALL(*plainSocket, connect("ssl.invalid", 123));
@@ -90,7 +78,7 @@ TEST_F(SslSocketTest, connect) {
   sslSocket.connect("ssl.invalid", 123);
 }
 
-TEST_F(SslSocketTest, connectSetSni) {
+TEST(SslSocketTest, connectSetSni) {
   auto plainSocket = std::unique_ptr<StrictMock<MockPlainSocket<>>>(
       new StrictMock<MockPlainSocket<>>());
   EXPECT_CALL(*plainSocket, connect(_, _));
@@ -107,7 +95,7 @@ TEST_F(SslSocketTest, connectSetSni) {
               ::testing::StrEq("ssl.invalid"));
 }
 
-TEST_F(SslSocketTest, close) {
+TEST(SslSocketTest, close) {
   auto plainSocket = std::unique_ptr<StrictMock<MockPlainSocket<>>>(
       new StrictMock<MockPlainSocket<>>());
   EXPECT_CALL(*plainSocket, close()).Times(2);
@@ -119,7 +107,7 @@ TEST_F(SslSocketTest, close) {
   sslSocket.close();
 }
 
-TEST_F(SslSocketTest, writeStringLiteral) {
+TEST(SslSocketTest, writeStringLiteral) {
   auto plainSocket = std::unique_ptr<PlainSocket<>>(new PlainSocket<>());
 
   SslSocket<StrictMock<MockACE_SSL_SOCK_Stream>> sslSocket(
@@ -131,7 +119,7 @@ TEST_F(SslSocketTest, writeStringLiteral) {
   sslSocket.write("foo");
 }
 
-TEST_F(SslSocketTest, writeStdString) {
+TEST(SslSocketTest, writeStdString) {
   const std::string str("foo");
 
   auto plainSocket = std::unique_ptr<PlainSocket<>>(new PlainSocket<>());
@@ -145,7 +133,7 @@ TEST_F(SslSocketTest, writeStdString) {
   sslSocket.write(str);
 }
 
-TEST_F(SslSocketTest, throwsExceptionOnFailedWrite) {
+TEST(SslSocketTest, throwsExceptionOnFailedWrite) {
   auto plainSocket = std::unique_ptr<PlainSocket<>>(new PlainSocket<>());
 
   SslSocket<StrictMock<MockACE_SSL_SOCK_Stream>> sslSocket(

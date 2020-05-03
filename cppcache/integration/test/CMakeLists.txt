@@ -41,7 +41,6 @@ add_executable(cpp-integration-test
   TransactionCleaningTest.cpp
   CleanIdleConnections.cpp
   BasicIPv6Test.cpp
-  SniProxyTest.cpp
   Socket.hpp
   SocketTest.cpp
   PlainSocketTest.cpp

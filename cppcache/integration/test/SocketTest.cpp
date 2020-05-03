@@ -24,17 +24,6 @@
 using ::testing::_;
 using ::testing::StrictMock;
 
-class SocketTest : public ::testing::Test {
- protected:
-  SocketTest() {}
-
-  ~SocketTest() override = default;
-
-  void SetUp() override {}
-
-  void TearDown() override{};
-};
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 
@@ -52,7 +41,7 @@ class MockSocket : public StreamSocket<StrictMock<MockStream>> {
 
 #pragma clang diagnostic pop
 
-TEST_F(SocketTest, connect) {
+TEST(SocketTest, connect) {
   StrictMock<MockSocket> socket;
 
   EXPECT_CALL(socket, connect("something.invalid", 123));
@@ -60,7 +49,7 @@ TEST_F(SocketTest, connect) {
   socket.connect("something.invalid", 123);
 }
 
-TEST_F(SocketTest, close) {
+TEST(SocketTest, close) {
   StrictMock<MockSocket> socket;
 
   EXPECT_CALL(socket, close());
@@ -68,7 +57,7 @@ TEST_F(SocketTest, close) {
   socket.close();
 }
 
-TEST_F(SocketTest, writeStringLiteral) {
+TEST(SocketTest, writeStringLiteral) {
   StrictMock<MockSocket> socket;
   auto& stream = socket.getStream();
 
@@ -77,7 +66,7 @@ TEST_F(SocketTest, writeStringLiteral) {
   socket.write("foo");
 }
 
-TEST_F(SocketTest, writeStdString) {
+TEST(SocketTest, writeStdString) {
   StrictMock<MockSocket> socket;
   auto& stream = socket.getStream();
   std::string str("foo");
@@ -87,7 +76,7 @@ TEST_F(SocketTest, writeStdString) {
   socket.write(str);
 }
 
-TEST_F(SocketTest, throwsExceptionOnFailedWrite) {
+TEST(SocketTest, throwsExceptionOnFailedWrite) {
   StrictMock<MockSocket> socket;
   auto& stream = socket.getStream();
 
