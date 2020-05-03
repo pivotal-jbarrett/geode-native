@@ -20,6 +20,9 @@
 #ifndef GEODE_SOCKET_H
 #define GEODE_SOCKET_H
 
+#include <memory>
+#include <string>
+
 #include <ace/OS_Errno.h>
 #include <ace/SSL/SSL_SOCK_Connector.h>
 

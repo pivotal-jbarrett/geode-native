@@ -41,9 +41,13 @@ add_executable(apache-geode_unittests
   InterestResultPolicyTest.cpp
   LocalRegionTest.cpp
   PdxInstanceImplTest.cpp
+  PlainSocketTest.cpp
   QueueConnectionRequestTest.cpp
   RegionAttributesFactoryTest.cpp
   SerializableCreateTests.cpp
+  SimpleProxySocketTest.cpp
+  SocketTest.cpp
+  SslSocketTest.cpp
   StructSetTest.cpp
   TcrMessageTest.cpp
   ThreadPoolTest.cpp
@@ -70,8 +74,10 @@ target_link_libraries(apache-geode_unittests
     apache-geode-static
     GTest::gtest
     GTest::gtest_main
+    GTest::gmock
     Boost::boost
     Boost::thread
+    ACE::ACE_SSL
     _WarningsAsError
     _CppCodeCoverage
 )
