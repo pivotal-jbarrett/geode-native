@@ -23,6 +23,8 @@
 #include <memory>
 #include <string>
 
+#include <boost/thread/lock_types.hpp>
+
 #include <geode/QueryService.hpp>
 #include <geode/internal/geode_globals.hpp>
 

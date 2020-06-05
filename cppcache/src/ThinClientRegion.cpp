@@ -20,6 +20,8 @@
 #include <algorithm>
 #include <regex>
 
+#include <boost/thread/lock_types.hpp>
+
 #include <geode/PoolManager.hpp>
 #include <geode/Struct.hpp>
 #include <geode/SystemProperties.hpp>

@@ -17,6 +17,8 @@
 
 #include "PdxTypeRegistry.hpp"
 
+#include <boost/thread/lock_types.hpp>
+
 #include <geode/PoolManager.hpp>
 
 #include "CacheImpl.hpp"
