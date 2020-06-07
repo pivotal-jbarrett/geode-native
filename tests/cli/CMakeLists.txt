@@ -4,9 +4,9 @@
 # The ASF licenses this file to You under the Apache License, Version 2.0
 # (the "License"); you may not use this file except in compliance with
 # the License.  You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,6 @@ project(nativeclient.tests LANGUAGES NONE)
 add_subdirectory(QueryHelper)
 add_subdirectory(PdxClassLibrary)
 
-set (NUNIT "C:\\Program Files (x86)\\NUnit 2.6.4")
-
 if (64 EQUAL ${BUILD_BITS})
   set (NUNIT_CONSOLE "nunit-console")
   set (PLATFORM x64)
@@ -28,6 +26,9 @@ else()
   set (NUNIT_CONSOLE "nunit-console-x86")
   set (PLATFORM x86)
 endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/DUnitFramework/packages.config ${CMAKE_CURRENT_BINARY_DIR}/DUnitFramework/packages.config COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/NewFwkLib/packages.config ${CMAKE_CURRENT_BINARY_DIR}/NewFwkLib/packages.config COPYONLY)
 
 # Set the .NET Target Framework (Note: This should match the build for Apache.Geode.)
 

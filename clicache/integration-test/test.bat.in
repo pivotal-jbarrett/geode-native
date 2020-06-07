@@ -6,9 +6,9 @@ rem this work for additional information regarding copyright ownership.
 rem The ASF licenses this file to You under the Apache License, Version 2.0
 rem (the "License"); you may not use this file except in compliance with
 rem the License.  You may obtain a copy of the License at
-rem 
+rem
 rem      http://www.apache.org/licenses/LICENSE-2.0
-rem 
+rem
 rem Unless required by applicable law or agreed to in writing, software
 rem distributed under the License is distributed on an "AS IS" BASIS,
 rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ rem limitations under the License.
 
 setlocal
 
+set PATH=$<SHELL_PATH:${CMAKE_BINARY_DIR}/packages/NUnit.Runners.2.6.4/tools>;%PATH%
 set PATH=$<SHELL_PATH:$<TARGET_LINKER_FILE_DIR:Apache.Geode>>;%PATH%
 set PATH=$<SHELL_PATH:$<TARGET_LINKER_FILE_DIR:framework>>;%PATH%
 set PATH=$<SHELL_PATH:$<TARGET_LINKER_FILE_DIR:testobject>>;%PATH%
@@ -24,8 +25,6 @@ set PATH=$<SHELL_PATH:$<TARGET_LINKER_FILE_DIR:SqLiteImpl>>;%PATH%
 set PATH=$<SHELL_PATH:$<TARGET_LINKER_FILE_DIR:cryptoImpl>>;%PATH%
 set PATH=$<SHELL_PATH:$<TARGET_LINKER_FILE_DIR:securityImpl>>;%PATH%
 set PATH=$<JOIN:$<SHELL_PATH:${PATH}>,;>;%PATH%
-
-set PATH=c:\Program Files (x86)\Nunit 2.6.4\bin;%PATH%
 
 set TEST_DIR="$<SHELL_PATH:${TEST_DIR}>"
 set GEODE_NATIVE_HOME="%TEST_DIR%"
@@ -50,7 +49,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 pushd "%TEST_DIR%"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-${NUNIT_CONSOLE} /labels /run:${NAMESPACE}.${TESTCLASS} ..\..\$<CONFIG>\UnitTests.dll 
+${NUNIT_CONSOLE} /labels /run:${NAMESPACE}.${TESTCLASS} ..\..\$<CONFIG>\UnitTests.dll
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 popd

@@ -6,9 +6,9 @@
   The ASF licenses this file to You under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,8 @@
   <PropertyGroup>
     <CMAKE_SOURCE_DIR>${CMAKE_SOURCE_DIR_NATIVE}</CMAKE_SOURCE_DIR>
     <CMAKE_CURRENT_SOURCE_DIR>${CMAKE_CURRENT_SOURCE_DIR_NATIVE}</CMAKE_CURRENT_SOURCE_DIR>
-	<CMAKE_BINARY_DIR>${CMAKE_BINARY_DIR_NATIVE}</CMAKE_BINARY_DIR>
-	<CMAKE_CURRENT_BINARY_DIR>${CMAKE_CURRENT_BINARY_DIR_NATIVE}</CMAKE_CURRENT_BINARY_DIR>
+  	<CMAKE_BINARY_DIR>${CMAKE_BINARY_DIR_NATIVE}</CMAKE_BINARY_DIR>
+  	<CMAKE_CURRENT_BINARY_DIR>${CMAKE_CURRENT_BINARY_DIR_NATIVE}</CMAKE_CURRENT_BINARY_DIR>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -93,13 +93,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>${NUNIT}\bin\framework\nunit.framework.dll</HintPath>
+      <HintPath>$(CMAKE_BINARY_DIR)\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <ProjectReference Include="$(CMAKE_BINARY_DIR)\clicache\src\Apache.Geode.vcxproj">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>   
+    </ProjectReference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -256,7 +256,7 @@
     <Folder Include="ResumableTx\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

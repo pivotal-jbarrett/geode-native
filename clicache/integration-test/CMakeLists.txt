@@ -15,14 +15,13 @@
 
 project(nativeclient.tests.clicache)
 
-set (NUNIT "C:\\Program Files (x86)\\NUnit 2.6.4")
-
 if (64 EQUAL ${BUILD_BITS})
   set (NUNIT_CONSOLE "nunit-console")
 else()
   set (NUNIT_CONSOLE "nunit-console-x86")
 endif()
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packages.config ${CMAKE_CURRENT_BINARY_DIR}/packages.config COPYONLY)
 
 foreach(var CMAKE_CURRENT_SOURCE_DIR CMAKE_SOURCE_DIR CMAKE_BINARY_DIR CMAKE_CURRENT_BINARY_DIR)
   file(TO_NATIVE_PATH ${${var}} ${var}_NATIVE)
@@ -43,6 +42,7 @@ foreach(FILE ${CSPROJECTS})
       TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
   set_target_properties(${PROJNAME} PROPERTIES FOLDER cli/test/integration)
 
+  add_dependencies(${PROJNAME} nuget-restore)
 endforeach()
 
 enable_testing()

@@ -376,6 +376,13 @@ if (${BUILD_CLI})
 endif()
 add_subdirectory(tests)
 
+if (${BUILD_CLI})
+  find_program(NUGET nuget)
+  add_custom_target(nuget-restore 
+    COMMAND ${NUGET} restore ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.sln
+  )
+endif()
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/xsds/ DESTINATION xsds)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/defaultSystem/ DESTINATION defaultSystem)
 
