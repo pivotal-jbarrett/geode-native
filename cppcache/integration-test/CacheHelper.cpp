@@ -686,7 +686,7 @@ std::shared_ptr<Region> CacheHelper::createRegionDiscOverFlow(
     sqLiteProps->insert("MaxPageCount", "1073741823");
     std::string sqlite_dir =
         "SqLiteRegionData" + std::to_string(ACE_OS::getpid());
-    sqLiteProps->insert("PersistenceDirectory", sqlite_dir.c_str());
+    sqLiteProps->insert("PersistenceDirectory", sqlite_dir);
     regionAttributeFactory.setPersistenceManager(
         "SqLiteImpl", "createSqLiteInstance", sqLiteProps);
   }

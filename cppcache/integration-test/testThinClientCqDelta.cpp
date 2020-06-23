@@ -120,19 +120,6 @@ void createPooledRegion(const char *name, bool ackMode, const char *locators,
   LOG("Pooled Region created.");
 }
 
-void createPooledLRURegion(const char *name, bool ackMode, const char *locators,
-                           const char *poolname,
-                           bool clientNotificationEnabled = false,
-                           bool cachingEnable = true) {
-  LOG(" createPooledLRURegion entered");
-  auto regPtr = getHelper()->createPooledRegionDiscOverFlow(
-      name, ackMode, locators, poolname, cachingEnable,
-      clientNotificationEnabled, std::chrono::seconds(0),
-      std::chrono::seconds(0), std::chrono::seconds(0), std::chrono::seconds(0),
-      3 /*LruLimit = 3*/);
-  LOG(" createPooledLRURegion exited");
-}
-
 void createRegion(const char *name, bool ackMode,
                   bool clientNotificationEnabled = false) {
   LOG("createRegion() entered.");

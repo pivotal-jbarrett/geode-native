@@ -159,18 +159,9 @@ DUNIT_TASK_DEFINITION(CLIENT1, CreateClient1)
     initClient(true);
     createPooledRegion(regionNames[0], USE_ACK, locatorsG, "__TESTPOOL1_",
                        true);  // without LRU
-    createPooledLRURegion(regionNames[1], USE_ACK, nullptr, locatorsG,
-                          "__TESTPOOL1_", true);  // with LRU
+    createPooledLRURegion(regionNames[1], USE_ACK, locatorsG, "__TESTPOOL1_",
+                          true);  // with LRU
     createPooledExpirationRegion(regionNames[2], "__TESTPOOL1_");
-  }
-END_TASK_DEFINITION
-
-DUNIT_TASK_DEFINITION(CLIENT1, CreateClient1_NoPools)
-  {
-    initClientNoPools();
-    createRegion(regionNames[0], USE_ACK, true);  // without LRU
-    createLRURegion(regionNames[1], true, true);  // with LRU
-    createExpirationRegion(regionNames[2], true, true);
   }
 END_TASK_DEFINITION
 
@@ -179,18 +170,9 @@ DUNIT_TASK_DEFINITION(CLIENT2, CreateClient2)
     initClient(true);
     createPooledRegion(regionNames[0], USE_ACK, locatorsG, "__TESTPOOL1_",
                        true);
-    createPooledLRURegion(regionNames[1], USE_ACK, nullptr, locatorsG,
-                          "__TESTPOOL1_", true);  // with LRU
+    createPooledLRURegion(regionNames[1], USE_ACK, locatorsG, "__TESTPOOL1_",
+                          true);  // with LRU
     createPooledExpirationRegion(regionNames[2], "__TESTPOOL1_");
-  }
-END_TASK_DEFINITION
-
-DUNIT_TASK_DEFINITION(CLIENT2, CreateClient2_NoPools)
-  {
-    initClientNoPools();
-    createRegion(regionNames[0], USE_ACK, true);  // without LRU
-    createLRURegion(regionNames[1], true, true);  // with LRU
-    createExpirationRegion(regionNames[2], true, true);
   }
 END_TASK_DEFINITION
 

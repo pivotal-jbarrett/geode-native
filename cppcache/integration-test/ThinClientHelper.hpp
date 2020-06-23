@@ -42,7 +42,7 @@
 
 #include "CacheHelper.hpp"
 
-namespace { // NOLINT(google-build-namespaces)
+namespace {  // NOLINT(google-build-namespaces)
 
 using apache::geode::client::CacheableInt32;
 using apache::geode::client::CacheHelper;
@@ -199,7 +199,8 @@ void _verifyEntry(const std::string& name, const char* key, const char* val,
           std::dynamic_pointer_cast<CacheableString>(regPtr->get(keyPtr));
 
       ASSERT(checkPtr != nullptr, "Value Ptr should not be null.");
-      LOG("In verify loop, get returned " + checkPtr->value() + " for key " + key);
+      LOG("In verify loop, get returned " + checkPtr->value() + " for key " +
+          key);
 
       if (strcmp(checkPtr->value().c_str(), value) != 0) {
         testValueCnt++;
@@ -317,7 +318,8 @@ void _verifyIntEntry(const char* name, const char* key, const int val,
             std::dynamic_pointer_cast<CacheableInt32>(regPtr->get(keyPtr));
 
         ASSERT(checkPtr != nullptr, "Value Ptr should not be null.");
-        LOG("In verify loop, get returned " + std::to_string(checkPtr->value()) + " for key " + key);
+        LOG("In verify loop, get returned " +
+            std::to_string(checkPtr->value()) + " for key " + key);
 
         if (checkPtr->value() != value) {
           testValueCnt++;
@@ -368,7 +370,7 @@ std::shared_ptr<Region> createOverflowRegion(const char* name, bool,
   sqLiteProps->insert("MaxPageCount", "1073741823");
   std::string sqlite_dir =
       "SqLiteRegionData" + std::to_string(ACE_OS::getpid());
-  sqLiteProps->insert("PersistenceDirectory", sqlite_dir.c_str());
+  sqLiteProps->insert("PersistenceDirectory", sqlite_dir);
   regionAttributesFactory.setPersistenceManager(
       "SqLiteImpl", "createSqLiteInstance", sqLiteProps);
 
