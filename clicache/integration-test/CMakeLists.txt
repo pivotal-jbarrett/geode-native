@@ -56,11 +56,6 @@ macro(generate_config INPUT TEMP OUTPUT)
     )
 endmacro()
 
-foreach( lib SQLite::sqlite3 )
-  get_target_property(runtime_path ${lib} INTERFACE_RUNTIME_DIR)
-  set(PATH ${PATH} ${runtime_path})
-endforeach()
-
 file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cs")
 
 foreach(FILE ${SOURCES})
