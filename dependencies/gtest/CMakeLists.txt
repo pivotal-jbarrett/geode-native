@@ -40,12 +40,17 @@ ExternalProject_Add( ${PROJECT_NAME}-extern
 ExternalProject_Get_Property( ${PROJECT_NAME}-extern SOURCE_DIR )
 ExternalProject_Get_Property( ${PROJECT_NAME}-extern BINARY_DIR )
 
+set(LIBRARY_DIR ${BINARY_DIR}/lib)
+if(GENERATOR_IS_MULTI_CONFIG)
+  set(LIBRARY_DIR ${LIBRARY_DIR}/$<CONFIG>)
+endif()
+
 add_library(GTest_gtest INTERFACE)
 target_include_directories(GTest_gtest SYSTEM INTERFACE
   $<BUILD_INTERFACE:${SOURCE_DIR}/googletest/include>
 )
 target_link_libraries(GTest_gtest INTERFACE
-  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  ${LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
   Threads::Threads
 )
 add_dependencies(GTest_gtest ${PROJECT_NAME}-extern)
@@ -53,7 +58,7 @@ add_library(GTest::gtest ALIAS GTest_gtest)
 
 add_library(GTest_gtest_main INTERFACE)
 target_link_libraries(GTest_gtest_main INTERFACE
-  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  ${LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
   GTest::gtest
 )
 add_dependencies(GTest_gtest_main ${PROJECT_NAME}-extern)
@@ -64,7 +69,7 @@ target_include_directories(GTest_gmock SYSTEM INTERFACE
   $<BUILD_INTERFACE:${SOURCE_DIR}/googlemock/include>
 )
 target_link_libraries(GTest_gmock INTERFACE
-  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gmock$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  ${LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gmock$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
   Threads::Threads
 )
 add_dependencies(GTest_gmock ${PROJECT_NAME}-extern)
@@ -72,7 +77,7 @@ add_library(GTest::gmock ALIAS GTest_gmock)
 
 add_library(GTest_gmock_main INTERFACE)
 target_link_libraries(GTest_gmock_main INTERFACE
-  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  ${LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
   GTest::gmock
 )
 add_dependencies(GTest_gmock_main ${PROJECT_NAME}-extern)
