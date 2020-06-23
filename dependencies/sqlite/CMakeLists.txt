@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project( sqlite VERSION 3310100 LANGUAGES NONE )
+project( sqlite VERSION 3320300 LANGUAGES NONE )
 
-set( SHA256 f3c79bc9f4162d0b06fa9fe09ee6ccd23bb99ce310b792c5145f87fbcc30efca )
+set( SHA256 e9cec01d4519e2d49b3810615237325263fe1feaceae390ee12b4a29bd73dbe2 )
 
 
 set( EXTERN ${PROJECT_NAME}-extern )
