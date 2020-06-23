@@ -15,56 +15,63 @@
 
 project( gtest LANGUAGES NONE )
 
+find_package(Threads REQUIRED)
+
 include(ExternalProject)
 ExternalProject_Add( ${PROJECT_NAME}-extern
   GIT_REPOSITORY https://github.com/google/googletest
   GIT_SHALLOW TRUE
+  INSTALL_COMMAND ""
   CMAKE_ARGS
     -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
     -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
     -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     -DCMAKE_BUILD_TYPE=$<CONFIG>
+    -DINSTALL_GTEST=OFF
     -Dgtest_force_shared_crt:BOOL=ON
 )
 
-ExternalProject_Get_Property( ${PROJECT_NAME}-extern INSTALL_DIR )
+ExternalProject_Get_Property( ${PROJECT_NAME}-extern SOURCE_DIR )
+ExternalProject_Get_Property( ${PROJECT_NAME}-extern BINARY_DIR )
 
 if(WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
 endif()
 
-include(GNUInstallDirs)
+add_library(GTest_gtest INTERFACE)
+target_include_directories(GTest_gtest SYSTEM INTERFACE
+  $<BUILD_INTERFACE:${SOURCE_DIR}/googletest/include>
+)
+target_link_libraries(GTest_gtest INTERFACE
+  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  Threads::Threads
+)
+add_dependencies(GTest_gtest ${PROJECT_NAME}-extern)
+add_library(GTest::gtest ALIAS GTest_gtest)
 
-function(ADD_GTEST_LIBRARY)
-  set(options)
-  set(oneValueArgs)
-  set(multiValueArgs DEPENDENCIES)
-  cmake_parse_arguments(PARSE_ARGV 1 args "${options}" "${oneValueArgs}" "${multiValueArgs}")
+add_library(GTest_gtest_main INTERFACE)
+target_link_libraries(GTest_gtest_main INTERFACE
+  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  GTest::gtest
+)
+add_dependencies(GTest_gtest_main ${PROJECT_NAME}-extern)
+add_library(GTest::gtest_main ALIAS GTest_gtest_main)
 
-  set(args_NAME ${ARGV0})
+add_library(GTest_gmock INTERFACE)
+target_include_directories(GTest_gmock SYSTEM INTERFACE
+  $<BUILD_INTERFACE:${SOURCE_DIR}/googlemock/include>
+)
+target_link_libraries(GTest_gmock INTERFACE
+  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gmock$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  Threads::Threads
+)
+add_dependencies(GTest_gmock ${PROJECT_NAME}-extern)
+add_library(GTest::gmock ALIAS GTest_gmock)
 
-  set(target "GTest_${args_NAME}")
-
-  add_library(${target} INTERFACE)
-
-  target_include_directories(${target} SYSTEM INTERFACE
-    $<BUILD_INTERFACE:${INSTALL_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
-  )
-
-  target_link_libraries(${target} INTERFACE
-    ${INSTALL_DIR}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${args_NAME}$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
-    ${args_DEPENDENCIES}
-  )
-
-  add_library(GTest::${args_NAME} ALIAS ${target})
-
-  add_dependencies(${target} ${PROJECT_NAME}-extern)
-
-endfunction()
-
-find_package(Threads REQUIRED)
-
-add_gtest_library(gtest DEPENDENCIES Threads::Threads)
-add_gtest_library(gtest_main DEPENDENCIES GTest::gtest)
-add_gtest_library(gmock DEPENDENCIES GTest::gtest)
-add_gtest_library(gmock_main DEPENDENCIES GTest::gmock)
+add_library(GTest_gmock_main INTERFACE)
+target_link_libraries(GTest_gmock_main INTERFACE
+  ${BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}
+  GTest::gmock
+)
+add_dependencies(GTest_gmock_main ${PROJECT_NAME}-extern)
+add_library(GTest::gmock_main ALIAS GTest_gmock_main)
