@@ -15,7 +15,14 @@
 
 project( gtest LANGUAGES NONE )
 
+# Google Test now follows the Abseil Live at Head philosophy, so always fetch head
+
 find_package(Threads REQUIRED)
+
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
+  set(CMAKE_ARGS ${CMAKE_ARGS} -Dgtest_force_shared_crt:BOOL=ON)
+endif()
 
 include(ExternalProject)
 ExternalProject_Add( ${PROJECT_NAME}-extern
@@ -25,18 +32,13 @@ ExternalProject_Add( ${PROJECT_NAME}-extern
   CMAKE_ARGS
     -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
     -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
-    -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     -DCMAKE_BUILD_TYPE=$<CONFIG>
     -DINSTALL_GTEST=OFF
-    -Dgtest_force_shared_crt:BOOL=ON
+    ${CMAKE_ARGS}
 )
 
 ExternalProject_Get_Property( ${PROJECT_NAME}-extern SOURCE_DIR )
 ExternalProject_Get_Property( ${PROJECT_NAME}-extern BINARY_DIR )
-
-if(WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
-endif()
 
 add_library(GTest_gtest INTERFACE)
 target_include_directories(GTest_gtest SYSTEM INTERFACE
