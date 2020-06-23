@@ -251,41 +251,39 @@ std::shared_ptr<Region> LocalRegion::createSubregion(
   }
 
   auto&& lock = m_subRegions.make_lock();
-  std::shared_ptr<Region> region_ptr;
   if (m_subRegions.find(subregionName) != m_subRegions.end()) {
     throw RegionExistsException(
         "LocalRegion::createSubregion: named region exists in the region");
   }
 
   auto csptr = std::make_shared<CacheStatistics>();
-  auto rPtr = m_cacheImpl->createRegion_internal(
+  auto subRegion = m_cacheImpl->createRegion_internal(
       subregionName,
       std::static_pointer_cast<RegionInternal>(shared_from_this()),
       regionAttributes, csptr, false);
-  region_ptr = rPtr;
-  if (!rPtr) {
+  if (!subRegion) {
     throw OutOfMemoryException("createSubregion: failed to create region");
   }
 
   // Instantiate a PersistenceManager object if DiskPolicy is overflow
   if (regionAttributes.getDiskPolicy() == DiskPolicyType::OVERFLOWS) {
-    auto pmPtr = regionAttributes.getPersistenceManager();
-    if (pmPtr == nullptr) {
+    if (auto pmPtr = regionAttributes.getPersistenceManager()) {
+      auto props = regionAttributes.getPersistenceProperties();
+      pmPtr->init(subRegion, props);
+      subRegion->setPersistenceManager(pmPtr);
+    } else {
       throw NullPointerException(
           "PersistenceManager could not be instantiated");
     }
-    auto props = regionAttributes.getPersistenceProperties();
-    pmPtr->init(std::shared_ptr<Region>(rPtr), props);
-    rPtr->setPersistenceManager(pmPtr);
   }
 
-  rPtr->acquireReadLock();
-  m_subRegions.emplace(rPtr->getName(), rPtr);
+  subRegion->acquireReadLock();
+  m_subRegions.emplace(subRegion->getName(), subRegion);
 
   // schedule the sub region expiry if regionExpiry enabled.
-  rPtr->setRegionExpiryTask();
-  rPtr->releaseReadLock();
-  return region_ptr;
+  subRegion->setRegionExpiryTask();
+  subRegion->releaseReadLock();
+  return std::dynamic_pointer_cast<Region>(subRegion);
 }
 
 std::vector<std::shared_ptr<Region>> LocalRegion::subregions(

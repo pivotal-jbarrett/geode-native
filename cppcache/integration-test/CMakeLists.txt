@@ -179,7 +179,7 @@ set_tests_properties(testDataOutput
     LABELS "STABLE;QUICK"
 )
 
-set_tests_properties(testOverflowPutGetSqLite 
+set_tests_properties(
     testThinClientAfterRegionLive
     testThinClientCacheables
     testThinClientCq

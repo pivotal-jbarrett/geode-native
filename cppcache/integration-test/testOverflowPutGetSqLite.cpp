@@ -63,7 +63,7 @@ void getNumOfEntries(std::shared_ptr<Region> &regionPtr, uint32_t num) {
   ASSERT(vecValues.size() == num, "size of value vec and num not equal");
 }
 
-void setAttributes(RegionAttributes regionAttributes,
+void setAttributes(RegionAttributes &regionAttributes,
                    std::string pDir = sqlite_dir) {
   RegionAttributesFactory regionAttributesFactory;
   regionAttributesFactory.setCachingEnabled(true);
@@ -79,7 +79,7 @@ void setAttributes(RegionAttributes regionAttributes,
 
   regionAttributes = regionAttributesFactory.create();
 }
-void setAttributesWithMirror(RegionAttributes regionAttributes) {
+void setAttributesWithMirror(RegionAttributes &regionAttributes) {
   RegionAttributesFactory regionAttributesFactory;
   regionAttributesFactory.setCachingEnabled(true);
   regionAttributesFactory.setLruEntriesLimit(20);
@@ -321,11 +321,13 @@ void verifyGetAll(std::shared_ptr<Region> region, int startIndex) {
   }
 }
 
-void createRegion(std::shared_ptr<Region> &regionPtr, const char *regionName,
+void createRegion(std::shared_ptr<Cache> &cachePtr,
+                  std::shared_ptr<Region> &regionPtr,
+                  const std::string regionName,
                   std::shared_ptr<Properties> &cacheProps,
                   std::shared_ptr<Properties> &sqLiteProps) {
   auto cacheFactoryPtr = CacheFactory(cacheProps);
-  auto cachePtr = std::make_shared<Cache>(CacheFactory().create());
+  cachePtr = std::make_shared<Cache>(CacheFactory().create());
   ASSERT(cachePtr != nullptr, "Expected cache to be NON-nullptr");
   auto regionFactory = cachePtr->createRegionFactory(RegionShortcut::LOCAL);
   regionFactory.setCachingEnabled(true);
@@ -372,8 +374,9 @@ BEGIN_TEST(OverFlowTest)
     std::shared_ptr<Properties> sqliteProperties;
     auto cacheProperties = Properties::create();
     setSqLiteProperties(sqliteProperties);
+    std::shared_ptr<Cache> cachePtr;
     std::shared_ptr<Region> regionPtr;
-    createRegion(regionPtr, "OverFlowRegion", cacheProperties,
+    createRegion(cachePtr, regionPtr, "OverFlowRegion", cacheProperties,
                  sqliteProperties);
     ASSERT(regionPtr != nullptr, "Expected regionPtr to be NON-nullptr");
     validateAttribute(regionPtr);
@@ -421,7 +424,7 @@ BEGIN_TEST(OverFlowTest)
              "persistence file still present");
     }
     // cache close
-    regionPtr->getRegionService().close();
+    cachePtr->close();
   }
 END_TEST(OverFlowTest)
 
@@ -438,8 +441,9 @@ BEGIN_TEST(OverFlowTest_absPath)
     std::shared_ptr<Properties> sqliteProperties;
     auto cacheProperties = Properties::create();
     setSqLiteProperties(sqliteProperties, 1073741823, 65536, absPersistenceDir);
+    std::shared_ptr<Cache> cachePtr;
     std::shared_ptr<Region> regionPtr;
-    createRegion(regionPtr, "OverFlowRegion", cacheProperties,
+    createRegion(cachePtr, regionPtr, "OverFlowRegion", cacheProperties,
                  sqliteProperties);
     ASSERT(regionPtr != nullptr, "Expected regionPtr to be NON-nullptr");
 
@@ -481,7 +485,7 @@ BEGIN_TEST(OverFlowTest_absPath)
              "persistence file still present");
     }
     // cache close
-    regionPtr->getRegionService().close();
+    cachePtr->close();
   }
 END_TEST(OverFlowTest_absPath)
 
