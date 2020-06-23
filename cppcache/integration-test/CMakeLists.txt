@@ -241,6 +241,7 @@ set_tests_properties(testFwPerf
     testThinClientSecurityAuthorizationMU
     testThinClientSecurityDurableCQAuthorizationMU
     testThinClientSecurityPostAuthorization
+    testThinClientTicket303
     testThinClientTicket304
     testThinClientTracking
     testThinClientWriterException
