@@ -15,8 +15,8 @@
 cmake_minimum_required(VERSION 3.4)
 project(docs-clicache LANGUAGES NONE)
 
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
+find_program(DOXYGEN_EXECUTABLE doxygen)
+if(DOXYGEN_EXECUTABLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
   add_custom_target(docs-clicache
       ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile

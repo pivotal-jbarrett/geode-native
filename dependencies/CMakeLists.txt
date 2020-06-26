@@ -20,7 +20,6 @@ find_package(Patch REQUIRED)
 
 add_subdirectory(ACE)
 add_subdirectory(boost)
-add_subdirectory(doxygen)
 add_subdirectory(xerces-c)
 
 if (USE_RAT)
