@@ -75,14 +75,6 @@ macro(generate_config INPUT TEMP OUTPUT)
     )
 endmacro()
 
-# Add lazy loaded shared library paths to test environment
-foreach( lib SQLite::sqlite3 )
-  get_target_property(library_path ${lib} INTERFACE_LIBRARY_DIR)
-  set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${library_path})
-  get_target_property(runtime_path ${lib} INTERFACE_RUNTIME_DIR)
-  set(PATH ${PATH} ${runtime_path})
-endforeach()
-
 set (PORT 20000)
 
 add_custom_target(cppcache-integration-tests)

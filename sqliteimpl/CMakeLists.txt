@@ -16,6 +16,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(SqLiteImpl LANGUAGES CXX)
 
+find_package(SQLite3 REQUIRED CONFIG)
+
 add_library(SqLiteImpl SHARED
   SqLiteHelper.cpp
   SqLiteHelper.hpp
@@ -41,7 +43,7 @@ target_include_directories(SqLiteImpl
 target_link_libraries(SqLiteImpl
   PUBLIC
     apache-geode
-    SQLite::sqlite3
+    SQLite3::SQLite3
   PRIVATE
     _WarningsAsError
 )
