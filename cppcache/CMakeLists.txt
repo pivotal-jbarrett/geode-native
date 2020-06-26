@@ -24,6 +24,8 @@ if (CMAKE_USE_PTHREADS_INIT)
   check_function_exists("pthread_setname_np" HAVE_pthread_setname_np)
 endif()
 
+find_package(GTest REQUIRED CONFIG)
+
 set(COMMON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(COMMON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

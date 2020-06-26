@@ -44,7 +44,7 @@ target_include_directories(integration-framework
 target_link_libraries(integration-framework
   PUBLIC
     apache-geode
-    GTest::gtest
+    GTest::GTest
     Boost::boost
     Boost::system
     Boost::log

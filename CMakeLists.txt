@@ -15,6 +15,7 @@
 
 cmake_minimum_required(VERSION 3.12)
 project(nativeclient LANGUAGES C CXX)
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 
 option(USE_PCH "Use precompiled headers (PCH)." OFF)
 option(USE_CPP_COVERAGE "Enable profiling and coverage report analysis for apache-geode cpp library." OFF)

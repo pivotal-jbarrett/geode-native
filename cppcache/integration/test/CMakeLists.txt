@@ -63,8 +63,7 @@ target_link_libraries(cpp-integration-test
     integration-framework
     testobject
     ACE::ACE
-    GTest::gtest
-    GTest::gtest_main
+    GTest::GTest
     Boost::boost
     Boost::system
     Boost::log
