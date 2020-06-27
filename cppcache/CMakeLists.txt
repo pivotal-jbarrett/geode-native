@@ -24,6 +24,11 @@ if (CMAKE_USE_PTHREADS_INIT)
   check_function_exists("pthread_setname_np" HAVE_pthread_setname_np)
 endif()
 
+find_package(Boost REQUIRED CONFIG)
+target_compile_definitions(Boost::Boost INTERFACE
+  BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
+)
+
 find_package(GTest REQUIRED CONFIG)
 
 set(COMMON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -85,10 +90,7 @@ endif()
 
 target_link_libraries(_apache-geode INTERFACE
   ACE::ACE
-  Boost::boost
-  Boost::filesystem
-  Boost::thread
-  Boost::stacktrace
+  Boost::Boost
   XercesC::XercesC
 )
 

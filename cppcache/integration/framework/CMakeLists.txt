@@ -45,12 +45,7 @@ target_link_libraries(integration-framework
   PUBLIC
     apache-geode
     GTest::GTest
-    Boost::boost
-    Boost::system
-    Boost::log
-    Boost::filesystem
-    Boost::process
-    Boost::asio
+    Boost::Boost
   PRIVATE
     _WarningsAsError
     internal

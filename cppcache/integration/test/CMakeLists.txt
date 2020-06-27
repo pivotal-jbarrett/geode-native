@@ -64,11 +64,7 @@ target_link_libraries(cpp-integration-test
     testobject
     ACE::ACE
     GTest::GTest
-    Boost::boost
-    Boost::system
-    Boost::log
-    Boost::filesystem
-    Boost::chrono
+    Boost::Boost
     cryptoImpl
   PRIVATE
     _WarningsAsError
