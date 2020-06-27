@@ -29,6 +29,8 @@ target_compile_definitions(Boost::Boost INTERFACE
   BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 )
 
+find_package(XercesC REQUIRED CONFIG)
+
 find_package(GTest REQUIRED CONFIG)
 
 set(COMMON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
