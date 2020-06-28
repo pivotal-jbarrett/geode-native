@@ -28,6 +28,17 @@ find_package(Boost REQUIRED CONFIG)
 target_compile_definitions(Boost::Boost INTERFACE
   BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 )
+if(WIN32)
+  target_compile_definitions(Boost::Boost INTERFACE
+    # Required for Boost.WinAPI
+    _WIN32_WINNT=0x0602
+  )
+endif()
+if(MSVC)
+  target_compile_options(Boost::Boost INTERFACE
+    /wd4244
+  )
+endif()
 
 find_package(XercesC REQUIRED CONFIG)
 

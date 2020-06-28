@@ -94,7 +94,8 @@ class SNITest : public ::testing::Test {
     if (!pipe) {
       throw std::runtime_error("Failed on the POPEN");
     }
-    while (fgets(charBuff.data(), charBuff.size(), pipe.get()) != nullptr) {
+    while (fgets(charBuff.data(), (int)charBuff.size(), pipe.get()) !=
+           nullptr) {
       commandOutput += charBuff.data();
     }
     return commandOutput;
