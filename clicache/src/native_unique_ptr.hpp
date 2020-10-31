@@ -29,13 +29,14 @@ namespace Apache
     namespace Client
     {
 
-      template <class _T>
+      template <class _T, class _D = std::default_delete<_T>>
       public ref class native_unique_ptr sealed {
       private:
-        std::unique_ptr<_T>* ptr;
+        std::unique_ptr<_T, _D>* ptr;
 
       public:
-        native_unique_ptr(std::unique_ptr<_T> ptr) : ptr(new std::unique_ptr<_T>(std::move(ptr))) {}
+        native_unique_ptr(std::unique_ptr<_T, _D>&& ptr) :
+          ptr(new std::unique_ptr<_T, _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
 
         ~native_unique_ptr() {
           native_unique_ptr::!native_unique_ptr();
@@ -50,6 +51,31 @@ namespace Apache
         }
 
       };
+
+      
+      template <class _T, class _D>
+      public ref class native_unique_ptr<_T[], _D> sealed {
+      private:
+        std::unique_ptr<_T[], _D>* ptr;
+
+      public:
+        native_unique_ptr(std::unique_ptr<_T[], _D>&& ptr) :
+          ptr(new std::unique_ptr<_T[], _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
+
+        ~native_unique_ptr() {
+          native_unique_ptr::!native_unique_ptr();
+        }
+
+        !native_unique_ptr() {
+          delete ptr;
+        }
+
+        inline _T* get() {
+          return ptr->get();
+        }
+
+      };
+
     }
   }
 }
