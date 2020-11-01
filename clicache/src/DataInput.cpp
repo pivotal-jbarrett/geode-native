@@ -134,7 +134,7 @@ namespace Apache
           }
           _GF_MG_EXCEPTION_TRY2
 
-          m_ownedBuffer = gcnew native_unique_ptr<System::Byte[]>(std::unique_ptr<System::Byte[]>{new System::Byte[len]});
+          m_ownedBuffer = make_native_unique<System::Byte[]>(len);
           m_buffer = m_ownedBuffer->get();
           pin_ptr<const Byte> pin_buffer = &buffer[0];
           memcpy(m_buffer, (void*)pin_buffer, len);

@@ -62,6 +62,9 @@ namespace Apache
         native_unique_ptr(std::unique_ptr<_T[], _D>&& ptr) :
           ptr(new std::unique_ptr<_T[], _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
 
+        native_unique_ptr(_T* ptr) :
+          ptr(new std::unique_ptr<_T[], _D>(ptr)) {}
+
         ~native_unique_ptr() {
           native_unique_ptr::!native_unique_ptr();
         }
@@ -76,6 +79,17 @@ namespace Apache
 
       };
 
+      template<class _T, class... _Args,
+        std::enable_if_t<!std::is_array_v<_T>, int> = 0>
+      inline native_unique_ptr<_T>^ make_unique(_Args&&... args) {
+        return gcnew native_unique_ptr<_T>(std::make_unique<_T>(std::forward<_Args>(args)...));
+      }
+
+      template <class _T, std::enable_if_t<std::is_array_v<_T> && std::extent_v<_T> == 0, int> = 0>
+      inline native_unique_ptr<_T>^ make_native_unique(std::size_t size) {
+        return gcnew native_unique_ptr<_T>(std::make_unique<_T>(size));
+      }
+      
     }
   }
 }
