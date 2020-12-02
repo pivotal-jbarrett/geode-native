@@ -403,3 +403,5 @@ if (USE_RAT)
     COMMENT "Checking source with Apache Rat."
   )
 endif()
+
+message(FATAL_ERROR "this is a bad PR")
