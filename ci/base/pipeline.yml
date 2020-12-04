@@ -22,7 +22,7 @@
 #@      "semver_resource",
 #@      "build_resources",
 #@      "build_jobs",
-#@      "build_job_name",
+#@      "build_job_names",
 #@      "update_pipeline_job",
 #@      "update_pipeline_job_name")
 #@ load("@ytt:data", "data")
@@ -49,17 +49,11 @@ jobs:
 groups:
   - name: builds
     jobs:
-      #@ for build in data.values.builds:
-      #@ for/end config in data.values.configs:
-      - #@ build_job_name(build, config)
-      #@ end
+      - #@ template.replace(build_job_names(data.values.builds, data.values.configs))
   - name: meta
     jobs:
       - #@ update_pipeline_job_name()
   - name: all
     jobs:
       - #@ update_pipeline_job_name()
-        #@ for build in data.values.builds:
-      #@ for/end config in data.values.configs:
-      - #@ build_job_name(build, config)
-      #@ end
+      - #@ template.replace(build_job_names(data.values.builds, data.values.configs))

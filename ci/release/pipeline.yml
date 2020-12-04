@@ -18,6 +18,7 @@
 #@      "gci_resource",
 #@      "registry_image_resource",
 #@      "build_job_name",
+#@      "build_job_names",
 #@      "packer_job",
 #@      "packer_job_name",
 #@      "docker_job",
@@ -29,6 +30,7 @@
 #@      "version_source_job_name")
 #@ load("@ytt:data", "data")
 #@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:template", "template")
 
 #@overlay/match by=overlay.all
 ---
@@ -83,19 +85,11 @@ jobs:
           steps:
             - get: version
               passed:
-                #@ for build in data.values.builds:
-                #@ for config in data.values.configs:
-                - #@ build_job_name(build, config)
-                #@ end
-                #@ end
+                - #@ template.replace(build_job_names(data.values.builds, data.values.configs))
               trigger: true
             - get: source
               passed:
-                #@ for build in data.values.builds:
-                #@ for config in data.values.configs:
-                - #@ build_job_name(build, config)
-                #@ end
-                #@ end
+                - #@ template.replace(build_job_names(data.values.builds, data.values.configs))
               trigger: true
             #@ for build in data.values.builds:
             #@ for config in data.values.configs:

@@ -387,13 +387,8 @@ plan:
   - do:
       - #@ build_task(config.config, build.params)
       - #@ cpp_unit_test_task(build, config)
-      - #@ cpp_integration_test_task(build, config)
-      - #@ cpp_legacy_integration_test_task(build, config)
-      #@ if build.with_dot_net:
+        #@ if/end build.with_dot_net:
       - #@ net_unit_test_task(build, config)
-      - #@ net_integration_test_task(build, config)
-      - #@ net_legacy_integration_test_task(build, config)
-      #@ end
 on_failure:
   in_parallel:
     steps:
@@ -402,6 +397,78 @@ ensure:
   in_parallel:
     steps:
       - #@ delete_instance()
+#@ end
+
+---
+#@ def test_job_name(build, config, task):
+#@ return "test-" + build.name + "-" + config.name + "-" + task["task"]
+#@ end
+
+---
+#@ def test_job(build, config, task):
+name: #@ test_job_name(build, config, task)
+plan:
+  - in_parallel:
+      fail_fast: true
+      steps:
+        - get: version
+          trigger: true
+          passed:
+            - #@ build_job_name(build, config)
+        - get: source
+          trigger: true
+          passed:
+            - #@ build_job_name(build, config)
+        - get: task-image
+        - do:
+            - in_parallel:
+                fail_fast: true
+                steps:
+                  - get: gcloud-image
+                  - get: #@ gci_resource_name(image_family_name(build.image_family))
+            - #@ create_instance(build, config)
+  - do:
+      - #@ build_task(config.config, build.params)
+      - #@ task
+on_failure:
+  in_parallel:
+    steps:
+      - #@ download_build_task()
+ensure:
+  in_parallel:
+    steps:
+      - #@ delete_instance()
+        #@ end
+
+---
+#@ def build_jobs(builds, configs):
+#@ for build in builds:
+#@ for config in configs:
+- #@ build_job(build, config)
+- #@ test_job(build, config, cpp_integration_test_task(build, config))
+- #@ test_job(build, config, cpp_legacy_integration_test_task(build, config))
+#@ if build.with_dot_net:
+- #@ test_job(build, config, net_integration_test_task(build, config))
+- #@ test_job(build, config, net_legacy_integration_test_task(build, config))
+#@ end
+#@ end
+#@ end
+#@ end
+
+
+---
+#@ def build_job_names(builds, configs):
+#@ for build in builds:
+#@ for config in configs:
+- #@ build_job_name(build, config)
+- #@ test_job_name(build, config, cpp_integration_test_task(build, config))
+- #@ test_job_name(build, config, cpp_legacy_integration_test_task(build, config))
+#@ if build.with_dot_net:
+- #@ test_job_name(build, config, net_integration_test_task(build, config))
+- #@ test_job_name(build, config, net_legacy_integration_test_task(build, config))
+#@ end
+#@ end
+#@ end
 #@ end
 
 ---
@@ -600,10 +667,3 @@ in_parallel:
 #@ end
 #@ end
 
----
-#@ def build_jobs(builds, configs):
-#@ for build in builds:
-  #@ for/end config in configs:
-  - #@ build_job(build, config)
-#@ end
-#@ end
