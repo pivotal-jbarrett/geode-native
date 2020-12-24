@@ -24,6 +24,7 @@ add_library(test-cppcache-utils STATIC
 )
 target_link_libraries(test-cppcache-utils
   PRIVATE
+    integration-framework
     ACE::ACE
     _WarningsAsError
   PUBLIC
@@ -246,7 +247,6 @@ set_tests_properties(testFwPerf
     testThinClientPRSingleHop
     testThinClientPoolAttrTest
     testThinClientPoolLocator
-    testThinClientPutWithDelta
     testThinClientRemoteQueryTimeout
     testThinClientRemoveOps
     testThinClientSecurityAuthentication
