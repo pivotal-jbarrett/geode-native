@@ -31,13 +31,12 @@ using apache::geode::client::LogLevel;
 
 int numOfLinesInFile(const char *fname) {
   char line[2048];
-  char *read;
   int ln_cnt = 0;
-  FILE *fp = fopen(fname, "r");
+  auto fp = fopen(fname, "r");
   if (fp == nullptr) {
     return -1;
   }
-  while (!!(read = fgets(line, sizeof line, fp))) {
+  while (!!(fgets(line, sizeof line, fp))) {
     printf("%d:%s", ++ln_cnt, line);
   }
 
