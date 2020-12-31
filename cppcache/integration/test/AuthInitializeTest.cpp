@@ -101,7 +101,7 @@ TEST(AuthInitializeTest, putGetWithBasicAuth) {
   Cluster cluster(
       Name(std::string(::testing::UnitTest::GetInstance()
                            ->current_test_info()
-                           ->test_case_name()) +
+                           ->test_suite_name()) +
            "/" +
            ::testing::UnitTest::GetInstance()->current_test_info()->name()),
       Classpath{getFrameworkString(FrameworkVariable::JavaObjectJarPath)},
@@ -133,7 +133,7 @@ TEST(AuthInitializeTest, putWithBadUsername) {
   Cluster cluster(
       Name(std::string(::testing::UnitTest::GetInstance()
                            ->current_test_info()
-                           ->test_case_name()) +
+                           ->test_suite_name()) +
            "/" +
            ::testing::UnitTest::GetInstance()->current_test_info()->name()),
       Classpath{getFrameworkString(FrameworkVariable::JavaObjectJarPath)},
@@ -169,7 +169,7 @@ TEST(AuthInitializeTest, putWithBadPassword) {
   Cluster cluster(
       Name(std::string(::testing::UnitTest::GetInstance()
                            ->current_test_info()
-                           ->test_case_name()) +
+                           ->test_suite_name()) +
            "/" +
            ::testing::UnitTest::GetInstance()->current_test_info()->name()),
       Classpath{getFrameworkString(FrameworkVariable::JavaObjectJarPath)},
@@ -199,7 +199,7 @@ TEST(AuthInitializeTest, badCredentialsWithSubscriptionEnabled) {
   Cluster cluster(
       Name(std::string(::testing::UnitTest::GetInstance()
                            ->current_test_info()
-                           ->test_case_name()) +
+                           ->test_suite_name()) +
            "/" +
            ::testing::UnitTest::GetInstance()->current_test_info()->name()),
       Classpath{getFrameworkString(FrameworkVariable::JavaObjectJarPath)},
