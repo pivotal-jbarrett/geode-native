@@ -871,6 +871,7 @@ void LogVarargs::debug(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Debug, msg);
   va_end(argp);
@@ -880,6 +881,7 @@ void LogVarargs::error(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Error, msg);
   va_end(argp);
@@ -889,6 +891,7 @@ void LogVarargs::warn(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Warning, msg);
   va_end(argp);
@@ -898,6 +901,7 @@ void LogVarargs::info(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Info, msg);
   va_end(argp);
@@ -907,6 +911,7 @@ void LogVarargs::config(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Config, msg);
   va_end(argp);
@@ -916,6 +921,7 @@ void LogVarargs::fine(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Fine, msg);
   va_end(argp);
@@ -925,6 +931,7 @@ void LogVarargs::finer(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Finer, msg);
   va_end(argp);
@@ -934,6 +941,7 @@ void LogVarargs::finest(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized): clang-tidy bug
   std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Finest, msg);
   va_end(argp);
