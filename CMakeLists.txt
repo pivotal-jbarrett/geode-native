@@ -404,4 +404,4 @@ if (USE_RAT)
   )
 endif()
 
-message(FATAL_ERROR "this is a bad PR")
+#message(FATAL_ERROR "this is a bad PR")
