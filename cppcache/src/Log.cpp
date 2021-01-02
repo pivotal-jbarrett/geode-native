@@ -21,6 +21,7 @@
 #include <cctype>
 #include <chrono>
 #include <cinttypes>
+#include <cstdio>
 #include <ctime>
 #include <mutex>
 #include <string>
@@ -33,7 +34,6 @@
 #include <boost/process/environment.hpp>
 
 #include <geode/ExceptionTypes.hpp>
-#include <geode/internal/geode_globals.hpp>
 #include <geode/util/LogLevel.hpp>
 
 #include "../internal/hacks/AceThreadId.h"
@@ -302,26 +302,19 @@ void Log::init(LogLevel level, const char* logFileName, int32_t logFileLimit,
                     g_rollIndex++, extName.c_str());
       bool rollFileNameGot = false;
       while (!rollFileNameGot) {
-        FILE* checkFile = fopen(rollFile, "r");
-        if (checkFile != nullptr) {
+        if (auto checkFile = fopen(rollFile, "r")) {
           fclose(checkFile);
-          checkFile = nullptr;
           std::snprintf(rollFile, 1024, "%s%c%s-%d.%s", logsdirname.c_str(),
                         ACE_DIRECTORY_SEPARATOR_CHAR, fnameBeforeExt.c_str(),
                         g_rollIndex++, extName.c_str());
         } else {
           rollFileNameGot = true;
         }
-        /* adongre
-         * CID 28999: Use after free (USE_AFTER_FREE)
-         */
-        if (checkFile != nullptr) fclose(existingFile);
       }
       // retry some number of times before giving up when file is busy etc.
-      int renameResult = -1;
       int maxTries = 10;
       while (maxTries-- > 0) {
-        renameResult = ACE_OS::rename(g_logFileWithExt->c_str(), rollFile);
+        auto renameResult = ACE_OS::rename(g_logFileWithExt->c_str(), rollFile);
         if (renameResult >= 0) {
           break;
         }
@@ -338,7 +331,6 @@ void Log::init(LogLevel level, const char* logFileName, int32_t logFileLimit,
     }
     if (existingFile != nullptr) {
       fclose(existingFile);
-      existingFile = nullptr;
     }
   } else if (g_logFile) {
     delete g_logFile;
@@ -351,10 +343,7 @@ void Log::init(LogLevel level, const char* logFileName, int32_t logFileLimit,
 void Log::close() {
   std::lock_guard<decltype(g_logMutex)> guard(g_logMutex);
 
-  std::string oldfile;
-
   if (g_logFile) {
-    oldfile = *g_logFile;
     delete g_logFile;
     g_logFile = nullptr;
   }
@@ -417,8 +406,7 @@ void Log::writeBanner() {
   }
 
   int numchars = 0;
-  const char* pch = nullptr;
-  pch = strchr(bannertext.c_str(), '\n');
+  auto pch = strchr(bannertext.c_str(), '\n');
   while (pch != nullptr) {
     pch = strchr(pch + 1, '\n');
     numchars += 2;
@@ -879,16 +867,11 @@ LogFn::~LogFn() {
 
 // var arg logging routines.
 
-#ifdef _WIN32
-#define vsnprintf _vsnprintf
-#endif
-
 void LogVarargs::debug(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Debug, msg);
   va_end(argp);
 }
@@ -897,8 +880,7 @@ void LogVarargs::error(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Error, msg);
   va_end(argp);
 }
@@ -907,8 +889,7 @@ void LogVarargs::warn(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Warning, msg);
   va_end(argp);
 }
@@ -917,8 +898,7 @@ void LogVarargs::info(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Info, msg);
   va_end(argp);
 }
@@ -927,8 +907,7 @@ void LogVarargs::config(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Config, msg);
   va_end(argp);
 }
@@ -937,8 +916,7 @@ void LogVarargs::fine(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Fine, msg);
   va_end(argp);
 }
@@ -947,8 +925,7 @@ void LogVarargs::finer(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Finer, msg);
   va_end(argp);
 }
@@ -957,8 +934,7 @@ void LogVarargs::finest(const char* fmt, ...) {
   char msg[_GF_MSG_LIMIT] = {0};
   va_list argp;
   va_start(argp, fmt);
-  vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
-  /* win doesn't guarantee termination */ msg[_GF_MSG_LIMIT - 1] = '\0';
+  std::vsnprintf(msg, _GF_MSG_LIMIT, fmt, argp);
   Log::put(LogLevel::Finest, msg);
   va_end(argp);
 }
