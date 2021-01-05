@@ -16,7 +16,7 @@
 
 FROM ubuntu:groovy
 LABEL maintainer="Apache Geode <dev@geode.apache.org>"
-LABEL description="Minimal image for running lvc/abi-dumper"
+LABEL description="Minimal image for running lvc/abi-compliance-checker and related tooling"
 
 FROM ubuntu:groovy
 
@@ -24,6 +24,7 @@ RUN apt-get update \
     && apt-get install -y \
         bash \
         abi-dumper \
+        abi-compliance-checker \
     && apt-get -y autoremove \
     && apt-get -y autoclean \
     && rm -rf /var/lib/apt/lists/*
