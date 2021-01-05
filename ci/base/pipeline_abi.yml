@@ -1,0 +1,70 @@
+#! Licensed to the Apache Software Foundation (ASF) under one or more
+#! contributor license agreements.  See the NOTICE file distributed with
+#! this work for additional information regarding copyright ownership.
+#! The ASF licenses this file to You under the Apache License, Version 2.0
+#! (the "License"); you may not use this file except in compliance with
+#! the License.  You may obtain a copy of the License at
+#!
+#!      http://www.apache.org/licenses/LICENSE-2.0
+#!
+#! Unless required by applicable law or agreed to in writing, software
+#! distributed under the License is distributed on an "AS IS" BASIS,
+#! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#! See the License for the specific language governing permissions and
+#! limitations under the License.
+
+#@ load("templates.lib.yml",
+#@      "resource_type",
+#@      "gcr_image_resource",
+#@      "project_gcr_image_resource",
+#@      "github_resource",
+#@      "registry_image_resource",
+#@      "semver_resource",
+#@      "apache_directory_index_resource",
+#@      "build_resources",
+#@      "build_jobs",
+#@      "build_job_name",
+#@      "check_source_job",
+#@      "check_source_job_name",
+#@      "update_pipeline_job",
+#@      "update_pipeline_job_name")
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.all
+---
+resources:
+  #@overlay/append
+  - #@ project_gcr_image_resource("abi-compliance-checker-image", "geode-native-abi-compliance-checker")
+  #@overlay/append
+  - #@ project_gcr_image_resource("abi-dumper-image", "geode-native-abi-dumper")
+
+jobs:
+  #@overlay/match by="name"
+  - name: build-rhel-8-debug
+    plan:
+      #@overlay/match by=overlay.index(0)
+      - in_parallel:
+          steps:
+            #@overlay/match by=overlay.subset({"get": "task-image"})
+            #@overlay/insert after=True
+            - get: abi-dumper-image
+    #@overlay/match by=overlay.subset({"task": "build"})
+    #@overlay/insert after=True
+      - task: dump-abi
+        image: abi-dumper-image
+        config:
+          platform: linux
+          inputs:
+            - name: version
+            - name: package
+          outputs:
+            - name: abi
+          run:
+            path: bash
+            args:
+              - -c
+              - |-
+                set -ueo pipefail
+                tar -zxf package/*.tar.gz
+                abi-dumper apache-geode-native/lib/libapache-geode.so -public-headers apache-geode* -lver $(cat version/version) -o abi/abi.dump

@@ -20,7 +20,7 @@
 name: #@ name
 with_dot_net: #@ False
 params:
-  CMAKE_CONFIGURE_FLAGS:
+  CMAKE_CONFIGURE_FLAGS: "-DCMAKE_CXX_FLAGS_DEBUG=\"-g -Og\""
   CMAKE_BUILD_FLAGS: "-j16"
   CPACK_GENERATORS: "TGZ"
 packages:
