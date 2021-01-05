@@ -35,9 +35,7 @@
 ---
 resources:
   #@overlay/append
-  - #@ project_gcr_image_resource("abi-compliance-checker-image", "geode-native-abi-compliance-checker")
-  #@overlay/append
-  - #@ project_gcr_image_resource("abi-dumper-image", "geode-native-abi-dumper")
+  - #@ project_gcr_image_resource("abi-tools-image", "geode-native-abi-tools")
 
 jobs:
   #@overlay/match by="name"
@@ -48,11 +46,11 @@ jobs:
           steps:
             #@overlay/match by=overlay.subset({"get": "task-image"})
             #@overlay/insert after=True
-            - get: abi-dumper-image
+            - get: abi-tools-image
     #@overlay/match by=overlay.subset({"task": "build"})
     #@overlay/insert after=True
       - task: dump-abi
-        image: abi-dumper-image
+        image: abi-tools-image
         config:
           platform: linux
           inputs:
