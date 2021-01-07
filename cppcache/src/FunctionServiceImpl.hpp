@@ -36,7 +36,7 @@ namespace client {
  * @see Execution
  */
 
-class APACHE_GEODE_EXPORT FunctionServiceImpl : public FunctionService {
+class FunctionServiceImpl : public FunctionService {
  public:
   explicit FunctionServiceImpl(AuthenticatedView* authenticatedView);
 

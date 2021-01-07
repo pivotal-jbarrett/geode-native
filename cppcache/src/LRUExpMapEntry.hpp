@@ -32,7 +32,7 @@ namespace client {
 /**
  * @brief Hold region mapped entry value and lru information.
  */
-class APACHE_GEODE_EXPORT LRUExpMapEntry : public MapEntryImpl,
+class LRUExpMapEntry : public MapEntryImpl,
                                            public LRUEntryProperties,
                                            public ExpEntryProperties {
  public:
@@ -64,7 +64,7 @@ class APACHE_GEODE_EXPORT LRUExpMapEntry : public MapEntryImpl,
   LRUExpMapEntry& operator=(const LRUExpMapEntry&);
 };
 
-class APACHE_GEODE_EXPORT VersionedLRUExpMapEntry : public LRUExpMapEntry,
+class VersionedLRUExpMapEntry : public LRUExpMapEntry,
                                                     public VersionStamp {
  public:
   virtual ~VersionedLRUExpMapEntry() {}
@@ -84,7 +84,7 @@ class APACHE_GEODE_EXPORT VersionedLRUExpMapEntry : public LRUExpMapEntry,
   VersionedLRUExpMapEntry& operator=(const VersionedLRUExpMapEntry&);
 };
 
-class APACHE_GEODE_EXPORT LRUExpEntryFactory : public EntryFactory {
+class LRUExpEntryFactory : public EntryFactory {
  public:
   using EntryFactory::EntryFactory;
 

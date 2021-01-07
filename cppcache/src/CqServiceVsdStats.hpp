@@ -36,7 +36,7 @@ using statistics::StatisticDescriptor;
 using statistics::Statistics;
 using statistics::StatisticsType;
 
-class APACHE_GEODE_EXPORT CqServiceVsdStats : public CqServiceStatistics {
+class CqServiceVsdStats : public CqServiceStatistics {
  public:
   /** hold statistics for a cq. */
   explicit CqServiceVsdStats(statistics::StatisticsFactory* factory,

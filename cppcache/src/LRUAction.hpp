@@ -37,7 +37,7 @@ namespace client {
  * @brief abstract behavior for different eviction actions.
  */
 class LRUEntriesMap;
-class APACHE_GEODE_EXPORT LRUAction {
+class LRUAction {
  protected:
   bool m_invalidates;
   bool m_destroys;
@@ -95,7 +95,7 @@ class APACHE_GEODE_EXPORT LRUAction {
 /**
  * @brief LRUAction for destroy (distributed)
  */
-class APACHE_GEODE_EXPORT LRUDestroyAction : public virtual LRUAction {
+class LRUDestroyAction : public virtual LRUAction {
  private:
   RegionInternal* m_regionPtr;
 
@@ -132,7 +132,7 @@ class APACHE_GEODE_EXPORT LRUDestroyAction : public virtual LRUAction {
 /**
  * @brief LRUAction for invalidate.
  */
-class APACHE_GEODE_EXPORT LRULocalInvalidateAction : public virtual LRUAction {
+class LRULocalInvalidateAction : public virtual LRUAction {
  private:
   RegionInternal* m_regionPtr;
 
@@ -154,7 +154,7 @@ class APACHE_GEODE_EXPORT LRULocalInvalidateAction : public virtual LRUAction {
 /**
  * @brief LRUAction for invalidate.
  */
-class APACHE_GEODE_EXPORT LRUOverFlowToDiskAction : public virtual LRUAction {
+class LRUOverFlowToDiskAction : public virtual LRUAction {
  private:
   RegionInternal* m_regionPtr;
   LRUEntriesMap* m_entriesMapPtr;

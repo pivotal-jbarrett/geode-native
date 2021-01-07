@@ -48,7 +48,7 @@ class CacheImpl;
  * @brief This class encapsulates expiration specific properties for
  *   a MapEntry.
  */
-class APACHE_GEODE_EXPORT ExpEntryProperties {
+class ExpEntryProperties {
  public:
   typedef std::chrono::system_clock::time_point time_point;
 
@@ -120,7 +120,7 @@ class APACHE_GEODE_EXPORT ExpEntryProperties {
 /**
  * @brief Interface class for region mapped entry value.
  */
-class APACHE_GEODE_EXPORT MapEntry {
+class MapEntry {
  public:
   virtual ~MapEntry() {}
 
@@ -270,7 +270,7 @@ class MapEntryImpl : public MapEntry,
   std::shared_ptr<CacheableKey> m_key;
 };
 
-class APACHE_GEODE_EXPORT VersionedMapEntryImpl : public MapEntryImpl,
+class VersionedMapEntryImpl : public MapEntryImpl,
                                                   public VersionStamp {
  public:
   virtual ~VersionedMapEntryImpl() {}
@@ -290,7 +290,7 @@ class APACHE_GEODE_EXPORT VersionedMapEntryImpl : public MapEntryImpl,
   VersionedMapEntryImpl& operator=(const VersionedMapEntryImpl&);
 };
 
-class APACHE_GEODE_EXPORT EntryFactory {
+class EntryFactory {
  public:
   explicit EntryFactory(const bool concurrencyChecksEnabled)
       : m_concurrencyChecksEnabled(concurrencyChecksEnabled) {}

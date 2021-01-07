@@ -33,7 +33,7 @@ namespace client {
 /**
  * @brief LRUAction for testing map outside of a region....
  */
-class APACHE_GEODE_EXPORT TestMapAction : public virtual LRUAction {
+class TestMapAction : public virtual LRUAction {
  private:
   EntriesMap* m_eMap;
 

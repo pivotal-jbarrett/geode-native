@@ -39,8 +39,7 @@ using internal::DSFid;
  * EventID "token" with a Distributed Member ID, Thread ID and per-thread
  * Sequence ID
  */
-class APACHE_GEODE_EXPORT EventId
-    : public internal::DataSerializableFixedId_t<DSFid::EventId> {
+class EventId : public internal::DataSerializableFixedId_t<DSFid::EventId> {
  private:
   char m_eidMem[512];
   int32_t m_eidMemLen;

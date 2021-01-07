@@ -46,7 +46,7 @@ namespace client {
  * This class starts a reactor's event loop for taking care of expiry
  * tasks. The scheduling of event also happens through this manager.
  */
-class APACHE_GEODE_EXPORT ExpiryTaskManager : public ACE_Task_Base {
+class ExpiryTaskManager : public ACE_Task_Base {
  public:
   typedef decltype(std::declval<ACE_Reactor>().schedule_timer(
       nullptr, nullptr, std::declval<ACE_Time_Value>())) id_type;
