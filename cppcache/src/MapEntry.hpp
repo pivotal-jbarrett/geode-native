@@ -50,6 +50,8 @@ class CacheImpl;
  */
 class ExpEntryProperties {
  public:
+  ~ExpEntryProperties() noexcept = default;
+
   typedef std::chrono::system_clock::time_point time_point;
 
   inline explicit ExpEntryProperties(ExpiryTaskManager* expiryTaskManager)
@@ -122,7 +124,7 @@ class ExpEntryProperties {
  */
 class MapEntry {
  public:
-  virtual ~MapEntry() {}
+  virtual ~MapEntry() noexcept = default;
 
   virtual void getKey(std::shared_ptr<CacheableKey>& result) const = 0;
   virtual void getValue(std::shared_ptr<Cacheable>& result) const = 0;
@@ -191,7 +193,7 @@ class MapEntry {
   virtual void cleanup(const CacheEventFlags eventFlags) = 0;
 
  protected:
-  inline MapEntry() {}
+  inline MapEntry() = default;
 
   inline explicit MapEntry(bool) {}
 };
@@ -203,7 +205,7 @@ class MapEntry {
 class MapEntryImpl : public MapEntry,
                      public std::enable_shared_from_this<MapEntryImpl> {
  public:
-  ~MapEntryImpl() override = default;
+  ~MapEntryImpl() noexcept override = default;
   MapEntryImpl(const MapEntryImpl&) = delete;
   MapEntryImpl& operator=(const MapEntryImpl&) = delete;
 
@@ -272,9 +274,12 @@ class MapEntryImpl : public MapEntry,
 
 class VersionedMapEntryImpl : public MapEntryImpl, public VersionStamp {
  public:
-  virtual ~VersionedMapEntryImpl() {}
+  ~VersionedMapEntryImpl() noexcept override = default;
 
-  virtual VersionStamp& getVersionStamp() { return *this; }
+  VersionedMapEntryImpl(const VersionedMapEntryImpl&) = delete;
+  VersionedMapEntryImpl& operator=(const VersionedMapEntryImpl&) = delete;
+
+  VersionStamp& getVersionStamp() override { return *this; }
 
  protected:
   inline explicit VersionedMapEntryImpl(bool) : MapEntryImpl(true) {}
@@ -282,11 +287,6 @@ class VersionedMapEntryImpl : public MapEntryImpl, public VersionStamp {
   inline explicit VersionedMapEntryImpl(
       const std::shared_ptr<CacheableKey>& key)
       : MapEntryImpl(key) {}
-
- private:
-  // disabled
-  VersionedMapEntryImpl(const VersionedMapEntryImpl&);
-  VersionedMapEntryImpl& operator=(const VersionedMapEntryImpl&);
 };
 
 class EntryFactory {
@@ -294,7 +294,7 @@ class EntryFactory {
   explicit EntryFactory(const bool concurrencyChecksEnabled)
       : m_concurrencyChecksEnabled(concurrencyChecksEnabled) {}
 
-  virtual ~EntryFactory() {}
+  virtual ~EntryFactory() noexcept = default;
 
   virtual void newMapEntry(ExpiryTaskManager* expiryTaskManager,
                            const std::shared_ptr<CacheableKey>& key,
@@ -303,6 +303,7 @@ class EntryFactory {
  protected:
   bool m_concurrencyChecksEnabled;
 };
+
 }  // namespace client
 }  // namespace geode
 }  // namespace apache

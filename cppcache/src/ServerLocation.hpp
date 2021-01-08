@@ -41,7 +41,7 @@ class ServerLocation : public internal::DataSerializableInternal {
       : Serializable(), m_serverName(std::move(serverName)), m_port(port) {
     LOGDEBUG(
         "ServerLocation::ServerLocation(): creating ServerLocation for %s:%d",
-        serverName.c_str(), port);
+        m_serverName.c_str(), port);
     makeEpString();
   }
 
@@ -62,11 +62,6 @@ class ServerLocation : public internal::DataSerializableInternal {
   }
 
   const std::string& getServerName() const { return m_serverName; }
-
-  void setServername(std::string serverName) {
-    m_serverName = std::move(serverName);
-    makeEpString();
-  }
 
   int getPort() const { return m_port; }
 

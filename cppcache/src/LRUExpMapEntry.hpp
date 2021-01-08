@@ -36,13 +36,16 @@ class LRUExpMapEntry : public MapEntryImpl,
                        public LRUEntryProperties,
                        public ExpEntryProperties {
  public:
-  virtual ~LRUExpMapEntry() {}
+  LRUExpMapEntry(const LRUExpMapEntry&) = delete;
+  LRUExpMapEntry& operator=(const LRUExpMapEntry&) = delete;
 
-  virtual LRUEntryProperties& getLRUProperties() { return *this; }
+  ~LRUExpMapEntry() noexcept override = default;
 
-  virtual ExpEntryProperties& getExpProperties() { return *this; }
+  LRUEntryProperties& getLRUProperties() override { return *this; }
 
-  virtual void cleanup(const CacheEventFlags eventFlags) {
+  ExpEntryProperties& getExpProperties() override { return *this; }
+
+  void cleanup(const CacheEventFlags eventFlags) override {
     if (!eventFlags.isExpiration()) {
       cancelExpiryTaskId(m_key);
     }
@@ -57,18 +60,16 @@ class LRUExpMapEntry : public MapEntryImpl,
   inline LRUExpMapEntry(ExpiryTaskManager* expiryTaskManager,
                         const std::shared_ptr<CacheableKey>& key)
       : MapEntryImpl(key), ExpEntryProperties(expiryTaskManager) {}
-
- private:
-  // disabled
-  LRUExpMapEntry(const LRUExpMapEntry&);
-  LRUExpMapEntry& operator=(const LRUExpMapEntry&);
 };
 
 class VersionedLRUExpMapEntry : public LRUExpMapEntry, public VersionStamp {
  public:
-  virtual ~VersionedLRUExpMapEntry() {}
+  VersionedLRUExpMapEntry(const VersionedLRUExpMapEntry&) = delete;
+  VersionedLRUExpMapEntry& operator=(const VersionedLRUExpMapEntry&) = delete;
 
-  virtual VersionStamp& getVersionStamp() { return *this; }
+  ~VersionedLRUExpMapEntry() noexcept override = default;
+
+  VersionStamp& getVersionStamp() override { return *this; }
 
  protected:
   inline explicit VersionedLRUExpMapEntry(bool) : LRUExpMapEntry(true) {}
@@ -76,22 +77,17 @@ class VersionedLRUExpMapEntry : public LRUExpMapEntry, public VersionStamp {
   inline VersionedLRUExpMapEntry(ExpiryTaskManager* expiryTaskManager,
                                  const std::shared_ptr<CacheableKey>& key)
       : LRUExpMapEntry(expiryTaskManager, key) {}
-
- private:
-  // disabled
-  VersionedLRUExpMapEntry(const VersionedLRUExpMapEntry&);
-  VersionedLRUExpMapEntry& operator=(const VersionedLRUExpMapEntry&);
 };
 
 class LRUExpEntryFactory : public EntryFactory {
  public:
   using EntryFactory::EntryFactory;
 
-  virtual ~LRUExpEntryFactory() {}
+  ~LRUExpEntryFactory() noexcept override = default;
 
-  virtual void newMapEntry(ExpiryTaskManager* expiryTaskManager,
-                           const std::shared_ptr<CacheableKey>& key,
-                           std::shared_ptr<MapEntryImpl>& result) const;
+  void newMapEntry(ExpiryTaskManager* expiryTaskManager,
+                   const std::shared_ptr<CacheableKey>& key,
+                   std::shared_ptr<MapEntryImpl>& result) const override;
 };
 }  // namespace client
 }  // namespace geode
