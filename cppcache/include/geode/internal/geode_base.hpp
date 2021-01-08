@@ -22,6 +22,10 @@
 
 #include "apache-geode_export.h"
 
+#ifndef APACHE_GEODE_ABI_VERSION
+#define APACHE_GEODE_ABI_VERSION 0
+#endif
+
 /**@namespace geode This namespace contains all the Geode
  * C++ API classes, enumerations and globals.
  */

@@ -254,7 +254,13 @@ class APACHE_GEODE_EXPORT Cache : public GeodeCache {
   LogLevel getLogLevel();
 
   Cache() = delete;
+
+#if (APACHE_GEODE_ABI_VERSION > 1)
   ~Cache() override;
+#else
+  virtual ~Cache();
+#endif
+
   Cache(const Cache& other) = delete;
   Cache& operator=(const Cache& other) = delete;
   Cache(Cache&& other) noexcept;

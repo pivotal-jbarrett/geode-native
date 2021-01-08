@@ -87,14 +87,12 @@ class APACHE_GEODE_EXPORT AuthenticatedView : public RegionService {
    */
   std::vector<std::shared_ptr<Region>> rootRegions() const override;
 
-  /**
-   * @brief destructor
-   */
+#if (APACHE_GEODE_ABI_VERSION > 1)
   ~AuthenticatedView() override;
+#else
+  virtual ~AuthenticatedView();
+#endif
 
-  /**
-   * @brief constructors
-   */
   AuthenticatedView(std::shared_ptr<Properties> credentials,
                     std::shared_ptr<Pool> pool, CacheImpl* cacheImpl);
   AuthenticatedView(AuthenticatedView&& other) = default;
