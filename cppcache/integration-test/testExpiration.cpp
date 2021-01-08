@@ -54,7 +54,7 @@ void startDSandCreateCache(std::shared_ptr<Cache> &cache) {
 
 void doNPuts(std::shared_ptr<Region> &rptr, int n) {
   std::shared_ptr<CacheableString> value;
-  char buf[16];
+  char buf[32];
   memset(buf, 'A', 15);
   buf[15] = '\0';
   memcpy(buf, "Value - ", 8);
@@ -62,7 +62,7 @@ void doNPuts(std::shared_ptr<Region> &rptr, int n) {
   ASSERT(value != nullptr, "Failed to create value.");
 
   for (int i = 0; i < n; i++) {
-    sprintf(buf, "KeyA - %d", i + 1);
+    snprintf(buf, sizeof(buf), "KeyA - %d", i + 1);
     auto key = CacheableKey::create(buf);
     LOGINFO("Putting key %s value %s in region %s", buf,
             value->toString().c_str(), rptr->getFullPath().c_str());

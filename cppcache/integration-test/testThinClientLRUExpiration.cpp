@@ -172,7 +172,7 @@ void createRegion(const char *name, bool ackMode,
 
 void doRgnOperations(const char *name, int n, int rgnOpt = 0) {
   std::shared_ptr<CacheableString> value;
-  char buf[16];
+  char buf[32];
   if (rgnOpt == 0) {
     memset(buf, 'A', 15);
     buf[15] = '\0';
@@ -183,7 +183,7 @@ void doRgnOperations(const char *name, int n, int rgnOpt = 0) {
   auto rptr = getHelper()->getRegion(name);
   ASSERT(rptr != nullptr, "Region not found.");
   for (int i = 0; i < n; i++) {
-    sprintf(buf, "KeyA - %d", i + 1);
+    snprintf(buf, sizeof(buf), "KeyA - %d", i + 1);
     auto key = CacheableKey::create(buf);
     switch (rgnOpt) {
       case 0:

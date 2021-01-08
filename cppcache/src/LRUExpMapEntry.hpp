@@ -33,8 +33,8 @@ namespace client {
  * @brief Hold region mapped entry value and lru information.
  */
 class LRUExpMapEntry : public MapEntryImpl,
-                                           public LRUEntryProperties,
-                                           public ExpEntryProperties {
+                       public LRUEntryProperties,
+                       public ExpEntryProperties {
  public:
   virtual ~LRUExpMapEntry() {}
 
@@ -64,8 +64,7 @@ class LRUExpMapEntry : public MapEntryImpl,
   LRUExpMapEntry& operator=(const LRUExpMapEntry&);
 };
 
-class VersionedLRUExpMapEntry : public LRUExpMapEntry,
-                                                    public VersionStamp {
+class VersionedLRUExpMapEntry : public LRUExpMapEntry, public VersionStamp {
  public:
   virtual ~VersionedLRUExpMapEntry() {}
 

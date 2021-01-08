@@ -32,8 +32,7 @@ namespace client {
  * @brief Hold region mapped entry value.
  * This subclass adds expiration times.
  */
-class ExpMapEntry : public MapEntryImpl,
-                                        public ExpEntryProperties {
+class ExpMapEntry : public MapEntryImpl, public ExpEntryProperties {
  public:
   virtual ~ExpMapEntry() {}
 
@@ -59,8 +58,7 @@ class ExpMapEntry : public MapEntryImpl,
   ExpMapEntry& operator=(const ExpMapEntry&);
 };
 
-class VersionedExpMapEntry : public ExpMapEntry,
-                                                 public VersionStamp {
+class VersionedExpMapEntry : public ExpMapEntry, public VersionStamp {
  public:
   inline VersionedExpMapEntry(ExpiryTaskManager* expiryTaskManager,
                               const std::shared_ptr<CacheableKey>& key)

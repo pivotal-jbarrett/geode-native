@@ -60,8 +60,7 @@ namespace client {
  *
  *
  */
-class LRUMapEntry : public MapEntryImpl,
-                                        public LRUEntryProperties {
+class LRUMapEntry : public MapEntryImpl, public LRUEntryProperties {
  public:
   virtual ~LRUMapEntry() {}
 
@@ -88,8 +87,7 @@ class LRUMapEntry : public MapEntryImpl,
   LRUMapEntry& operator=(const LRUMapEntry&);
 };
 
-class VersionedLRUMapEntry : public LRUMapEntry,
-                                                 public VersionStamp {
+class VersionedLRUMapEntry : public LRUMapEntry, public VersionStamp {
  public:
   virtual ~VersionedLRUMapEntry() {}
 

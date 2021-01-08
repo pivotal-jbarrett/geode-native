@@ -270,8 +270,7 @@ class MapEntryImpl : public MapEntry,
   std::shared_ptr<CacheableKey> m_key;
 };
 
-class VersionedMapEntryImpl : public MapEntryImpl,
-                                                  public VersionStamp {
+class VersionedMapEntryImpl : public MapEntryImpl, public VersionStamp {
  public:
   virtual ~VersionedMapEntryImpl() {}
 
