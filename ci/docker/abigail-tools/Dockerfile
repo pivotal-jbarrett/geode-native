@@ -20,6 +20,8 @@ LABEL description="Minimal image for running abigail tools for ABI testing."
 
 FROM ubuntu:20.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update \
     && apt-get install -y \
         g++ \
