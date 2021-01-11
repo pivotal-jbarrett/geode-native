@@ -23,8 +23,7 @@ FROM ubuntu:groovy
 RUN apt-get update \
     && apt-get install -y \
         bash \
-        abi-dumper \
-        abi-compliance-checker \
+        libabigail \
     && apt-get -y autoremove \
     && apt-get -y autoclean \
     && rm -rf /var/lib/apt/lists/*
