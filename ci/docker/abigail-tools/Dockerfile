@@ -22,6 +22,29 @@ FROM ubuntu:groovy
 
 RUN apt-get update \
     && apt-get install -y \
+        g++ \
+    && apt-get -y autoremove \
+    && apt-get -y autoclean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y \
+        bash \
+        libssl-dev \
+        patch \
+        git \
+        doxygen \
+        openjdk-8-jdk-headless \
+        jq \
+        curl \
+        g++ \
+        make \
+    && apt-get -y autoremove \
+    && apt-get -y autoclean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y \
         bash \
         abigail-tools \
     && apt-get -y autoremove \
