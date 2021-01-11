@@ -35,22 +35,22 @@
 ---
 resources:
   #@overlay/append
-  - #@ project_gcr_image_resource("abi-tools-image", "geode-native-abi-tools")
+  - #@ project_gcr_image_resource("abigail-tools-image", "geode-native-abigail-tools")
 
 jobs:
   #@overlay/match by="name"
-  - name: build-rhel-8-debug
+  - name: build-ubuntu-20.04-debug
     plan:
       #@overlay/match by=overlay.index(0)
       - in_parallel:
           steps:
             #@overlay/match by=overlay.subset({"get": "task-image"})
             #@overlay/insert after=True
-            - get: abi-tools-image
+            - get: abigail-tools-image
     #@overlay/match by=overlay.subset({"task": "build"})
     #@overlay/insert after=True
       - task: dump-abi
-        image: abi-tools-image
+        image: abigail-tools-image
         config:
           platform: linux
           inputs:
@@ -65,4 +65,4 @@ jobs:
               - |-
                 set -ueo pipefail
                 tar -zxf package/*.tar.gz
-                abi-dumper apache-geode-native/lib/libapache-geode.so -public-headers apache-geode* -lver $(cat version/version) -o abi/abi.dump
+                abidw apache-geode-native/lib/libapache-geode.so -o abi/abi.xml

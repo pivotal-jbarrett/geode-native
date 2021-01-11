@@ -16,14 +16,14 @@
 
 FROM ubuntu:groovy
 LABEL maintainer="Apache Geode <dev@geode.apache.org>"
-LABEL description="Minimal image for running lvc/abi-compliance-checker and related tooling"
+LABEL description="Minimal image for running abigail tools for ABI testing."
 
 FROM ubuntu:groovy
 
 RUN apt-get update \
     && apt-get install -y \
         bash \
-        libabigail \
+        abigail-tools \
     && apt-get -y autoremove \
     && apt-get -y autoclean \
     && rm -rf /var/lib/apt/lists/*
