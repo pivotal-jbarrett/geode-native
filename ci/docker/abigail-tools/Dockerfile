@@ -18,7 +18,7 @@ FROM ubuntu:groovy
 LABEL maintainer="Apache Geode <dev@geode.apache.org>"
 LABEL description="Minimal image for running abigail tools for ABI testing."
 
-FROM ubuntu:groovy
+FROM ubuntu:20.04
 
 RUN apt-get update \
     && apt-get install -y \
