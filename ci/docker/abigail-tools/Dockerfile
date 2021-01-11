@@ -43,6 +43,14 @@ RUN apt-get update \
     && apt-get -y autoclean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN installer=$(mktemp) \
+    && curl -o ${installer} -L $(curl -s https://api.github.com/repos/Kitware/CMake/releases/latest \
+        | grep 'browser_download_url.*Linux-x86_64\.sh' \
+        | cut -d : -f 2,3 \
+        | tr -d '"') \
+    && bash ${installer} --skip-license --prefix=/usr/local \
+    && rm ${installer}
+
 RUN apt-get update \
     && apt-get install -y \
         bash \
