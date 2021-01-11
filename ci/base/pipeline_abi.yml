@@ -39,7 +39,7 @@ resources:
 
 jobs:
   #@overlay/match by="name"
-  - name: build-ubuntu-20.04-debug
+  - name: build-ubuntu-18.04-debug
     plan:
       #@overlay/match by=overlay.index(0)
       - in_parallel:
