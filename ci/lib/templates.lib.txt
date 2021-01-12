@@ -240,3 +240,40 @@ for checksum in ${checksums}; do
   remote_download ${checksum} package/
 done
 (@- end @)
+
+(@ def dump_previous_abi_bash_task(): -@)
+set -xueo pipefail
+if [[ "$(cat abi/version 2>/dev/null)" == "$(cat source/version)" ]]; then
+  exit 0
+fi
+source=$(pwd)/source/expanded/apache-geode-native-$(cat source/version)-src
+export GEODE_HOME=$(pwd)/geode/expanded/apache-geode-$(cat geode/version)
+mkdir build
+pushd build
+cmake ${source}
+cmake --build cppcache/shared --parallel $(nproc)
+popd
+abidw --out-file abi/abi.xml --headers-dir ${source}/cppcache/include build/cppcache/shared/libapache-geode.so
+cp source/version abi/version
+(@- end @)
+
+(@ def dump_current_abi_bash_task(): -@)
+set -xueo pipefail
+if [[ "$(cat abi/ref 2>/dev/null)" == "$(cat source/.git/ref)" ]]; then
+  exit 0
+fi
+source=$(pwd)/source
+export GEODE_HOME=$(pwd)/geode/expanded/apache-geode-$(cat geode/version)
+mkdir build
+pushd build
+cmake ${source}
+cmake --build cppcache/shared --parallel $(nproc)
+popd
+abidw --out-file abi/abi.xml --headers-dir ${source}/cppcache/include build/cppcache/shared/libapache-geode.so
+cp source/.git/ref abi/ref
+(@- end @)
+
+(@ def diff_abi_bash_task(): -@)
+set -xueo pipefail
+abidiff previous-abi/abi.xml current-abi/abi.xml
+(@- end @)

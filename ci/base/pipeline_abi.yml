@@ -14,20 +14,14 @@
 #! limitations under the License.
 
 #@ load("templates.lib.yml",
-#@      "resource_type",
-#@      "gcr_image_resource",
 #@      "project_gcr_image_resource",
-#@      "github_resource",
-#@      "registry_image_resource",
-#@      "semver_resource",
-#@      "apache_directory_index_resource",
-#@      "build_resources",
-#@      "build_jobs",
-#@      "build_job_name",
-#@      "check_source_job",
-#@      "check_source_job_name",
-#@      "update_pipeline_job",
-#@      "update_pipeline_job_name")
+#@      "bash_task",
+#@ )
+#@ load("templates.lib.txt",
+#@      "dump_previous_abi_bash_task",
+#@      "dump_current_abi_bash_task",
+#@      "diff_abi_bash_task",
+#@ )
 #@ load("@ytt:data", "data")
 #@ load("@ytt:overlay", "overlay")
 
@@ -38,31 +32,33 @@ resources:
   - #@ project_gcr_image_resource("abigail-tools-image", "geode-native-abigail-tools")
 
 jobs:
-  #@overlay/match by="name"
-  - name: build-ubuntu-18.04-debug
+  #@overlay/append
+  - name: abi-check
     plan:
-      #@overlay/match by=overlay.index(0)
       - in_parallel:
+          fail_fast: true
           steps:
-            #@overlay/match by=overlay.subset({"get": "task-image"})
-            #@overlay/insert after=True
             - get: abigail-tools-image
-    #@overlay/match by=overlay.subset({"task": "build"})
-    #@overlay/insert after=True
-      - task: dump-abi
-        image: abigail-tools-image
-        config:
-          platform: linux
-          inputs:
-            - name: version
-            - name: package
-          outputs:
-            - name: abi
-          run:
-            path: bash
-            args:
-              - -c
-              - |-
-                set -ueo pipefail
-                tar -zxf package/*.tar.gz
-                abidw apache-geode-native/lib/libapache-geode.so -o abi/abi.xml
+            - get: source
+              trigger: true
+            - get: geode
+            - get: geode-native
+      - in_parallel:
+          fail_fast: true
+          steps:
+            - #@ bash_task("dump-previous-abi", [{"name":"geode-native", "path":"source"}, {"name":"geode"}], [{"name":"previous-abi", "path":"abi"}], dump_previous_abi_bash_task(), "abigail-tools-image", caches=[{"path":"abi"}])
+            - #@ bash_task("dump-current-abi", [{"name":"source"}, {"name":"geode"}], [{"name":"current-abi", "path":"abi"}], dump_current_abi_bash_task(), "abigail-tools-image", caches=[{"path":"abi"}])
+      - #@ bash_task("diff-abi", [{"name":"previous-abi"}, {"name":"current-abi"}], [], diff_abi_bash_task(), "abigail-tools-image")
+
+groups:
+  #@overlay/match by="name", missing_ok=True
+  - name: all
+    jobs:
+      #@overlay/append
+      - abi-check
+
+  #@overlay/match by="name", missing_ok=True
+  - name: build
+    jobs:
+      #@overlay/append
+      - abi-check

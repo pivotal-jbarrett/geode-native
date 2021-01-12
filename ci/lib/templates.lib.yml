@@ -210,6 +210,7 @@ source:
 #@ def build_job(build, config):
 name: #@ build_job_name(build, config)
 plan:
+  #! pre-build / index(0)
   - in_parallel:
       fail_fast: true
       steps:
@@ -225,15 +226,23 @@ plan:
                   - get: gcloud-image
                   - get: #@ gci_resource_name(image_family_name(build.image_family))
             - #@ create_instance_task(build, config)
-  - #@ build_task(config.config, build.params)
-  - #@ cpp_unit_test_task(build, config)
-  - #@ cpp_integration_test_task(build, config)
-  - #@ cpp_legacy_integration_test_task(build, config)
-  #@ if build.with_dot_net:
-  - #@ net_unit_test_task(build, config)
-  - #@ net_integration_test_task(build, config)
-  - #@ net_legacy_integration_test_task(build, config)
-  #@ end
+  #! build / index(1)
+  - in_parallel:
+      fail_fast: true
+      steps:
+        - #@ build_task(config.config, build.params)
+  #! post-build / index(2)
+  - in_parallel:
+      steps:
+        - do:
+          - #@ cpp_unit_test_task(build, config)
+          - #@ cpp_integration_test_task(build, config)
+          - #@ cpp_legacy_integration_test_task(build, config)
+          #@ if build.with_dot_net:
+          - #@ net_unit_test_task(build, config)
+          - #@ net_integration_test_task(build, config)
+          - #@ net_legacy_integration_test_task(build, config)
+          #@ end
 on_failure:
   in_parallel:
     steps:
@@ -398,7 +407,6 @@ plan:
 ---
 #@ def put_package(build, config):
 in_parallel:
-  fail_fast: true
   steps:
     #@ for package in build.packages:
     - put: #@ package_resource_name(build, config, package)
@@ -445,7 +453,7 @@ plan:
 #@ end
 
 ---
-#@ def bash_task(name, inputs, outputs, source, image="task-image", params={}, platform="linux", timeout=None, attempts=None):
+#@ def bash_task(name, inputs, outputs, source, image="task-image", params={}, platform="linux", timeout=None, attempts=None, caches=[]):
 task: #@ name
 #@ if timeout != None:
 timeout: #@ timeout
@@ -458,6 +466,7 @@ config:
   platform: #@ platform
   inputs: #@ inputs
   outputs: #@ outputs
+  caches: #@ caches
   params:
     _: #@ template.replace(params)
   run:
