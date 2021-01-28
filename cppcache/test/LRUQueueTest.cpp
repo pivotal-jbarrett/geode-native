@@ -29,7 +29,6 @@ using apache::geode::client::CacheableKey;
 using apache::geode::client::LRUEntryProperties;
 using apache::geode::client::LRUQueue;
 using apache::geode::client::MapEntryImplMock;
-using apache::geode::client::internal::hashcode;
 
 TEST(LRUQueueTest, create) {
   LRUQueue queue;

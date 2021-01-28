@@ -25,7 +25,6 @@ add_executable(apache-geode_unittests
   ByteArrayTest.cpp
   CacheableDateTest.cpp
   CacheableKeyCreateTests.cpp
-  CacheableKeysTest.cpp
   CacheableStringEqualityTest.cpp
   CacheableStringTests.cpp
   CacheTest.cpp

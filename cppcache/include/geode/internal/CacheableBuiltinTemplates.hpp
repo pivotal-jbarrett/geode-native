@@ -64,7 +64,9 @@ class CacheableKeyPrimitive : public virtual DataSerializablePrimitive,
 
   std::string toString() const override { return std::to_string(value_); }
 
-  int32_t hashcode() const override { return internal::hashcode(value_); }
+  int32_t hashcode() const override {
+    return internal::geode_hash<decltype(value_)>{}(value_);
+  }
 
   bool operator==(const CacheableKey& other) const override {
     if (auto&& otherPrimitive =

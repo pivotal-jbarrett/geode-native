@@ -17,15 +17,13 @@
 
 #include <chrono>
 #include <ctime>
-#include <cwchar>
 
 #include <geode/CacheableDate.hpp>
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
-#include <geode/ExceptionTypes.hpp>
 #include <geode/internal/CacheableKeys.hpp>
+#include <geode/internal/functional.hpp>
 
-#include "config.h"
 #include "util/chrono/time_point.hpp"
 
 namespace apache {
@@ -60,7 +58,7 @@ bool CacheableDate::operator==(const CacheableKey& other) const {
 int64_t CacheableDate::milliseconds() const { return m_timevalue; }
 
 int32_t CacheableDate::hashcode() const {
-  return static_cast<int>(m_timevalue) ^ static_cast<int>(m_timevalue >> 32);
+  return internal::geode_hash<int64_t>{}(m_timevalue);
 }
 
 CacheableDate::CacheableDate(const time_t value) {

@@ -82,7 +82,7 @@ struct dereference_equal_to<_T*> : std::equal_to<_T*> {
 template <class _T>
 struct geode_hash {
   typedef _T argument_type;
-  int32_t operator()(const argument_type& val);
+  int32_t operator()(const argument_type& val) const;
 };
 
 /**
@@ -90,7 +90,7 @@ struct geode_hash {
  */
 template <>
 struct geode_hash<std::u16string> {
-  inline int32_t operator()(const std::u16string& val) {
+  inline int32_t operator()(const std::u16string& val) const {
     int32_t hash = 0;
     for (auto&& c : val) {
       hash = 31 * hash + c;
@@ -104,7 +104,7 @@ struct geode_hash<std::u16string> {
  */
 template <>
 struct geode_hash<std::string> {
-  inline int32_t operator()(const std::string& val) {
+  inline int32_t operator()(const std::string& val) const {
     int32_t hash = 0;
 
     for (auto&& it = val.cbegin(); it < val.cend(); it++) {
@@ -147,6 +147,139 @@ struct geode_hash<std::string> {
     return hash;
   }
 };
+
+/**
+ * Hashes like java.lang.Char (UTF-8)
+ */
+template <>
+struct geode_hash<char> {
+  inline int32_t operator()(const char& val) const {
+    return static_cast<int32_t>(val);
+  }
+};
+
+/**
+ * Hashes like java.lang.Char (UTF-16)
+ */
+template <>
+struct geode_hash<char16_t> {
+  inline int32_t operator()(const int16_t& val) const {
+    return static_cast<int32_t>(val);
+  }
+};
+
+/**
+ * Hashes like java.lang.Boolean
+ */
+template <>
+struct geode_hash<bool> {
+  inline int32_t operator()(const bool& val) const { return val ? 1231 : 1237; }
+};
+
+/**
+ * Hashes like java.lang.Byte
+ */
+template <>
+struct geode_hash<int8_t> {
+  inline int32_t operator()(const int8_t& val) const {
+    return static_cast<int32_t>(val);
+  }
+};
+
+/**
+ * Hashes like java.lang.Short
+ */
+template <>
+struct geode_hash<int16_t> {
+  inline int32_t operator()(const int16_t& val) const {
+    return static_cast<int32_t>(val);
+  }
+};
+
+/**
+ * Hashes like java.lang.Integer
+ */
+template <>
+struct geode_hash<int32_t> {
+  inline int32_t operator()(const int32_t& val) const { return val; }
+};
+
+/**
+ * Hashes like java.lang.Long
+ */
+template <>
+struct geode_hash<int64_t> {
+  inline int32_t operator()(const int64_t& val) const {
+    return static_cast<int32_t>(val ^ (val >> 32));
+  }
+};
+
+/**
+ * Hashes like java.lang.Float
+ */
+template <>
+struct geode_hash<float_t> {
+  inline int32_t operator()(const float_t& val) const {
+    union float_int32_t {
+      float f;
+      int32_t u;
+    } v;
+    v.f = isnan(val) ? std::numeric_limits<float_t>::quiet_NaN() : val;
+    return v.u;
+  }
+};
+
+/**
+ * Hashes like java.lang.Double
+ */
+template <>
+struct geode_hash<double_t> {
+  inline int32_t operator()(const double_t& val) const {
+    union double_int64_t {
+      double d;
+      int64_t u;
+    } v;
+    v.d = isnan(val) ? std::numeric_limits<double_t>::quiet_NaN() : val;
+    return geode_hash<int64_t>{}(v.u);
+  }
+};
+
+static const auto epoch = std::chrono::system_clock::from_time_t(0);
+
+/**
+ * Hashes like java.util.DateTime
+ */
+template <>
+struct geode_hash<std::chrono::system_clock::time_point> {
+  inline int32_t operator()(
+      const std::chrono::system_clock::time_point& val) const {
+    return geode_hash<int64_t>{}(
+        std::chrono::duration_cast<std::chrono::milliseconds>(val - epoch)
+            .count());
+  }
+};
+
+template <typename _Head>
+int32_t _hash(int32_t hash, _Head head) {
+  return hash * 31 + geode_hash<_Head>{}(head);
+}
+
+template <typename _Head, typename... _Tail>
+int32_t _hash(int32_t hash, _Head head, _Tail... tail) {
+  return _hash(_hash(hash, head), tail...);
+}
+
+/**
+ * Hashes like java.util.Objects.hash(Object...)
+ *
+ * @tparam _Types value types.
+ * @param values to hash.
+ * @return hash of all values.
+ */
+template <typename... _Types>
+int32_t hash(_Types... values) {
+  return _hash(1, values...);
+}
 
 }  // namespace internal
 }  // namespace client
