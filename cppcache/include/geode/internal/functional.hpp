@@ -32,10 +32,10 @@ namespace geode {
 namespace client {
 namespace internal {
 
-template <class _T>
+template <typename _T>
 struct dereference_hash;
 
-template <class _T>
+template <typename _T>
 struct dereference_hash<std::shared_ptr<_T>>
     : public std::unary_function<std::shared_ptr<_T>, size_t> {
   size_t operator()(const std::shared_ptr<_T>& val) const {
@@ -43,7 +43,7 @@ struct dereference_hash<std::shared_ptr<_T>>
   }
 };
 
-template <class _T>
+template <typename _T>
 struct dereference_hash<_T*> : public std::unary_function<_T*, size_t> {
   typedef _T* argument_type;
   size_t operator()(const argument_type& val) const {
@@ -51,10 +51,10 @@ struct dereference_hash<_T*> : public std::unary_function<_T*, size_t> {
   }
 };
 
-template <class _T>
+template <typename _T>
 struct dereference_equal_to;
 
-template <class _T>
+template <typename _T>
 struct dereference_equal_to<std::shared_ptr<_T>>
     : public std::binary_function<std::shared_ptr<_T>, std::shared_ptr<_T>,
                                   bool> {
@@ -64,7 +64,7 @@ struct dereference_equal_to<std::shared_ptr<_T>>
   }
 };
 
-template <class _T>
+template <typename _T>
 struct dereference_equal_to<_T*> : std::equal_to<_T*> {
   typedef _T* first_argument_type;
   typedef _T* second_argument_type;
@@ -77,16 +77,16 @@ struct dereference_equal_to<_T*> : std::equal_to<_T*> {
 /**
  * Hashes based on the same algorithm used in the Geode server.
  *
- * @tparam _T class type to hash.
+ * @tparam _T type to hash.
  */
-template <class _T, typename Enable = void>
+template <typename _T, typename Enable = void>
 struct geode_hash {
   typedef _T argument_type;
   int32_t operator()(const argument_type& val) const;
 };
 
 /**
- * Hashes like java.lang.String
+ * Hashes \c std::u16string like \c java.lang.String
  */
 template <>
 struct geode_hash<std::u16string> {
@@ -100,7 +100,7 @@ struct geode_hash<std::u16string> {
 };
 
 /**
- * Hashes like java.lang.String
+ * Hashes \c std::string like \c java.lang.String.
  */
 template <>
 struct geode_hash<std::string> {
@@ -149,7 +149,7 @@ struct geode_hash<std::string> {
 };
 
 /**
- * Hashes like java.lang.Char (UTF-8)
+ * Hashes like \c java.lang.Char (UTF-8)
  */
 template <>
 struct geode_hash<char> {
@@ -159,7 +159,7 @@ struct geode_hash<char> {
 };
 
 /**
- * Hashes like java.lang.Char (UTF-16)
+ * Hashes like \c java.lang.Char (UTF-16)
  */
 template <>
 struct geode_hash<char16_t> {
@@ -169,7 +169,7 @@ struct geode_hash<char16_t> {
 };
 
 /**
- * Hashes like java.lang.Boolean
+ * Hashes like \c java.lang.Boolean
  */
 template <>
 struct geode_hash<bool> {
@@ -177,7 +177,7 @@ struct geode_hash<bool> {
 };
 
 /**
- * Hashes like java.lang.Byte
+ * Hashes like \c java.lang.Byte
  */
 template <>
 struct geode_hash<int8_t> {
@@ -187,7 +187,7 @@ struct geode_hash<int8_t> {
 };
 
 /**
- * Hashes like java.lang.Short
+ * Hashes like \c java.lang.Short
  */
 template <>
 struct geode_hash<int16_t> {
@@ -197,7 +197,7 @@ struct geode_hash<int16_t> {
 };
 
 /**
- * Hashes like java.lang.Integer
+ * Hashes like \c java.lang.Integer
  */
 template <>
 struct geode_hash<int32_t> {
@@ -205,7 +205,7 @@ struct geode_hash<int32_t> {
 };
 
 /**
- * Hashes like java.lang.Long
+ * Hashes like \c java.lang.Long
  */
 template <>
 struct geode_hash<int64_t> {
@@ -215,7 +215,7 @@ struct geode_hash<int64_t> {
 };
 
 /**
- * Hashes like java.lang.Float
+ * Hashes like \c java.lang.Float
  */
 template <>
 struct geode_hash<float_t> {
@@ -230,7 +230,7 @@ struct geode_hash<float_t> {
 };
 
 /**
- * Hashes like java.lang.Double
+ * Hashes like \c java.lang.Double
  */
 template <>
 struct geode_hash<double_t> {
@@ -247,7 +247,7 @@ struct geode_hash<double_t> {
 static const auto epoch = std::chrono::system_clock::from_time_t(0);
 
 /**
- * Hashes like java.util.DateTime
+ * Hashes like \c java.util.DateTime
  */
 template <>
 struct geode_hash<std::chrono::system_clock::time_point> {
@@ -281,10 +281,10 @@ struct is_smart_ptr<std::unique_ptr<_T>> : std::true_type {};
 }  // namespace detail
 
 /**
- * Hashes any type with int32_t hashcode() method.
+ * Hashes any type with \code int32_t hashcode() \endcode method.
  * @tparam _T type that implements hashcode method.
  */
-template <class _T>
+template <typename _T>
 struct geode_hash<
     _T, typename std::enable_if<detail::has_hashcode<_T>::value>::type> {
   inline int32_t operator()(const _T& val) const { return val.hashcode(); }
@@ -294,7 +294,7 @@ struct geode_hash<
  * Hashes any type with int32_t hashcode() method.
  * @tparam _T type that implements hashcode method.
  */
-template <class _T>
+template <typename _T>
 struct geode_hash<
     _T, typename std::enable_if<
             detail::is_smart_ptr<_T>::value &&
@@ -305,26 +305,26 @@ struct geode_hash<
 namespace detail {
 
 template <typename _Head>
-int32_t _hash(int32_t hash, const _Head& head) {
+inline int32_t _hash(int32_t hash, const _Head& head) {
   return hash * 31 + geode_hash<_Head>{}(head);
 }
 
 template <typename _Head, typename... _Tail>
-int32_t _hash(int32_t hash, const _Head& head, const _Tail&... tail) {
+inline int32_t _hash(int32_t hash, const _Head& head, const _Tail&... tail) {
   return _hash(_hash(hash, head), tail...);
 }
 
 }  // namespace detail
 
 /**
- * Hashes like java.util.Objects.hash(Object...)
+ * Hashes like \c java.util.Objects.hash(Object...)
  *
  * @tparam _Types value types.
  * @param values to hash.
  * @return hash of all values.
  */
 template <typename... _Types>
-int32_t hash(const _Types&... values) {
+inline int32_t hash(const _Types&... values) {
   return detail::_hash(1, values...);
 }
 
