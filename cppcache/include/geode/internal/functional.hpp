@@ -79,7 +79,7 @@ struct dereference_equal_to<_T*> : std::equal_to<_T*> {
  *
  * @tparam _T class type to hash.
  */
-template <class _T>
+template <class _T, typename Enable = void>
 struct geode_hash {
   typedef _T argument_type;
   int32_t operator()(const argument_type& val) const;
@@ -259,15 +259,62 @@ struct geode_hash<std::chrono::system_clock::time_point> {
   }
 };
 
+namespace detail {
+template <typename _T, typename = void>
+struct has_hashcode : std::false_type {};
+
+template <typename _T>
+struct has_hashcode<
+    _T, typename std::enable_if<std::is_same<
+            decltype(std::declval<_T>().hashcode()), int32_t>::value>::type>
+    : std::true_type {};
+
+template <typename _T>
+struct is_smart_ptr : std::false_type {};
+template <typename _T>
+struct is_smart_ptr<std::shared_ptr<_T>> : std::true_type {};
+template <typename _T>
+struct is_smart_ptr<std::weak_ptr<_T>> : std::true_type {};
+template <typename _T>
+struct is_smart_ptr<std::unique_ptr<_T>> : std::true_type {};
+
+}  // namespace detail
+
+/**
+ * Hashes any type with int32_t hashcode() method.
+ * @tparam _T type that implements hashcode method.
+ */
+template <class _T>
+struct geode_hash<
+    _T, typename std::enable_if<detail::has_hashcode<_T>::value>::type> {
+  inline int32_t operator()(const _T& val) const { return val.hashcode(); }
+};
+
+/**
+ * Hashes any type with int32_t hashcode() method.
+ * @tparam _T type that implements hashcode method.
+ */
+template <class _T>
+struct geode_hash<
+    _T, typename std::enable_if<
+            detail::is_smart_ptr<_T>::value &&
+            detail::has_hashcode<typename _T::element_type>::value>::type> {
+  inline int32_t operator()(const _T& val) const { return val->hashcode(); }
+};
+
+namespace detail {
+
 template <typename _Head>
-int32_t _hash(int32_t hash, _Head head) {
+int32_t _hash(int32_t hash, const _Head& head) {
   return hash * 31 + geode_hash<_Head>{}(head);
 }
 
 template <typename _Head, typename... _Tail>
-int32_t _hash(int32_t hash, _Head head, _Tail... tail) {
+int32_t _hash(int32_t hash, const _Head& head, const _Tail&... tail) {
   return _hash(_hash(hash, head), tail...);
 }
+
+}  // namespace detail
 
 /**
  * Hashes like java.util.Objects.hash(Object...)
@@ -277,8 +324,8 @@ int32_t _hash(int32_t hash, _Head head, _Tail... tail) {
  * @return hash of all values.
  */
 template <typename... _Types>
-int32_t hash(_Types... values) {
-  return _hash(1, values...);
+int32_t hash(const _Types&... values) {
+  return detail::_hash(1, values...);
 }
 
 }  // namespace internal

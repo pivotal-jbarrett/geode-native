@@ -238,3 +238,46 @@ TEST(hash, mulitpleTypes) {
                               std::numeric_limits<double>::max(), 'C',
                               std::string("a string")));
 }
+
+#include <geode/CacheableString.hpp>
+
+TEST(geode_hash, CacheableString) {
+  using apache::geode::client::CacheableString;
+
+  auto value = apache::geode::client::CacheableString::create(
+      "supercalifragilisticexpialidocious");
+
+  EXPECT_EQ(1077910243, geode_hash<decltype(*value)>{}(*value));
+  EXPECT_EQ(1077910243, geode_hash<decltype(value)>{}(value));
+}
+
+TEST(hash, CacheableString) {
+  using apache::geode::client::internal::hash;
+
+  auto value = apache::geode::client::CacheableString::create(
+      "supercalifragilisticexpialidocious");
+
+  EXPECT_EQ(1077910274, hash(*value));
+  EXPECT_EQ(1077910274, hash(value));
+}
+
+class CustomKey : apache::geode::client::CacheableKey {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+ public:
+  CustomKey(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+  ~CustomKey() noexcept override = default;
+  bool operator==(const CacheableKey&) const override { return false; }
+  int32_t hashcode() const override {
+    return apache::geode::client::internal::hash(a_, b_, c_);
+  }
+};
+
+TEST(geode_hash, CustomKey) {
+  auto value = std::make_shared<CustomKey>(1, 2.0, "key");
+  EXPECT_EQ(-1073604993, geode_hash<decltype(value)>{}(value));
+}
