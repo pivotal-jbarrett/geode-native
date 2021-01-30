@@ -21,8 +21,8 @@
 #include <geode/CacheableDate.hpp>
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
+#include <geode/hash.hpp>
 #include <geode/internal/CacheableKeys.hpp>
-#include <geode/internal/functional.hpp>
 
 #include "util/chrono/time_point.hpp"
 
@@ -58,7 +58,7 @@ bool CacheableDate::operator==(const CacheableKey& other) const {
 int64_t CacheableDate::milliseconds() const { return m_timevalue; }
 
 int32_t CacheableDate::hashcode() const {
-  return internal::geode_hash<int64_t>{}(m_timevalue);
+  return geode_hash<int64_t>{}(m_timevalue);
 }
 
 CacheableDate::CacheableDate(const time_t value) {

@@ -16,12 +16,10 @@
  */
 
 #include <geode/CacheableEnum.hpp>
-#include <geode/internal/functional.hpp>
+#include <geode/hash.hpp>
 
 #include "CacheRegionHelper.hpp"
-#include "EnumInfo.hpp"
 #include "PdxHelper.hpp"
-#include "Utils.hpp"
 
 namespace apache {
 namespace geode {
@@ -52,8 +50,6 @@ void CacheableEnum::fromData(apache::geode::client::DataInput& input) {
 }
 
 void CacheableEnum::calculateHashcode() {
-  using internal::geode_hash;
-
   m_hashcode = 1;
   const int32_t prime = 31;
   m_hashcode = prime * m_hashcode + geode_hash<std::string>{}(m_enumClassName);

@@ -15,19 +15,11 @@
  * limitations under the License.
  */
 
-#include <codecvt>
-#include <cstdlib>
-#include <cwchar>
-#include <locale>
-
 #include <geode/CacheableString.hpp>
 #include <geode/DataInput.hpp>
 #include <geode/DataOutput.hpp>
-#include <geode/ExceptionTypes.hpp>
+#include <geode/hash.hpp>
 
-#include "DataOutputInternal.hpp"
-#include "SerializationRegistry.hpp"
-#include "Utils.hpp"
 #include "util/string.hpp"
 
 namespace apache {
@@ -104,7 +96,7 @@ bool CacheableString::operator==(const CacheableKey& other) const {
 
 int32_t CacheableString::hashcode() const {
   if (m_hashcode == 0) {
-    m_hashcode = internal::geode_hash<std::string>{}(m_str);
+    m_hashcode = geode_hash<std::string>{}(m_str);
   }
   return m_hashcode;
 }

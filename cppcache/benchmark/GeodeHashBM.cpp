@@ -18,12 +18,13 @@
 #include <benchmark/benchmark.h>
 
 #include <geode/CacheableString.hpp>
+#include <geode/hash.hpp>
 
 #include "util/string.hpp"
 
 using apache::geode::client::to_utf16;
 using apache::geode::client::to_utf8;
-using apache::geode::client::internal::geode_hash;
+using apache::geode::geode_hash;
 
 template <class ToString, class FromString>
 ToString convert(const FromString& from);

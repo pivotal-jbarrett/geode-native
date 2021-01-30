@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 
-#include <geode/internal/functional.hpp>
+#include <geode/hash.hpp>
 
-using apache::geode::client::internal::geode_hash;
+using apache::geode::geode_hash;
 
 TEST(geode_hash, bool) {
   constexpr auto hash = geode_hash<bool>{};
@@ -200,7 +200,7 @@ TEST(geode_hash, timepoint) {
 }
 
 TEST(hash, 1int32_t) {
-  using apache::geode::client::internal::hash;
+  using apache::geode::hash;
 
   EXPECT_EQ(31, hash(0));
   EXPECT_EQ(32, hash(1));
@@ -209,7 +209,7 @@ TEST(hash, 1int32_t) {
 }
 
 TEST(hash, 2int32_t) {
-  using apache::geode::client::internal::hash;
+  using apache::geode::hash;
 
   EXPECT_EQ(962, hash(0, 1));
   EXPECT_EQ(992, hash(1, 0));
@@ -220,14 +220,14 @@ TEST(hash, 2int32_t) {
 }
 
 TEST(hash, 4int32_t) {
-  using apache::geode::client::internal::hash;
+  using apache::geode::hash;
 
   EXPECT_EQ(924547, hash(0, 1, 2, 3));
   EXPECT_EQ(953279, hash(1, 0, -1, -2));
 }
 
 TEST(hash, mulitpleTypes) {
-  using apache::geode::client::internal::hash;
+  using apache::geode::hash;
 
   EXPECT_EQ(-1009437857, hash(std::chrono::system_clock::from_time_t(0), true,
                               std::numeric_limits<int8_t>::max(),
@@ -252,7 +252,7 @@ TEST(geode_hash, CacheableString) {
 }
 
 TEST(hash, CacheableString) {
-  using apache::geode::client::internal::hash;
+  using apache::geode::hash;
 
   auto value = apache::geode::client::CacheableString::create(
       "supercalifragilisticexpialidocious");
@@ -272,9 +272,7 @@ class CustomKey : apache::geode::client::CacheableKey {
       : a_(a), b_(b), c_(std::move(c)) {}
   ~CustomKey() noexcept override = default;
   bool operator==(const CacheableKey&) const override { return false; }
-  int32_t hashcode() const override {
-    return apache::geode::client::internal::hash(a_, b_, c_);
-  }
+  int32_t hashcode() const override { return apache::geode::hash(a_, b_, c_); }
 };
 
 TEST(geode_hash, CustomKey) {

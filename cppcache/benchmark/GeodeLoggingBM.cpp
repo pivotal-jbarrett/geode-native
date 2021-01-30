@@ -22,6 +22,7 @@
 #include <boost/filesystem.hpp>
 
 #include <geode/CacheableString.hpp>
+#include <geode/hash.hpp>
 
 #include "geode/util/LogLevel.hpp"
 #include "util/Log.hpp"
@@ -31,7 +32,7 @@ using apache::geode::client::Log;
 using apache::geode::client::LogLevel;
 using apache::geode::client::to_utf16;
 using apache::geode::client::to_utf8;
-using apache::geode::client::internal::geode_hash;
+using apache::geode::geode_hash;
 
 const int STRING_ARRAY_LENGTH = 3;
 

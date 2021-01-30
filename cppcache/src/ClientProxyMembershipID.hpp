@@ -27,7 +27,7 @@
 #include <ace/INET_Addr.h>
 
 #include <geode/DataOutput.hpp>
-#include <geode/internal/functional.hpp>
+#include <geode/hash.hpp>
 #include <geode/internal/geode_globals.hpp>
 
 #include "DSMemberForVersionStamp.hpp"
@@ -100,7 +100,7 @@ class ClientProxyMembershipID : public DSMemberForVersionStamp {
     for (uint32_t i = 0; i < getHostAddrLen(); i++) {
       hostAddressString << ":" << static_cast<int>(m_hostAddr[i]);
     }
-    result += internal::geode_hash<std::string>{}(hostAddressString.str());
+    result += geode_hash<std::string>{}(hostAddressString.str());
     result += m_hostPort;
     return result;
   }

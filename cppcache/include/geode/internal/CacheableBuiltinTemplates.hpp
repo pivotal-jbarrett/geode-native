@@ -26,6 +26,7 @@
 #include "../CacheableString.hpp"
 #include "../Serializable.hpp"
 #include "../Serializer.hpp"
+#include "../hash.hpp"
 #include "CacheableKeys.hpp"
 
 namespace apache {
@@ -65,7 +66,7 @@ class CacheableKeyPrimitive : public virtual DataSerializablePrimitive,
   std::string toString() const override { return std::to_string(value_); }
 
   int32_t hashcode() const override {
-    return internal::geode_hash<decltype(value_)>{}(value_);
+    return geode_hash<decltype(value_)>{}(value_);
   }
 
   bool operator==(const CacheableKey& other) const override {

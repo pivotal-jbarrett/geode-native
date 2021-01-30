@@ -16,10 +16,9 @@
  */
 
 #include <geode/PdxWrapper.hpp>
+#include <geode/hash.hpp>
 
-#include "PdxHelper.hpp"
-#include "SerializationRegistry.hpp"
-#include "Utils.hpp"
+#include "util/Log.hpp"
 
 namespace apache {
 namespace geode {
@@ -41,7 +40,7 @@ bool PdxWrapper::operator==(const CacheableKey& other) const {
 }
 
 int32_t PdxWrapper::hashcode() const {
-  return internal::geode_hash<int64_t>{}(static_cast<int64_t>(
+  return geode_hash<int64_t>{}(static_cast<int64_t>(
       reinterpret_cast<std::uintptr_t>(m_userObject.get())));
 }
 

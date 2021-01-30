@@ -22,8 +22,9 @@
 
 #include <gtest/gtest.h>
 
+#include <geode/hash.hpp>
+
 #include "ClientProxyMembershipID.hpp"
-#include "geode/internal/functional.hpp"
 
 using apache::geode::client::ClientProxyMembershipID;
 
@@ -45,10 +46,9 @@ TEST(ClientProxyMembershipIDTest, testCreate) {
   ASSERT_NE("", uniqueTag);
   EXPECT_EQ(std::string(":0:0:0:1:2:myDs:").append(uniqueTag),
             cpmID.getHashKey());
-  EXPECT_EQ(
-      cpmID.hashcode(),
-      apache::geode::client::internal::geode_hash<std::string>{}(":0:0:0:1") +
-          static_cast<int32_t>(cpmID.getHostPort()));
+  EXPECT_EQ(cpmID.hashcode(),
+            apache::geode::geode_hash<std::string>{}(":0:0:0:1") +
+                static_cast<int32_t>(cpmID.getHostPort()));
   EXPECT_TRUE(std::regex_search(
       cpmID.getDSMemberIdForThinClientUse(),
       std::regex(

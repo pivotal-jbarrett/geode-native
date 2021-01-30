@@ -15,26 +15,39 @@
  * limitations under the License.
  */
 
-#include <geode/PdxSerializable.hpp>
-#include <geode/hash.hpp>
+/**
+ * \file
+ *
+ * Internals for multi-value hash function \c ::apache::geode::hash().
+ */
 
-#include "PdxHelper.hpp"
+#pragma once
+
+#ifndef GEODE_INTERNAL_HASH_IMPL_H_
+#define GEODE_INTERNAL_HASH_IMPL_H_
+
+#include "../hash.hpp"
 
 namespace apache {
 namespace geode {
-namespace client {
 
-std::string PdxSerializable::toString() const { return getClassName(); }
+template <typename, typename = void>
+struct geode_hash;
 
-bool PdxSerializable::operator==(const CacheableKey& other) const {
-  return (this == &other);
+namespace internal {
+
+template <typename _Head>
+inline int32_t hash_impl(int32_t hash, const _Head& head) {
+  return hash * 31 + geode_hash<_Head>{}(head);
 }
 
-int32_t PdxSerializable::hashcode() const {
-  return geode_hash<int64_t>{}(
-      static_cast<int64_t>(reinterpret_cast<uintptr_t>(this)));
+template <typename _Head, typename... _Tail>
+inline int32_t hash_impl(int32_t hash, const _Head& head, const _Tail&... tail) {
+  return hash_impl(hash_impl(hash, head), tail...);
 }
 
-}  // namespace client
+}  // namespace internal
 }  // namespace geode
 }  // namespace apache
+
+#endif  // GEODE_INTERNAL_HASH_H_
