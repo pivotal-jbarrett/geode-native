@@ -199,44 +199,44 @@ TEST(geode_hash, timepoint) {
   EXPECT_EQ(542840753, hash(system_clock::from_time_t(-4733596800)));
 }
 
-TEST(hash, 1int32_t) {
-  using apache::geode::hash;
+TEST(hash_all, 1int32_t) {
+  using apache::geode::hash_all;
 
-  EXPECT_EQ(31, hash(0));
-  EXPECT_EQ(32, hash(1));
-  EXPECT_EQ(-2147483618, hash(std::numeric_limits<int32_t>::max()));
-  EXPECT_EQ(-2147483617, hash(std::numeric_limits<int32_t>::min()));
+  EXPECT_EQ(31, hash_all(0));
+  EXPECT_EQ(32, hash_all(1));
+  EXPECT_EQ(-2147483618, hash_all(std::numeric_limits<int32_t>::max()));
+  EXPECT_EQ(-2147483617, hash_all(std::numeric_limits<int32_t>::min()));
 }
 
-TEST(hash, 2int32_t) {
-  using apache::geode::hash;
+TEST(hash_all, 2int32_t) {
+  using apache::geode::hash_all;
 
-  EXPECT_EQ(962, hash(0, 1));
-  EXPECT_EQ(992, hash(1, 0));
-  EXPECT_EQ(930, hash(std::numeric_limits<int32_t>::max(),
-                      std::numeric_limits<int32_t>::min()));
-  EXPECT_EQ(960, hash(std::numeric_limits<int32_t>::min(),
-                      std::numeric_limits<int32_t>::max()));
+  EXPECT_EQ(962, hash_all(0, 1));
+  EXPECT_EQ(992, hash_all(1, 0));
+  EXPECT_EQ(930, hash_all(std::numeric_limits<int32_t>::max(),
+                          std::numeric_limits<int32_t>::min()));
+  EXPECT_EQ(960, hash_all(std::numeric_limits<int32_t>::min(),
+                          std::numeric_limits<int32_t>::max()));
 }
 
-TEST(hash, 4int32_t) {
-  using apache::geode::hash;
+TEST(hash_all, 4int32_t) {
+  using apache::geode::hash_all;
 
-  EXPECT_EQ(924547, hash(0, 1, 2, 3));
-  EXPECT_EQ(953279, hash(1, 0, -1, -2));
+  EXPECT_EQ(924547, hash_all(0, 1, 2, 3));
+  EXPECT_EQ(953279, hash_all(1, 0, -1, -2));
 }
 
-TEST(hash, mulitpleTypes) {
-  using apache::geode::hash;
+TEST(hash_all, mulitpleTypes) {
+  using apache::geode::hash_all;
 
-  EXPECT_EQ(-1009437857, hash(std::chrono::system_clock::from_time_t(0), true,
-                              std::numeric_limits<int8_t>::max(),
-                              std::numeric_limits<int16_t>::min(),
-                              std::numeric_limits<int32_t>::max(),
-                              std::numeric_limits<int64_t>::min(),
-                              std::numeric_limits<float>::infinity(),
-                              std::numeric_limits<double>::max(), 'C',
-                              std::string("a string")));
+  EXPECT_EQ(-1009437857, hash_all(std::chrono::system_clock::from_time_t(0),
+                                  true, std::numeric_limits<int8_t>::max(),
+                                  std::numeric_limits<int16_t>::min(),
+                                  std::numeric_limits<int32_t>::max(),
+                                  std::numeric_limits<int64_t>::min(),
+                                  std::numeric_limits<float>::infinity(),
+                                  std::numeric_limits<double>::max(), 'C',
+                                  std::string("a string")));
 }
 
 #include <geode/CacheableString.hpp>
@@ -251,14 +251,14 @@ TEST(geode_hash, CacheableString) {
   EXPECT_EQ(1077910243, geode_hash<decltype(value)>{}(value));
 }
 
-TEST(hash, CacheableString) {
-  using apache::geode::hash;
+TEST(hash_all, CacheableString) {
+  using apache::geode::hash_all;
 
   auto value = apache::geode::client::CacheableString::create(
       "supercalifragilisticexpialidocious");
 
-  EXPECT_EQ(1077910274, hash(*value));
-  EXPECT_EQ(1077910274, hash(value));
+  EXPECT_EQ(1077910274, hash_all(*value));
+  EXPECT_EQ(1077910274, hash_all(value));
 }
 
 class CustomKey : apache::geode::client::CacheableKey {
@@ -272,10 +272,64 @@ class CustomKey : apache::geode::client::CacheableKey {
       : a_(a), b_(b), c_(std::move(c)) {}
   ~CustomKey() noexcept override = default;
   bool operator==(const CacheableKey&) const override { return false; }
-  int32_t hashcode() const override { return apache::geode::hash(a_, b_, c_); }
+  int32_t hashcode() const override {
+    return apache::geode::hash_all(a_, b_, c_);
+  }
 };
 
 TEST(geode_hash, CustomKey) {
   auto value = std::make_shared<CustomKey>(1, 2.0, "key");
+  EXPECT_EQ(-1073604993, geode_hash<decltype(value)>{}(value));
+}
+
+namespace custom_namespace {
+class CustomType {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+ public:
+  CustomType(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+  decltype(a_) getA() const { return a_; }
+  decltype(b_) getB() const { return b_; }
+  const decltype(c_)& getC() const { return c_; }
+};
+
+int32_t hash_code(const CustomType& val) {
+  return apache::geode::hash_all(val.getA(), val.getB(), val.getC());
+}
+
+}  // namespace custom_namespace
+
+TEST(geode_hash, CustomType) {
+  auto value = custom_namespace::CustomType{1, 2.0, "key"};
+  EXPECT_EQ(-1073604993, geode_hash<decltype(value)>{}(value));
+}
+
+namespace friend_namespace {
+
+class FriendType {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+  friend int32_t hash_code(const FriendType& val);
+
+ public:
+  FriendType(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+};
+
+int32_t hash_code(const FriendType& val) {
+  return apache::geode::hash_all(val.a_, val.b_, val.c_);
+}
+
+}  // namespace friend_namespace
+
+TEST(geode_hash, FriendType) {
+  auto value = friend_namespace::FriendType{1, 2.0, "key"};
   EXPECT_EQ(-1073604993, geode_hash<decltype(value)>{}(value));
 }

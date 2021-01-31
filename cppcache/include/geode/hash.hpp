@@ -238,6 +238,15 @@ struct geode_hash<
   inline int32_t operator()(const _T& val) const { return val->hashcode(); }
 };
 
+template<typename _T>
+int32_t hash_code(const _T& value);
+
+template <typename _T>
+struct geode_hash<
+    _T, typename std::enable_if<internal::has_hash_code<_T>::value>::type> {
+  inline int32_t operator()(const _T& val) const { return hash_code(val); }
+};
+
 /**
  * Hashes like \c java.util.Objects.hash(Object...)
  *
@@ -246,7 +255,7 @@ struct geode_hash<
  * @return hash of all values.
  */
 template <typename... _Types>
-inline int32_t hash(const _Types&... values) {
+inline int32_t hash_all(const _Types&... values) {
   return internal::hash_impl(1, values...);
 }
 

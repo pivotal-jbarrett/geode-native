@@ -18,7 +18,7 @@
 /**
  * \file
  *
- * Internals for multi-value hash function \c ::apache::geode::hash().
+ * Internals for multi-value hash_all function \c ::apache::geode::hash_all().
  */
 
 #pragma once

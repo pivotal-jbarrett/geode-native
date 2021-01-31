@@ -49,6 +49,24 @@ struct has_hashcode<
     : std::true_type {};
 
 /**
+ * Type trait that matches a member <tt>int32_t hash_code(const _T& val)</tt>.
+ * @tparam _T type to test
+ */
+template <typename _T, typename = void>
+struct has_hash_code : std::false_type {};
+
+/**
+ * Type trait that matches a member <tt>int32_t hash_code(const _T& val)</tt>.
+ * @tparam _T type to test
+ */
+template <typename _T>
+struct has_hash_code<
+    _T, typename std::enable_if<std::is_same<
+        decltype(hash_code(std::declval<_T>())), int32_t>::value>::type>
+    : std::true_type {};
+
+
+/**
  * Type trait that matches C++ std smart pointers.
  * @tparam _T type to test
  */

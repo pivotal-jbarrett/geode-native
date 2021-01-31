@@ -28,11 +28,11 @@
 #include "util/Log.hpp"
 #include "util/string.hpp"
 
+using apache::geode::geode_hash;
 using apache::geode::client::Log;
 using apache::geode::client::LogLevel;
 using apache::geode::client::to_utf16;
 using apache::geode::client::to_utf8;
-using apache::geode::geode_hash;
 
 const int STRING_ARRAY_LENGTH = 3;
 
