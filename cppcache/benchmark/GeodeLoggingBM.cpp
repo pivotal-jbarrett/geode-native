@@ -28,7 +28,7 @@
 #include "util/Log.hpp"
 #include "util/string.hpp"
 
-using apache::geode::geode_hash;
+using apache::geode::hash;
 using apache::geode::client::Log;
 using apache::geode::client::LogLevel;
 using apache::geode::client::to_utf16;

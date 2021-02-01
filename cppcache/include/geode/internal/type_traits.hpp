@@ -45,7 +45,7 @@ struct has_hashcode : std::false_type {};
 template <typename _T>
 struct has_hashcode<
     _T, typename std::enable_if<std::is_same<
-        decltype(std::declval<_T>().hashcode()), int32_t>::value>::type>
+            decltype(std::declval<_T>().hashcode()), int32_t>::value>::type>
     : std::true_type {};
 
 /**
@@ -62,9 +62,8 @@ struct has_hash_code : std::false_type {};
 template <typename _T>
 struct has_hash_code<
     _T, typename std::enable_if<std::is_same<
-        decltype(hash_code(std::declval<_T>())), int32_t>::value>::type>
+            decltype(hash_code(std::declval<_T>())), int32_t>::value>::type>
     : std::true_type {};
-
 
 /**
  * Type trait that matches C++ std smart pointers.

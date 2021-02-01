@@ -50,10 +50,7 @@ void CacheableEnum::fromData(apache::geode::client::DataInput& input) {
 }
 
 void CacheableEnum::calculateHashcode() {
-  m_hashcode = 1;
-  const int32_t prime = 31;
-  m_hashcode = prime * m_hashcode + geode_hash<std::string>{}(m_enumClassName);
-  m_hashcode = prime * m_hashcode + geode_hash<std::string>{}(m_enumName);
+  m_hashcode = apache::geode::hash_all(m_enumClassName, m_enumName);
 }
 
 bool CacheableEnum::operator==(const CacheableKey& other) const {

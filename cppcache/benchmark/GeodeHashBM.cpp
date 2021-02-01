@@ -22,7 +22,7 @@
 
 #include "util/string.hpp"
 
-using apache::geode::geode_hash;
+using apache::geode::hash;
 using apache::geode::client::to_utf16;
 using apache::geode::client::to_utf8;
 
@@ -46,7 +46,7 @@ void GeodeHashBM(benchmark::State& state) {
 
   for (auto _ : state) {
     int hashcode;
-    benchmark::DoNotOptimize(hashcode = geode_hash<String>{}(string));
+    benchmark::DoNotOptimize(hashcode = hash<String>{}(string));
   }
 }
 

@@ -31,8 +31,7 @@ bool PdxSerializable::operator==(const CacheableKey& other) const {
 }
 
 int32_t PdxSerializable::hashcode() const {
-  return geode_hash<int64_t>{}(
-      static_cast<int64_t>(reinterpret_cast<uintptr_t>(this)));
+  return apache::geode::hash<decltype(this)>{}(this);
 }
 
 }  // namespace client

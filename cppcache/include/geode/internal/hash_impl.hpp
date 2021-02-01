@@ -32,19 +32,22 @@ namespace apache {
 namespace geode {
 
 template <typename, typename = void>
-struct geode_hash;
+struct hash;
 
 namespace internal {
 
 template <typename _Head>
 inline int32_t hash_impl(int32_t hash, const _Head& head) {
-  return hash * 31 + geode_hash<_Head>{}(head);
+  return hash * 31 + apache::geode::hash<_Head>{}(head);
 }
 
 template <typename _Head, typename... _Tail>
-inline int32_t hash_impl(int32_t hash, const _Head& head, const _Tail&... tail) {
+inline int32_t hash_impl(int32_t hash, const _Head& head,
+                         const _Tail&... tail) {
   return hash_impl(hash_impl(hash, head), tail...);
 }
+
+static const auto epoch = std::chrono::system_clock::from_time_t(0);
 
 }  // namespace internal
 }  // namespace geode

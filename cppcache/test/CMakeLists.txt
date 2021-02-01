@@ -39,6 +39,7 @@ add_executable(apache-geode_unittests
   GatewaySenderEventCallbackArgumentTest.cpp
   geodeBannerTest.cpp
   gtest_extensions.h
+  hashTest.cpp
   InterestResultPolicyTest.cpp
   LocalRegionTest.cpp
   LoggingTest.cpp
@@ -54,7 +55,6 @@ add_executable(apache-geode_unittests
   ThreadPoolTest.cpp
   mock/MapEntryImplMock.hpp
   statistics/HostStatSamplerTest.cpp
-  util/functionalTests.cpp
   util/JavaModifiedUtf8Tests.cpp
   util/queueTest.cpp
   util/synchronized_mapTest.cpp

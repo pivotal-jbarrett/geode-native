@@ -20,11 +20,11 @@
 #ifndef GEODE_HASH_H_
 #define GEODE_HASH_H_
 
-#include <string>
 #include <chrono>
+#include <string>
 
-#include "internal/type_traits.hpp"
 #include "internal/hash_impl.hpp"
+#include "internal/type_traits.hpp"
 
 namespace apache {
 namespace geode {
@@ -37,7 +37,7 @@ namespace geode {
  * @tparam _T type to hash.
  */
 template <typename _T, typename Enable>
-struct geode_hash {
+struct hash {
   typedef _T argument_type;
   int32_t operator()(const argument_type& val) const;
 };
@@ -46,7 +46,7 @@ struct geode_hash {
  * Hashes \c std::u16string like \c java.lang.String
  */
 template <>
-struct geode_hash<std::u16string> {
+struct hash<std::u16string> {
   inline int32_t operator()(const std::u16string& val) const {
     int32_t hash = 0;
     for (auto&& c : val) {
@@ -60,7 +60,7 @@ struct geode_hash<std::u16string> {
  * Hashes \c std::string like \c java.lang.String.
  */
 template <>
-struct geode_hash<std::string> {
+struct hash<std::string> {
   inline int32_t operator()(const std::string& val) const {
     int32_t hash = 0;
 
@@ -109,7 +109,7 @@ struct geode_hash<std::string> {
  * Hashes like \c java.lang.Char (UTF-8)
  */
 template <>
-struct geode_hash<char> {
+struct hash<char> {
   inline int32_t operator()(const char& val) const {
     return static_cast<int32_t>(val);
   }
@@ -119,7 +119,7 @@ struct geode_hash<char> {
  * Hashes like \c java.lang.Char (UTF-16)
  */
 template <>
-struct geode_hash<char16_t> {
+struct hash<char16_t> {
   inline int32_t operator()(const int16_t& val) const {
     return static_cast<int32_t>(val);
   }
@@ -129,7 +129,7 @@ struct geode_hash<char16_t> {
  * Hashes like \c java.lang.Boolean
  */
 template <>
-struct geode_hash<bool> {
+struct hash<bool> {
   inline int32_t operator()(const bool& val) const { return val ? 1231 : 1237; }
 };
 
@@ -137,7 +137,7 @@ struct geode_hash<bool> {
  * Hashes like \c java.lang.Byte
  */
 template <>
-struct geode_hash<int8_t> {
+struct hash<int8_t> {
   inline int32_t operator()(const int8_t& val) const {
     return static_cast<int32_t>(val);
   }
@@ -147,7 +147,7 @@ struct geode_hash<int8_t> {
  * Hashes like \c java.lang.Short
  */
 template <>
-struct geode_hash<int16_t> {
+struct hash<int16_t> {
   inline int32_t operator()(const int16_t& val) const {
     return static_cast<int32_t>(val);
   }
@@ -157,7 +157,7 @@ struct geode_hash<int16_t> {
  * Hashes like \c java.lang.Integer
  */
 template <>
-struct geode_hash<int32_t> {
+struct hash<int32_t> {
   inline int32_t operator()(const int32_t& val) const { return val; }
 };
 
@@ -165,7 +165,7 @@ struct geode_hash<int32_t> {
  * Hashes like \c java.lang.Long
  */
 template <>
-struct geode_hash<int64_t> {
+struct hash<int64_t> {
   inline int32_t operator()(const int64_t& val) const {
     return static_cast<int32_t>(val ^ (val >> 32));
   }
@@ -175,7 +175,7 @@ struct geode_hash<int64_t> {
  * Hashes like \c java.lang.Float
  */
 template <>
-struct geode_hash<float_t> {
+struct hash<float_t> {
   inline int32_t operator()(const float_t& val) const {
     union float_int32_t {
       float f;
@@ -190,29 +190,38 @@ struct geode_hash<float_t> {
  * Hashes like \c java.lang.Double
  */
 template <>
-struct geode_hash<double_t> {
+struct hash<double_t> {
   inline int32_t operator()(const double_t& val) const {
     union double_int64_t {
       double d;
       int64_t u;
     } v;
     v.d = isnan(val) ? std::numeric_limits<double_t>::quiet_NaN() : val;
-    return geode_hash<int64_t>{}(v.u);
+    return hash<int64_t>{}(v.u);
   }
 };
-
-static const auto epoch = std::chrono::system_clock::from_time_t(0);
 
 /**
  * Hashes like \c java.util.DateTime
  */
 template <>
-struct geode_hash<std::chrono::system_clock::time_point> {
+struct hash<std::chrono::system_clock::time_point> {
   inline int32_t operator()(
       const std::chrono::system_clock::time_point& val) const {
-    return geode_hash<int64_t>{}(
-        std::chrono::duration_cast<std::chrono::milliseconds>(val - epoch)
+    return hash<int64_t>{}(
+        std::chrono::duration_cast<std::chrono::milliseconds>(val -
+                                                              internal::epoch)
             .count());
+  }
+};
+
+/**
+ * Hashes like \c java.lang.Object, by address.
+ */
+template <typename T>
+struct hash<T*> {
+  inline int32_t operator()(const T* val) const {
+    return hash<int64_t>{}(reinterpret_cast<int64_t>(val));
   }
 };
 
@@ -221,8 +230,8 @@ struct geode_hash<std::chrono::system_clock::time_point> {
  * @tparam _T type that implements hashcode method.
  */
 template <typename _T>
-struct geode_hash<
-    _T, typename std::enable_if<internal::has_hashcode<_T>::value>::type> {
+struct hash<_T,
+            typename std::enable_if<internal::has_hashcode<_T>::value>::type> {
   inline int32_t operator()(const _T& val) const { return val.hashcode(); }
 };
 
@@ -231,19 +240,19 @@ struct geode_hash<
  * @tparam _T type that implements hashcode method.
  */
 template <typename _T>
-struct geode_hash<
+struct hash<
     _T, typename std::enable_if<
-        internal::is_smart_ptr<_T>::value &&
-        internal::has_hashcode<typename _T::element_type>::value>::type> {
+            internal::is_smart_ptr<_T>::value &&
+            internal::has_hashcode<typename _T::element_type>::value>::type> {
   inline int32_t operator()(const _T& val) const { return val->hashcode(); }
 };
 
-template<typename _T>
+template <typename _T>
 int32_t hash_code(const _T& value);
 
 template <typename _T>
-struct geode_hash<
-    _T, typename std::enable_if<internal::has_hash_code<_T>::value>::type> {
+struct hash<_T,
+            typename std::enable_if<internal::has_hash_code<_T>::value>::type> {
   inline int32_t operator()(const _T& val) const { return hash_code(val); }
 };
 

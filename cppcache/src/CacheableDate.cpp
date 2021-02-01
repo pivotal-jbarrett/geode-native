@@ -58,7 +58,7 @@ bool CacheableDate::operator==(const CacheableKey& other) const {
 int64_t CacheableDate::milliseconds() const { return m_timevalue; }
 
 int32_t CacheableDate::hashcode() const {
-  return geode_hash<int64_t>{}(m_timevalue);
+  return apache::geode::hash<int64_t>{}(m_timevalue);
 }
 
 CacheableDate::CacheableDate(const time_t value) {

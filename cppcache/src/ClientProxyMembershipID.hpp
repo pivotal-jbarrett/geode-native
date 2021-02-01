@@ -100,7 +100,7 @@ class ClientProxyMembershipID : public DSMemberForVersionStamp {
     for (uint32_t i = 0; i < getHostAddrLen(); i++) {
       hostAddressString << ":" << static_cast<int>(m_hostAddr[i]);
     }
-    result += geode_hash<std::string>{}(hostAddressString.str());
+    result += apache::geode::hash<std::string>{}(hostAddressString.str());
     result += m_hostPort;
     return result;
   }

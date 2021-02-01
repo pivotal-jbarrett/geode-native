@@ -1,0 +1,422 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <limits>
+#include <string>
+
+#include <gtest/gtest.h>
+
+#include <geode/hash.hpp>
+
+using apache::geode::hash;
+
+TEST(hash, bool) {
+  constexpr auto hasher = hash<bool>{};
+
+  EXPECT_EQ(1237, hasher(false));
+  EXPECT_EQ(1231, hasher(true));
+}
+
+TEST(hash, int8_t) {
+  constexpr auto hasher = hash<int8_t>{};
+
+  EXPECT_EQ(0, hasher(0));
+  EXPECT_EQ(1, hasher(1));
+  EXPECT_EQ(-1, hasher(-1));
+  EXPECT_EQ(std::numeric_limits<int8_t>::max(),
+            hasher(std::numeric_limits<int8_t>::max()));
+  EXPECT_EQ(std::numeric_limits<int8_t>::min(),
+            hasher(std::numeric_limits<int8_t>::min()));
+}
+
+TEST(hash, int16_t) {
+  constexpr auto hasher = hash<int16_t>{};
+
+  EXPECT_EQ(0, hasher(0));
+  EXPECT_EQ(1, hasher(1));
+  EXPECT_EQ(-1, hasher(-1));
+  EXPECT_EQ(std::numeric_limits<int16_t>::max(),
+            hasher(std::numeric_limits<int16_t>::max()));
+  EXPECT_EQ(std::numeric_limits<int16_t>::min(),
+            hasher(std::numeric_limits<int16_t>::min()));
+}
+
+TEST(hash, int32_t) {
+  constexpr auto hasher = hash<int32_t>{};
+
+  EXPECT_EQ(0, hasher(0));
+  EXPECT_EQ(1, hasher(1));
+  EXPECT_EQ(-1, hasher(-1));
+  EXPECT_EQ(std::numeric_limits<int32_t>::max(),
+            hasher(std::numeric_limits<int32_t>::max()));
+  EXPECT_EQ(std::numeric_limits<int32_t>::min(),
+            hasher(std::numeric_limits<int32_t>::min()));
+}
+
+TEST(hash, int64_t) {
+  constexpr auto int32_max = std::numeric_limits<int32_t>::max();
+  constexpr auto int32_min = std::numeric_limits<int32_t>::min();
+  constexpr auto int64_max = std::numeric_limits<int64_t>::max();
+  constexpr auto int64_min = std::numeric_limits<int64_t>::min();
+  constexpr auto hasher = hash<int64_t>{};
+
+  EXPECT_EQ(0, hasher(0));
+  EXPECT_EQ(1, hasher(1));
+  EXPECT_EQ(0, hasher(-1));
+  EXPECT_EQ(2147483647, hasher(int32_max));
+  EXPECT_EQ(2147483647, hasher(int32_min));
+  EXPECT_EQ(-2147483648, hasher(1l + int32_max));
+  EXPECT_EQ(-2147483648, hasher(-1l + int32_min));
+  EXPECT_EQ(-2147483648, hasher(int64_max));
+  EXPECT_EQ(-2147483648, hasher(int64_min));
+  EXPECT_EQ(-1073741824, hasher(int64_max >> 1));
+  EXPECT_EQ(-1073741824, hasher(int64_min >> 1));
+  EXPECT_EQ(-536870912, hasher(int64_max >> 2));
+  EXPECT_EQ(-536870912, hasher(int64_min >> 2));
+  EXPECT_EQ(0, hasher(-9223372034707292160l));
+
+  EXPECT_EQ(1583802735, hasher(1577836800000L));
+}
+
+TEST(hash, float_t) {
+  constexpr auto hasher = hash<float_t>{};
+
+  EXPECT_EQ(0, hasher(0.0f));
+  EXPECT_EQ(-2147483648, hasher(-0.0f));
+  EXPECT_EQ(1065353216, hasher(1.0f));
+  EXPECT_EQ(-1082130432, hasher(-1.0f));
+  EXPECT_EQ(2139095039, hasher(std::numeric_limits<float_t>::max()));
+  EXPECT_EQ(-8388609, hasher(std::numeric_limits<float_t>::lowest()));
+  EXPECT_EQ(1, hasher(std::numeric_limits<float_t>::denorm_min()));
+  EXPECT_EQ(2139095040, hasher(std::numeric_limits<float_t>::infinity()));
+  EXPECT_EQ(-8388608, hasher(-1.0f * std::numeric_limits<float_t>::infinity()));
+  EXPECT_EQ(8388608, hasher(std::numeric_limits<float_t>::min()));
+  EXPECT_EQ(2143289344, hasher(std::numeric_limits<float_t>::quiet_NaN()));
+  EXPECT_EQ(2143289344, hasher(std::numeric_limits<float_t>::signaling_NaN()));
+}
+
+TEST(hash, double_t) {
+  constexpr auto hasher = hash<double_t>{};
+
+  EXPECT_EQ(0, hasher(0.0f));
+  EXPECT_EQ(-2147483648, hasher(-0.0));
+  EXPECT_EQ(1072693248, hasher(1.0));
+  EXPECT_EQ(-1074790400, hasher(-1.0));
+  EXPECT_EQ(-2146435072, hasher(std::numeric_limits<double_t>::max()));
+  EXPECT_EQ(1048576, hasher(std::numeric_limits<double_t>::lowest()));
+  EXPECT_EQ(1, hasher(std::numeric_limits<double_t>::denorm_min()));
+  EXPECT_EQ(2146435072, hasher(std::numeric_limits<double_t>::infinity()));
+  EXPECT_EQ(-1048576,
+            hasher(-1.0f * std::numeric_limits<double_t>::infinity()));
+  EXPECT_EQ(1048576, hasher(std::numeric_limits<double_t>::min()));
+  EXPECT_EQ(2146959360, hasher(std::numeric_limits<double_t>::quiet_NaN()));
+  EXPECT_EQ(2146959360, hasher(std::numeric_limits<double_t>::signaling_NaN()));
+}
+
+TEST(hash, string) {
+  constexpr auto hasher = hash<std::string>{};
+
+  EXPECT_EQ(0, hasher(""));
+  EXPECT_EQ(48, hasher("0"));
+  EXPECT_EQ(57, hasher("9"));
+  EXPECT_EQ(97, hasher("a"));
+  EXPECT_EQ(122, hasher("z"));
+  EXPECT_EQ(65, hasher("A"));
+  EXPECT_EQ(90, hasher("Z"));
+
+  EXPECT_EQ(1077910243, hasher("supercalifragilisticexpialidocious"));
+
+  EXPECT_EQ(1544552287, hasher(u8"You had me at meat tornad\u00F6!\U000F0000"));
+
+  auto str = std::string("You had me at");
+  str.push_back(0);
+  str.append(u8"meat tornad\u00F6!\U000F0000");
+  EXPECT_EQ(701776767, hasher(str));
+
+  EXPECT_EQ(
+      512895612,
+      hasher(
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+          "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut "
+          "enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+          "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "
+          "reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+          "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+          "sunt in culpa qui officia deserunt mollit anim id est laborum."));
+  EXPECT_EQ(
+      -1425027716,
+      hasher(u8"\u16bb\u16d6\u0020\u16b3\u16b9\u16ab\u16a6\u0020\u16a6\u16ab"
+             "\u16cf\u0020\u16bb\u16d6\u0020\u16d2\u16a2\u16de\u16d6\u0020"
+             "\u16a9\u16be\u0020\u16a6\u16ab\u16d7\u0020\u16da\u16aa\u16be"
+             "\u16de\u16d6\u0020\u16be\u16a9\u16b1\u16a6\u16b9\u16d6\u16aa"
+             "\u16b1\u16de\u16a2\u16d7\u0020\u16b9\u16c1\u16a6\u0020\u16a6"
+             "\u16aa\u0020\u16b9\u16d6\u16e5\u16ab"));
+}
+
+TEST(hash, u16string) {
+  constexpr auto hasher = hash<std::u16string>{};
+
+  EXPECT_EQ(0, hasher(u""));
+  EXPECT_EQ(48, hasher(u"0"));
+  EXPECT_EQ(57, hasher(u"9"));
+  EXPECT_EQ(97, hasher(u"a"));
+  EXPECT_EQ(122, hasher(u"z"));
+  EXPECT_EQ(65, hasher(u"A"));
+  EXPECT_EQ(90, hasher(u"Z"));
+  EXPECT_EQ(5819, hasher(u"\u16bb"));
+
+  EXPECT_EQ(1077910243, hasher(u"supercalifragilisticexpialidocious"));
+
+  EXPECT_EQ(1544552287, hasher(u"You had me at meat tornad\u00F6!\U000F0000"));
+
+  auto str = std::u16string{u"You had me at"};
+  str.push_back(0);
+  str.append(u"meat tornad\u00F6!\U000F0000");
+  EXPECT_EQ(701776767, hasher(str));
+
+  EXPECT_EQ(
+      512895612,
+      hasher(
+          u"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+          "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut "
+          "enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+          "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "
+          "reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+          "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+          "sunt in culpa qui officia deserunt mollit anim id est laborum."));
+  EXPECT_EQ(
+      -1425027716,
+      hasher(u"\u16bb\u16d6\u0020\u16b3\u16b9\u16ab\u16a6\u0020\u16a6\u16ab"
+             "\u16cf\u0020\u16bb\u16d6\u0020\u16d2\u16a2\u16de\u16d6\u0020"
+             "\u16a9\u16be\u0020\u16a6\u16ab\u16d7\u0020\u16da\u16aa\u16be"
+             "\u16de\u16d6\u0020\u16be\u16a9\u16b1\u16a6\u16b9\u16d6\u16aa"
+             "\u16b1\u16de\u16a2\u16d7\u0020\u16b9\u16c1\u16a6\u0020\u16a6"
+             "\u16aa\u0020\u16b9\u16d6\u16e5\u16ab"));
+}
+
+TEST(hash, char) {
+  constexpr auto hasher = hash<char>{};
+
+  EXPECT_EQ(48, hasher('0'));
+  EXPECT_EQ(57, hasher('9'));
+  EXPECT_EQ(97, hasher('a'));
+  EXPECT_EQ(122, hasher('z'));
+  EXPECT_EQ(65, hasher('A'));
+  EXPECT_EQ(90, hasher('Z'));
+}
+
+TEST(hash, char16_t) {
+  constexpr auto hasher = hash<char16_t>{};
+
+  EXPECT_EQ(48, hasher(u'0'));
+  EXPECT_EQ(57, hasher(u'9'));
+  EXPECT_EQ(97, hasher(u'a'));
+  EXPECT_EQ(122, hasher(u'z'));
+  EXPECT_EQ(65, hasher(u'A'));
+  EXPECT_EQ(90, hasher(u'Z'));
+  EXPECT_EQ(5819, hasher(u'\u16bb'));
+}
+
+TEST(hash, timepoint) {
+  using std::chrono::system_clock;
+  constexpr auto hasher = hash<system_clock::time_point>{};
+
+  EXPECT_EQ(0, hasher(system_clock::from_time_t(0)));
+  EXPECT_EQ(1583802735, hasher(system_clock::from_time_t(1577836800)));
+  EXPECT_EQ(-927080926, hasher(system_clock::from_time_t(33134745600)));
+  EXPECT_EQ(1670202000, hasher(system_clock::from_time_t(-1577923200)));
+  EXPECT_EQ(542840753, hasher(system_clock::from_time_t(-4733596800)));
+}
+
+TEST(hash, pointer) {
+  constexpr auto hasher = hash<int32_t*>{};
+
+  const int32_t a = 1;
+  const int32_t b = 1;
+
+  EXPECT_NE(hasher(&a), hasher(&b));
+}
+
+TEST(hash_all, 1int32_t) {
+  using apache::geode::hash_all;
+
+  EXPECT_EQ(31, hash_all(0));
+  EXPECT_EQ(32, hash_all(1));
+  EXPECT_EQ(-2147483618, hash_all(std::numeric_limits<int32_t>::max()));
+  EXPECT_EQ(-2147483617, hash_all(std::numeric_limits<int32_t>::min()));
+}
+
+TEST(hash_all, 2int32_t) {
+  using apache::geode::hash_all;
+
+  EXPECT_EQ(962, hash_all(0, 1));
+  EXPECT_EQ(992, hash_all(1, 0));
+  EXPECT_EQ(930, hash_all(std::numeric_limits<int32_t>::max(),
+                          std::numeric_limits<int32_t>::min()));
+  EXPECT_EQ(960, hash_all(std::numeric_limits<int32_t>::min(),
+                          std::numeric_limits<int32_t>::max()));
+}
+
+TEST(hash_all, 4int32_t) {
+  using apache::geode::hash_all;
+
+  EXPECT_EQ(924547, hash_all(0, 1, 2, 3));
+  EXPECT_EQ(953279, hash_all(1, 0, -1, -2));
+}
+
+TEST(hash_all, mulitpleTypes) {
+  using apache::geode::hash_all;
+
+  EXPECT_EQ(-1009437857, hash_all(std::chrono::system_clock::from_time_t(0),
+                                  true, std::numeric_limits<int8_t>::max(),
+                                  std::numeric_limits<int16_t>::min(),
+                                  std::numeric_limits<int32_t>::max(),
+                                  std::numeric_limits<int64_t>::min(),
+                                  std::numeric_limits<float>::infinity(),
+                                  std::numeric_limits<double>::max(), 'C',
+                                  std::string("a string")));
+}
+
+#include <geode/CacheableString.hpp>
+
+TEST(hash, CacheableString) {
+  using apache::geode::client::CacheableString;
+
+  auto value = apache::geode::client::CacheableString::create(
+      "supercalifragilisticexpialidocious");
+
+  EXPECT_EQ(1077910243, hash<decltype(*value)>{}(*value));
+  EXPECT_EQ(1077910243, hash<decltype(value)>{}(value));
+}
+
+TEST(hash_all, CacheableString) {
+  using apache::geode::hash_all;
+
+  auto value = apache::geode::client::CacheableString::create(
+      "supercalifragilisticexpialidocious");
+
+  EXPECT_EQ(1077910274, hash_all(*value));
+  EXPECT_EQ(1077910274, hash_all(value));
+}
+
+class CustomKey : apache::geode::client::CacheableKey {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+ public:
+  CustomKey(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+  ~CustomKey() noexcept override = default;
+  bool operator==(const CacheableKey&) const override { return false; }
+  int32_t hashcode() const override {
+    return apache::geode::hash_all(a_, b_, c_);
+  }
+};
+
+TEST(hash, CustomKey) {
+  auto value = std::make_shared<CustomKey>(1, 2.0, "key");
+  EXPECT_EQ(-1073604993, hash<decltype(value)>{}(value));
+}
+
+namespace custom_namespace {
+class CustomType {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+ public:
+  CustomType(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+  decltype(a_) getA() const { return a_; }
+  decltype(b_) getB() const { return b_; }
+  const decltype(c_)& getC() const { return c_; }
+};
+
+int32_t hash_code(const CustomType& val) {
+  return apache::geode::hash_all(val.getA(), val.getB(), val.getC());
+}
+
+}  // namespace custom_namespace
+
+TEST(hash, CustomType) {
+  auto value = custom_namespace::CustomType{1, 2.0, "key"};
+  EXPECT_EQ(-1073604993, hash<decltype(value)>{}(value));
+}
+
+namespace friend_namespace {
+
+class FriendType {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+  friend int32_t hash_code(const FriendType& val);
+
+ public:
+  FriendType(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+};
+
+int32_t hash_code(const FriendType& val) {
+  return apache::geode::hash_all(val.a_, val.b_, val.c_);
+}
+
+}  // namespace friend_namespace
+
+TEST(hash, FriendType) {
+  auto value = friend_namespace::FriendType{1, 2.0, "key"};
+  EXPECT_EQ(-1073604993, hash<decltype(value)>{}(value));
+}
+
+namespace exported_namespace {
+
+class ExportedType {
+ private:
+  int32_t a_;
+  double b_;
+  std::string c_;
+
+  friend struct apache::geode::hash<ExportedType>;
+
+ public:
+  ExportedType(int32_t a, double b, std::string c)
+      : a_(a), b_(b), c_(std::move(c)) {}
+};
+
+}  // namespace exported_namespace
+
+namespace apache {
+namespace geode {
+
+template <>
+struct hash<exported_namespace::ExportedType> {
+  int32_t operator()(const exported_namespace::ExportedType& val) {
+    return apache::geode::hash_all(val.a_, val.b_, val.c_);
+  }
+};
+
+}  // namespace geode
+}  // namespace apache
+
+TEST(hash, ExportedType) {
+  auto value = exported_namespace::ExportedType{1, 2.0, "key"};
+  EXPECT_EQ(-1073604962, apache::geode::hash_all(value));
+}
