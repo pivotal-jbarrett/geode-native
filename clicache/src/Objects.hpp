@@ -18,7 +18,6 @@
 #pragma once
 
 using namespace System;
-using namespace System::Collections;
 
 namespace Apache {
 namespace Geode {
@@ -142,7 +141,15 @@ namespace Geode {
   /// <param name="value">
   /// Array or List like collection to hash.
   /// </param>
-  static Int32 GetHashCode(ICollection^ value);
+  static Int32 GetHashCode(System::Collections::ICollection^ collection);
+
+  /// <summary>
+  /// Hashes consistent with java.util.Map.hashCode().
+  /// </summary>
+  /// <param name="dictionary">
+  /// Map to hash.
+  /// </param>
+  static Int32 GetHashCode(System::Collections::IDictionary^ dictionary);
 };
 
 }  // namespace Geode

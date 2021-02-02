@@ -259,6 +259,14 @@ namespace Apache.Geode
       Assert.Equal(955331, Objects.GetHashCode(new Stack(new int[] { 4, 3, 2, 1 })));
     }
 
+    [Fact]
+    public void GetHashCodeOfDictionary()
+    {
+      Assert.Equal(10, Objects.GetHashCode(new Hashtable { { 1, 2 }, { 3, 4 } }));
+      Assert.Equal(10, Objects.GetHashCode(new Dictionary<int, int> { { 1, 2 }, { 3, 4 } }));
+    }
+
+
   }
 
 };

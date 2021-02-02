@@ -21,6 +21,7 @@
 #include "ICacheableKey.hpp"
 
 using namespace System;
+using namespace System::Collections;
 using namespace Apache::Geode::Client;
 
 namespace Apache {
@@ -55,6 +56,8 @@ Int32 Objects::GetHashCode(Object^ value) {
     return GetHashCode(*b);
   } else if (auto k = dynamic_cast<ICacheableKey^>(value)) {
     return k->GetHashCode();
+  } else if (auto c = dynamic_cast<IDictionary^>(value)) {
+    return GetHashCode(c);
   } else if (auto c = dynamic_cast<ICollection^>(value)) {
     return GetHashCode(c);
   }
@@ -121,6 +124,10 @@ Int32 Objects::GetHashCode(Double value) {
 }
 
 Int32 Objects::GetHashCode(DateTime^ value) {
+  if (value == nullptr) {
+    return 0;
+  }
+
   return GetHashCode(*value);
 }
 
@@ -131,12 +138,24 @@ Int32 Objects::GetHashCode(DateTime value) {
 }
 
 Int32 Objects::GetHashCode(ICollection^ value) {
-  if (value == nullptr) return 0;
+  if (value == nullptr) {
+    return 0;
+  }
+
   int result = 1;
   for each (auto element in value) {
     result = 31 * result + Objects::GetHashCode(element);
   }
   return result;
+}
+
+Int32 Objects::GetHashCode(System::Collections::IDictionary^ dictionary) {
+  int h = 0;
+  for each(System::Collections::DictionaryEntry^ entry in dictionary)
+  {
+    h = h + (GetHashCode(entry->Key) ^ GetHashCode(entry->Value));
+  }
+  return h;
 }
 
 }  // namespace Geode
