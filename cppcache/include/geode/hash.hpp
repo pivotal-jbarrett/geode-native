@@ -218,9 +218,10 @@ struct hash<std::chrono::system_clock::time_point> {
 /**
  * Hashes like \c java.lang.Object, by address.
  */
-template <typename T>
-struct hash<T*> {
-  inline int32_t operator()(const T* val) const {
+template <typename _T>
+    struct hash<_T* /*, typename std::enable_if<std::is_pointer<_T>::value>::type*/>
+{
+  inline int32_t operator()(const _T* val) const {
     return hash<int64_t>{}(reinterpret_cast<int64_t>(val));
   }
 };
@@ -247,6 +248,7 @@ struct hash<
   inline int32_t operator()(const _T& val) const { return val->hashcode(); }
 };
 
+/*
 template <typename _T>
 int32_t hash_code(const _T& value);
 
@@ -255,6 +257,7 @@ struct hash<_T,
             typename std::enable_if<internal::has_hash_code<_T>::value>::type> {
   inline int32_t operator()(const _T& val) const { return hash_code(val); }
 };
+*/
 
 /**
  * Hashes like \c java.util.Objects.hash(Object...)
