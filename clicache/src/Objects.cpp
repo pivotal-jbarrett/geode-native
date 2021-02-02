@@ -18,27 +18,16 @@
 #include "Objects.hpp"
 
 #include "CacheableDate.hpp"
+#include "ICacheableKey.hpp"
 
 using namespace System;
+using namespace Apache::Geode::Client;
 
 namespace Apache {
 namespace Geode {
-namespace Client {
 
 Int32 Objects::Hash(... array<Object^>^ values) {
  return Objects::GetHashCode(values);
-}
-
-Int32 Objects::GetHashCode(array<Object^>^ value) {
-  if (value == nullptr) return 0;
-
-  int result = 1;
-
-  for each(auto element in value) {
-    result = 31 * result + Objects::GetHashCode(element);
-  }
-
-  return result;
 }
 
 Int32 Objects::GetHashCode(Object^ value) {
@@ -56,17 +45,21 @@ Int32 Objects::GetHashCode(Object^ value) {
     return GetHashCode(*s);
   } else if (auto d = dynamic_cast<DateTime^>(value)) {
     return GetHashCode(*d);
-  } else if (auto s = dynamic_cast<SByte^>(value)) {
-    return GetHashCode(*s);
+  } else if (auto b = dynamic_cast<SByte^>(value)) {
+    return GetHashCode(*b);
   } else if (auto s = dynamic_cast<Single^>(value)) {
     return GetHashCode(*s);
-  } else if (auto s = dynamic_cast<Double^>(value)) {
-    return GetHashCode(*s);
-  } else if (auto s = dynamic_cast<Boolean^>(value)) {
-    return GetHashCode(*s);
+  } else if (auto d = dynamic_cast<Double^>(value)) {
+    return GetHashCode(*d);
+  } else if (auto b = dynamic_cast<Boolean^>(value)) {
+    return GetHashCode(*b);
+  } else if (auto k = dynamic_cast<ICacheableKey^>(value)) {
+    return k->GetHashCode();
+  } else if (auto c = dynamic_cast<ICollection^>(value)) {
+    return GetHashCode(c);
   }
 
-  throw gcnew System::NotImplementedException();
+  return value->GetHashCode();
 }
 
 Int32 Objects::GetHashCode(String^ value) {
@@ -137,6 +130,14 @@ Int32 Objects::GetHashCode(DateTime value) {
   return GetHashCode(milliseconds);
 }
 
-}  // namespace Client
+Int32 Objects::GetHashCode(ICollection^ value) {
+  if (value == nullptr) return 0;
+  int result = 1;
+  for each (auto element in value) {
+    result = 31 * result + Objects::GetHashCode(element);
+  }
+  return result;
+}
+
 }  // namespace Geode
 }  // namespace Apache

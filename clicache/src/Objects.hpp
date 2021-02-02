@@ -18,30 +18,132 @@
 #pragma once
 
 using namespace System;
+using namespace System::Collections;
 
 namespace Apache {
 namespace Geode {
-namespace Client {
 
-public
-ref class Objects {
+/// <summary>
+/// Provides hash code functions similar to those used by Geode server in 
+/// Java.
+/// </summary>
+ public ref class Objects {
  public:
+  /// <summary>
+  /// Hashes consistent with java.util.Objects.hash(Object ...).
+  /// </summary>
+  /// <param name="values">
+  /// Variable arguments to combine into hash.
+  /// </param>
   static Int32 Hash(... array<Object^>^ values);
-  static Int32 GetHashCode(array<Object^>^ value);
+
+  
+  /// <summary>
+  /// Hashes consistent with java.util.Objects.hashCode(Object).
+  /// </summary>
+  /// <param name="value">
+  /// Object to hash.
+  /// </param>
   static Int32 GetHashCode(Object^ value);
+
+
+  /// <summary>
+  /// Hashes consistent with java.lang.String.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// String to hash.
+  /// </param>
   static Int32 GetHashCode(String^ value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Character.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Character to hash.
+  /// </param>
   static Int32 GetHashCode(Char value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Boolean.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Boolean to hash.
+  /// </param>
   static Int32 GetHashCode(Boolean value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Byte.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Byte to hash.
+  /// </param>
   static Int32 GetHashCode(SByte value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Short.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Short to hash.
+  /// </param>
   static Int32 GetHashCode(Int16 value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Integer.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Integer to hash.
+  /// </param>
   static Int32 GetHashCode(Int32 value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Long.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Long to hash.
+  /// </param>
   static Int32 GetHashCode(Int64 value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Float.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// FLoat to hash.
+  /// </param>
   static Int32 GetHashCode(Single value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Double.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Double to hash.
+  /// </param>
   static Int32 GetHashCode(Double value);
+
+  /// <summary>
+  /// Hashes consistent with java.util.Date.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Date to hash.
+  /// </param>
   static Int32 GetHashCode(DateTime^ value);
+
+  /// <summary>
+  /// Hashes consistent with java.lang.Date.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Date to hash.
+  /// </param>
   static Int32 GetHashCode(DateTime value);
+
+  /// <summary>
+  /// Hashes consistent with java.util.Arrays.hashCode(Object[]) or
+  /// java.util.List.hashCode().
+  /// </summary>
+  /// <param name="value">
+  /// Array or List like collection to hash.
+  /// </param>
+  static Int32 GetHashCode(ICollection^ value);
 };
 
-}  // namespace Client
 }  // namespace Geode
 }  // namespace Apache

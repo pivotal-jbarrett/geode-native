@@ -16,9 +16,11 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Collections;
 using Xunit;
 
-namespace Apache.Geode.Client
+namespace Apache.Geode
 {
 
   public class ObjectsTests
@@ -245,6 +247,16 @@ namespace Apache.Geode.Client
     public void HashCodeOf1DateTime()
     {
       Assert.Equal(31, Objects.Hash(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)));
+    }
+
+    [Fact]
+    public void GetHashCodeOfList()
+    {
+      Assert.Equal(955331, Objects.GetHashCode(new List<int> { 1, 2, 3, 4 }));
+      Assert.Equal(955331, Objects.GetHashCode(new ArrayList { 1, 2, 3, 4 }));
+      Assert.Equal(955331, Objects.GetHashCode(new LinkedList<int>(new int[] { 1, 2, 3, 4 })));
+      Assert.Equal(955331, Objects.GetHashCode(new Stack<int>(new int[] { 4, 3, 2, 1 })));
+      Assert.Equal(955331, Objects.GetHashCode(new Stack(new int[] { 4, 3, 2, 1 })));
     }
 
   }
