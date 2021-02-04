@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
+#include "Cache.hpp"
 
 #include "begin_native.hpp"
 #include <CacheRegionHelper.hpp>
 #include <CacheImpl.hpp>
 #include "end_native.hpp"
 
-#include "Cache.hpp"
+#include "cli.hpp"
+
 #include "ExceptionTypes.hpp"
 #include "DistributedSystem.hpp"
 #include "PoolFactory.hpp"
@@ -37,318 +39,182 @@
 #include "PoolManager.hpp"
 #include "TypeRegistry.hpp"
 
-#pragma warning(disable:4091)
+#pragma warning(disable : 4091)
 
 using namespace System;
 using namespace msclr::interop;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      Cache::Cache(std::shared_ptr<native::Cache> nativeptr)
-      {
-        m_nativeptr = gcnew native_shared_ptr<native::Cache>(nativeptr);
-        m_pdxTypeRegistry = gcnew Apache::Geode::Client::Internal::PdxTypeRegistry(this);
-        m_typeRegistry = gcnew Apache::Geode::Client::TypeRegistry(this);
-      }
+#define BEGIN_NATIVE \
+  do {               \
+    try
 
-      String^ Cache::Name::get( )
-      {
-        try
-        {
-          return marshal_as<String^>( m_nativeptr->get()->getName( ) );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+#define END_NATIVE                                        \
+  catch (const apache::geode::client::Exception &ex) {    \
+    throw Apache::Geode::Client::GeodeException::Get(ex); \
+  }                                                       \
+  finally { GC::KeepAlive(this); }                        \
+  }                                                       \
+  while (false)
 
-      bool Cache::IsClosed::get( )
-      {
-        try
-        {
-          return m_nativeptr->get()->isClosed( );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+namespace native = apache::geode::client;
 
-      SystemProperties^ Cache::SystemProperties::get( )
-      {
-        try
-        {
-          auto&& systemProperties = m_nativeptr->get()->getSystemProperties();
-          return Apache::Geode::Client::SystemProperties::Create(&systemProperties);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+Cache::Cache(std::shared_ptr<native::Cache> nativeptr) {
+  m_nativeptr = gcnew native_shared_ptr<native::Cache>(nativeptr);
+  m_pdxTypeRegistry = gcnew Apache::Geode::Client::Internal::PdxTypeRegistry(this);
+  m_typeRegistry = gcnew Apache::Geode::Client::TypeRegistry(this);
+}
 
-      CacheTransactionManager^ Cache::CacheTransactionManager::get( )
-      {
-        // TODO shared_ptr this should be checking the return type for which tx mgr
-        try
-        {
-          auto nativeptr = m_nativeptr->get()->getCacheTransactionManager();
-          return Apache::Geode::Client::CacheTransactionManager::Create(nativeptr.get());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+String ^ Cache::Name::get() {
+  BEGIN_NATIVE { return marshal_as<String ^>(m_nativeptr->get()->getName()); }
+  END_NATIVE;
+}
 
-      void Cache::Close( )
-      {
-        Close( false );
-      }
+bool Cache::IsClosed::get() {
+  BEGIN_NATIVE { return m_nativeptr->get()->isClosed(); }
+  END_NATIVE;
+}
 
-      void Cache::Close( bool keepalive )
-      {
-        _GF_MG_EXCEPTION_TRY2
+SystemProperties ^ Cache::SystemProperties::get() {
+  BEGIN_NATIVE {
+    auto &&systemProperties = m_nativeptr->get()->getSystemProperties();
+    return Apache::Geode::Client::SystemProperties::Create(&systemProperties);
+  }
+  END_NATIVE;
+}
 
-          m_nativeptr->get()->close( keepalive );
-          Apache::Geode::Client::DistributedSystem::UnregisterBuiltinManagedTypes(this);
+CacheTransactionManager ^ Cache::CacheTransactionManager::get() {
+  // TODO shared_ptr this should be checking the return type for which tx mgr
+  BEGIN_NATIVE {
+    auto nativeptr = m_nativeptr->get()->getCacheTransactionManager();
+    return Apache::Geode::Client::CacheTransactionManager::Create(nativeptr.get());
+  }
+  END_NATIVE;
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-        finally
-        {
-					CacheRegionHelper::getCacheImpl(m_nativeptr->get())->getPdxTypeRegistry()->clear();
-          m_typeRegistry->Clear();
-          Apache::Geode::Client::DistributedSystem::unregisterCliCallback();
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+void Cache::Close() { Close(false); }
 
-      void Cache::ReadyForEvents( )
-      {
-        _GF_MG_EXCEPTION_TRY2
+void Cache::Close(bool keepalive) {
+  try {
+    BEGIN_NATIVE {
+      m_nativeptr->get()->close(keepalive);
+      Apache::Geode::Client::DistributedSystem::UnregisterBuiltinManagedTypes(this);
+      CacheRegionHelper::getCacheImpl(m_nativeptr->get())->getPdxTypeRegistry()->clear();
+    }
+    END_NATIVE;
+  } finally {
+    m_typeRegistry->Clear();
+    Apache::Geode::Client::DistributedSystem::unregisterCliCallback();
+  }
+}
 
-          try
-          {
-            m_nativeptr->get()->readyForEvents( );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+void Cache::ReadyForEvents() {
+  BEGIN_NATIVE { m_nativeptr->get()->readyForEvents(); }
+  END_NATIVE;
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+GENERIC(class TKey, class TValue)
+Client::IRegion<TKey, TValue> ^ Cache::GetRegion(String ^ path) {
+  BEGIN_NATIVE {
+    return Client::Region<TKey, TValue>::Create(m_nativeptr->get()->getRegion(marshal_as<std::string>(path)));
+  }
+  END_NATIVE;
+}
 
-      generic<class TKey, class TValue>
-      Client::IRegion<TKey,TValue>^ Cache::GetRegion( String^ path )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+GENERIC(class TKey, class TValue)
+array<Client::IRegion<TKey, TValue> ^> ^ Cache::RootRegions() {
+  std::vector<std::shared_ptr<apache::geode::client::Region>> vrr;
+  BEGIN_NATIVE { vrr = m_nativeptr->get()->rootRegions(); }
+  END_NATIVE;
 
-          try
-          {
-            return Client::Region<TKey, TValue>::Create(m_nativeptr->get()->getRegion(marshal_as<std::string>(path)));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+  auto rootRegions = gcnew array<Client::IRegion<TKey, TValue> ^>(static_cast<int>(vrr.size()));
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+  for (System::Int32 index = 0; index < vrr.size(); index++) {
+    std::shared_ptr<apache::geode::client::Region> &nativeptr(vrr[index]);
+    rootRegions[index] = Client::Region<TKey, TValue>::Create(nativeptr);
+  }
+  return rootRegions;
+}
 
-      generic<class TKey, class TValue>
-      array<Client::IRegion<TKey, TValue>^>^ Cache::RootRegions( )
-      {
-        std::vector<std::shared_ptr<apache::geode::client::Region>> vrr;
-        try
-        {
-			vrr = m_nativeptr->get()->rootRegions( );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
+Client::QueryService ^ Cache::GetQueryService() {
+  BEGIN_NATIVE { return Client::QueryService::Create(m_nativeptr->get()->getQueryService()); }
+  END_NATIVE;
+}
 
-        auto rootRegions = gcnew array<Client::IRegion<TKey, TValue>^>(static_cast<int>(vrr.size()));
+Client::QueryService ^ Cache::GetQueryService(String ^ poolName) {
+  BEGIN_NATIVE { return QueryService::Create(m_nativeptr->get()->getQueryService(marshal_as<std::string>(poolName))); }
+  END_NATIVE;
+}
 
-        for( System::Int32 index = 0; index < vrr.size( ); index++ )
-        {
-          std::shared_ptr<apache::geode::client::Region>& nativeptr( vrr[ index ] );
-          rootRegions[ index ] = Client::Region<TKey, TValue>::Create( nativeptr );
-        }
-        return rootRegions;
-      }
+RegionFactory ^ Cache::CreateRegionFactory(RegionShortcut preDefinedRegionAttributes) {
+  auto preDefineRegionAttr = apache::geode::client::RegionShortcut(preDefinedRegionAttributes);
 
-      Client::QueryService^ Cache::GetQueryService( )
-      {
-        _GF_MG_EXCEPTION_TRY2
+  BEGIN_NATIVE {
+    return RegionFactory::Create(std::unique_ptr<native::RegionFactory>(
+        new native::RegionFactory(m_nativeptr->get()->native::Cache::createRegionFactory(preDefineRegionAttr))));
+  }
+  END_NATIVE;
+}
 
-          try
-          {
-            return Client::QueryService::Create(m_nativeptr->get()->getQueryService());
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+IRegionService ^ Cache::CreateAuthenticatedView(Properties<String ^, Object ^> ^ credentials) {
+  BEGIN_NATIVE {
+    return AuthenticatedView::Create(
+        m_nativeptr->get()->native::Cache::createAuthenticatedView(credentials->GetNative(), ""));
+  }
+  END_NATIVE;
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+bool Cache::GetPdxIgnoreUnreadFields() {
+  BEGIN_NATIVE { return m_nativeptr->get()->native::Cache::getPdxIgnoreUnreadFields(); }
+  END_NATIVE;
+}
 
-      Client::QueryService^ Cache::GetQueryService(String^ poolName )
-      {
-        _GF_MG_EXCEPTION_TRY2
+bool Cache::GetPdxReadSerialized() {
+  BEGIN_NATIVE { return m_nativeptr->get()->native::Cache::getPdxReadSerialized(); }
+  END_NATIVE;
+}
 
-          try
-          {
-            return QueryService::Create(m_nativeptr->get()->getQueryService(marshal_as<std::string>(poolName)));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+IRegionService ^ Cache::CreateAuthenticatedView(Properties<String ^, Object ^> ^ credentials, String ^ poolName) {
+  BEGIN_NATIVE {
+    return AuthenticatedView::Create(m_nativeptr->get()->native::Cache::createAuthenticatedView(
+        credentials->GetNative(), marshal_as<std::string>(poolName)));
+  }
+  END_NATIVE;
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+void Cache::InitializeDeclarativeCache(String ^ cacheXml) {
+  BEGIN_NATIVE { m_nativeptr->get()->native::Cache::initializeDeclarativeCache(marshal_as<std::string>(cacheXml)); }
+  END_NATIVE;
+}
 
-      RegionFactory^ Cache::CreateRegionFactory(RegionShortcut preDefinedRegionAttributes)
-      {
-        _GF_MG_EXCEPTION_TRY2
+IPdxInstanceFactory ^ Cache::CreatePdxInstanceFactory(String ^ className) {
+  return gcnew Internal::PdxInstanceFactoryImpl(className, this);
+}
 
-          auto preDefineRegionAttr = apache::geode::client::RegionShortcut(preDefinedRegionAttributes);
+DataInput ^ Cache::CreateDataInput(array<Byte> ^ buffer, System::Int32 len) {
+  return gcnew DataInput(buffer, len, this);
+}
 
-          try
-          {
-            return RegionFactory::Create(std::unique_ptr<native::RegionFactory>(
-                new native::RegionFactory(
-                    m_nativeptr->get()->createRegionFactory(preDefineRegionAttr))));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-          
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+DataInput ^ Cache::CreateDataInput(array<Byte> ^ buffer) { return gcnew DataInput(buffer, this); }
 
-      IRegionService^ Cache::CreateAuthenticatedView(Properties<String^, Object^>^ credentials)
-      {        
-        _GF_MG_EXCEPTION_TRY2
+DataOutput ^ Cache::CreateDataOutput() { return gcnew DataOutput(this); }
 
-          try
-          {
-            return AuthenticatedView::Create((m_nativeptr->get()->createAuthenticatedView(credentials->GetNative(), "")));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+PoolFactory ^ Cache::GetPoolFactory() {
+  BEGIN_NATIVE {
+    return PoolFactory::Create(std::unique_ptr<native::PoolFactory>(
+        new native::PoolFactory(m_nativeptr->get_shared_ptr()->getPoolManager().createFactory())));
+  }
+  END_NATIVE;
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2   
-      }
+PoolManager ^ Cache::GetPoolManager() {
+  BEGIN_NATIVE { return gcnew PoolManager(m_nativeptr->get_shared_ptr()->getPoolManager()); }
+  END_NATIVE;
+}
 
-			bool Cache::GetPdxIgnoreUnreadFields()
-			{
-				_GF_MG_EXCEPTION_TRY2
-
-					try
-					{
-					  return	m_nativeptr->get()->getPdxIgnoreUnreadFields();
-					}
-					finally
-					{
-					  GC::KeepAlive(m_nativeptr);
-					}
-
-				_GF_MG_EXCEPTION_CATCH_ALL2   
-			}
-
-      bool Cache::GetPdxReadSerialized()
-			{
-				_GF_MG_EXCEPTION_TRY2
-
-					try
-					{
-					  return	m_nativeptr->get()->getPdxReadSerialized();
-					}
-					finally
-					{
-					  GC::KeepAlive(m_nativeptr);
-					}
-
-				_GF_MG_EXCEPTION_CATCH_ALL2   
-			}
-
-      IRegionService^ Cache::CreateAuthenticatedView(Properties<String^, Object^>^ credentials, String^ poolName)
-      {
-
-        _GF_MG_EXCEPTION_TRY2
-
-          try
-          {
-            return AuthenticatedView::Create( (m_nativeptr->get()->createAuthenticatedView(credentials->GetNative(), marshal_as<std::string>(poolName))));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-
-        _GF_MG_EXCEPTION_CATCH_ALL2   
-      }
-
-			 void Cache::InitializeDeclarativeCache( String^ cacheXml )
-      {
-        try
-        {
-          m_nativeptr->get()->initializeDeclarativeCache( marshal_as<std::string>(cacheXml));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-
-       IPdxInstanceFactory^ Cache::CreatePdxInstanceFactory(String^ className)
-       {
-    
-         return gcnew Internal::PdxInstanceFactoryImpl(className, this);
-
-       }
-
-       DataInput^ Cache::CreateDataInput(array<Byte>^ buffer, System::Int32 len)
-       {
-         return gcnew DataInput(buffer, len,  this);
-       }
-
-       
-       DataInput^ Cache::CreateDataInput(array<Byte>^ buffer)
-       {
-         return gcnew DataInput(buffer, this);
-       }
-
-        DataOutput^ Cache::CreateDataOutput()
-       {
-         return gcnew DataOutput(this);
-       }
-
-        PoolFactory^ Cache::GetPoolFactory()
-        {
-          return PoolFactory::Create(std::unique_ptr<native::PoolFactory>(new native::PoolFactory(
-            m_nativeptr->get_shared_ptr()->getPoolManager().createFactory())));
-        }
-
-        PoolManager^ Cache::GetPoolManager()
-        {
-          return gcnew PoolManager(m_nativeptr->get_shared_ptr()->getPoolManager());
-        }
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

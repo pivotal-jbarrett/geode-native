@@ -68,6 +68,7 @@ add_library(Apache.Geode SHARED
   CacheTransactionManager.cpp
   CacheTransactionManager.hpp
   CacheWriterAdapter.hpp
+  cli.hpp
   CMakeLists.txt
   CqAttributes.cpp
   CqAttributes.hpp

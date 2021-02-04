@@ -17,6 +17,7 @@
 
 #include "Objects.hpp"
 
+#include "cli.hpp"
 #include "CacheableDate.hpp"
 #include "ICacheableKey.hpp"
 
@@ -27,49 +28,45 @@ using namespace Apache::Geode::Client;
 namespace Apache {
 namespace Geode {
 
-Int32 Objects::Hash(... array<Object^>^ values) {
- return Objects::GetHashCode(values);
-}
+Int32 Objects::Hash(... array<Object ^> ^ values) { return Objects::GetHashCode(values); }
 
-Int32 Objects::GetHashCode(Object^ value) {
+Int32 Objects::GetHashCode(Object ^ value) {
   if (nullptr == value) {
     return 0;
-  } else if (auto s = dynamic_cast<String^>(value)) {
+  } else if (auto s = dynamic_cast<String ^>(value)) {
     return GetHashCode(s);
-  } else if (auto i = dynamic_cast<Int32^>(value)) {
+  } else if (auto i = dynamic_cast<Int32 ^>(value)) {
     return GetHashCode(*i);
-  } else if (auto l = dynamic_cast<Int64^>(value)) {
+  } else if (auto l = dynamic_cast<Int64 ^>(value)) {
     return GetHashCode(*l);
-  } else if (auto s = dynamic_cast<Int16^>(value)) {
+  } else if (auto s = dynamic_cast<Int16 ^>(value)) {
     return GetHashCode(*s);
-  } else if (auto s = dynamic_cast<Char^>(value)) {
+  } else if (auto s = dynamic_cast<Char ^>(value)) {
     return GetHashCode(*s);
-  } else if (auto d = dynamic_cast<DateTime^>(value)) {
+  } else if (auto d = dynamic_cast<DateTime ^>(value)) {
     return GetHashCode(*d);
-  } else if (auto b = dynamic_cast<SByte^>(value)) {
+  } else if (auto b = dynamic_cast<SByte ^>(value)) {
     return GetHashCode(*b);
-  } else if (auto s = dynamic_cast<Single^>(value)) {
+  } else if (auto s = dynamic_cast<Single ^>(value)) {
     return GetHashCode(*s);
-  } else if (auto d = dynamic_cast<Double^>(value)) {
+  } else if (auto d = dynamic_cast<Double ^>(value)) {
     return GetHashCode(*d);
-  } else if (auto b = dynamic_cast<Boolean^>(value)) {
+  } else if (auto b = dynamic_cast<Boolean ^>(value)) {
     return GetHashCode(*b);
-  } else if (auto k = dynamic_cast<ICacheableKey^>(value)) {
+  } else if (auto k = dynamic_cast<ICacheableKey ^>(value)) {
     return k->GetHashCode();
-  } else if (auto c = dynamic_cast<IDictionary^>(value)) {
+  } else if (auto c = dynamic_cast<IDictionary ^>(value)) {
     return GetHashCode(c);
-  } else if (auto c = dynamic_cast<ICollection^>(value)) {
+  } else if (auto c = dynamic_cast<ICollection ^>(value)) {
     return GetHashCode(c);
   }
 
   return value->GetHashCode();
 }
 
-Int32 Objects::GetHashCode(String^ value) {
+Int32 Objects::GetHashCode(String ^ value) {
   Int32 hash = 0;
-  for each(auto c in value) {
-    hash = 31 * hash + c;
-  }
+  FOR_EACH (auto c in value) { hash = 31 * hash + c; }
   return hash;
 }
 
@@ -83,9 +80,7 @@ Int32 Objects::GetHashCode(Int16 value) { return value; }
 
 Int32 Objects::GetHashCode(Int32 value) { return value; }
 
-Int32 Objects::GetHashCode(Int64 value) {
-  return static_cast<Int32>(value ^ (value >> 32));
-}
+Int32 Objects::GetHashCode(Int64 value) { return static_cast<Int32>(value ^ (value >> 32)); }
 
 union float_int64_t {
   float f;
@@ -94,7 +89,7 @@ union float_int64_t {
 
 constexpr auto kJavaFloatNaN = 0x7fc00000;
 
-Int32 Objects::GetHashCode(Single value) { 
+Int32 Objects::GetHashCode(Single value) {
   float_int64_t v;
   if (Single::IsNaN(value)) {
     // .NET and Java don't aggree on NaN encoding
@@ -102,7 +97,7 @@ Int32 Objects::GetHashCode(Single value) {
   } else {
     v.f = value;
   }
-  return GetHashCode(v.u); 
+  return GetHashCode(v.u);
 }
 
 union double_int64_t {
@@ -120,10 +115,10 @@ Int32 Objects::GetHashCode(Double value) {
   } else {
     v.d = value;
   }
-  return GetHashCode(v.u); 
+  return GetHashCode(v.u);
 }
 
-Int32 Objects::GetHashCode(DateTime^ value) {
+Int32 Objects::GetHashCode(DateTime ^ value) {
   if (value == nullptr) {
     return 0;
   }
@@ -137,22 +132,19 @@ Int32 Objects::GetHashCode(DateTime value) {
   return GetHashCode(milliseconds);
 }
 
-Int32 Objects::GetHashCode(ICollection^ value) {
+Int32 Objects::GetHashCode(ICollection ^ value) {
   if (value == nullptr) {
     return 0;
   }
 
   int result = 1;
-  for each (auto element in value) {
-    result = 31 * result + Objects::GetHashCode(element);
-  }
+  FOR_EACH (auto element in value) { result = 31 * result + Objects::GetHashCode(element); }
   return result;
 }
 
-Int32 Objects::GetHashCode(System::Collections::IDictionary^ dictionary) {
+Int32 Objects::GetHashCode(System::Collections::IDictionary ^ dictionary) {
   int h = 0;
-  for each(System::Collections::DictionaryEntry^ entry in dictionary)
-  {
+  FOR_EACH (System::Collections::DictionaryEntry ^ entry in dictionary) {
     h = h + (GetHashCode(entry->Key) ^ GetHashCode(entry->Value));
   }
   return h;

@@ -17,31 +17,15 @@
 
 #pragma once
 
-#include "begin_native.hpp"
-#include <memory>
-#include "end_native.hpp"
+// clang-format off
 
-namespace Apache {
-namespace Geode {
-namespace Client {
+// C++/CLI for each
+#define FOR_EACH for each
 
-template <class _T>
-public ref class native_shared_ptr sealed {
- private:
-  std::shared_ptr<_T>* ptr;
+// clang-format on
 
- public:
-  native_shared_ptr(const std::shared_ptr<_T>& ptr) : ptr(new std::shared_ptr<_T>(ptr)) {}
+// C++/CLI generic<>
+#define GENERIC(...) generic<__VA_ARGS__>
 
-  ~native_shared_ptr() { native_shared_ptr::!native_shared_ptr(); }
-
-  !native_shared_ptr() { delete ptr; }
-
-  inline _T* get() { return ptr->get(); }
-
-  inline std::shared_ptr<_T> get_shared_ptr() { return *ptr; }
-
-};
-}  // namespace Client
-}  // namespace Geode
-}  // namespace Apache
+// C++/CLI safe statement
+#define CLI(X) X
