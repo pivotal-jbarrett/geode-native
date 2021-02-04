@@ -42,7 +42,7 @@ function(add_clangformat _target)
         string(REGEX MATCH "\\.(h(pp|xx)?|c(pp|xx)?)(\\..*)?$" _source_extension_match ${_source})
         if(_source_GENERATED
             OR _source_extension_match STREQUAL "")
-          break()
+          continue()
         endif()
 
         get_source_file_property(_source_LOCATION "${_source}" LOCATION)
