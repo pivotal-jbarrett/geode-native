@@ -275,9 +275,7 @@ void PdxType::initLocalToRemote() {
       for (std::vector<std::shared_ptr<PdxFieldType>>::iterator remotePdxfield =
                m_pdxFieldTypes->begin();
            remotePdxfield != m_pdxFieldTypes->end(); ++remotePdxfield)
-      // for each(PdxFieldType^ remotePdxfield in m_pdxFieldTypes)
       {
-        // PdxFieldType* localPdx = localPdxField.get();
         PdxFieldType* remotePdx = (*(remotePdxfield)).get();
         if (localPdxField->equals(*remotePdxfield)) {
           found = true;
@@ -456,7 +454,7 @@ std::shared_ptr<PdxType> PdxType::mergeVersion(
            otherVersion->m_pdxFieldTypes->begin();
        it != otherVersion->m_pdxFieldTypes->end(); ++it) {
     bool found = false;
-    // for each(PdxFieldType^ tmpNew in newone->m_pdxFieldTypes)
+    // FOR_EACH (PdxFieldType^ tmpNew in newone->m_pdxFieldTypes)
     for (std::vector<std::shared_ptr<PdxFieldType>>::iterator it2 =
              newone->m_pdxFieldTypes->begin();
          it2 != newone->m_pdxFieldTypes->end(); ++it2) {
