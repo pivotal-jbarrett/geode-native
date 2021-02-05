@@ -373,7 +373,7 @@ namespace Apache
       void ReflectionBasedAutoSerializer::serializeFields(Object^ o,IPdxWriter^ writer )
       {
         Type^ ty = o->GetType();
-        for each(FieldWrapper^ fi in GetFields(o->GetType()))
+        FOR_EACH (FieldWrapper^ fi in GetFields(o->GetType()))
         {
           Object^ originalValue = fi->GetFieldValue(o);
 
@@ -393,7 +393,7 @@ namespace Apache
       {
         Object^ object = this->CreateObject(className, reader->Cache);
 
-        for each(FieldWrapper^ fi in GetFields(object->GetType()))
+        FOR_EACH (FieldWrapper^ fi in GetFields(object->GetType()))
         {
           Object^ serializeValue = fi->DeserializeField(reader);
 
@@ -441,7 +441,7 @@ namespace Apache
           List<FieldWrapper^>^ collectFields = gcnew List<FieldWrapper^>();
           while(domaimType != nullptr)
           {
-            for each(FieldInfo^ fi in domaimType->GetFields(BindingFlags::Public| BindingFlags::NonPublic | BindingFlags::Instance
+            FOR_EACH (FieldInfo^ fi in domaimType->GetFields(BindingFlags::Public| BindingFlags::NonPublic | BindingFlags::Instance
               |BindingFlags::DeclaredOnly
               ))
             {

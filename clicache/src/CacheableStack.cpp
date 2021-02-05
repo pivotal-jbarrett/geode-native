@@ -43,7 +43,7 @@ namespace Apache
         {
           output->WriteArrayLen((System::Int32)m_stack->Count);
           auto stack = safe_cast<System::Collections::Generic::Stack<Object^>^>(m_stack);
-          for each (auto obj in Linq::Enumerable::Reverse(stack)) {
+          FOR_EACH (auto obj in Linq::Enumerable::Reverse(stack)) {
             output->WriteObject(obj);
           }
         }
@@ -75,7 +75,7 @@ namespace Apache
       {
         //TODO:
         /*System::UInt32 size = static_cast<System::UInt32> (sizeof(CacheableStack^));
-        for each (ISerializable^ val in this) {
+        FOR_EACH (ISerializable^ val in this) {
         if (val != nullptr) {
         size += val->ObjectSize;
         }

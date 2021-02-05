@@ -248,10 +248,10 @@ namespace Apache
 
           int varLenFields = newone->m_numberOfVarLenFields;
 
-          for each(PdxFieldType^ tmp in otherVersion->m_pdxFieldTypes)
+          FOR_EACH (PdxFieldType^ tmp in otherVersion->m_pdxFieldTypes)
           {
             bool found = false;
-            for each(PdxFieldType^ tmpNew in newone->m_pdxFieldTypes)
+            FOR_EACH (PdxFieldType^ tmpNew in newone->m_pdxFieldTypes)
             {
               if (tmpNew->Equals(tmp))
               {
@@ -310,7 +310,7 @@ namespace Apache
           newone->m_geodeTypeId = 0;
           newone->m_numberOfVarLenFields = m_numberOfVarLenFields;
 
-          for each(PdxFieldType^ tmp in m_pdxFieldTypes)
+          FOR_EACH (PdxFieldType^ tmp in m_pdxFieldTypes)
           {
             newone->m_pdxFieldTypes->Add(tmp);
           }
@@ -362,11 +362,11 @@ namespace Apache
 
             m_remoteToLocalFieldMap = gcnew array<Int32>(m_pdxFieldTypes->Count);
 
-            for each(PdxFieldType^ remotePdxField in m_pdxFieldTypes)
+            FOR_EACH (PdxFieldType^ remotePdxField in m_pdxFieldTypes)
             {
               bool found = false;
 
-              for each(PdxFieldType^ localPdxfield in localPdxFields)
+              FOR_EACH (PdxFieldType^ localPdxfield in localPdxFields)
               {
                 if (localPdxfield->Equals(remotePdxField))
                 {
@@ -418,7 +418,7 @@ namespace Apache
               PdxFieldType^ localPdxField = localPdxType->m_pdxFieldTypes[fieldIdx];
               bool found = false;
 
-              for each(PdxFieldType^ remotePdxfield in m_pdxFieldTypes)
+              FOR_EACH (PdxFieldType^ remotePdxfield in m_pdxFieldTypes)
               {
                 if (localPdxField->Equals(remotePdxfield))
                 {

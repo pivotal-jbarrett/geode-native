@@ -585,7 +585,7 @@ namespace Apache
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
 
           native::HashMapOfCacheable nativeMap;
-        for each (KeyValuePair<TKey, TValue> keyValPair in map)
+        FOR_EACH (KeyValuePair<TKey, TValue> keyValPair in map)
         {
           std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TKey>(keyValPair.Key);
           std::shared_ptr<native::Cacheable> valueptr = Serializable::GetUnmanagedValueGeneric<TValue>(keyValPair.Value);
@@ -610,7 +610,7 @@ namespace Apache
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
 
           native::HashMapOfCacheable nativeMap;
-        for each (KeyValuePair<TKey, TValue> keyValPair in map)
+        FOR_EACH (KeyValuePair<TKey, TValue> keyValPair in map)
         {
           std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TKey>(keyValPair.Key);
           std::shared_ptr<native::Cacheable> valueptr = Serializable::GetUnmanagedValueGeneric<TValue>(keyValPair.Value);
@@ -654,7 +654,7 @@ namespace Apache
 
             std::vector<std::shared_ptr<native::CacheableKey>> vecKeys;
 
-          for each(TKey item in keys)
+          FOR_EACH (TKey item in keys)
           {
             auto v = Serializable::GetUnmanagedValueGeneric<TKey>(item);
             vecKeys.push_back(v);
@@ -696,7 +696,7 @@ namespace Apache
 
           std::vector<std::shared_ptr<native::CacheableKey>> vecKeys;
 
-          for each(TKey item in keys)
+          FOR_EACH (TKey item in keys)
           {
             auto v = Serializable::GetUnmanagedValueGeneric<TKey>(item);
             vecKeys.push_back(v);
@@ -749,7 +749,7 @@ namespace Apache
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
 
         std::vector<std::shared_ptr<native::CacheableKey>> vecKeys;
-        for each(TKey item in keys) 
+        FOR_EACH (TKey item in keys) 
         {
           auto v = Serializable::GetUnmanagedValueGeneric<TKey>(item);
           vecKeys.push_back(v);
@@ -1121,7 +1121,7 @@ namespace Apache
 
             std::vector<std::shared_ptr<native::CacheableKey>> vecKeys;
 
-          for each(TKey item in keys)
+          FOR_EACH (TKey item in keys)
           {
             auto v = Serializable::GetUnmanagedValueGeneric<TKey>(item);
             vecKeys.push_back(v);
@@ -1148,7 +1148,7 @@ namespace Apache
 
             std::vector<std::shared_ptr<native::CacheableKey>> vecKeys;
 
-          for each(TKey item in keys)
+          FOR_EACH (TKey item in keys)
           {
             auto v = Serializable::GetUnmanagedValueGeneric<TKey>(item);
             vecKeys.push_back(v);

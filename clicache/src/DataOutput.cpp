@@ -256,7 +256,7 @@ namespace Apache
         if (dict != nullptr)
         {
           this->WriteArrayLen(dict->Count);
-          for each(System::Collections::DictionaryEntry^ entry in dict)
+          FOR_EACH (System::Collections::DictionaryEntry^ entry in dict)
           {
             this->WriteObject(entry->Key);
             this->WriteObject(entry->Value);
@@ -273,7 +273,7 @@ namespace Apache
         if (collection != nullptr)
         {
           this->WriteArrayLen(collection->Count);
-          for each (Object^ obj in collection) {
+          FOR_EACH (Object^ obj in collection) {
             this->WriteObject(obj);
           }
         }
@@ -324,7 +324,7 @@ namespace Apache
         String^ pdxDomainClassname = m_cache->TypeRegistry->GetPdxTypeName(objectArray->GetType()->GetElementType()->FullName);
         WriteByte((int8_t)DSCode::CacheableASCIIString);
         WriteUTF(pdxDomainClassname);
-        for each(Object^ o in list)
+        FOR_EACH (Object^ o in list)
           WriteObject(o);
       }
 
@@ -633,7 +633,7 @@ namespace Apache
           WriteByte(static_cast<unsigned char>(DSCode::CacheableLinkedList));
           System::Collections::ICollection^ linkedList = (System::Collections::ICollection^)obj;
           this->WriteArrayLen(linkedList->Count);
-          for each (Object^ o in linkedList)
+          FOR_EACH (Object^ o in linkedList)
             this->WriteObject(o);
           return;
         }

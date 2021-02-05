@@ -45,7 +45,7 @@ namespace Apache
         output->WriteByte((int8_t)apache::geode::client::internal::DSCode::CacheableASCIIString);
         output->WriteUTF("java.lang.Object");
 
-        for each (Object^ obj in this) {
+        FOR_EACH (Object^ obj in this) {
 					//TODO::split
           output->WriteObject(obj);
         }

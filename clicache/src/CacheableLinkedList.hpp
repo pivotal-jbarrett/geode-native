@@ -91,7 +91,7 @@ namespace Apache
           if (m_linkedList != nullptr)
           {
             output->WriteArrayLen(m_linkedList->Count);
-            for each (Object^ obj in m_linkedList) {
+            FOR_EACH (Object^ obj in m_linkedList) {
               //TODO::split
               output->WriteObject(obj);
             }

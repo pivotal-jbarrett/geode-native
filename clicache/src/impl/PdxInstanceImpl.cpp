@@ -540,7 +540,7 @@ namespace Apache
             return false;
 
           System::Collections::IDictionaryEnumerator^ dEnum = iDict->GetEnumerator();
-          for each(System::Collections::DictionaryEntry^ de in iDict)
+          FOR_EACH (System::Collections::DictionaryEntry^ de in iDict)
           {
             Object^ other = nullptr;
             if (otherIDict->Contains(de->Key))
@@ -658,7 +658,7 @@ namespace Apache
 
           Type^ objT = obj->GetType();
 
-          /*for each(Type^ tmp in objT->GetInterfaces())
+          /*FOR_EACH (Type^ tmp in objT->GetInterfaces())
             //Log::Debug("interfaces " + tmp);*/
 
           if (objT->IsArray)
@@ -711,7 +711,7 @@ namespace Apache
         int PdxInstanceImpl::enumerableHashCode(System::Collections::IEnumerable^ enumObj)
         {
           int h = 1;
-          for each(Object^ o in enumObj)
+          FOR_EACH (Object^ o in enumObj)
           {
             h = h * 31 + deepArrayHashCode(o);
             //  Log::Debug(" in enumerableHashCode hc " + h);
@@ -724,7 +724,7 @@ namespace Apache
         {
           int h = 0;
           System::Collections::IDictionaryEnumerator^ dEnum = iDict->GetEnumerator();
-          for each(System::Collections::DictionaryEntry^ de in iDict)
+          FOR_EACH (System::Collections::DictionaryEntry^ de in iDict)
           {
             //System::Collections::DictionaryEntry^ de = (System::Collections::DictionaryEntry^)o;
             h = h + ((deepArrayHashCode(de->Key)) ^ ((de->Value != nullptr) ? deepArrayHashCode(de->Value) : 0));
@@ -745,7 +745,7 @@ namespace Apache
 
             //Log::Debug("primitiveArrayHashCode isbool " + isBooleanType);
             int h = 1;
-            for each(Object^ o in objArray)
+            FOR_EACH (Object^ o in objArray)
             {
               if (isBooleanType)
               {
@@ -922,7 +922,7 @@ namespace Apache
             result->Append("PDX[")->Append(pt->TypeId)->Append(",")->Append(pt->PdxClassName)
               ->Append("]{");
             bool firstElement = true;
-            for each(PdxFieldType^ fieldType in getIdentityPdxFields(pt))
+            FOR_EACH (PdxFieldType^ fieldType in getIdentityPdxFields(pt))
             {
               if (firstElement)
               {

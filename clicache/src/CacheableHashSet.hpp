@@ -85,7 +85,7 @@ namespace Apache
             System::UInt64 get() override
             {
               System::UInt64 size = 0;
-              for each (Object^ key in this) {
+              FOR_EACH (Object^ key in this) {
                 if (key != nullptr)
                   //size += key->ObjectSize; 
                   //TODO:: how should we do this now

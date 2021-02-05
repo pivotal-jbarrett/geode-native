@@ -42,7 +42,7 @@ namespace Apache
         if(m_arrayList != nullptr)
         {
           output->WriteArrayLen(m_arrayList->Count);
-          for each (Object^ obj in m_arrayList) {
+          FOR_EACH (Object^ obj in m_arrayList) {
 						//TODO::split
             output->WriteObject(obj);
           }
@@ -64,7 +64,7 @@ namespace Apache
       { 
         //TODO::
         /*System::UInt32 size = static_cast<System::UInt32> (sizeof(CacheableVector^));
-        for each (ISerializable^ val in this) {
+        FOR_EACH (ISerializable^ val in this) {
           if (val != nullptr) {
             size += val->ObjectSize;
           }

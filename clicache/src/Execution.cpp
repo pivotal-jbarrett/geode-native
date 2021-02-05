@@ -44,7 +44,7 @@ namespace Apache
           _GF_MG_EXCEPTION_TRY2/* due to auto replace */
           auto rsptr = native::CacheableVector::create();
         
-          for each(TFilter item in routingObj)
+          FOR_EACH (TFilter item in routingObj)
           {
             auto v = Serializable::GetUnmanagedValueGeneric<TFilter>(item);
             rsptr->push_back(v);

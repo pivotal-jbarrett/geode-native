@@ -608,7 +608,7 @@ namespace Apache
         inline void WriteList(System::Collections::IList^ list)
         {
           this->WriteArrayLen(list->Count);
-          for each (Object^ obj in list) 
+          FOR_EACH (Object^ obj in list) 
 						this->WriteObject(obj);
         }
 
