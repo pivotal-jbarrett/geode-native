@@ -29,3 +29,10 @@
 
 // C++/CLI safe statement
 #define CLI(X) X
+
+// clang-format off
+
+// public ref class
+#define PUBLIC_REF_CLASS public ref class
+
+// clang-format on
