@@ -35,16 +35,16 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       interface class IResultCollector;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class ResultCollector;
 
       /// <summary>
       /// This class encapsulates events that occur for cq.
       /// </summary>
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class Execution sealed
       {
       public:
@@ -52,14 +52,14 @@ namespace Apache
 		    /// Add a routing object, 
         /// Return self.
         /// </summary>
-		    generic<class TFilter>
+		    GENERIC(class TFilter)
         Execution<TResult>^ WithFilter(System::Collections::Generic::ICollection<TFilter>^ routingObj);
 
         /// <summary>
 		    /// Add an argument, 
         /// Return self.
         /// </summary>
-        generic<class TArgs>
+        GENERIC(class TArgs)
 		    Execution<TResult>^ WithArgs(TArgs args);
 
         /// <summary>

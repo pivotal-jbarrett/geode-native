@@ -33,19 +33,19 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       void ResultCollector<TResult>::AddResult( const TResult rs )
       {
         throw gcnew UnsupportedOperationException();
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       System::Collections::Generic::ICollection<TResult>^  ResultCollector<TResult>::GetResult()
       {
         return GetResult( TimeUtils::DurationToTimeSpan(DEFAULT_QUERY_RESPONSE_TIMEOUT) );
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       System::Collections::Generic::ICollection<TResult>^  ResultCollector<TResult>::GetResult(TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -69,7 +69,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       void ResultCollector<TResult>::EndResults()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -84,7 +84,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       void ResultCollector<TResult>::ClearResults(/*bool*/)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */

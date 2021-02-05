@@ -38,7 +38,7 @@ namespace Apache
       /// can throw a {<c>TransactionWriterException</c>} to veto the transaction.
       /// </summary>
       /// <seealso cref="CacheTransactionManager.SetWriter" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public interface class ITransactionWriter
       {
       public:

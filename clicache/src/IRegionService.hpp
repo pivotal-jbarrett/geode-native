@@ -30,7 +30,7 @@ namespace Apache
       using namespace System;
       using namespace System::Collections::Generic;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
 			interface class IRegion;
 
       ref class QueryService;
@@ -92,7 +92,7 @@ namespace Apache
         /// </summary>
         /// <param name="name">the name of the region</param>
         /// <returns>the region</returns>
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         IRegion<TKey, TValue>^ GetRegion( String^ name );
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Apache
         /// It is not supported when Cache is created from Pool.
         /// </remarks>
         /// <returns>array of regions</returns>
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         array<IRegion<TKey, TValue>^>^ RootRegions( );
 
         /// <summary>

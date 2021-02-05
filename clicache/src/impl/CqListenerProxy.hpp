@@ -32,7 +32,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public ref class CqListenerGeneric : Apache::Geode::Client::ICqListener<Object^, Object^>
       {
         private:

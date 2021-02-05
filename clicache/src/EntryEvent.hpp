@@ -43,7 +43,7 @@ namespace Apache
       /// <summary>
       /// This class encapsulates events that occur for an entry in a region.
       /// </summary>
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class EntryEvent sealed
       {
       public:

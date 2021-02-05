@@ -36,8 +36,8 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TResult>
-      generic<class TFilter>
+      GENERIC(class TResult)
+      GENERIC(class TFilter)
       Execution<TResult>^ Execution<TResult>::WithFilter(System::Collections::Generic::ICollection<TFilter>^ routingObj)
       {
         if (routingObj != nullptr) {
@@ -65,8 +65,8 @@ namespace Apache
         }
       }
 
-      generic<class TResult>
-      generic<class TArgs>
+      GENERIC(class TResult)
+      GENERIC(class TArgs)
       Execution<TResult>^ Execution<TResult>::WithArgs( TArgs args )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -82,7 +82,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       Execution<TResult>^ Execution<TResult>::WithCollector(Client::IResultCollector<TResult>^ rc)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -102,7 +102,7 @@ namespace Apache
         }
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
-      generic<class TResult>
+      GENERIC(class TResult)
       IResultCollector<TResult>^ Execution<TResult>::Execute(String^ func, TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -121,7 +121,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       IResultCollector<TResult>^ Execution<TResult>::Execute(String^ func)
       {
         return Execute(func, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));

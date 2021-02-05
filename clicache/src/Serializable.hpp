@@ -189,16 +189,16 @@ namespace Apache
           m_nativeptr = gcnew native_shared_ptr<native::Serializable>(nativeptr);
         }
 
-        generic<class TKey>
+        GENERIC(class TKey)
         static std::shared_ptr<native::CacheableKey> GetUnmanagedValueGeneric(TKey ky);
 
-        generic<class TKey>
+        GENERIC(class TKey)
         static std::shared_ptr<native::CacheableKey> GetUnmanagedValueGeneric(TKey key, bool isAciiChar);
 
-        generic<class TKey>
+        GENERIC(class TKey)
         static std::shared_ptr<native::CacheableKey> GetUnmanagedValueGeneric(Type^ managedType, TKey key);
 
-        generic<class TKey>
+        GENERIC(class TKey)
         static std::shared_ptr<native::CacheableKey> GetUnmanagedValueGeneric(Type^ managedType, TKey key, bool isAsciiChar);
 
         static Serializable()

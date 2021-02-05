@@ -74,7 +74,7 @@ namespace Apache
       /// </remarks>
       /// <seealso cref="RegionAttributesFactory.SetPartitionResolver" />
       /// <seealso cref="RegionAttributes.PartitionResolver" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public interface class IFixedPartitionResolver : public IPartitionResolver<TKey, TValue>
       {
       public:

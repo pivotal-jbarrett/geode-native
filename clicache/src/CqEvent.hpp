@@ -45,7 +45,7 @@ namespace Apache
       /// <summary>
       /// This class encapsulates events that occur for cq.
       /// </summary>
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public ref class CqEvent sealed
       {
       public:

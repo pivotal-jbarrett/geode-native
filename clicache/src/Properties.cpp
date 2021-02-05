@@ -64,7 +64,7 @@ namespace Apache
         }
       };
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       TPropValue Properties<TPropKey, TPropValue>::Find( TPropKey key)
       {
         try
@@ -79,7 +79,7 @@ namespace Apache
         }
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::Insert( TPropKey key, TPropValue value )
       {
         std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TPropKey>(key, true);
@@ -99,7 +99,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::Remove( TPropKey key)
       {
         std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TPropKey>(key);
@@ -118,7 +118,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::ForEach( PropertyVisitorGeneric<TPropKey, TPropValue>^ visitor )
       {
        if (visitor != nullptr)
@@ -146,7 +146,7 @@ namespace Apache
         }
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       System::UInt32 Properties<TPropKey, TPropValue>::Size::get( )
       {
         _GF_MG_EXCEPTION_TRY2
@@ -163,7 +163,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::AddAll( Properties<TPropKey, TPropValue>^ other )
       {
         _GF_MG_EXCEPTION_TRY2
@@ -180,7 +180,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::Load( String^ fileName )
       {
         _GF_MG_EXCEPTION_TRY2
@@ -197,7 +197,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       String^ Properties<TPropKey, TPropValue>::ToString( )
       {
 				return "";
@@ -205,7 +205,7 @@ namespace Apache
 
       // ISerializable methods
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::ToData( DataOutput^ output )
       {
         if (output->IsManagedObject()) {
@@ -236,7 +236,7 @@ namespace Apache
         }
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::FromData( DataInput^ input )
       {
         if(input->IsManagedObject()) {
@@ -254,7 +254,7 @@ namespace Apache
         }
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       void Properties<TPropKey, TPropValue>::FromData( native::DataInput& input )
       {
         _GF_MG_EXCEPTION_TRY2
@@ -271,7 +271,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       System::UInt64 Properties<TPropKey, TPropValue>::ObjectSize::get( )
       {
         //TODO::
@@ -291,7 +291,7 @@ namespace Apache
 
       // ISerializable methods
 
-      //generic<class TPropKey, class TPropValue>
+      //GENERIC(class TPropKey, class TPropValue)
       //void Properties<TPropKey, TPropValue>::GetObjectData( SerializationInfo^ info,
       //  StreamingContext context )
       //{
@@ -319,7 +319,7 @@ namespace Apache
       //  info->AddValue( "bytes", bytes, array<Byte>::typeid );
       //}
       //
-      //generic<class TPropKey, class TPropValue>
+      //GENERIC(class TPropKey, class TPropValue)
       //Properties<TPropKey, TPropValue>::Properties( SerializationInfo^ info,
       //  StreamingContext context, std::shared_ptr<native::SerializationRegistry> serializationRegistry)
       //  : Properties(serializationRegistry)

@@ -113,7 +113,7 @@ namespace Apache
         return (mg_obj != nullptr ? mg_obj->_NativePtr : NULL);
       }
 
-      generic<class TValue>
+      GENERIC(class TValue)
       inline static TValue SafeGenericUMSerializableConvert( std::shared_ptr<native::Serializable> obj)
       {
         auto converted = SafeUMSerializableConvertGeneric(obj);
@@ -163,7 +163,7 @@ namespace Apache
       /// Helper function to convert native <c>native::CacheableKey</c> object
       /// to managed <see cref="ICacheableKey" /> object.
       /// </summary>
-      generic<class TKey>
+      GENERIC(class TKey)
       inline static Client::ICacheableKey^ SafeGenericUMKeyConvert( std::shared_ptr<native::CacheableKey> obj )
       {
         //All cacheables will be ManagedCacheableKey only

@@ -47,7 +47,7 @@ namespace Apache
         void close(apache::geode::client::Region& region );
       };
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class CacheLoaderGeneric : ICacheLoaderProxy // : Apache::Geode::Client::ICacheLoader /*<Object^, Object^>*/
       {
         private:

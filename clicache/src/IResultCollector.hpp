@@ -31,14 +31,14 @@ namespace Apache
 
       interface class ISerializable;
       /*
-      generic<class TKey>
+      GENERIC(class TKey)
       ref class ResultCollector;
       */
 
       /// <summary>
       /// collect function execution results, can be overriden 
       /// </summary>
-      generic<class TResult>
+      GENERIC(class TResult)
       public interface class IResultCollector
       {
       public:
@@ -62,7 +62,7 @@ namespace Apache
         ///Call back provided to caller, which is called after function execution is
         ///complete and caller can retrieve results using getResult()
         /// </summary>
-        //generic<class TKey>
+        //GENERIC(class TKey)
         void EndResults();
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Apache
         /// the result collector
         /// @since 6.5
         /// </summary>
-        //generic<class TKey>
+        //GENERIC(class TKey)
         void ClearResults(/*bool*/);
 
       };

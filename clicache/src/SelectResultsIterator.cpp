@@ -27,25 +27,25 @@ namespace Apache
     {
       using namespace System;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       TResult SelectResultsIterator<TResult>::Current::get( )
       {
         return m_results[m_index];
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       Object^ SelectResultsIterator<TResult>::Current2::get( )
       {
         return m_results[m_index];
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       bool SelectResultsIterator<TResult>::MoveNext( )
       {
          return ++m_index < m_results->Size;
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       void SelectResultsIterator<TResult>::Reset( )
       {
         m_index = -1;

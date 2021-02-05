@@ -39,14 +39,14 @@ namespace Apache
 
       interface class ISerializable;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class SelectResultsIterator;
       /// <summary>
       /// Encapsulates a query result set.
       /// It specifies the interface for the resultset obtained from the
       /// Geode cache server
       /// </summary>
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class ResultSet sealed
         : public ISelectResults<TResult>
       {

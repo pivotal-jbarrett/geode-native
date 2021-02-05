@@ -56,7 +56,7 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>::RegionAttributesFactory( Apache::Geode::Client::RegionAttributes<TKey, TValue>^ regionAttributes )
       {
         auto attribptr = regionAttributes->GetNative();
@@ -65,7 +65,7 @@ namespace Apache
 
       // CALLBACKS
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCacheLoader( ICacheLoader<TKey, TValue>^ cacheLoader )
       {
         std::shared_ptr<native::CacheLoader> loaderptr;
@@ -86,7 +86,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCacheWriter( ICacheWriter<TKey, TValue>^ cacheWriter )
       {
         std::shared_ptr<native::CacheWriter> writerptr;
@@ -107,7 +107,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCacheListener( ICacheListener<TKey, TValue>^ cacheListener )
       {
         std::shared_ptr<native::CacheListener> listenerptr;
@@ -128,7 +128,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPartitionResolver( IPartitionResolver<TKey, TValue>^ partitionresolver )
       {
         std::shared_ptr<native::PartitionResolver> resolverptr;
@@ -159,7 +159,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCacheLoader( String^ libPath, String^ factoryFunctionName )
       {
         throw gcnew System::NotSupportedException;
@@ -175,7 +175,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCacheWriter( String^ libPath, String^ factoryFunctionName )
       {
         throw gcnew System::NotSupportedException;
@@ -191,7 +191,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCacheListener( String^ libPath, String^ factoryFunctionName )
       {
         throw gcnew System::NotSupportedException;
@@ -207,7 +207,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPartitionResolver( String^ libPath, String^ factoryFunctionName )
       {
         throw gcnew System::NotSupportedException;
@@ -225,7 +225,7 @@ namespace Apache
 
       // EXPIRATION ATTRIBUTES
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetEntryIdleTimeout( ExpirationAction action, TimeSpan idleTimeout )
       {
         try
@@ -239,7 +239,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetEntryTimeToLive( ExpirationAction action, TimeSpan timeToLive )
       {
         try
@@ -253,7 +253,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetRegionIdleTimeout( ExpirationAction action, TimeSpan idleTimeout )
       {
         try
@@ -267,7 +267,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetRegionTimeToLive( ExpirationAction action, TimeSpan timeToLive )
       {
         try
@@ -282,7 +282,7 @@ namespace Apache
       }
 
       // PERSISTENCE
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPersistenceManager(IPersistenceManager<TKey, TValue>^ persistenceManager, Properties<String^, String^>^ config )
       {
         std::shared_ptr<native::PersistenceManager> persistenceManagerptr;
@@ -303,14 +303,14 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPersistenceManager(IPersistenceManager<TKey, TValue>^ persistenceManager )
       {
         SetPersistenceManager(persistenceManager, nullptr);
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPersistenceManager( String^ libPath,
         String^ factoryFunctionName )
       {
@@ -318,7 +318,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPersistenceManager( String^ libPath,
         String^ factoryFunctionName, Properties<String^, String^>^ config )
       {
@@ -337,7 +337,7 @@ namespace Apache
 
       // STORAGE ATTRIBUTES
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetPoolName( String^ poolName )
       {
 
@@ -354,7 +354,7 @@ namespace Apache
 
       // MAP ATTRIBUTES
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetInitialCapacity( System::Int32 initialCapacity )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -373,7 +373,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetLoadFactor( Single loadFactor )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -392,7 +392,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetConcurrencyLevel( System::Int32 concurrencyLevel )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -411,7 +411,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetLruEntriesLimit( System::UInt32 entriesLimit )
       {
         try
@@ -425,7 +425,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetDiskPolicy( DiskPolicyType diskPolicy )
       {
         try
@@ -439,7 +439,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCachingEnabled( bool cachingEnabled )
       {
         try
@@ -453,7 +453,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::SetCloningEnabled( bool cloningEnabled )
       {
         try
@@ -467,7 +467,7 @@ namespace Apache
         return this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionAttributesFactory<TKey, TValue>^  RegionAttributesFactory<TKey, TValue>::SetConcurrencyChecksEnabled( bool concurrencyChecksEnabled )
       {
         try
@@ -482,7 +482,7 @@ namespace Apache
       }
       // FACTORY METHOD
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Apache::Geode::Client::RegionAttributes<TKey, TValue>^ RegionAttributesFactory<TKey, TValue>::Create()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */

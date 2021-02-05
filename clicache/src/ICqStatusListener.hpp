@@ -36,7 +36,7 @@ namespace Apache
         /// the cq is disconnected.
         /// </summary>
 
-        generic<class TKey, class TResult>
+        GENERIC(class TKey, class TResult)
         public interface class ICqStatusListener : public ICqListener<TKey, TResult>
         {
         public:

@@ -56,7 +56,7 @@ namespace Apache
       /// <seealso cref="Region.AttributesMutator" />
       /// <seealso cref="RegionAttributes" />
       /// <seealso cref="RegionAttributesFactory" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class AttributesMutator sealed
       {
       public:

@@ -35,7 +35,7 @@ namespace Apache
         /// This class abstracts the disk-related operations in case of persistence or overflow to disk.
         /// A specific disk storage implementation will implement all the methods described here.
         /// </summary>
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         public interface class IPersistenceManager
         {
         public:

@@ -54,7 +54,7 @@ namespace Apache
       ///
       /// Call <see cref="IsDestroyed" /> to see if an entry has already been destroyed.
       /// </remarks>
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class RegionEntry sealed
       {
       public:

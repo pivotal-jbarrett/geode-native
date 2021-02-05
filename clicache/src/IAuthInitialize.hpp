@@ -31,7 +31,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       ref class Properties;
 
       /// <summary>

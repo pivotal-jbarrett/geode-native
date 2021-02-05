@@ -34,7 +34,7 @@ namespace Apache
       /// cache transactions. 
       /// </summary>
       /// <seealso cref="CacheTransactionManager.AddListener" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public interface class ITransactionListener
       {
       public:

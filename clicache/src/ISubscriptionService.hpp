@@ -29,7 +29,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey>
+      GENERIC(class TKey)
       /// <summary>
       /// This generic interface class provides all Register Interest API's for 
       /// geode's generic non local region (Region<TKey, TValue>).

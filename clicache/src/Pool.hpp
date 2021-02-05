@@ -45,7 +45,7 @@ namespace Apache
       /// <remarks>
       /// A pool of connections from a Geode client to a set of Geode servers.
       /// </remarks>
-      // generic<class TKey, class TValue>
+      // GENERIC(class TKey, class TValue)
       public ref class Pool sealed
       {
       public:

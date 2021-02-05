@@ -39,13 +39,13 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ICqResults<TResult>^ CqQuery<TKey, TResult>::ExecuteWithInitialResults()
       {
         return ExecuteWithInitialResults(TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ICqResults<TResult>^ CqQuery<TKey, TResult>::ExecuteWithInitialResults(TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -67,7 +67,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqQuery<TKey, TResult>::Execute()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -84,7 +84,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       String^ CqQuery<TKey, TResult>::QueryString::get( )
       {
         try
@@ -97,7 +97,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       String^ CqQuery<TKey, TResult>::Name::get( )
       {
         try
@@ -110,7 +110,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       Query<TResult>^ CqQuery<TKey, TResult>::GetQuery( )
       {
         try
@@ -123,7 +123,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       CqAttributes<TKey, TResult>^ CqQuery<TKey, TResult>::GetCqAttributes( )
       {
         try
@@ -136,7 +136,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       CqAttributesMutator<TKey, TResult>^ CqQuery<TKey, TResult>::GetCqAttributesMutator( )
       {
         try
@@ -150,7 +150,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       CqStatistics^ CqQuery<TKey, TResult>::GetStatistics( )
       {
         try
@@ -163,7 +163,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       CqState CqQuery<TKey, TResult>::GetState( )
       {
         try
@@ -176,7 +176,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqQuery<TKey, TResult>::Stop( )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -193,7 +193,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqQuery<TKey, TResult>::Close( )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -210,7 +210,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       bool CqQuery<TKey, TResult>::IsRunning( )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -227,7 +227,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       bool CqQuery<TKey, TResult>::IsStopped( )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -244,7 +244,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
         bool CqQuery<TKey, TResult>::IsClosed()
         {
           _GF_MG_EXCEPTION_TRY2/* due to auto replace */

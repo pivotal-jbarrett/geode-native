@@ -100,7 +100,7 @@ namespace Apache
         /// </remarks>
         /// <param name="path">the pathname of the region</param>
         /// <returns>the region</returns>
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         virtual IRegion<TKey, TValue>^ GetRegion( String^ path );
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Apache
         /// It is not supported when Cache is created from Pool.
         /// </remarks>
         /// <returns>array of regions</returns>
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         virtual array<IRegion<TKey, TValue>^>^ RootRegions();
 
         /// <summary>

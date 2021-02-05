@@ -36,13 +36,13 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       interface class ICqListener;
 
       /// <summary>
       /// Defines attributes for configuring a cq.
       /// </summary>
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public ref class CqAttributes sealed
       {
       public:

@@ -33,9 +33,9 @@ namespace Apache
     namespace Client
     {
 
-      //generic<class TKey, class TValue>
+      //GENERIC(class TKey, class TValue)
       ref class Pool;
-     // generic<class TKey, class TValue>
+     // GENERIC(class TKey, class TValue)
       ref class PoolFactory;
 
       namespace native = apache::geode::client;
@@ -43,7 +43,7 @@ namespace Apache
       /// <summary>
       /// This interface provides for the configuration and creation of instances of PoolFactory.
       /// </summary>
-     // generic<class TKey, class TValue>
+     // GENERIC(class TKey, class TValue)
       public ref class PoolManager
       {
       public:

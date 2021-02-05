@@ -35,13 +35,13 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class Query;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ref class CqQuery;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ref class CqAttributes;
 
       ref class CqServiceStatistics;
@@ -56,14 +56,14 @@ namespace Apache
         /// <summary>
         /// Get a <c>Query</c> object to enable querying.
         /// </summary>
-        generic<class TResult>
+        GENERIC(class TResult)
         Query<TResult>^ NewQuery( String^ query );
         /// @nativeclient
         /// <summary>
         /// Get a <c>CqQuery</c> object to enable continuous querying.
         /// </summary>
         /// @endnativeclient
-        generic<class TKey, class TResult>
+        GENERIC(class TKey, class TResult)
         CqQuery<TKey, TResult>^ NewCq(String^ query, CqAttributes<TKey, TResult>^ cqAttr, bool isDurable);
 
         /// @nativeclient
@@ -71,7 +71,7 @@ namespace Apache
         /// Get a <c>CqQuery</c> object to enable continuous querying.
         /// </summary>
         /// @endnativeclient
-        generic<class TKey, class TResult>
+        GENERIC(class TKey, class TResult)
         CqQuery<TKey, TResult>^ NewCq( String^ name, String^ query, CqAttributes<TKey, TResult>^ cqAttr, bool isDurable );
         /// @nativeclient
         /// <summary>
@@ -85,7 +85,7 @@ namespace Apache
         /// Get all  <c>CqQuery</c> on this client.
         /// </summary>
         /// @endnativeclient
-        generic<class TKey, class TResult>
+        GENERIC(class TKey, class TResult)
         array<CqQuery<TKey, TResult>^>^ GetCqs();
 
         /// @nativeclient
@@ -93,7 +93,7 @@ namespace Apache
         /// Get the  <c>CqQuery</c> with the given name on this client.
         /// </summary>
         /// @endnativeclient
-        generic<class TKey, class TResult>
+        GENERIC(class TKey, class TResult)
         CqQuery<TKey, TResult>^ GetCq(String^ name);
 
         /// @nativeclient

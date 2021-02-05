@@ -34,17 +34,17 @@ namespace Apache
     namespace Client
     {
 
-    //  generic<class TKey, class TValue>
+    //  GENERIC(class TKey, class TValue)
       ref class Pool;
      
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class Execution;
 
       /// <summary>
       /// A factory class used to create Execute object for function execution
       /// </summary>
       /// <remarks>
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class FunctionService
       {
       public:

@@ -121,7 +121,7 @@ namespace Apache
         return (Internal::EnumInfo^)SafeUMSerializableConvertGeneric(sPtr);
       }
 
-      generic<class TKey>
+      GENERIC(class TKey)
       std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(TKey key)
       {
         if (key != nullptr) {
@@ -130,7 +130,7 @@ namespace Apache
         return nullptr;
       }
 
-      generic<class TKey>
+      GENERIC(class TKey)
       std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(TKey key, bool isAciiChar)
       {
         if (key != nullptr) {
@@ -139,14 +139,14 @@ namespace Apache
         return nullptr;
       }
 
-      generic<class TKey>
+      GENERIC(class TKey)
       std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(
         Type^ managedType, TKey key)
       {
         return GetUnmanagedValueGeneric(managedType, key, false);
       }
 
-      generic<class TKey>
+      GENERIC(class TKey)
       std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(
         Type^ managedType, TKey key, bool isAsciiChar)
       {

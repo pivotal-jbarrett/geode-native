@@ -29,21 +29,21 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ RegionEvent<TKey, TValue>::Region::get( )
       {
         auto regionptr = m_nativeptr->getRegion( );
         return Client::Region<TKey, TValue>::Create( regionptr );
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Object^ RegionEvent<TKey, TValue>::CallbackArgument::get()
       {
         std::shared_ptr<apache::geode::client::Serializable>& valptr(m_nativeptr->getCallbackArgument());
         return TypeRegistry::GetManagedValueGeneric<Object^>( valptr );
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool RegionEvent<TKey, TValue>::RemoteOrigin::get( )
       {
         return m_nativeptr->remoteOrigin( );

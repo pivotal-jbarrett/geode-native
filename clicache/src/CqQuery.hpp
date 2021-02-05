@@ -35,18 +35,18 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       interface class ICqResults;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ref class CqAttributes;
 
       ref class CqStatistics;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ref class CqAttributesMutator;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class Query;
 
       /// <summary>
@@ -64,7 +64,7 @@ namespace Apache
       /// should not operate on the same <c>CqQuery</c> object concurrently
       /// rather should have their own <c>CqQuery</c> objects.
       /// </remarks>
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public ref class CqQuery sealed
       {
       public:

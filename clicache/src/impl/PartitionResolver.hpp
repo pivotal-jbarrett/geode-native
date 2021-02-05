@@ -38,7 +38,7 @@ namespace Apache
         const std::string& getName();
       };
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class PartitionResolverGeneric : IPartitionResolverProxy
       {
         private:

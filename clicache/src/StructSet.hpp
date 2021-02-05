@@ -39,13 +39,13 @@ namespace Apache
       namespace native = apache::geode::client;
       interface class ISerializable;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class SelectResultsIterator;
 
       /// <summary>
       /// Encapsulates a query struct set.
       /// </summary>
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class StructSet sealed
         : public ICqResults<TResult>
       {

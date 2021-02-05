@@ -40,7 +40,7 @@ namespace Apache
       /// This class is used to hide the generic implementation from cpp and at the same time
       /// forward the calls to the generic objects
       /// </summary>
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
 			public ref class TransactionListenerGeneric : Apache::Geode::Client::TransactionListenerAdapter
       {
         private:

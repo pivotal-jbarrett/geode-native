@@ -44,7 +44,7 @@ namespace Apache
             void close();
         };
 
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         public ref class PersistenceManagerGeneric : IPersistenceManagerProxy 
         {
           private:

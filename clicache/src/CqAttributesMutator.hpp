@@ -37,10 +37,10 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
 	  interface class ICqListener;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       private ref class CqListenerHelper sealed{
         public:
         static Dictionary<Client::ICqListener<TKey, TResult>^, native_shared_ptr<native::CqListener>^>^
@@ -54,7 +54,7 @@ namespace Apache
       /// Supports modification of certain cq attributes after the cq
       /// has been created.
       /// </summary>
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public ref class CqAttributesMutator sealed
       {
       public:

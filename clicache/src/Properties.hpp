@@ -61,10 +61,10 @@ namespace Apache
       /// </remarks>
       /// <param name="key">The key of the property.</param>
       /// <param name="value">The value of the property.</param>
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
 	    public delegate void PropertyVisitorGeneric( TPropKey key, TPropValue value );
 
-      generic<class TPropKey, class TPropValue>
+      GENERIC(class TPropKey, class TPropValue)
       [Serializable]
       /// <summary>
       /// Provides a collection of properties, each of which is a key/value

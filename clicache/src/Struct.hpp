@@ -35,7 +35,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class StructSet;
 
       /// <summary>

@@ -36,13 +36,13 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ref class SelectResultsIterator;
 
       /// <summary>
       /// Interface to encapsulate a select query result set.
       /// </summary>
-      generic<class TResult>
+      GENERIC(class TResult)
       public interface class ICqResults
         : public ISelectResults<TResult>
       {

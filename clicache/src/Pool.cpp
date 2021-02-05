@@ -366,7 +366,7 @@ namespace Apache
         }
       }
 
-	  //generic<class TKey, class TValue>
+	  //GENERIC(class TKey, class TValue)
       Boolean Pool::ThreadLocalConnections::get()
       {
         try

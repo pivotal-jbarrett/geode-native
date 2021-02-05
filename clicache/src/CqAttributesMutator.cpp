@@ -36,7 +36,7 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqAttributesMutator<TKey, TResult>::AddCqListener( Client::ICqListener<TKey, TResult>^ cqListener )
       {
         native_shared_ptr<native::CqListener>^ listenerptr;
@@ -88,7 +88,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqAttributesMutator<TKey, TResult>::RemoveCqListener( Client::ICqListener<TKey, TResult>^ cqListener )
       {
         if (auto lister = dynamic_cast<Client::ICqStatusListener<TKey, TResult>^>(cqListener)) {
@@ -139,7 +139,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqAttributesMutator<TKey, TResult>::SetCqListeners(array<Client::ICqListener<TKey, TResult>^>^ newListeners)
       {
         native::CqAttributes::listener_container_type vrr;

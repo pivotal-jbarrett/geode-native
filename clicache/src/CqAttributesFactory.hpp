@@ -38,14 +38,14 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       interface class ICqListener;
 
       /// <summary>
       /// Creates instances of <c>CqAttributes</c>.
       /// </summary>
       /// <seealso cref="CqAttributes" />
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public ref class CqAttributesFactory sealed
       {
       public:

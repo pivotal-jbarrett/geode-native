@@ -32,7 +32,7 @@ namespace Apache
       interface class ISerializable;
 
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ref class CqQuery;
 
       interface class ICacheableKey;
@@ -64,7 +64,7 @@ namespace Apache
       /// <seealso cref="RegionAttributes.CacheListener" />
       /// <seealso cref="ICacheLoader" />
       /// <seealso cref="ICacheWriter" />
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       public interface class ICqEvent
       {
       public:

@@ -70,7 +70,7 @@ namespace Apache
       }
       
 			//TODO::split
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ AuthenticatedView::GetRegion( String^ path )
       {
         _GF_MG_EXCEPTION_TRY2
@@ -104,7 +104,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       array<IRegion<TKey, TValue>^>^ AuthenticatedView::RootRegions( )
       {
         std::vector<std::shared_ptr<apache::geode::client::Region>> vrr;

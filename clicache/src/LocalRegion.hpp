@@ -41,13 +41,13 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ref class RegionEntry;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ref class AttributesMutator;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
 			public ref class LocalRegion : public IRegion<TKey, TValue>  
       {
       public:
@@ -207,10 +207,10 @@ namespace Apache
             bool get();
           }
           
-          generic<class TResult>
+          GENERIC(class TResult)
           virtual ISelectResults<TResult>^ Query( String^ predicate );
 
-          generic<class TResult>
+          GENERIC(class TResult)
           virtual ISelectResults<TResult>^ Query( String^ predicate, TimeSpan timeout );
 
           virtual bool ExistsValue( String^ predicate );
@@ -235,7 +235,7 @@ namespace Apache
         /// <returns>
         /// The managed wrapper object; null if the native pointer is null.
         /// </returns>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         inline static IRegion<TKey, TValue>^ Create( std::shared_ptr<native::Region> nativeptr )
         {
           return __nullptr == nativeptr ? nullptr :

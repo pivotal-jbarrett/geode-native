@@ -28,7 +28,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       ref class CqEvent;
 
       /// <summary>
@@ -59,8 +59,8 @@ namespace Apache
       /// <seealso cref="RegionAttributes.CacheListener" />
       /// <seealso cref="ICacheLoader" />
       /// <seealso cref="ICacheWriter" />
-      //generic<class TKey, class TValue>
-      generic<class TKey, class TResult>
+      //GENERIC(class TKey, class TValue)
+      GENERIC(class TKey, class TResult)
       public interface class ICqListener
       {
       public:
@@ -94,7 +94,7 @@ namespace Apache
         /// EntryEvent denotes the event object associated with updating the entry.
         /// </param>
         /// <seealso cref="Region.Put" />
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         void OnError(CqEvent<TKey, TResult>^ ev);
 
 

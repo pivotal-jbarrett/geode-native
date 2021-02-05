@@ -40,16 +40,16 @@ namespace Apache
 
       interface class IRegionService;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       interface class ISelectResults;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ref class RegionEntry;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ref class RegionAttributes;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ref class AttributesMutator;
 
       /// <summary>
@@ -85,7 +85,7 @@ namespace Apache
       /// </remarks>
       /// <see cref="RegionAttributes" />
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public interface class IRegion : public System::Collections::Generic::IDictionary<TKey, TValue>
       {
         public: 
@@ -1938,7 +1938,7 @@ namespace Apache
           /// <returns>
           /// The SelectResults which can either be a ResultSet or a StructSet.
           /// </returns>
-          generic<class TResult>
+          GENERIC(class TResult)
           ISelectResults<TResult>^ Query( String^ predicate );
 
           /// <summary>
@@ -1983,7 +1983,7 @@ namespace Apache
           /// <returns>
           /// The SelectResults which can either be a ResultSet or a StructSet.
           /// </returns>
-          generic<class TResult>
+          GENERIC(class TResult)
           ISelectResults<TResult>^ Query( String^ predicate, TimeSpan timeout );
 
           /// <summary>

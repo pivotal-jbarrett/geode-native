@@ -39,7 +39,7 @@ namespace Apache
     {
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqAttributesFactory<TKey, TResult>::AddCqListener( Client::ICqListener<TKey, TResult>^ cqListener )
       {
         native_shared_ptr<native::CqListener>^ listenerptr;
@@ -91,7 +91,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       void CqAttributesFactory<TKey, TResult>::InitCqListeners(array<Client::ICqListener<TKey, TResult>^>^ newListeners)
       {
         native::CqAttributes::listener_container_type vrr;
@@ -145,7 +145,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       Client::CqAttributes<TKey, TResult>^ CqAttributesFactory<TKey, TResult>::Create( )
       {
         try

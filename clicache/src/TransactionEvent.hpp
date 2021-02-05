@@ -37,13 +37,13 @@ namespace Apache
 				ref class TransactionId;
 				ref class Cache;
 
-				generic<class TKey, class TValue>
+				GENERIC(class TKey, class TValue)
         ref class EntryEvent;
 
         /// <summary>
         /// This class encapsulates events that occur for an transaction in a cache.
         /// </summary>
-        generic<class TKey, class TValue>
+        GENERIC(class TKey, class TValue)
         public ref class TransactionEvent sealed
           : public Internal::UMWrap<apache::geode::client::TransactionEvent>
         {

@@ -43,7 +43,7 @@ namespace Apache
         const std::string& getPartitionName(const apache::geode::client::EntryEvent& opDetails);       
       };
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class FixedPartitionResolverGeneric : IFixedPartitionResolverProxy
       {
         private:

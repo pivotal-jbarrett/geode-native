@@ -35,7 +35,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class CacheWriterGeneric : Apache::Geode::Client::CacheWriterAdapter<Object^, Object^>
       {
         private:

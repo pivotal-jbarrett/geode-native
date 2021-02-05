@@ -31,7 +31,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TResult>
+      GENERIC(class TResult)
       size_t StructSet<TResult>::Size::get( )
       {
         try
@@ -44,7 +44,7 @@ namespace Apache
         }
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       TResult StructSet<TResult>::default::get( size_t index )
       {
         try
@@ -57,19 +57,19 @@ namespace Apache
         }
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       System::Collections::Generic::IEnumerator<TResult>^ StructSet<TResult>::GetEnumerator( )
       {
         return SelectResultsIterator<TResult>::Create(this);
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       System::Collections::IEnumerator^ StructSet<TResult>::GetIEnumerator( )
       {
         return SelectResultsIterator<TResult>::Create(this);
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       int32_t StructSet<TResult>::GetFieldIndex( String^ fieldName )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -86,7 +86,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       String^ StructSet<TResult>::GetFieldName(int32_t index)
       {
         try

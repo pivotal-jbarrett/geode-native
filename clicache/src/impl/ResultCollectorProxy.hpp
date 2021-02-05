@@ -41,7 +41,7 @@ namespace Apache
         void ClearResults();
       };
 
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class ResultCollectorGeneric : ResultCollectorG
       {
         private:

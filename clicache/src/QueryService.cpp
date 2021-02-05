@@ -36,7 +36,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TResult>
+      GENERIC(class TResult)
       Query<TResult>^ QueryService::NewQuery(String^ query)
       {
         try
@@ -54,7 +54,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
         CqQuery<TKey, TResult>^ QueryService::NewCq(String^ query, CqAttributes<TKey, TResult>^ cqAttr, bool isDurable)
         {
           try
@@ -73,7 +73,7 @@ namespace Apache
         }
 
     
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       CqQuery<TKey, TResult>^ QueryService::NewCq(String^ name, String^ query, CqAttributes<TKey, TResult>^ cqAttr, bool isDurable)
       {
         try
@@ -107,7 +107,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       array<CqQuery<TKey, TResult>^>^ QueryService::GetCqs()
       {
         try
@@ -132,7 +132,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       CqQuery<TKey, TResult>^ QueryService::GetCq(String^ name)
       {
         try

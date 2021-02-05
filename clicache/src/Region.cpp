@@ -54,7 +54,7 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       TValue Region<TKey, TValue>::Get(TKey key, Object^ callbackArg)
       {
         std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TKey>(key);
@@ -69,13 +69,13 @@ namespace Apache
         return returnVal;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       TValue Region<TKey, TValue>::Get(TKey key)
       {
         return Get(key, nullptr);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       std::shared_ptr<native::Serializable> Region<TKey, TValue>::get(std::shared_ptr<native::CacheableKey>& keyptr, std::shared_ptr<native::Serializable>& callbackptr)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -90,7 +90,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       std::shared_ptr<native::Serializable> Region<TKey, TValue>::get(std::shared_ptr<native::CacheableKey>& keyptr)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -105,7 +105,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::isPoolInMultiuserMode()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -122,7 +122,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Put(TKey key, TValue value, Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -142,13 +142,13 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Put(TKey key, TValue value)
       {
         Put(key, value, nullptr);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       TValue Region<TKey, TValue>::default::get(TKey key)
       {
         std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TKey>(key);
@@ -162,7 +162,7 @@ namespace Apache
         return returnVal;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::default::set(TKey key, TValue value)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -181,7 +181,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::IEnumerator<KeyValuePair<TKey, TValue>>^
         Region<TKey, TValue>::GetEnumerator()
       {
@@ -212,7 +212,7 @@ namespace Apache
         return ((System::Collections::Generic::IEnumerable<KeyValuePair<TKey, TValue>>^)toArray)->GetEnumerator();
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::IEnumerator^
         Region<TKey, TValue>::GetEnumeratorOld()
       {
@@ -243,7 +243,7 @@ namespace Apache
         return ((System::Collections::Generic::IEnumerable<Object^>^)toArray)->GetEnumerator();
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::Contains(KeyValuePair<TKey, TValue> keyValuePair)
       {
         std::shared_ptr<native::CacheableKey> keyptr = Serializable::GetUnmanagedValueGeneric<TKey>(keyValuePair.Key);
@@ -257,7 +257,7 @@ namespace Apache
         return ((Object^)value)->Equals(keyValuePair.Value);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::ContainsKey(TKey key)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -275,7 +275,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::TryGetValue(TKey key, TValue %val)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -294,7 +294,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::ICollection<TKey>^ Region<TKey, TValue>::Keys::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -320,7 +320,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::ICollection<TValue>^ Region<TKey, TValue>::Values::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -346,7 +346,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Add(TKey key, TValue value)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -365,7 +365,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Add(KeyValuePair<TKey, TValue> keyValuePair)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -384,7 +384,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Add(TKey key, TValue value, Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -404,7 +404,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::Remove(TKey key)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -423,7 +423,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::Remove(TKey key, Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -442,7 +442,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::Remove(KeyValuePair<TKey, TValue> keyValuePair)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -461,7 +461,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::Remove(TKey key, TValue value, Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -482,7 +482,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::InvalidateRegion()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -492,7 +492,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::InvalidateRegion(Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -510,7 +510,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::DestroyRegion()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -520,7 +520,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::DestroyRegion(Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -538,7 +538,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Invalidate(TKey key)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -549,7 +549,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Invalidate(TKey key, Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -568,7 +568,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::PutAll(System::Collections::Generic::IDictionary<TKey, TValue>^ map)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -579,7 +579,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::PutAll(System::Collections::Generic::IDictionary<TKey, TValue>^ map, TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -604,7 +604,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::PutAll(System::Collections::Generic::IDictionary<TKey, TValue>^ map, TimeSpan timeout, Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -630,7 +630,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::GetAll(System::Collections::Generic::ICollection<TKey>^ keys,
                                         System::Collections::Generic::IDictionary<TKey, TValue>^ values,
                                         System::Collections::Generic::IDictionary<TKey, System::Exception^>^ exceptions)
@@ -643,7 +643,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::GetAll(System::Collections::Generic::ICollection<TKey>^ keys,
                                         System::Collections::Generic::IDictionary<TKey, TValue>^ values,
                                         System::Collections::Generic::IDictionary<TKey, System::Exception^>^ exceptions,
@@ -685,7 +685,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::GetAll(System::Collections::Generic::ICollection<TKey>^ keys,
                                         System::Collections::Generic::IDictionary<TKey, TValue>^ values,
                                         System::Collections::Generic::IDictionary<TKey, System::Exception^>^ exceptions,
@@ -731,7 +731,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RemoveAll(System::Collections::Generic::ICollection<TKey>^ keys)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -742,7 +742,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RemoveAll(System::Collections::Generic::ICollection<TKey>^ keys,
                                             Object^ callbackArg)
       {
@@ -769,7 +769,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
 
       }
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       String^ Region<TKey, TValue>::Name::get()
       {
         try
@@ -782,7 +782,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       String^ Region<TKey, TValue>::FullPath::get()
       {
         try
@@ -795,7 +795,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ Region<TKey, TValue>::ParentRegion::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -813,7 +813,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Apache::Geode::Client::RegionAttributes<TKey, TValue>^ Region<TKey, TValue>::Attributes::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -831,7 +831,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       AttributesMutator<TKey, TValue>^ Region<TKey, TValue>::AttributesMutator::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -849,7 +849,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Apache::Geode::Client::CacheStatistics^ Region<TKey, TValue>::Statistics::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -867,7 +867,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ Region<TKey, TValue>::GetSubRegion(String^ path)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -885,7 +885,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ Region<TKey, TValue>::CreateSubRegion(String^ subRegionName,
                                                                     Apache::Geode::Client::RegionAttributes<TKey, TValue>^ attributes)
       {
@@ -905,7 +905,7 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::ICollection<IRegion<TKey, TValue>^>^ Region<TKey, TValue>::SubRegions(bool recursive)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -933,7 +933,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       RegionEntry<TKey, TValue>^ Region<TKey, TValue>::GetEntry(TKey key)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -952,7 +952,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::ICollection<RegionEntry<TKey, TValue>^>^ Region<TKey, TValue>::GetEntries(bool recursive)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -981,13 +981,13 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegionService^ Region<TKey, TValue>::RegionService::get()
       {
         return CacheResolver::Lookup(&m_nativeptr->get()->getCache());
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::ContainsValueForKey(TKey key)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1005,7 +1005,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       int Region<TKey, TValue>::Count::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1020,13 +1020,13 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Clear()
       {
         Clear(nullptr);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::Clear(Object^ callbackArg)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1042,7 +1042,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::CopyTo(array<KeyValuePair<TKey, TValue>>^ toArray,
                                         int startIdx)
       {
@@ -1084,7 +1084,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::IsDestroyed::get()
       {
         try
@@ -1097,19 +1097,19 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterKeys(System::Collections::Generic::ICollection<TKey>^ keys)
       {
         RegisterKeys(keys, false, false);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterKeys(System::Collections::Generic::ICollection<TKey>^ keys, bool isDurable, bool getInitialValues)
       {
         RegisterKeys(keys, isDurable, getInitialValues, true);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterKeys(System::Collections::Generic::ICollection<TKey>^ keys,
                                               bool isDurable,
                                               bool getInitialValues,
@@ -1139,7 +1139,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::UnregisterKeys(System::Collections::Generic::ICollection<TKey>^ keys)
       {
         if (keys != nullptr)
@@ -1167,26 +1167,26 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterAllKeys()
       {
         RegisterAllKeys(false, false);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterAllKeys(bool isDurable)
       {
         RegisterAllKeys(isDurable, false);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterAllKeys(bool isDurable,
                                                   bool getInitialValues)
       {
         RegisterAllKeys(isDurable, getInitialValues, true);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterAllKeys(bool isDurable,
                                                   bool getInitialValues,
                                                   bool receiveValues)
@@ -1205,7 +1205,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::ICollection<TKey>^ Region<TKey, TValue>::GetInterestList()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1232,7 +1232,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       System::Collections::Generic::ICollection<String^>^ Region<TKey, TValue>::GetInterestListRegex()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1258,7 +1258,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::UnregisterAllKeys()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1276,25 +1276,25 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterRegex(String^ regex)
       {
         RegisterRegex(regex, false, false);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterRegex(String^ regex, bool isDurable)
       {
         RegisterRegex(regex, isDurable, false);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterRegex(String^ regex, bool isDurable, bool getInitialValues)
       {
         RegisterRegex(regex, isDurable, getInitialValues, true);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::RegisterRegex(String^ regex, bool isDurable,
           bool getInitialValues, bool receiveValues)
       {
@@ -1313,7 +1313,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void Region<TKey, TValue>::UnregisterRegex(String^ regex)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1331,15 +1331,15 @@ namespace Apache
 
       }
 
-      generic<class TKey, class TValue>
-      generic<class TResult>
+      GENERIC(class TKey, class TValue)
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Region<TKey, TValue>::Query(String^ predicate)
       {
         return Query<TResult>( predicate, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT ));
       }
 
-      generic<class TKey, class TValue>
-      generic<class TResult>
+      GENERIC(class TKey, class TValue)
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Region<TKey, TValue>::Query(String^ predicate, TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1365,13 +1365,13 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::ExistsValue(String^ predicate)
       {
         return ExistsValue(predicate, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool Region<TKey, TValue>::ExistsValue(String^ predicate, TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1388,13 +1388,13 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Object^ Region<TKey, TValue>::SelectValue(String^ predicate)
       {
         return SelectValue(predicate, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Object^ Region<TKey, TValue>::SelectValue(String^ predicate, TimeSpan timeout)
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -1412,13 +1412,13 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ISubscriptionService<TKey>^ Region<TKey, TValue>::GetSubscriptionService()
       {
         return (ISubscriptionService<TKey>^) this;
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ Region<TKey, TValue>::GetLocalView()
       {
         return gcnew LocalRegion<TKey, TValue>(GetNative());

@@ -28,7 +28,7 @@ namespace Apache
     namespace Client
     {
 
-        generic<class TKey, class TResult>
+        GENERIC(class TKey, class TResult)
         public ref class CqStatusListenerGeneric : Apache::Geode::Client::ICqStatusListener<Object^, Object^>
         {
         private:

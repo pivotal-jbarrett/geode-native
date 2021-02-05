@@ -151,7 +151,7 @@ namespace Apache
       /// <seealso cref="RegionAttributes" />
       /// <seealso cref="AttributesMutator" />
       /// <seealso cref="Region.CreateSubRegion" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class RegionAttributesFactory sealed
       {
       public:
@@ -183,7 +183,7 @@ namespace Apache
         /// <param name="cacheLoader">
         /// a user-defined cache loader, or null for no cache loader
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetCacheLoader( ICacheLoader<TKey, TValue>^ cacheLoader );
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Apache
         /// <param name="cacheWriter">
         /// user-defined cache writer, or null for no cache writer
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetCacheWriter( ICacheWriter<TKey, TValue>^ cacheWriter );
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Apache
         /// <param name="cacheListener">
         /// user-defined cache listener, or null for no cache listener
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetCacheListener( ICacheListener<TKey, TValue>^ cacheListener );
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Apache
         /// <param name="partitionresolver">
         /// user-defined partition resolver, or null for no partition resolver
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetPartitionResolver( IPartitionResolver<TKey, TValue>^ partitionresolver );
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace Apache
         /// {Namespace}.{Class Name}.{Method Name} that creates an
         /// <c>ICacheLoader</c> for a managed library.
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetCacheLoader( String^ libPath, String^ factoryFunctionName );
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Apache
         /// {Namespace}.{Class Name}.{Method Name} that creates an
         /// <c>ICacheWriter</c> for a managed library.
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetCacheWriter( String^ libPath, String^ factoryFunctionName );
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace Apache
         /// {Namespace}.{Class Name}.{Method Name} that creates an
         /// <c>ICacheListener</c> for a managed library.
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetCacheListener( String^ libPath, String^ factoryFunctionName );
 
 
@@ -271,7 +271,7 @@ namespace Apache
         /// {Namespace}.{Class Name}.{Method Name} that creates an
         /// <c>IPartitionResolver</c> for a managed library.
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetPartitionResolver( String^ libPath, String^ factoryFunctionName );
 
 
@@ -334,7 +334,7 @@ namespace Apache
         /// <param name="persistenceManager">
         /// Persistence Manager object
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetPersistenceManager(IPersistenceManager<TKey, TValue>^ persistenceManager);
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Apache
         /// <param name="config">
         /// The configuration properties to use for the PersistenceManager.
         /// </param>
-        //generic<class TKey, class TValue>
+        //GENERIC(class TKey, class TValue)
         RegionAttributesFactory<TKey, TValue>^ SetPersistenceManager(IPersistenceManager<TKey, TValue>^ persistenceManager, Properties<String^, String^>^ config);
         
 

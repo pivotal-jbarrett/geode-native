@@ -266,3 +266,5 @@
 
 /// @file IPersistenceManager.hpp
 /// Declares the generic IPersistenceManager interface.
+
+#include "cli.hpp"

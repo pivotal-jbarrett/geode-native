@@ -37,14 +37,14 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Cache^ TransactionEvent<TKey, TValue>::Cache::get( )
       {
         auto cache = NativePtr->getCache();
 				return CacheResolver::Lookup(cache);
       }
       
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
 			Apache::Geode::Client::TransactionId^ TransactionEvent<TKey, TValue>::TransactionId::get( )
       {
         std::shared_ptr<apache::geode::client::TransactionId> & nativeptr(
@@ -54,7 +54,7 @@ namespace Apache
           nativeptr.get() );
       }
     
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       array<EntryEvent<TKey, TValue>^>^ TransactionEvent<TKey, TValue>::Events::get( )
       {
         std::vector<std::shared_ptr<apache::geode::client::EntryEvent>> vee;

@@ -34,7 +34,7 @@ namespace Apache
       /// with empty implementations. Applications can subclass this class
       /// and only override the methods for the events of interest.
       /// </summary>
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class CacheWriterAdapter
         : public ICacheWriter<TKey, TValue>
       {

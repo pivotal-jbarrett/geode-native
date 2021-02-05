@@ -37,13 +37,13 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Query<TResult>::Execute(  )
       {
         return Execute( TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT) );
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Query<TResult>::Execute( TimeSpan timeout )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -60,13 +60,13 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 	
-      generic<class TResult>
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Query<TResult>::Execute( array<Object^>^ paramList)
       {
         return Execute(paramList, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Query<TResult>::Execute( array<Object^>^ paramList, TimeSpan timeout )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -90,7 +90,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       ISelectResults<TResult>^ Query<TResult>::WrapResults(const std::shared_ptr<apache::geode::client::SelectResults>& selectResults)
       {
         if ( __nullptr == selectResults ) return nullptr;
@@ -107,7 +107,7 @@ namespace Apache
         return nullptr;
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       String^ Query<TResult>::QueryString::get( )
       {
         try
@@ -120,7 +120,7 @@ namespace Apache
         }
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       void Query<TResult>::Compile( )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -137,7 +137,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       bool Query<TResult>::IsCompiled::get()
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */

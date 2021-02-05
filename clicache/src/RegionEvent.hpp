@@ -42,7 +42,7 @@ namespace Apache
       /// <summary>
       /// This class encapsulates events that occur for a region.
       /// </summary>
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class RegionEvent sealed
       {
       public:

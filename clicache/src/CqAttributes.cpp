@@ -38,7 +38,7 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TKey, class TResult>
+      GENERIC(class TKey, class TResult)
       array<ICqListener<TKey, TResult>^>^ CqAttributes<TKey, TResult>::getCqListeners( )
       {
         native::CqAttributes::listener_container_type vrr;

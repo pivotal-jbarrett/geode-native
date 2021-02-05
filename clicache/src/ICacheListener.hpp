@@ -77,7 +77,7 @@ namespace Apache
       /// <seealso cref="ICacheLoader" />
       /// <seealso cref="ICacheWriter" />
       /// <seealso cref="CacheListenerException" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public interface class ICacheListener
       {
         public:

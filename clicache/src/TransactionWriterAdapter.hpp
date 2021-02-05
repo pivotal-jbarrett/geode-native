@@ -33,7 +33,7 @@ namespace Apache
       /// Utility class that implements all methods in <c>ITransactionWriter</c>
       /// with empty implementations.
       /// </summary>
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public ref class TransactionWriterAdapter
         : public Apache::Geode::Client::ITransactionWriter<TKey, TValue>
       {

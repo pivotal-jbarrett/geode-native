@@ -39,13 +39,13 @@ namespace Apache
     {
      namespace native = apache::geode::client;
 
-     generic<class TResult>
+     GENERIC(class TResult)
 	   interface class IResultCollector;
 
       /// <summary>
       /// collect function execution results, default collector
       /// </summary>
-     generic<class TResult>
+     GENERIC(class TResult)
      public ref class ResultCollector
        : public IResultCollector<TResult>
      {
@@ -70,10 +70,10 @@ namespace Apache
         ///Call back provided to caller, which is called after function execution is
         ///complete and caller can retrieve results using getResult()
         /// </summary>
-        //generic<class TKey>
+        //GENERIC(class TKey)
 	      virtual void EndResults(); 
 
-        //generic<class TKey>
+        //GENERIC(class TKey)
         virtual void ClearResults();
 
       internal:

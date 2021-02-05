@@ -31,7 +31,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       TKey RegionEntry<TKey, TValue>::Key::get( )
       {        
         try
@@ -44,7 +44,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       TValue RegionEntry<TKey, TValue>::Value::get( )
       {
         try
@@ -57,7 +57,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       IRegion<TKey, TValue>^ RegionEntry<TKey, TValue>::Region::get( )
       {
         try
@@ -70,7 +70,7 @@ namespace Apache
         }
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       Apache::Geode::Client::CacheStatistics^ RegionEntry<TKey, TValue>::Statistics::get( )
       {
         std::shared_ptr<apache::geode::client::CacheStatistics> nativeptr;
@@ -85,7 +85,7 @@ namespace Apache
         return Apache::Geode::Client::CacheStatistics::Create( nativeptr);
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       bool RegionEntry<TKey, TValue>::IsDestroyed::get( )
       {
         try

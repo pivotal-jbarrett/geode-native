@@ -68,7 +68,7 @@ namespace Apache
       /// <seealso cref="RegionAttributes.CacheLoader" />
       /// <seealso cref="ICacheListener" />
       /// <seealso cref="ICacheWriter" />
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       public interface class ICacheLoader
       {
       public:

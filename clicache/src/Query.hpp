@@ -38,7 +38,7 @@ namespace Apache
 
       namespace native = apache::geode::client;
 
-      generic<class TResult>
+      GENERIC(class TResult)
       interface class ISelectResults;
 
       /// <summary>
@@ -54,7 +54,7 @@ namespace Apache
       /// should not operate on the same <c>Query</c> object concurrently
       /// rather should have their own <c>Query</c> objects.
       /// </remarks>
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class Query sealed
       {
       public:

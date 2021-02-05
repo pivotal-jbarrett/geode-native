@@ -72,7 +72,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       Execution<TResult>^ FunctionService<TResult>::OnServer( IRegionService^ cache )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */
@@ -92,7 +92,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       Execution<TResult>^ FunctionService<TResult>::OnServers( IRegionService^ cache )
       {
         _GF_MG_EXCEPTION_TRY2/* due to auto replace */

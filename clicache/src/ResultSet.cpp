@@ -31,7 +31,7 @@ namespace Apache
     namespace Client
     {
 
-      generic<class TResult>
+      GENERIC(class TResult)
       size_t ResultSet<TResult>::Size::get( )
       {
         try
@@ -44,7 +44,7 @@ namespace Apache
         }
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       TResult ResultSet<TResult>::default::get( size_t index )
       {
         try
@@ -57,13 +57,13 @@ namespace Apache
         }
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       System::Collections::Generic::IEnumerator<TResult>^ ResultSet<TResult>::GetEnumerator( )
       {
         return SelectResultsIterator<TResult>::Create(this);
       }
 
-      generic<class TResult>
+      GENERIC(class TResult)
       System::Collections::IEnumerator^ ResultSet<TResult>::GetIEnumerator()
       {
         return SelectResultsIterator<TResult>::Create(this);

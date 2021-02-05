@@ -32,7 +32,7 @@ namespace Apache
       /// <summary>
       /// Iterator for a query result.
       /// </summary>
-      generic<class TResult>
+      GENERIC(class TResult)
       public ref class SelectResultsIterator sealed
         : public System::Collections::Generic::IEnumerator<TResult>
       {

@@ -134,7 +134,7 @@ namespace Apache
       }
 
 #ifdef CSTX_COMMENTED
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       ITransactionWriter<TKey, TValue>^ CacheTransactionManager::GetWriter( )
       {
         _GF_MG_EXCEPTION_TRY2
@@ -154,7 +154,7 @@ namespace Apache
         return nullptr;
       }
       
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void CacheTransactionManager::SetWriter(ITransactionWriter<TKey, TValue>^ transactionWriter)
       {
         _GF_MG_EXCEPTION_TRY2
@@ -173,7 +173,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
 
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void CacheTransactionManager::AddListener(ITransactionListener<TKey, TValue>^ transactionListener)
       {
         _GF_MG_EXCEPTION_TRY2
@@ -192,7 +192,7 @@ namespace Apache
         _GF_MG_EXCEPTION_CATCH_ALL2
       }
         
-      generic<class TKey, class TValue>
+      GENERIC(class TKey, class TValue)
       void CacheTransactionManager::RemoveListener(ITransactionListener<TKey, TValue>^ transactionListener)
       {
         _GF_MG_EXCEPTION_TRY2
