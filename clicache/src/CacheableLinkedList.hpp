@@ -39,9 +39,7 @@ ref class CacheableLinkedList : public IDataSerializablePrimitive {
   /// <summary>
   /// Allocates a new empty instance.
   /// </summary>
-  inline CacheableLinkedList(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) {
-    m_linkedList = list;
-  }
+  inline CacheableLinkedList(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) { m_linkedList = list; }
 
   /// <summary>
   /// Static function to create a new empty instance.
@@ -53,8 +51,7 @@ ref class CacheableLinkedList : public IDataSerializablePrimitive {
   /// <summary>
   /// Static function to create a new empty instance.
   /// </summary>
-  inline static gc_ptr(CacheableLinkedList)
-      Create(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) {
+  inline static gc_ptr(CacheableLinkedList) Create(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) {
     return gcnew CacheableLinkedList(list);
   }
 

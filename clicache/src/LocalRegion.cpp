@@ -773,9 +773,7 @@ gc_ptr(ISubscriptionService<TKey>) LocalRegion<TKey, TValue>::GetSubscriptionSer
 }
 
 GENERIC(class TKey, class TValue)
-gc_ptr(IRegion<TKey, TValue>) LocalRegion<TKey, TValue>::GetLocalView() {
-  throw gcnew System::NotSupportedException;
-}
+gc_ptr(IRegion<TKey, TValue>) LocalRegion<TKey, TValue>::GetLocalView() { throw gcnew System::NotSupportedException; }
 }  // namespace Client
 }  // namespace Geode
 }  // namespace Apache

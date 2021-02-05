@@ -40,8 +40,7 @@ PdxLocalWriter::PdxLocalWriter(gc_ptr(DataOutput) dataOutput, gc_ptr(PdxType) pd
   initialize();
 }
 
-PdxLocalWriter::PdxLocalWriter(gc_ptr(DataOutput) dataOutput, gc_ptr(PdxType) pdxType,
-                               gc_ptr(String) pdxClassName) {
+PdxLocalWriter::PdxLocalWriter(gc_ptr(DataOutput) dataOutput, gc_ptr(PdxType) pdxType, gc_ptr(String) pdxClassName) {
   m_dataOutput = dataOutput;
   m_pdxType = pdxType;
   m_currentOffsetIndex = 0;
@@ -235,8 +234,7 @@ gc_ptr(IPdxWriter) PdxLocalWriter::WriteObject(gc_ptr(String) fieldName, gc_ptr(
 // gc_ptr(IPdxWriter) PdxLocalWriter::WriteMap( gc_ptr(String) fieldName,
 // gc_ptr(System::Collections::IDictionary) map );
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteCollection(gc_ptr(String) fieldName,
-                                                       gc_ptr(System::Collections::IList) obj) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteCollection(gc_ptr(String) fieldName, gc_ptr(System::Collections::IList) obj) {
   AddOffset();
   m_dataOutput->WriteCollection(obj);
   return this;
@@ -247,8 +245,7 @@ gc_ptr(IPdxWriter) PdxLocalWriter::WriteDate(gc_ptr(String) fieldName, System::D
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteBooleanArray(gc_ptr(String) fieldName,
-                                                         gc_ptr(array<bool>) boolArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteBooleanArray(gc_ptr(String) fieldName, gc_ptr(array<bool>) boolArray) {
   AddOffset();
   m_dataOutput->WriteBooleanArray(boolArray);
   return this;
@@ -266,85 +263,77 @@ gc_ptr(IPdxWriter) PdxLocalWriter::WriteByteArray(gc_ptr(String) fieldName, gc_p
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteSByteArray(gc_ptr(String) fieldName,
-                                                       gc_ptr(array<SByte>) sbyteArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteSByteArray(gc_ptr(String) fieldName, gc_ptr(array<SByte>) sbyteArray) {
   AddOffset();
   m_dataOutput->WriteSBytes(sbyteArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteShortArray(gc_ptr(String) fieldName,
-                                                       gc_ptr(array<System::Int16>) shortArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteShortArray(gc_ptr(String) fieldName, gc_ptr(array<System::Int16>) shortArray) {
   AddOffset();
   m_dataOutput->WriteShortArray(shortArray);  // TODO::this don't write typeid looks confusing
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxLocalWriter::WriteUnsignedShortArray(gc_ptr(String) fieldName,
-                                                               gc_ptr(array<System::UInt16>) ushortArray) {
+                                                           gc_ptr(array<System::UInt16>) ushortArray) {
   AddOffset();
   // m_dataOutput->WriteObject(ushortArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteIntArray(gc_ptr(String) fieldName,
-                                                     gc_ptr(array<System::Int32>) intArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteIntArray(gc_ptr(String) fieldName, gc_ptr(array<System::Int32>) intArray) {
   AddOffset();
   m_dataOutput->WriteIntArray(intArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxLocalWriter::WriteUnsignedIntArray(gc_ptr(String) fieldName,
-                                                             gc_ptr(array<System::UInt32>) uintArray) {
+                                                         gc_ptr(array<System::UInt32>) uintArray) {
   AddOffset();
   // m_dataOutput->WriteObject(uintArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteLongArray(gc_ptr(String) fieldName,
-                                                      gc_ptr(array<Int64>) longArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteLongArray(gc_ptr(String) fieldName, gc_ptr(array<Int64>) longArray) {
   AddOffset();
   m_dataOutput->WriteLongArray(longArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxLocalWriter::WriteUnsignedLongArray(gc_ptr(String) fieldName,
-                                                              gc_ptr(array<System::UInt64>) ulongArray) {
+                                                          gc_ptr(array<System::UInt64>) ulongArray) {
   AddOffset();
   // m_dataOutput->WriteObject(ulongArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteFloatArray(gc_ptr(String) fieldName,
-                                                       gc_ptr(array<float>) floatArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteFloatArray(gc_ptr(String) fieldName, gc_ptr(array<float>) floatArray) {
   AddOffset();
   m_dataOutput->WriteFloatArray(floatArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteDoubleArray(gc_ptr(String) fieldName,
-                                                        gc_ptr(array<double>) doubleArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteDoubleArray(gc_ptr(String) fieldName, gc_ptr(array<double>) doubleArray) {
   AddOffset();
   m_dataOutput->WriteDoubleArray(doubleArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteStringArray(gc_ptr(String) fieldName,
-                                                        gc_ptr(array<String ^>) stringArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) {
   AddOffset();
   m_dataOutput->WriteStringArray(stringArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteObjectArray(gc_ptr(String) fieldName,
-                                                        gc_ptr(List<Object ^>) objectArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) {
   AddOffset();
   m_dataOutput->WriteObjectArray(objectArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxLocalWriter::WriteArrayOfByteArrays(gc_ptr(String) fieldName,
-                                                              array<gc_ptr(array<Byte>)> ^ byteArrays) {
+                                                          array<gc_ptr(array<Byte>)> ^ byteArrays) {
   AddOffset();
   m_dataOutput->WriteArrayOfByteArrays(byteArrays);
   return this;
@@ -356,8 +345,7 @@ gc_ptr(IPdxWriter) PdxLocalWriter::WriteArrayOfByteArrays(gc_ptr(String) fieldNa
 
 gc_ptr(IPdxWriter) PdxLocalWriter::MarkIdentityField(gc_ptr(String) fieldName) { return this; }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue,
-                                                  gc_ptr(Type) type) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue, gc_ptr(Type) type) {
   if (type->Equals(DotNetTypes::IntType)) {
     return this->WriteInt(fieldName, (int)fieldValue);
   } else if (type->Equals(DotNetTypes::StringType)) {

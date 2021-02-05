@@ -119,8 +119,7 @@ void ManagedCacheableDeltaGeneric::fromDelta(DataInput& input) {
 
 std::shared_ptr<Delta> ManagedCacheableDeltaGeneric::clone() const {
   try {
-    if (auto cloneable =
-            dynamic_cast<gc_ptr(ICloneable)>((gc_ptr(Apache::Geode::Client::IDelta))m_managedptr)) {
+    if (auto cloneable = dynamic_cast<gc_ptr(ICloneable)>((gc_ptr(Apache::Geode::Client::IDelta))m_managedptr)) {
       auto Mclone = dynamic_cast<gc_ptr(Apache::Geode::Client::ISerializable)>(cloneable->Clone());
       return std::shared_ptr<Delta>(
           dynamic_cast<ManagedCacheableDeltaGeneric*>(GetNativeWrapperForManagedObject(Mclone)));

@@ -244,16 +244,16 @@ PUBLIC ref class Pool sealed {
   /// </summary>
   property Int32 PendingEventCount { Int32 get(); }
 
-  internal :
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(Pool) Create(std::shared_ptr<native::Pool> nativeptr) {
+  CLI(internal:)
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(Pool) Create(std::shared_ptr<native::Pool> nativeptr) {
     return __nullptr == nativeptr ? nullptr : gcnew Pool(nativeptr);
   }
 

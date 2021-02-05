@@ -104,9 +104,7 @@ ref class Cache sealed : public IGeodeCache {
   /// <returns>true if this cache is closed, otherwise false</returns>
   virtual property bool IsClosed { bool get(); };
 
-  virtual property gc_ptr(SystemProperties) SystemProperties {
-    gc_ptr(Apache::Geode::Client::SystemProperties) get();
-  };
+  virtual property gc_ptr(SystemProperties) SystemProperties { gc_ptr(Apache::Geode::Client::SystemProperties) get(); };
 
   /// <summary>
   /// Returns the cache transaction manager of
@@ -219,8 +217,7 @@ ref class Cache sealed : public IGeodeCache {
   /// </remarks>
   /// <param name="credentials">the user Credentials.</param>
   /// <returns>Instance of IRegionService</returns>
-  gc_ptr(IRegionService)
-      CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials);
+  gc_ptr(IRegionService) CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials);
 
   /// <summary>
   /// Returns the instance of <see cref="IRegionService" /> to do the operation on Cache with different Credential.
@@ -232,8 +229,7 @@ ref class Cache sealed : public IGeodeCache {
   /// <param name="poolName">Pool, which is in multiuser mode.</param>
   /// <returns>Instance of IRegionService</returns>
   gc_ptr(IRegionService)
-      CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials,
-                              gc_ptr(String) poolName);
+      CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials, gc_ptr(String) poolName);
 
   ///< summary>
   /// Returns whether Cache saves unread fields for Pdx types.

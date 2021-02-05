@@ -79,16 +79,14 @@ gc_ptr(String) Apache::Geode::Client::Serializable::ToString() {
   }
 }
 
-System::Int32 Serializable::GetPDXIdForType(native::Pool* pool, gc_ptr(ISerializable) pdxType,
-                                            gc_ptr(Cache) cache) {
+System::Int32 Serializable::GetPDXIdForType(native::Pool* pool, gc_ptr(ISerializable) pdxType, gc_ptr(Cache) cache) {
   std::shared_ptr<native::Cacheable> kPtr(GetNativeWrapperForManagedObject(pdxType));
   return CacheRegionHelper::getCacheImpl(cache->GetNative().get())
       ->getSerializationRegistry()
       ->GetPDXIdForType(pool, kPtr);
 }
 
-gc_ptr(ISerializable) Serializable::GetPDXTypeById(native::Pool* pool, System::Int32 typeId,
-                                                       gc_ptr(Cache) cache) {
+gc_ptr(ISerializable) Serializable::GetPDXTypeById(native::Pool* pool, System::Int32 typeId, gc_ptr(Cache) cache) {
   auto sPtr = CacheRegionHelper::getCacheImpl(cache->GetNative().get())
                   ->getSerializationRegistry()
                   ->GetPDXTypeById(pool, typeId);
@@ -185,8 +183,7 @@ std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(gc_
           Apache::Geode::Client::CacheableStringArray::Create((gc_ptr(array<String ^>)) key));
     }
     case native::internal::DSCode::CacheableFileName: {
-      return GetNativeCacheableKeyWrapperForManagedISerializable(
-          (gc_ptr(Apache::Geode::Client::CacheableFileName))key);
+      return GetNativeCacheableKeyWrapperForManagedISerializable((gc_ptr(Apache::Geode::Client::CacheableFileName))key);
     }
     case native::internal::DSCode::CacheableHashTable:  // collection::hashtable
     {
@@ -218,8 +215,7 @@ std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(gc_
           Apache::Geode::Client::CacheableStack::Create((gc_ptr(System::Collections::ICollection))key));
     }
     case native::internal::InternalId::CacheableManagedObject: {
-      return GetNativeCacheableKeyWrapperForManagedISerializable(
-          (gc_ptr(Apache::Geode::Client::CacheableObject))key);
+      return GetNativeCacheableKeyWrapperForManagedISerializable((gc_ptr(Apache::Geode::Client::CacheableObject))key);
     }
     case native::internal::InternalId::CacheableManagedObjectXml: {
       return GetNativeCacheableKeyWrapperForManagedISerializable(
@@ -235,8 +231,7 @@ std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(gc_
     }
     case native::internal::DSCode::CacheableHashSet:  // no need of it, default case should work
     {
-      return GetNativeCacheableKeyWrapperForManagedISerializable(
-          (gc_ptr(Apache::Geode::Client::CacheableHashSet))key);
+      return GetNativeCacheableKeyWrapperForManagedISerializable((gc_ptr(Apache::Geode::Client::CacheableHashSet))key);
     }
     case native::internal::DSCode::CacheableLinkedHashSet:  // no need of it, default case should work
     {

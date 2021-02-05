@@ -75,8 +75,7 @@ PUBLIC ref class CacheListenerGeneric : CacheListenerAdapter<gc_ptr(Object), gc_
     m_listener->AfterRegionDestroy(% gevent);
   }
 
-  virtual void AfterRegionInvalidate(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>)
-                                         event) override {
+  virtual void AfterRegionInvalidate(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
     RegionEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterRegionInvalidate(% gevent);
   }

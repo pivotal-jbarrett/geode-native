@@ -68,8 +68,8 @@ ref class PdxType : public IDataSerializableInternal {
   gc_ptr(PdxType) clone();
 
   void generatePositionMap();
-  Int32 variableLengthFieldPosition(gc_ptr(PdxFieldType) varLenField, System::Byte* offsetPosition,
-                                    Int32 offsetSize, Int32 pdxStreamlen);
+  Int32 variableLengthFieldPosition(gc_ptr(PdxFieldType) varLenField, System::Byte* offsetPosition, Int32 offsetSize,
+                                    Int32 pdxStreamlen);
   Int32 fixedLengthFieldPosition(gc_ptr(PdxFieldType) fixLenField, System::Byte* offsetPosition, Int32 offsetSize,
                                  Int32 pdxStreamlen);
 
@@ -156,13 +156,11 @@ ref class PdxType : public IDataSerializableInternal {
     System::UInt64 get() { return 0; }
   }
   virtual gc_ptr(String) ToString() override { return "PdxType"; }
-  void AddFixedLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId,
-                               Int32 size);
+  void AddFixedLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId, Int32 size);
   void AddVariableLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId);
   void InitializeType(gc_ptr(Cache) cache);
   gc_ptr(PdxType) MergeVersion(gc_ptr(PdxType) otherVersion);
-  Int32 GetFieldPosition(gc_ptr(String) fieldName, System::Byte* offsetPosition, Int32 offsetSize,
-                         Int32 pdxStreamlen);
+  Int32 GetFieldPosition(gc_ptr(String) fieldName, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
   Int32 GetFieldPosition(Int32 fieldIdx, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
 
   virtual bool Equals(gc_ptr(Object) otherType) override;

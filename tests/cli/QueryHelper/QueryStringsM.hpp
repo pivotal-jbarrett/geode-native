@@ -126,7 +126,7 @@ namespace Apache
 
           gc_ptr(native_conditional_unique_ptr<testData::QueryStrings>) m_nativeptr;
 
-        internal:
+        CLI(internal:)
 
           /// <summary>
           /// Internal constructor to wrap a native object pointer

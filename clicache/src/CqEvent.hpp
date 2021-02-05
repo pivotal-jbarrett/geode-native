@@ -74,14 +74,13 @@ PUBLIC ref class CqEvent sealed {
 
   gc_ptr(array<Byte>) getDeltaValue();
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Private constructor to wrap a native object pointer
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      inline CqEvent(const native::CqEvent* nativeptr)
-      : m_nativeptr(nativeptr) {}
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline CqEvent(const native::CqEvent* nativeptr) : m_nativeptr(nativeptr) {}
 
   const native::CqEvent* GetNative() { return m_nativeptr; }
 

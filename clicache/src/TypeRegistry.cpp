@@ -258,8 +258,8 @@ void TypeRegistry::UnregisterNativesGeneric(gc_ptr(Cache) cache) {
 }
 
 gc_ptr(Type) TypeRegistry::GetTypeFromRefrencedAssemblies(gc_ptr(String) className,
-                                                              gc_ptr(Dictionary<Assembly ^, bool>) referedAssembly,
-                                                              gc_ptr(Assembly) currentAssembly) {
+                                                          gc_ptr(Dictionary<Assembly ^, bool>) referedAssembly,
+                                                          gc_ptr(Assembly) currentAssembly) {
   auto type = currentAssembly->GetType(className);
   if (type != nullptr) {
     return type;
@@ -403,8 +403,7 @@ return safe_cast<TValue>(ret);
     }
     case 0:  // UserFunctionExecutionException unregistered
     {
-      auto ret =
-          SafeGenericUMSerializableConvert<gc_ptr(UserFunctionExecutionException)>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(UserFunctionExecutionException)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
   }
@@ -587,10 +586,8 @@ gc_ptr(TypeRegistry::CreateNewObjectDelegate) TypeRegistry::CreateNewObjectDeleg
 }
 
 // delegate gc_ptr(Object) CreateNewObjectArray(int len);
-gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate) TypeRegistry::CreateNewObjectArrayDelegateF(gc_ptr(Type)
-                                                                                                       type) {
-  gc_ptr(DynamicMethod) dynam =
-      gcnew DynamicMethod("", Internal::DotNetTypes::ObjectType, singleIntTypeA, type, true);
+gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate) TypeRegistry::CreateNewObjectArrayDelegateF(gc_ptr(Type) type) {
+  gc_ptr(DynamicMethod) dynam = gcnew DynamicMethod("", Internal::DotNetTypes::ObjectType, singleIntTypeA, type, true);
   gc_ptr(ILGenerator) il = dynam->GetILGenerator();
 
   il->Emit(OpCodes::Ldarg_0);
@@ -598,8 +595,7 @@ gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate) TypeRegistry::CreateNewObject
   il->Emit(OpCodes::Newarr, type);
   il->Emit(OpCodes::Ret);
 
-  return (gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate))dynam->CreateDelegate(
-      createNewObjectArrayDelegateType);
+  return (gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate))dynam->CreateDelegate(createNewObjectArrayDelegateType);
 }
 
 void TypeRegistry::RegisterDataSerializablePrimitivesWrapNativeDeserialization() {

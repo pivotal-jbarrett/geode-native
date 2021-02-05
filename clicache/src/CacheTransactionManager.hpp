@@ -190,9 +190,9 @@ PUBLIC ref class CacheTransactionManager sealed {
     gc_ptr(Apache::Geode::Client::TransactionId) get();
   }
 
-  internal :
+  CLI(internal:)
 
-      inline static gc_ptr(CacheTransactionManager) Create(native::CacheTransactionManager* nativeptr) {
+  inline static gc_ptr(CacheTransactionManager) Create(native::CacheTransactionManager* nativeptr) {
     return (nativeptr != nullptr ? gcnew CacheTransactionManager(nativeptr) : nullptr);
   }
 

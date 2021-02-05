@@ -79,9 +79,7 @@ GENERIC(class TPropKey, class TPropValue)
   /// Factory method to create an empty collection of properties.
   /// </summary>
   /// <returns>empty collection of properties</returns>
-  inline static gc_ptr(Properties<TPropKey, TPropValue>) Create() {
-    return gcnew Properties<TPropKey, TPropValue>();
-  }
+  inline static gc_ptr(Properties<TPropKey, TPropValue>) Create() { return gcnew Properties<TPropKey, TPropValue>(); }
 
   /// <summary>
   /// Return the value for the given key, or NULL if not found.
@@ -175,7 +173,7 @@ GENERIC(class TPropKey, class TPropValue)
     inline virtual int8_t get() { return static_cast<int8_t>(native::internal::DSCode::Properties); }
   }
 
-internal:
+  CLI(internal:)
 
   /// <summary>
   /// Internal factory function to wrap a native object pointer inside
@@ -219,9 +217,7 @@ generic<class TPropKey, class TPropValue> ref class PropertyVisitorProxy {
     // m_visitor->Invoke(safe_cast<TPropKey>(key), safe_cast<TPropValue>(value));
   }
 
-  void SetPropertyVisitorGeneric(gc_ptr(PropertyVisitorGeneric<TPropKey, TPropValue>) visitor) {
-    m_visitor = visitor;
-  }
+  void SetPropertyVisitorGeneric(gc_ptr(PropertyVisitorGeneric<TPropKey, TPropValue>) visitor) { m_visitor = visitor; }
 
  private:
   gc_ptr(PropertyVisitorGeneric<TPropKey, TPropValue>) m_visitor;

@@ -33,7 +33,7 @@ ref class FieldWrapper {
   // static readonly Module Module = typeof(Program).Module;
   static gc_ptr(array<Type ^>) oneObj = gcnew array<gc_ptr(Type)>(1){Type::GetType("System.Object")};
   static gc_ptr(array<Type ^>) twoObj = gcnew array<gc_ptr(Type)>(2){Type::GetType("System.Object"),
-                                                                             Type::GetType("System.Object")};
+                                                                     Type::GetType("System.Object")};
   delegate void MySetter(gc_ptr(Object) t1, gc_ptr(Object) t2);
   delegate gc_ptr(Object) MyGetter(gc_ptr(Object) t1);
 
@@ -358,8 +358,7 @@ void ReflectionBasedAutoSerializer::serializeFields(gc_ptr(Object) o, gc_ptr(IPd
   }
 }
 
-gc_ptr(Object) ReflectionBasedAutoSerializer::deserializeFields(gc_ptr(String) className,
-                                                                    gc_ptr(IPdxReader) reader) {
+gc_ptr(Object) ReflectionBasedAutoSerializer::deserializeFields(gc_ptr(String) className, gc_ptr(IPdxReader) reader) {
   gc_ptr(Object) object = this->CreateObject(className, reader->Cache);
 
   FOR_EACH (gc_ptr(FieldWrapper) fi in GetFields(object->GetType())) {
@@ -403,8 +402,8 @@ gc_ptr(List<FieldWrapper ^>) ReflectionBasedAutoSerializer::GetFields(gc_ptr(Typ
 
     gc_ptr(List<FieldWrapper ^>) collectFields = gcnew List<gc_ptr(FieldWrapper)>();
     while (domaimType != nullptr) {
-      FOR_EACH (gc_ptr(FieldInfo) fi in domaimType->GetFields(
-          BindingFlags::Public | BindingFlags::NonPublic | BindingFlags::Instance | BindingFlags::DeclaredOnly)) {
+      FOR_EACH (gc_ptr(FieldInfo) fi in domaimType->GetFields(BindingFlags::Public | BindingFlags::NonPublic |
+                                                              BindingFlags::Instance | BindingFlags::DeclaredOnly)) {
         if (!fi->IsNotSerialized && !fi->IsStatic && !fi->IsLiteral && !fi->IsInitOnly) {
           // to ignore the fild
           if (IsFieldIncluded(fi, domaimType)) {
@@ -431,9 +430,7 @@ gc_ptr(List<FieldWrapper ^>) ReflectionBasedAutoSerializer::GetFields(gc_ptr(Typ
   }
 }
 
-gc_ptr(String) ReflectionBasedAutoSerializer::GetFieldName(gc_ptr(FieldInfo) fi, gc_ptr(Type) type) {
-  return fi->Name;
-}
+gc_ptr(String) ReflectionBasedAutoSerializer::GetFieldName(gc_ptr(FieldInfo) fi, gc_ptr(Type) type) { return fi->Name; }
 
 bool ReflectionBasedAutoSerializer::IsIdentityField(gc_ptr(FieldInfo) fi, gc_ptr(Type) type) {
   return IsPdxIdentityField(fi);
@@ -446,12 +443,12 @@ FieldType ReflectionBasedAutoSerializer::GetFieldType(gc_ptr(FieldInfo) fi, gc_p
 bool ReflectionBasedAutoSerializer::IsFieldIncluded(gc_ptr(FieldInfo) fi, gc_ptr(Type) type) { return true; }
 
 gc_ptr(Object) ReflectionBasedAutoSerializer::WriteTransform(gc_ptr(FieldInfo) fi, gc_ptr(Type) type,
-                                                                 gc_ptr(Object) originalValue) {
+                                                             gc_ptr(Object) originalValue) {
   return originalValue;
 }
 
 gc_ptr(Object) ReflectionBasedAutoSerializer::ReadTransform(gc_ptr(FieldInfo) fi, gc_ptr(Type) type,
-                                                                gc_ptr(Object) serializeValue) {
+                                                            gc_ptr(Object) serializeValue) {
   return serializeValue;
 }
 

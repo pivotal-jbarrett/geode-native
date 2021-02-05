@@ -263,12 +263,9 @@ PUBLIC ref class DataInput sealed {
   /// </summary>
   array<gc_ptr(array<Byte>)> ^ ReadArrayOfByteArrays();
 
-  internal :
+  CLI(internal:)
 
-      native::DataInput*
-      GetNative() {
-    return m_nativeptr->get();
-  }
+  native::DataInput* GetNative() { return m_nativeptr->get(); }
 
   void setPdxdeserialization(bool val) { m_ispdxDesrialization = true; }
   bool isRootObjectPdx() { return m_isRootObjectPdx; }

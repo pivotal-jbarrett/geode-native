@@ -102,8 +102,7 @@ bool CacheTransactionManager::TryResume(gc_ptr(Apache::Geode::Client::Transactio
 
   _GF_MG_EXCEPTION_CATCH_ALL2
 }
-bool CacheTransactionManager::TryResume(gc_ptr(Apache::Geode::Client::TransactionId) transactionId,
-                                        TimeSpan waitTime) {
+bool CacheTransactionManager::TryResume(gc_ptr(Apache::Geode::Client::TransactionId) transactionId, TimeSpan waitTime) {
   _GF_MG_EXCEPTION_TRY2
 
     return m_nativeptr->tryResume(transactionId->GetNative(),

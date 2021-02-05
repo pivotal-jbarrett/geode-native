@@ -322,10 +322,9 @@ bool PdxInstanceImpl::Equals(gc_ptr(Object) other) {
   return true;
 }
 
-bool PdxInstanceImpl::compareRawBytes(gc_ptr(PdxInstanceImpl) other, gc_ptr(PdxType) myPT,
-                                      gc_ptr(PdxFieldType) myF, gc_ptr(DataInput) myDataInput,
-                                      gc_ptr(PdxType) otherPT, gc_ptr(PdxFieldType) otherF,
-                                      gc_ptr(DataInput) otherDataInput) {
+bool PdxInstanceImpl::compareRawBytes(gc_ptr(PdxInstanceImpl) other, gc_ptr(PdxType) myPT, gc_ptr(PdxFieldType) myF,
+                                      gc_ptr(DataInput) myDataInput, gc_ptr(PdxType) otherPT,
+                                      gc_ptr(PdxFieldType) otherF, gc_ptr(DataInput) otherDataInput) {
   if (myF != Default_PdxFieldType && otherF != Default_PdxFieldType) {
     int pos = getOffset(myDataInput, myPT, myF->SequenceId);
     int nextpos = getNextFieldPosition(myDataInput, myF->SequenceId + 1, myPT);
@@ -640,8 +639,7 @@ generic<class T> int PdxInstanceImpl::primitiveArrayHashCode(T objArray) {
   return h;
 }
 
-int PdxInstanceImpl::getRawHashCode(gc_ptr(PdxType) pt, gc_ptr(PdxFieldType) pField,
-                                    gc_ptr(DataInput) dataInput) {
+int PdxInstanceImpl::getRawHashCode(gc_ptr(PdxType) pt, gc_ptr(PdxFieldType) pField, gc_ptr(DataInput) dataInput) {
   int pos = getOffset(dataInput, pt, pField->SequenceId);
   int nextpos = getNextFieldPosition(dataInput, pField->SequenceId + 1, pt);
 
@@ -672,8 +670,7 @@ bool PdxInstanceImpl::compareDefaulBytes(gc_ptr(DataInput) dataInput, int start,
   return true;
 }
 
-bool PdxInstanceImpl::hasDefaultBytes(gc_ptr(PdxFieldType) pField, gc_ptr(DataInput) dataInput, int start,
-                                      int end) {
+bool PdxInstanceImpl::hasDefaultBytes(gc_ptr(PdxFieldType) pField, gc_ptr(DataInput) dataInput, int start, int end) {
   switch (pField->TypeId) {
     case PdxFieldTypes::INT: {
       return compareDefaulBytes(dataInput, start, end, Int_DefaultBytes);
@@ -926,8 +923,7 @@ void PdxInstanceImpl::setPdxId(Int32 typeId) {
   }
 }
 
-gc_ptr(Object) PdxInstanceImpl::readField(gc_ptr(DataInput) dataInput, gc_ptr(String) fieldName,
-                                              int typeId) {
+gc_ptr(Object) PdxInstanceImpl::readField(gc_ptr(DataInput) dataInput, gc_ptr(String) fieldName, int typeId) {
   switch (typeId) {
     case PdxFieldTypes::INT: {
       return dataInput->ReadInt32();
@@ -995,9 +991,6 @@ gc_ptr(Object) PdxInstanceImpl::readField(gc_ptr(DataInput) dataInput, gc_ptr(St
     default:  // object
     {
       return dataInput->ReadObject();
-      // throw gcnew IllegalStateException("ReadField unable to de-serialize  "
-      //																	+
-      //fieldName + " of " + type);
     }
   }
 }
@@ -1074,7 +1067,7 @@ bool PdxInstanceImpl::checkType(gc_ptr(Type) type, int typeId) {
       return true;
       // throw gcnew IllegalStateException("ReadField unable to de-serialize  "
       //																	+
-      //fieldName + " of " + type);
+      // fieldName + " of " + type);
     }
   }
 }

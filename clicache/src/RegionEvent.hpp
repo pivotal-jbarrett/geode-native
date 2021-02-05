@@ -58,12 +58,9 @@ PUBLIC ref class RegionEvent sealed {
   /// </summary>
   property bool RemoteOrigin { bool get(); }
 
-  internal :
+  CLI(internal:)
 
-      const native::RegionEvent*
-      GetNative() {
-    return m_nativeptr;
-  }
+  const native::RegionEvent* GetNative() { return m_nativeptr; }
 
   /// <summary>
   /// Internal constructor to wrap a native object pointer

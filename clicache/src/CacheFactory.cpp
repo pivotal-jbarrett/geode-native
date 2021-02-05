@@ -74,9 +74,7 @@ gc_ptr(Cache) CacheFactory::Create() {
   finally { GC::KeepAlive(m_nativeptr); }
 }
 
-gc_ptr(String) CacheFactory::Version::get() {
-  return marshal_as<gc_ptr(String)>(native::CacheFactory::getVersion());
-}
+gc_ptr(String) CacheFactory::Version::get() { return marshal_as<gc_ptr(String)>(native::CacheFactory::getVersion()); }
 
 gc_ptr(String) CacheFactory::ProductDescription::get() {
   return marshal_as<gc_ptr(String)>(native::CacheFactory::getProductDescription());

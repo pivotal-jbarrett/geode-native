@@ -76,14 +76,12 @@ ref class CacheableHashTable : public CacheableHashMap {
   static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableHashTable(); }
 
   virtual void FromData(gc_ptr(DataInput) input) override { m_dictionary = input->ReadHashtable(); }
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Factory function to register this class.
-      /// </summary>
-      static gc_ptr(ISerializable) Create(gc_ptr(Object) hashtable) {
-    return gcnew CacheableHashTable(hashtable);
-  }
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) Create(gc_ptr(Object) hashtable) { return gcnew CacheableHashTable(hashtable); }
 };
 }  // namespace Client
 }  // namespace Geode

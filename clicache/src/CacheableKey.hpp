@@ -114,12 +114,11 @@ PUBLIC ref class CacheableKey : public Serializable, public ICacheableKey {
   /// </summary>
   static operator gc_ptr(CacheableKey)(gc_ptr(String) value);
 
-  internal :
-      /// <summary>
-      /// Default constructor.
-      /// </summary>
-      inline CacheableKey()
-      : Client::Serializable() {}
+  CLI(internal:)
+  /// <summary>
+  /// Default constructor.
+  /// </summary>
+  inline CacheableKey() : Client::Serializable() {}
 
   /// <summary>
   /// Internal constructor to wrap a native object pointer

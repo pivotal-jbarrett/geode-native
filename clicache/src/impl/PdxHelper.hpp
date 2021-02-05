@@ -39,11 +39,11 @@ PUBLIC ref class PdxHelper {
   static void SerializePdx(gc_ptr(DataOutput) dataOutput, gc_ptr(IPdxSerializable) pdxObject);
 
   static gc_ptr(IPdxSerializable) DeserializePdx(gc_ptr(DataInput) dataOutput, bool forceDeserialize,
-                                                     const native::SerializationRegistry* serializationRegistry);
+                                                 const native::SerializationRegistry* serializationRegistry);
 
-  static gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(
-      gc_ptr(DataInput) dataInput, bool forceDeserialize, int typeId, int length,
-      const native::SerializationRegistry* serializationRegistry);
+  static gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(gc_ptr(DataInput) dataInput, bool forceDeserialize,
+                                                            int typeId, int length,
+                                                            const native::SerializationRegistry* serializationRegistry);
 
   literal Byte PdxHeader = 8;
 
@@ -63,14 +63,12 @@ PUBLIC ref class PdxHelper {
 
   static Int32 ReadInt(System::Byte* offsetPosition, int size);
 
-  static Int32 GetEnumValue(gc_ptr(String) enumClassName, gc_ptr(String) enumName, int hashcode,
-                            gc_ptr(Cache) cache);
+  static Int32 GetEnumValue(gc_ptr(String) enumClassName, gc_ptr(String) enumName, int hashcode, gc_ptr(Cache) cache);
 
   static gc_ptr(Object) GetEnum(int enumId, gc_ptr(Cache) cache);
 
  private:
-  static void CreateMergedType(gc_ptr(PdxType) localType, gc_ptr(PdxType) remoteType,
-                               gc_ptr(DataInput) dataInput,
+  static void CreateMergedType(gc_ptr(PdxType) localType, gc_ptr(PdxType) remoteType, gc_ptr(DataInput) dataInput,
                                const native::SerializationRegistry* serializationRegistry);
 };
 }  // namespace Internal

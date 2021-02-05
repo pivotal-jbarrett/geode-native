@@ -281,12 +281,9 @@ ref class Log STATICCLASS {
     if (staticLogLevel >= LogLevel::Debug)
       Log::Write(LogLevel::Debug, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
-  internal :
+  CLI(internal:)
 
-      static void
-      SetLogLevel(LogLevel level) {
-    staticLogLevel = level;
-  }
+  static void SetLogLevel(LogLevel level) { staticLogLevel = level; }
 
  private:
   static LogLevel staticLogLevel = LogLevel::Null;

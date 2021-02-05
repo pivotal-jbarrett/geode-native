@@ -139,8 +139,8 @@ PUBLIC interface class ISubscriptionService {
   /// if the operation timed out
   /// </exception>
   /// <exception cref="UnknownException">For other exceptions.</exception>
-  void RegisterKeys(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys, bool isDurable,
-                    bool getInitialValues, bool receiveValues);
+  void RegisterKeys(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys, bool isDurable, bool getInitialValues,
+                    bool receiveValues);
 
   /// <summary>
   /// Unregisters a collection of keys to stop getting updates for them.

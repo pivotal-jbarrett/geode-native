@@ -64,13 +64,12 @@ PUBLIC ref class TransactionEvent sealed : public Internal::UMWrap<apache::geode
     gc_ptr(Apache::Geode::Client::Cache) get();
   }
 
-  internal :
-      /// <summary>
-      /// Internal constructor to wrap a native object pointer
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      inline TransactionEvent(apache::geode::client::TransactionEvent* nativeptr)
-      : UMWrap(nativeptr, false) {}
+  CLI(internal:)
+  /// <summary>
+  /// Internal constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline TransactionEvent(apache::geode::client::TransactionEvent* nativeptr) : UMWrap(nativeptr, false) {}
 };
 }  // namespace Client
 }  // namespace Geode

@@ -272,8 +272,7 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    String) Client::RegionAttributes<TKey, TValue>::CacheListenerLibrary::get() {
+generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheListenerLibrary::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheListenerLibrary());
   } finally {
@@ -299,8 +298,7 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    String) Client::RegionAttributes<TKey, TValue>::CacheListenerFactory::get() {
+generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheListenerFactory::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheListenerFactory());
   } finally {

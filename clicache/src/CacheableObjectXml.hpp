@@ -97,12 +97,11 @@ PUBLIC ref class CacheableObjectXml : public ISerializable {
   /// </summary>
   static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableObjectXml(nullptr); }
 
-  internal :
-      /// <summary>
-      /// Allocates a new instance from the given object.
-      /// </summary>
-      inline CacheableObjectXml(gc_ptr(Object) value)
-      : m_obj(value), m_objectSize(0) {}
+  CLI(internal:)
+  /// <summary>
+  /// Allocates a new instance from the given object.
+  /// </summary>
+  inline CacheableObjectXml(gc_ptr(Object) value) : m_obj(value), m_objectSize(0) {}
 
  private:
   gc_ptr(Object) m_obj;

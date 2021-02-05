@@ -170,8 +170,7 @@ gc_ptr(IPdxWriter) PdxRemoteWriter::WriteObject(gc_ptr(String) fieldName, gc_ptr
 // gc_ptr(IPdxWriter) PdxRemoteWriter::WriteMap( gc_ptr(String) fieldName,
 // gc_ptr(System::Collections::IDictionary) map );
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteCollection(gc_ptr(String) fieldName,
-                                                        gc_ptr(System::Collections::IList) obj) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteCollection(gc_ptr(String) fieldName, gc_ptr(System::Collections::IList) obj) {
   writePreserveData();
   PdxLocalWriter::WriteCollection(fieldName, obj);
   return this;
@@ -183,106 +182,95 @@ gc_ptr(IPdxWriter) PdxRemoteWriter::WriteDate(gc_ptr(String) fieldName, System::
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteBooleanArray(gc_ptr(String) fieldName,
-                                                          gc_ptr(array<bool>) boolArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteBooleanArray(gc_ptr(String) fieldName, gc_ptr(array<bool>) boolArray) {
   writePreserveData();
   PdxLocalWriter::WriteBooleanArray(fieldName, boolArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteCharArray(gc_ptr(String) fieldName,
-                                                       gc_ptr(array<Char>) charArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteCharArray(gc_ptr(String) fieldName, gc_ptr(array<Char>) charArray) {
   writePreserveData();
   PdxLocalWriter::WriteCharArray(fieldName, charArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteByteArray(gc_ptr(String) fieldName,
-                                                       gc_ptr(array<Byte>) byteArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteByteArray(gc_ptr(String) fieldName, gc_ptr(array<Byte>) byteArray) {
   writePreserveData();
   PdxLocalWriter::WriteByteArray(fieldName, byteArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteSByteArray(gc_ptr(String) fieldName,
-                                                        gc_ptr(array<SByte>) sbyteArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteSByteArray(gc_ptr(String) fieldName, gc_ptr(array<SByte>) sbyteArray) {
   writePreserveData();
   PdxLocalWriter::WriteSByteArray(fieldName, sbyteArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteShortArray(gc_ptr(String) fieldName,
-                                                        gc_ptr(array<System::Int16>) shortArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteShortArray(gc_ptr(String) fieldName, gc_ptr(array<System::Int16>) shortArray) {
   writePreserveData();
   PdxLocalWriter::WriteShortArray(fieldName, shortArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxRemoteWriter::WriteUnsignedShortArray(gc_ptr(String) fieldName,
-                                                                gc_ptr(array<System::UInt16>) ushortArray) {
+                                                            gc_ptr(array<System::UInt16>) ushortArray) {
   writePreserveData();
   PdxLocalWriter::WriteUnsignedShortArray(fieldName, ushortArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteIntArray(gc_ptr(String) fieldName,
-                                                      gc_ptr(array<System::Int32>) intArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteIntArray(gc_ptr(String) fieldName, gc_ptr(array<System::Int32>) intArray) {
   writePreserveData();
   PdxLocalWriter::WriteIntArray(fieldName, intArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxRemoteWriter::WriteUnsignedIntArray(gc_ptr(String) fieldName,
-                                                              gc_ptr(array<System::UInt32>) uintArray) {
+                                                          gc_ptr(array<System::UInt32>) uintArray) {
   writePreserveData();
   PdxLocalWriter::WriteUnsignedIntArray(fieldName, uintArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteLongArray(gc_ptr(String) fieldName,
-                                                       gc_ptr(array<Int64>) longArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteLongArray(gc_ptr(String) fieldName, gc_ptr(array<Int64>) longArray) {
   writePreserveData();
   PdxLocalWriter::WriteLongArray(fieldName, longArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxRemoteWriter::WriteUnsignedLongArray(gc_ptr(String) fieldName,
-                                                               gc_ptr(array<System::UInt64>) ulongArray) {
+                                                           gc_ptr(array<System::UInt64>) ulongArray) {
   writePreserveData();
   PdxLocalWriter::WriteUnsignedLongArray(fieldName, ulongArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteFloatArray(gc_ptr(String) fieldName,
-                                                        gc_ptr(array<float>) floatArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteFloatArray(gc_ptr(String) fieldName, gc_ptr(array<float>) floatArray) {
   writePreserveData();
   PdxLocalWriter::WriteFloatArray(fieldName, floatArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteDoubleArray(gc_ptr(String) fieldName,
-                                                         gc_ptr(array<double>) doubleArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteDoubleArray(gc_ptr(String) fieldName, gc_ptr(array<double>) doubleArray) {
   writePreserveData();
   PdxLocalWriter::WriteDoubleArray(fieldName, doubleArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteStringArray(gc_ptr(String) fieldName,
-                                                         gc_ptr(array<String ^>) stringArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) {
   writePreserveData();
   PdxLocalWriter::WriteStringArray(fieldName, stringArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteObjectArray(gc_ptr(String) fieldName,
-                                                         gc_ptr(List<Object ^>) objectArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) {
   writePreserveData();
   PdxLocalWriter::WriteObjectArray(fieldName, objectArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxRemoteWriter::WriteArrayOfByteArrays(gc_ptr(String) fieldName,
-                                                               array<gc_ptr(array<Byte>)> ^ byteArrays) {
+                                                           array<gc_ptr(array<Byte>)> ^ byteArrays) {
   writePreserveData();
   PdxLocalWriter::WriteArrayOfByteArrays(fieldName, byteArrays);
   return this;

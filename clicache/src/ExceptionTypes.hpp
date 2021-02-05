@@ -82,7 +82,7 @@ delegate gc_ptr(GeodeException)
     gc_ptr(CreateException2) m_delegate;
   };
 
-internal:
+  CLI(internal:)
 
   /// <summary>
   /// Static method to associate the native exception names with
@@ -238,81 +238,80 @@ internal:
 /// Handle geode exceptions from native layer and convert to managed
 /// exceptions.
 #define _GF_MG_EXCEPTION_TRY2 try {
-#define _GF_MG_EXCEPTION_CATCH_ALL2                         \
-  }                                                         \
-  catch (const apache::geode::client::Exception& ex) {      \
-    throw Apache::Geode::Client::GeodeException::Get(ex);   \
-  }                                                         \
-  catch (gc_ptr(System::AccessViolationException) ex) { \
-    throw ex;                                               \
+#define _GF_MG_EXCEPTION_CATCH_ALL2                       \
+  }                                                       \
+  catch (const apache::geode::client::Exception& ex) {    \
+    throw Apache::Geode::Client::GeodeException::Get(ex); \
+  }                                                       \
+  catch (gc_ptr(System::AccessViolationException) ex) {   \
+    throw ex;                                             \
   }
 
 /// Creates a class <c>x</c> named for each exception <c>y</c>.
-#define _GF_MG_EXCEPTION_DEF4(x, y)                                                                    \
-  [Serializable] PUBLIC ref class x : public GeodeException {                                          \
-   public:                                                                                             \
-    /** <summary>Default constructor</summary> */                                                      \
-    x() : GeodeException() {}                                                                          \
-                                                                                                       \
-    /** <summary>                                                                                      \
-     *  Constructor to create an exception object with the given message.                              \
-     *  </summary>                                                                                     \
-     *  <param name="message">The exception message.</param>                                           \
-     */                                                                                                \
-    x(gc_ptr(String) message) : GeodeException(message) {}                                         \
-                                                                                                       \
-    /** <summary>                                                                                      \
-     *  Constructor to create an exception object with the given message                               \
-     *  and with the given inner exception.                                                            \
-     *  </summary>                                                                                     \
-     *  <param name="message">The exception message.</param>                                           \
-     *  <param name="innerException">The inner exception object.</param>                               \
-     */                                                                                                \
-    x(gc_ptr(String) message, gc_ptr(System::Exception) innerException)                        \
-        : GeodeException(message, innerException) {}                                                   \
-                                                                                                       \
-   protected:                                                                                          \
-    /** <summary>                                                                                      \
-     *  Initializes a new instance of the class with serialized data.                                  \
-     *  This allows deserialization of this exception in .NET remoting.                                \
-     *  </summary>                                                                                     \
-     *  <param name="info">                                                                            \
-     *  holds the serialized object data about the exception being thrown                              \
-     *  </param>                                                                                       \
-     *  <param name="context">                                                                         \
-     *  contains contextual information about the source or destination                                \
-     *  </param>                                                                                       \
-     */                                                                                                \
-    x(gc_ptr(SerializationInfo) info, StreamingContext context) : GeodeException(info, context) {} \
-                                                                                                       \
-  internal:                                                                                            \
-    x(const apache::geode::client::y& nativeEx)                                                        \
-        : GeodeException(marshal_as<gc_ptr(String)>(nativeEx.getMessage()),                        \
-                         gcnew GeodeException(GeodeException::GetStackTrace(nativeEx))) {}             \
-                                                                                                       \
-    x(const apache::geode::client::y& nativeEx, gc_ptr(Exception) innerException)                  \
-        : GeodeException(marshal_as<gc_ptr(String)>(nativeEx.getMessage()), innerException) {}     \
-                                                                                                       \
-    static gc_ptr(GeodeException)                                                                  \
-        Create(const apache::geode::client::Exception& ex, gc_ptr(Exception) innerException) {     \
-      const apache::geode::client::y* nativeEx = dynamic_cast<const apache::geode::client::y*>(&ex);   \
-      if (nativeEx != nullptr) {                                                                       \
-        if (innerException == nullptr) {                                                               \
-          return gcnew x(*nativeEx);                                                                   \
-        } else {                                                                                       \
-          return gcnew x(*nativeEx, innerException);                                                   \
-        }                                                                                              \
-      }                                                                                                \
-      return nullptr;                                                                                  \
-    }                                                                                                  \
-    virtual std::shared_ptr<apache::geode::client::Exception> GetNative() override {                   \
-      auto message = marshal_as<std::string>(this->Message + ": " + this->StackTrace);                 \
-      if (this->InnerException != nullptr) {                                                           \
-        auto cause = GeodeException::GetNative(this->InnerException);                                  \
-        message += "Caused by: " + cause->getMessage();                                                \
-      }                                                                                                \
-      return std::make_shared<apache::geode::client::y>(message);                                      \
-    }                                                                                                  \
+#define _GF_MG_EXCEPTION_DEF4(x, y)                                                                                  \
+  [Serializable] PUBLIC ref class x : public GeodeException {                                                        \
+   public:                                                                                                           \
+    /** <summary>Default constructor</summary> */                                                                    \
+    x() : GeodeException() {}                                                                                        \
+                                                                                                                     \
+    /** <summary>                                                                                                    \
+     *  Constructor to create an exception object with the given message.                                            \
+     *  </summary>                                                                                                   \
+     *  <param name="message">The exception message.</param>                                                         \
+     */                                                                                                              \
+    x(gc_ptr(String) message) : GeodeException(message) {}                                                           \
+                                                                                                                     \
+    /** <summary>                                                                                                    \
+     *  Constructor to create an exception object with the given message                                             \
+     *  and with the given inner exception.                                                                          \
+     *  </summary>                                                                                                   \
+     *  <param name="message">The exception message.</param>                                                         \
+     *  <param name="innerException">The inner exception object.</param>                                             \
+     */                                                                                                              \
+    x(gc_ptr(String) message, gc_ptr(System::Exception) innerException) : GeodeException(message, innerException) {} \
+                                                                                                                     \
+   protected:                                                                                                        \
+    /** <summary>                                                                                                    \
+     *  Initializes a new instance of the class with serialized data.                                                \
+     *  This allows deserialization of this exception in .NET remoting.                                              \
+     *  </summary>                                                                                                   \
+     *  <param name="info">                                                                                          \
+     *  holds the serialized object data about the exception being thrown                                            \
+     *  </param>                                                                                                     \
+     *  <param name="context">                                                                                       \
+     *  contains contextual information about the source or destination                                              \
+     *  </param>                                                                                                     \
+     */                                                                                                              \
+    x(gc_ptr(SerializationInfo) info, StreamingContext context) : GeodeException(info, context) {}                   \
+                                                                                                                     \
+    CLI(internal:)                                                                                                   \
+    x(const apache::geode::client::y& nativeEx)                                                                      \
+        : GeodeException(marshal_as<gc_ptr(String)>(nativeEx.getMessage()),                                          \
+                         gcnew GeodeException(GeodeException::GetStackTrace(nativeEx))) {}                           \
+                                                                                                                     \
+    x(const apache::geode::client::y& nativeEx, gc_ptr(Exception) innerException)                                    \
+        : GeodeException(marshal_as<gc_ptr(String)>(nativeEx.getMessage()), innerException) {}                       \
+                                                                                                                     \
+    static gc_ptr(GeodeException)                                                                                    \
+        Create(const apache::geode::client::Exception& ex, gc_ptr(Exception) innerException) {                       \
+      const apache::geode::client::y* nativeEx = dynamic_cast<const apache::geode::client::y*>(&ex);                 \
+      if (nativeEx != nullptr) {                                                                                     \
+        if (innerException == nullptr) {                                                                             \
+          return gcnew x(*nativeEx);                                                                                 \
+        } else {                                                                                                     \
+          return gcnew x(*nativeEx, innerException);                                                                 \
+        }                                                                                                            \
+      }                                                                                                              \
+      return nullptr;                                                                                                \
+    }                                                                                                                \
+    virtual std::shared_ptr<apache::geode::client::Exception> GetNative() override {                                 \
+      auto message = marshal_as<std::string>(this->Message + ": " + this->StackTrace);                               \
+      if (this->InnerException != nullptr) {                                                                         \
+        auto cause = GeodeException::GetNative(this->InnerException);                                                \
+        message += "Caused by: " + cause->getMessage();                                                              \
+      }                                                                                                              \
+      return std::make_shared<apache::geode::client::y>(message);                                                    \
+    }                                                                                                                \
   }
 
 /// Creates a class named for each exception <c>x</c>.

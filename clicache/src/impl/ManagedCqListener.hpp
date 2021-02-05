@@ -44,8 +44,7 @@ class ManagedCqListenerGeneric : public apache::geode::client::CqListener {
   /// <param name="userptr">
   /// The user object.
   /// </param>
-  inline ManagedCqListenerGeneric(/*gc_ptr(Generic::ICqListener<Object^, Object^>) managedptr*/ gc_ptr(Object)
-                                      userptr)
+  inline ManagedCqListenerGeneric(/*gc_ptr(Generic::ICqListener<Object^, Object^>) managedptr*/ gc_ptr(Object) userptr)
       : /*m_managedptr( managedptr )*/ m_userptr(userptr) {}
 
   /// <summary>

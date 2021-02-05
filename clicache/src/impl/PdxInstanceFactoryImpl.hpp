@@ -37,7 +37,9 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
   gc_ptr(Dictionary<String ^, Object ^>) m_FieldVsValues;
   gc_ptr(Cache) m_cache;
 
-  internal : PdxInstanceFactoryImpl(gc_ptr(String) className, gc_ptr(Cache) cache);
+  CLI(internal:)
+
+  PdxInstanceFactoryImpl(gc_ptr(String) className, gc_ptr(Cache) cache);
   void isFieldAdded(gc_ptr(String) fieldName);
 
  public:
@@ -200,8 +202,7 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
   /// @throws PdxFieldAlreadyExistsException if the named field has already been written
   /// @throws PdxSerializationException if serialization of the field fails.
   /// </summary>
-  virtual gc_ptr(IPdxInstanceFactory)
-      WriteBooleanArray(gc_ptr(String) fieldName, gc_ptr(array<Boolean>) value);
+  virtual gc_ptr(IPdxInstanceFactory) WriteBooleanArray(gc_ptr(String) fieldName, gc_ptr(array<Boolean>) value);
 
   /// <summary>
   /// Writes the named field with the given value to the serialized form.
@@ -285,8 +286,7 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
   /// @throws PdxFieldAlreadyExistsException if the named field has already been written
   /// @throws PdxSerializationException if serialization of the field fails.
   /// </summary>
-  virtual gc_ptr(IPdxInstanceFactory)
-      WriteDoubleArray(gc_ptr(String) fieldName, gc_ptr(array<double>) value);
+  virtual gc_ptr(IPdxInstanceFactory) WriteDoubleArray(gc_ptr(String) fieldName, gc_ptr(array<double>) value);
 
   /// <summary>
   /// Writes the named field with the given value to the serialized form.
@@ -298,8 +298,7 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
   /// @throws PdxFieldAlreadyExistsException if the named field has already been written
   /// @throws PdxSerializationException if serialization of the field fails.
   /// </summary>
-  virtual gc_ptr(IPdxInstanceFactory)
-      WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) value);
+  virtual gc_ptr(IPdxInstanceFactory) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) value);
 
   /// <summary>
   /// Writes the named field with the given value to the serialized form.

@@ -50,8 +50,7 @@ PUBLIC ref class FunctionService {
   /// If Pool is multiusersecure mode then one need to pass logical instance of Region
   /// Pool->CreateSecureUserCache(<credentials>)->getRegion(<regionPath>).
   /// </remarks>
-  generic<class TKey, class TValue> static gc_ptr(Execution<TResult>)
-      OnRegion(gc_ptr(IRegion<TKey, TValue>) rg);
+  generic<class TKey, class TValue> static gc_ptr(Execution<TResult>) OnRegion(gc_ptr(IRegion<TKey, TValue>) rg);
 
   /// <summary>
   /// Creates a new Execution object on one server

@@ -117,9 +117,7 @@ PUBLIC ref class DataOutput sealed {
   /// Write an array of signed bytes to the <c>DataOutput</c>.
   /// </summary>
   /// <param name="bytes">The array of signed bytes to write.</param>
-  inline void WriteSBytes(gc_ptr(array<SByte>) bytes) {
-    WriteSBytes(bytes, (bytes == nullptr ? -1 : bytes->Length));
-  }
+  inline void WriteSBytes(gc_ptr(array<SByte>) bytes) { WriteSBytes(bytes, (bytes == nullptr ? -1 : bytes->Length)); }
 
   /// <summary>
   /// Write a given length of bytes without its length to the
@@ -320,12 +318,9 @@ PUBLIC ref class DataOutput sealed {
   /// <param name="value">The array of sign byte array to write.</param>
   void WriteArrayOfByteArrays(array<gc_ptr(array<Byte>)> ^ value);
 
-  internal :
+  CLI(internal:)
 
-      native::DataOutput*
-      GetNative() {
-    return m_nativeptr->get();
-  }
+  native::DataOutput* GetNative() { return m_nativeptr->get(); }
 
   void WriteDotNetObjectArray(gc_ptr(Object) objectArray);
 

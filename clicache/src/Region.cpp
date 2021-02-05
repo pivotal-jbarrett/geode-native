@@ -501,8 +501,8 @@ void Region<TKey, TValue>::PutAll(gc_ptr(System::Collections::Generic::IDictiona
 }
 
 GENERIC(class TKey, class TValue)
-void Region<TKey, TValue>::PutAll(gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) map,
-                                  TimeSpan timeout, gc_ptr(Object) callbackArg) {
+void Region<TKey, TValue>::PutAll(gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) map, TimeSpan timeout,
+                                  gc_ptr(Object) callbackArg) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     native::HashMapOfCacheable nativeMap;
@@ -903,14 +903,14 @@ void Region<TKey, TValue>::RegisterKeys(gc_ptr(System::Collections::Generic::ICo
 }
 
 GENERIC(class TKey, class TValue)
-void Region<TKey, TValue>::RegisterKeys(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
-                                        bool isDurable, bool getInitialValues) {
+void Region<TKey, TValue>::RegisterKeys(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys, bool isDurable,
+                                        bool getInitialValues) {
   RegisterKeys(keys, isDurable, getInitialValues, true);
 }
 
 GENERIC(class TKey, class TValue)
-void Region<TKey, TValue>::RegisterKeys(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
-                                        bool isDurable, bool getInitialValues, bool receiveValues) {
+void Region<TKey, TValue>::RegisterKeys(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys, bool isDurable,
+                                        bool getInitialValues, bool receiveValues) {
   if (keys != nullptr) {
     _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 

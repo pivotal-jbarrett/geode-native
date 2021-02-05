@@ -33,9 +33,9 @@ namespace native = apache::geode::client;
 /// This class encapsulates Id of a transaction.
 /// </summary>
 PUBLIC ref class TransactionId sealed {
-  internal :
+  CLI(internal:)
 
-      inline static gc_ptr(TransactionId) Create(native::TransactionId* nativeptr) {
+  inline static gc_ptr(TransactionId) Create(native::TransactionId* nativeptr) {
     return __nullptr == nativeptr ? nullptr : gcnew TransactionId(nativeptr);
   }
 

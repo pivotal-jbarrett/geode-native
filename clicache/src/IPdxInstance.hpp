@@ -137,11 +137,11 @@ PUBLIC interface class IPdxInstance : public IDisposable {
   /// </list>
   /// If a field's type is <code>OBJECT</code> then its value must be deserialized to determine if it is equals. If the
   /// deserialized object is an array then all the array element is used to determine equality. Otherwise <see
-  /// cref="Object.Equals" /> is used. If a field's type is <code>OBJECT[]</code> then its value must be deserialized and
-  /// all the array element is used to determine equality. For all other field types then the value does not need to be
-  /// deserialized. Instead the serialized raw bytes are compared and used to determine equality. Note that any fields
-  /// that have objects that do not override <see cref="Object.Equals" /> will cause equals to return false when you
-  /// might have expected it to return true.
+  /// cref="Object.Equals" /> is used. If a field's type is <code>OBJECT[]</code> then its value must be deserialized
+  /// and all the array element is used to determine equality. For all other field types then the value does not need to
+  /// be deserialized. Instead the serialized raw bytes are compared and used to determine equality. Note that any
+  /// fields that have objects that do not override <see cref="Object.Equals" /> will cause equals to return false when
+  /// you might have expected it to return true.
   /// </summary>
   ///< param name="other"> the other instance to compare to this.</param>
   ///< returns> <code>true</code> if this instance is equal to <code>other</code>.</returns>
@@ -155,9 +155,9 @@ PUBLIC interface class IPdxInstance : public IDisposable {
   /// Otherwise all its fields are identity fields.
   ///
   /// If an identity field is of type <code>OBJECT</code> then it is deserialized. If the deserialized object is an
-  /// array then all the array element is used. Otherwise <see cref="Object.GetHashCode" /> is used. If an identity field
-  /// is of type <code>OBJECT[]</code> this it is deserialized and all the array element is used. Otherwise the field is
-  /// not deserialized and the raw bytes of its value are used to compute the hash code.
+  /// array then all the array element is used. Otherwise <see cref="Object.GetHashCode" /> is used. If an identity
+  /// field is of type <code>OBJECT[]</code> this it is deserialized and all the array element is used. Otherwise the
+  /// field is not deserialized and the raw bytes of its value are used to compute the hash code.
   /// </summary>
   int GetHashCode();
 

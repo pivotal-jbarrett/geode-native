@@ -44,8 +44,7 @@ PUBLIC ref class Region : public IRegion<TKey, TValue>, public ISubscriptionServ
       virtual System::Collections::Generic::IEnumerator<KeyValuePair<TKey, TValue>> ^
       GetEnumerator();
 
-  virtual gc_ptr(System::Collections::IEnumerator)
-      GetEnumeratorOld() = System::Collections::IEnumerable::GetEnumerator;
+  virtual gc_ptr(System::Collections::IEnumerator) GetEnumeratorOld() = System::Collections::IEnumerable::GetEnumerator;
 
   virtual bool ContainsKey(TKey key);
 
@@ -129,8 +128,7 @@ PUBLIC ref class Region : public IRegion<TKey, TValue>, public ISubscriptionServ
                       bool addToLocalCache, gc_ptr(Object) callbackArg);
 
   virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys);
-  virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
-                         gc_ptr(Object) callbackArg);
+  virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys, gc_ptr(Object) callbackArg);
 
   virtual property gc_ptr(String) Name { gc_ptr(String) get(); }
 
@@ -138,9 +136,7 @@ PUBLIC ref class Region : public IRegion<TKey, TValue>, public ISubscriptionServ
 
   virtual property gc_ptr(IRegion<TKey, TValue>) ParentRegion { gc_ptr(IRegion<TKey, TValue>) get(); }
 
-  virtual property gc_ptr(RegionAttributes<TKey, TValue>) Attributes {
-    gc_ptr(RegionAttributes<TKey, TValue>) get();
-  }
+  virtual property gc_ptr(RegionAttributes<TKey, TValue>) Attributes { gc_ptr(RegionAttributes<TKey, TValue>) get(); }
 
   virtual property gc_ptr(AttributesMutator<TKey, TValue>) AttributesMutator {
     gc_ptr(Apache::Geode::Client::AttributesMutator<TKey, TValue>) get();
@@ -220,17 +216,17 @@ PUBLIC ref class Region : public IRegion<TKey, TValue>, public ISubscriptionServ
 
   virtual gc_ptr(Object) SelectValue(gc_ptr(String) predicate, TimeSpan timeout);
 
-  internal :
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      // GENERIC(class TKey, class TValue)
-      inline static gc_ptr(IRegion<TKey, TValue>) Create(std::shared_ptr<native::Region> nativeptr) {
+  CLI(internal:)
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  // GENERIC(class TKey, class TValue)
+  inline static gc_ptr(IRegion<TKey, TValue>) Create(std::shared_ptr<native::Region> nativeptr) {
     return __nullptr == nativeptr ? nullptr : gcnew Region<TKey, TValue>(nativeptr);
   }
 

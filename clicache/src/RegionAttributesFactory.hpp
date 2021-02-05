@@ -195,8 +195,7 @@ PUBLIC ref class RegionAttributesFactory sealed {
   /// user-defined cache listener, or null for no cache listener
   /// </param>
   // GENERIC(class TKey, class TValue)
-  gc_ptr(RegionAttributesFactory<TKey, TValue>)
-      SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) cacheListener);
+  gc_ptr(RegionAttributesFactory<TKey, TValue>) SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) cacheListener);
 
   /// <summary>
   /// Sets the PartitionResolver for the <c>RegionAttributes</c> being created.

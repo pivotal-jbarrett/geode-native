@@ -103,9 +103,8 @@ gc_ptr(DistributedSystem) DistributedSystem::Connect(gc_ptr(String) name, gc_ptr
   return DistributedSystem::Connect(name, nullptr, cache);
 }
 
-gc_ptr(DistributedSystem) DistributedSystem::Connect(gc_ptr(String) name,
-                                                         gc_ptr(Properties<String ^, String ^>) config,
-                                                         gc_ptr(Cache) cache) {
+gc_ptr(DistributedSystem) DistributedSystem::Connect(gc_ptr(String) name, gc_ptr(Properties<String ^, String ^>) config,
+                                                     gc_ptr(Cache) cache) {
   // TODO AppDomain should we be able to create a DS directly?
   _GF_MG_EXCEPTION_TRY2
 

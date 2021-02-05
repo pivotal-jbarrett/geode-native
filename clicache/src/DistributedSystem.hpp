@@ -101,17 +101,17 @@ ref class DistributedSystem sealed {
   /// <returns>the name of the DistributedSystem instance.</returns>
   property gc_ptr(String) Name { gc_ptr(String) get(); }
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      static gc_ptr(DistributedSystem) Create(native::DistributedSystem* nativeptr);
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  static gc_ptr(DistributedSystem) Create(native::DistributedSystem* nativeptr);
 
   DistributedSystem(std::unique_ptr<native::DistributedSystem> nativeDistributedSystem);
 

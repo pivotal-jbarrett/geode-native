@@ -33,8 +33,7 @@ namespace Geode {
 namespace Client {
 
 GENERIC(class TKey, class TValue)
-PUBLIC ref class CacheWriterGeneric
-    : Apache::Geode::Client::CacheWriterAdapter<gc_ptr(Object), gc_ptr(Object)> {
+PUBLIC ref class CacheWriterGeneric : Apache::Geode::Client::CacheWriterAdapter<gc_ptr(Object), gc_ptr(Object)> {
  private:
   gc_ptr(ICacheWriter<TKey, TValue>) m_writer;
 

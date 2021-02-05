@@ -24,8 +24,7 @@ namespace Apache {
 namespace Geode {
 namespace Client {
 
-gc_ptr(MethodInfo) Utils::LoadMethod(gc_ptr(String) assemblyName, gc_ptr(String) typeName,
-                                         gc_ptr(String) methodName) {
+gc_ptr(MethodInfo) Utils::LoadMethod(gc_ptr(String) assemblyName, gc_ptr(String) typeName, gc_ptr(String) methodName) {
   gc_ptr(Type) loadType;
 
   loadType = Type::GetType(typeName + ',' + assemblyName, false, true);
@@ -36,7 +35,7 @@ gc_ptr(MethodInfo) Utils::LoadMethod(gc_ptr(String) assemblyName, gc_ptr(String)
 }
 
 gc_ptr(MethodInfo) Utils::LoadMethodFrom(gc_ptr(String) assemblyPath, gc_ptr(String) typeName,
-                                             gc_ptr(String) methodName) {
+                                         gc_ptr(String) methodName) {
   gc_ptr(String) assemblyName;
   gc_ptr(Type) loadType;
 

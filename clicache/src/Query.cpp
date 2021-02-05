@@ -63,7 +63,7 @@ gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<Object ^>) 
     auto rsptr = apache::geode::client::CacheableVector::create();
     for (int index = 0; index < paramList->Length; index++) {
       auto valueptr = Serializable::GetUnmanagedValueGeneric<gc_ptr(Object)>(paramList[index]->GetType(),
-                                                                                 (gc_ptr(Object))paramList[index]);
+                                                                             (gc_ptr(Object))paramList[index]);
       rsptr->push_back(valueptr);
     }
 

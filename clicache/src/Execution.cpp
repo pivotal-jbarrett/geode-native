@@ -35,8 +35,8 @@ namespace native = apache::geode::client;
 
 GENERIC(class TResult)
 GENERIC(class TFilter)
-gc_ptr(Execution<TResult>) Execution<TResult>::WithFilter(
-    gc_ptr(System::Collections::Generic::ICollection<TFilter>) routingObj) {
+gc_ptr(Execution<TResult>) Execution<TResult>::WithFilter(gc_ptr(System::Collections::Generic::ICollection<TFilter>)
+                                                              routingObj) {
   if (routingObj != nullptr) {
     _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
       auto rsptr = native::CacheableVector::create();

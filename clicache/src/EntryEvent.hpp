@@ -77,7 +77,9 @@ PUBLIC ref class EntryEvent sealed {
   /// </summary>
   property bool RemoteOrigin { bool get(); }
 
-  internal : const native::EntryEvent* GetNative() { return m_nativeptr; }
+  CLI(internal:)
+
+  const native::EntryEvent* GetNative() { return m_nativeptr; }
 
   /// <summary>
   /// Private constructor to wrap a native object pointer

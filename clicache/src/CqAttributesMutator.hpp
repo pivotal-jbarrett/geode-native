@@ -42,8 +42,8 @@ private
 ref class CqListenerHelper sealed {
  public:
   static Dictionary<gc_ptr(Client::ICqListener<TKey, TResult>), gc_ptr(native_shared_ptr<native::CqListener>)> ^
-      m_ManagedVsUnManagedCqLstrDict = gcnew
-  Dictionary<gc_ptr(Client::ICqListener<TKey, TResult>), gc_ptr(native_shared_ptr<native::CqListener>)>();
+      m_ManagedVsUnManagedCqLstrDict =
+      gcnew Dictionary<gc_ptr(Client::ICqListener<TKey, TResult>), gc_ptr(native_shared_ptr<native::CqListener>)>();
 
   static gc_ptr(ReaderWriterLock) g_readerWriterLock = gcnew ReaderWriterLock();
 };
@@ -75,18 +75,17 @@ PUBLIC ref class CqAttributesMutator sealed {
 
   void SetCqListeners(array<gc_ptr(Client::ICqListener<TKey, TResult>)> ^ newListeners);
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object
-      /// </returns>
-      inline static gc_ptr(Client::CqAttributesMutator<TKey, TResult>)
-          Create(native::CqAttributesMutator* nativeptr) {
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object
+  /// </returns>
+  inline static gc_ptr(Client::CqAttributesMutator<TKey, TResult>) Create(native::CqAttributesMutator* nativeptr) {
     auto instance = gcnew CqAttributesMutator(nativeptr);
     return instance;
   }

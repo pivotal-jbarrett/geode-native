@@ -411,17 +411,17 @@ PUBLIC ref class RegionFactory sealed {
   generic<class TKey, class TValue> gc_ptr(RegionFactory)
       SetPartitionResolver(gc_ptr(IPartitionResolver<TKey, TValue>) partitionresolver);
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(RegionFactory) Create(std::unique_ptr<native::RegionFactory>& nativeptr) {
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(RegionFactory) Create(std::unique_ptr<native::RegionFactory>& nativeptr) {
     return __nullptr == nativeptr ? nullptr : gcnew RegionFactory(nativeptr);
   }
 

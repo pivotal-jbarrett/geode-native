@@ -166,7 +166,7 @@ bool Cache::GetPdxReadSerialized() {
 }
 
 gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<String ^, Object ^>) credentials,
-                                                          gc_ptr(String) poolName) {
+                                                      gc_ptr(String) poolName) {
   BEGIN_NATIVE {
     return AuthenticatedView::Create(m_nativeptr->get()->native::Cache::createAuthenticatedView(
         credentials->GetNative(), marshal_as<std::string>(poolName)));

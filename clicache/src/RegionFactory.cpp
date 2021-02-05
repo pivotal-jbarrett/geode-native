@@ -42,8 +42,7 @@ using namespace System::Collections::Generic;
 
 namespace native = apache::geode::client;
 
-gc_ptr(RegionFactory) RegionFactory::SetCacheLoader(gc_ptr(String) libPath,
-                                                        gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionFactory) RegionFactory::SetCacheLoader(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 
   try {
@@ -54,8 +53,7 @@ gc_ptr(RegionFactory) RegionFactory::SetCacheLoader(gc_ptr(String) libPath,
   return this;
 }
 
-gc_ptr(RegionFactory) RegionFactory::SetCacheWriter(gc_ptr(String) libPath,
-                                                        gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionFactory) RegionFactory::SetCacheWriter(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 
   try {
@@ -66,8 +64,7 @@ gc_ptr(RegionFactory) RegionFactory::SetCacheWriter(gc_ptr(String) libPath,
   return this;
 }
 
-gc_ptr(RegionFactory) RegionFactory::SetCacheListener(gc_ptr(String) libPath,
-                                                          gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionFactory) RegionFactory::SetCacheListener(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 
   try {
@@ -79,8 +76,7 @@ gc_ptr(RegionFactory) RegionFactory::SetCacheListener(gc_ptr(String) libPath,
   return this;
 }
 
-gc_ptr(RegionFactory) RegionFactory::SetPartitionResolver(gc_ptr(String) libPath,
-                                                              gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionFactory) RegionFactory::SetPartitionResolver(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 
   try {
@@ -160,8 +156,7 @@ generic<class TKey, class TValue> gc_ptr(RegionFactory)
   return SetPersistenceManager(persistenceManager, nullptr);
 }
 
-gc_ptr(RegionFactory) RegionFactory::SetPersistenceManager(gc_ptr(String) libPath,
-                                                               gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionFactory) RegionFactory::SetPersistenceManager(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   SetPersistenceManager(libPath, factoryFunctionName, nullptr);
   return this;
 }
@@ -274,8 +269,7 @@ gc_ptr(RegionFactory) RegionFactory::SetConcurrencyChecksEnabled(bool concurrenc
 }
 // NEW GENERIC APIs:
 
-generic<class TKey, class TValue> gc_ptr(IRegion<TKey, TValue>) RegionFactory::Create(gc_ptr(String)
-                                                                                              regionName) {
+generic<class TKey, class TValue> gc_ptr(IRegion<TKey, TValue>) RegionFactory::Create(gc_ptr(String) regionName) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     try {

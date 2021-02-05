@@ -67,9 +67,8 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
       static_cast<SByte>(apache::geode::client::internal::DSCode::NullObj)};
   static gc_ptr(array<SByte>) NULL_ARRAY_DefaultBytes = gcnew array<SByte>{-1};
 
-  static gc_ptr(PdxFieldType) Default_PdxFieldType = gcnew PdxFieldType("default", "default", -1,
-                                                                            -1 /*field index*/, false, 1,
-                                                                            -1 /*var len field idx*/);
+  static gc_ptr(PdxFieldType) Default_PdxFieldType = gcnew PdxFieldType("default", "default", -1, -1 /*field index*/,
+                                                                        false, 1, -1 /*var len field idx*/);
 
   bool hasDefaultBytes(gc_ptr(PdxFieldType) pField, gc_ptr(DataInput) dataInput, int start, int end);
   bool compareDefaulBytes(gc_ptr(DataInput) dataInput, int start, int end, gc_ptr(array<SByte>) defaultBytes);
@@ -83,7 +82,10 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
   bool m_own;
   gc_ptr(PdxType) m_pdxType;
   gc_ptr(Apache::Geode::Client::Cache) m_cache;
-  internal : gc_ptr(Dictionary<String ^, Object ^>) m_updatedFields;
+
+  CLI(internal:)
+
+  gc_ptr(Dictionary<String ^, Object ^>) m_updatedFields;
 
   gc_ptr(Object) readField(gc_ptr(DataInput) dataInput, gc_ptr(String) fieldName, int typeId);
 
@@ -95,8 +97,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
 
   int getSerializedLength(gc_ptr(DataInput) dataInput, gc_ptr(PdxType) pt);
 
-  void writeUnmodifieldField(gc_ptr(DataInput) dataInput, int startPos, int endPos,
-                             gc_ptr(PdxLocalWriter) localWriter);
+  void writeUnmodifieldField(gc_ptr(DataInput) dataInput, int startPos, int endPos, gc_ptr(PdxLocalWriter) localWriter);
 
   int getNextFieldPosition(gc_ptr(DataInput) dataInput, int fieldId, gc_ptr(PdxType) pt);
 
@@ -140,8 +141,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
   void updatePdxStream(System::Byte* newPdxStream, int len);
 
  public:
-  PdxInstanceImpl(System::Byte* buffer, int length, int typeId, bool own,
-                  gc_ptr(Apache::Geode::Client::Cache) cache) {
+  PdxInstanceImpl(System::Byte* buffer, int length, int typeId, bool own, gc_ptr(Apache::Geode::Client::Cache) cache) {
     m_buffer = buffer;
     m_bufferLength = length;
     m_typeId = typeId;
@@ -152,8 +152,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
   }
 
   // for pdxInstance factory
-  PdxInstanceImpl(gc_ptr(Dictionary<String ^, Object ^>) fieldVsValue, gc_ptr(PdxType) pdxType,
-                  gc_ptr(Cache) cache);
+  PdxInstanceImpl(gc_ptr(Dictionary<String ^, Object ^>) fieldVsValue, gc_ptr(PdxType) pdxType, gc_ptr(Cache) cache);
 
   ~PdxInstanceImpl() { cleanup(); }
   !PdxInstanceImpl() { cleanup(); }

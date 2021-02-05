@@ -67,13 +67,13 @@ PUBLIC ref class ResultCollector : public IResultCollector<TResult> {
   // GENERIC(class TKey)
   virtual void ClearResults();
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal constructor to wrap a native object pointer
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      inline ResultCollector(std::shared_ptr<native::ResultCollector> nativeptr) {
+  /// <summary>
+  /// Internal constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline ResultCollector(std::shared_ptr<native::ResultCollector> nativeptr) {
     m_nativeptr = gcnew native_shared_ptr<native::ResultCollector>(nativeptr);
   }
 

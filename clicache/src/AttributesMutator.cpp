@@ -141,8 +141,7 @@ void AttributesMutator<TKey, TValue>::SetCacheListener(gc_ptr(ICacheListener<TKe
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheListener(gc_ptr(String) libPath,
-                                                       gc_ptr(String) factoryFunctionName) {
+void AttributesMutator<TKey, TValue>::SetCacheListener(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 }
 
@@ -163,8 +162,7 @@ void AttributesMutator<TKey, TValue>::SetCacheLoader(gc_ptr(ICacheLoader<TKey, T
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheLoader(gc_ptr(String) libPath,
-                                                     gc_ptr(String) factoryFunctionName) {
+void AttributesMutator<TKey, TValue>::SetCacheLoader(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 }
 
@@ -185,8 +183,7 @@ void AttributesMutator<TKey, TValue>::SetCacheWriter(gc_ptr(ICacheWriter<TKey, T
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheWriter(gc_ptr(String) libPath,
-                                                     gc_ptr(String) factoryFunctionName) {
+void AttributesMutator<TKey, TValue>::SetCacheWriter(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 }
 

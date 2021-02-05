@@ -43,8 +43,8 @@ gc_ptr(Query<TResult>) QueryService::NewQuery(gc_ptr(String) query) {
 }
 
 GENERIC(class TKey, class TResult)
-gc_ptr(CqQuery<TKey, TResult>) QueryService::NewCq(gc_ptr(String) query,
-                                                       gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable) {
+gc_ptr(CqQuery<TKey, TResult>) QueryService::NewCq(gc_ptr(String) query, gc_ptr(CqAttributes<TKey, TResult>) cqAttr,
+                                                   bool isDurable) {
   try {
     return CqQuery<TKey, TResult>::Create(
         m_nativeptr->get()->newCq(marshal_as<std::string>(query), cqAttr->GetNative(), isDurable));
@@ -57,7 +57,7 @@ gc_ptr(CqQuery<TKey, TResult>) QueryService::NewCq(gc_ptr(String) query,
 
 GENERIC(class TKey, class TResult)
 gc_ptr(CqQuery<TKey, TResult>) QueryService::NewCq(gc_ptr(String) name, gc_ptr(String) query,
-                                                       gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable) {
+                                                   gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable) {
   try {
     return CqQuery<TKey, TResult>::Create(m_nativeptr->get()->newCq(
         marshal_as<std::string>(name), marshal_as<std::string>(query), cqAttr->GetNative(), isDurable));
@@ -141,8 +141,8 @@ gc_ptr(System::Collections::Generic::List<String ^>) QueryService::GetAllDurable
     auto durableCqsArrayListPtr = m_nativeptr->get()->getAllDurableCqsFromServer();
     auto durableCqsList = gcnew System::Collections::Generic::List<gc_ptr(String)>();
     for (const auto& d : *durableCqsArrayListPtr) {
-      durableCqsList->Add(marshal_as<gc_ptr(String)>(
-          std::dynamic_pointer_cast<apache::geode::client::CacheableString>(d)->value()));
+      durableCqsList->Add(
+          marshal_as<gc_ptr(String)>(std::dynamic_pointer_cast<apache::geode::client::CacheableString>(d)->value()));
     }
     return durableCqsList;
   } catch (const apache::geode::client::Exception& ex) {

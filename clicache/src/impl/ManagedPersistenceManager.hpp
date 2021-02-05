@@ -51,9 +51,7 @@ class ManagedPersistenceManagerGeneric : public apache::geode::client::Persisten
   virtual void destroy(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<void>& PersistenceInfo);
   virtual void close();
 
-  inline void setptr(gc_ptr(Apache::Geode::Client::IPersistenceManagerProxy) managedptr) {
-    m_managedptr = managedptr;
-  }
+  inline void setptr(gc_ptr(Apache::Geode::Client::IPersistenceManagerProxy) managedptr) { m_managedptr = managedptr; }
 
   inline gc_ptr(Object) userptr() const { return m_userptr; }
 

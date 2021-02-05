@@ -31,18 +31,18 @@ namespace Internal {
 void PdxType::AddFixedLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId,
                                       Int32 size) {
   int current = m_pdxFieldTypes->Count;
-  gc_ptr(PdxFieldType) pfType = gcnew PdxFieldType(fieldName, className, (Byte)typeId, current /*field index*/,
-                                                       false, size, 0 /*var len field idx*/);
+  gc_ptr(PdxFieldType) pfType = gcnew PdxFieldType(fieldName, className, (Byte)typeId, current /*field index*/, false,
+                                                   size, 0 /*var len field idx*/);
   m_pdxFieldTypes->Add(pfType);
   // this will make sure one can't add same field name
   m_fieldNameVsPdxType->Add(fieldName, pfType);
 }
 
-void PdxType::AddVariableLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className,
-                                         PdxFieldTypes typeId) {
+void PdxType::AddVariableLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId) {
   // we don't store offset of first var len field, this is the purpose of following check
-  if (m_isVarLenFieldAdded) m_varLenFieldIdx++;  // it initial value is zero so variable length field idx start with
-                                                 // zero
+  if (m_isVarLenFieldAdded)
+    m_varLenFieldIdx++;  // it initial value is zero so variable length field idx start with
+                         // zero
 
   m_numberOfVarLenFields++;
 

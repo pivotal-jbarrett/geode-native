@@ -226,8 +226,7 @@ PUBLIC interface class IRegion : public System::Collections::Generic::IDictionar
   /// Type: System.Collections.IEnumerator. An IEnumerator object that can be used to iterate
   /// through the collection.
   /// </returns>
-  virtual gc_ptr(System::Collections::IEnumerator)
-      GetEnumeratorOld() = System::Collections::IEnumerable::GetEnumerator;
+  virtual gc_ptr(System::Collections::IEnumerator) GetEnumeratorOld() = System::Collections::IEnumerable::GetEnumerator;
 
   /// <summary>
   /// Determines whether the IDictionary contains an element with the specified key.

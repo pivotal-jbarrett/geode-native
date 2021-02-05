@@ -298,8 +298,7 @@ PUBLIC interface class IPdxInstanceFactory {
   /// <param name="value"> the value of the field to write</param>
   /// <returns> this PdxInstanceFactory</returns>
   /// <exception cref="IllegalStateException"/> if the named field has already been written</exception>
-  gc_ptr(IPdxInstanceFactory)
-      WriteArrayOfByteArrays(gc_ptr(String) fieldName, array<gc_ptr(array<Byte>)> ^ value);
+  gc_ptr(IPdxInstanceFactory) WriteArrayOfByteArrays(gc_ptr(String) fieldName, array<gc_ptr(array<Byte>)> ^ value);
 
   /// <summary>
   /// Writes the named field with the given value and type to the serialized form.
@@ -314,8 +313,7 @@ PUBLIC interface class IPdxInstanceFactory {
   /// <returns> this PdxInstanceFactory</returns>
   /// <exception cref="IllegalStateException"/> if the named field has already been written</exception>
 
-  gc_ptr(IPdxInstanceFactory)
-      WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue, gc_ptr(Type) fieldType);
+  gc_ptr(IPdxInstanceFactory) WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue, gc_ptr(Type) fieldType);
 
   /// <summary>
   /// Indicate that the named field should be included in hashCode and equals checks

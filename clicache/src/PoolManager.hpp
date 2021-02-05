@@ -72,12 +72,9 @@ PUBLIC ref class PoolManager {
   /// </summary>
   void Close();
 
-  internal :
+  CLI(internal:)
 
-      native::PoolManager&
-      GetNative() {
-    return m_nativeref;
-  }
+  native::PoolManager& GetNative() { return m_nativeref; }
 
   inline PoolManager(native::PoolManager& nativeref) : m_nativeref(nativeref) {}
 

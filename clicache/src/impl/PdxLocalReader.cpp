@@ -56,7 +56,7 @@ void PdxLocalReader::MoveStream() {
 }
 
 gc_ptr(PdxRemotePreservedData) PdxLocalReader::GetPreservedData(gc_ptr(PdxType) mergedVersion,
-                                                                    gc_ptr(IPdxSerializable) pdxObject) {
+                                                                gc_ptr(IPdxSerializable) pdxObject) {
   int nFieldExtra = m_pdxType->NumberOfFieldsExtra;
   if (nFieldExtra > 0 && m_dataInput->Cache->GetPdxIgnoreUnreadFields() == false) {
     // m_pdxRemotePreserveData = gcnew PdxRemotePreservedData(m_pdxType!=nullptr? m_pdxType->TypeId : 0,
@@ -286,8 +286,8 @@ gc_ptr(Object) PdxLocalReader::ReadField(gc_ptr(String) fieldName, gc_ptr(Type) 
   } else {
     return this->ReadObject(fieldName);
     // throw gcnew IllegalStateException("ReadField unable to de-serialize  "
-    //																	+ fieldName + " of " +
-    //type);
+    //																	+ fieldName + " of "
+    //+ type);
   }
 }
 

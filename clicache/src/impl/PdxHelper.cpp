@@ -84,7 +84,7 @@ void PdxHelper::SerializePdx(gc_ptr(DataOutput) dataOutput, gc_ptr(IPdxSerializa
     pdxObject->ToData(ptc);
 
     gc_ptr(PdxType) nType = ptc->PdxLocalType;  // local type
-    nType->InitializeType(dataOutput->Cache);       // initialize it
+    nType->InitializeType(dataOutput->Cache);   // initialize it
 
     // get type id from server and then set it
     int nTypeId = dataOutput->Cache->GetPdxTypeRegistry()->GetPDXIdForType(pdxType, dataOutput->GetPool(), nType, true);
@@ -130,9 +130,9 @@ void PdxHelper::SerializePdx(gc_ptr(DataOutput) dataOutput, gc_ptr(IPdxSerializa
   }
 }
 
-gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(gc_ptr(DataInput) dataInput, bool forceDeserialize,
-                                                       int typeId, int len,
-                                                       const native::SerializationRegistry* serializationRegistry) {
+gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(gc_ptr(DataInput) dataInput, bool forceDeserialize, int typeId,
+                                                   int len,
+                                                   const native::SerializationRegistry* serializationRegistry) {
   dataInput->setPdxdeserialization(true);
   gc_ptr(String) pdxClassname = nullptr;
   gc_ptr(String) pdxDomainClassname = nullptr;
@@ -256,7 +256,7 @@ gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(gc_ptr(DataInput) dataInput, 
 }
 
 gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(gc_ptr(DataInput) dataInput, bool forceDeserialize,
-                                                       const native::SerializationRegistry* serializationRegistry) {
+                                                   const native::SerializationRegistry* serializationRegistry) {
   try {
     dataInput->setPdxdeserialization(true);
     if (dataInput->Cache->GetPdxReadSerialized() == false || forceDeserialize || dataInput->isRootObjectPdx()) {
@@ -325,8 +325,7 @@ gc_ptr(Object) PdxHelper::GetEnum(int enumId, gc_ptr(Cache) cache) {
   return ei->GetEnum(cache);
 }
 
-void PdxHelper::CreateMergedType(gc_ptr(PdxType) localType, gc_ptr(PdxType) remoteType,
-                                 gc_ptr(DataInput) dataInput,
+void PdxHelper::CreateMergedType(gc_ptr(PdxType) localType, gc_ptr(PdxType) remoteType, gc_ptr(DataInput) dataInput,
                                  const native::SerializationRegistry* serializationRegistry) {
   gc_ptr(PdxType) mergedVersion = localType->MergeVersion(remoteType);
 

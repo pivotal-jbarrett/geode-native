@@ -94,12 +94,11 @@ PUBLIC ref class CacheableObject : public IDataSerializablePrimitive {
   /// </summary>
   static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableObject(nullptr); }
 
-  internal :
-      /// <summary>
-      /// Allocates a new instance from the given object.
-      /// </summary>
-      inline CacheableObject(gc_ptr(Object) value)
-      : m_obj(value), m_objectSize(0) {}
+  CLI(internal:)
+  /// <summary>
+  /// Allocates a new instance from the given object.
+  /// </summary>
+  inline CacheableObject(gc_ptr(Object) value) : m_obj(value), m_objectSize(0) {}
 
  private:
   gc_ptr(Object) m_obj;

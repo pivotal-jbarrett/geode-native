@@ -229,17 +229,16 @@ PUBLIC ref class AttributesMutator sealed {
   /// </param>
   void SetCacheWriter(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName);
 
-  internal :
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(AttributesMutator<TKey, TValue>)
-          Create(std::shared_ptr<native::AttributesMutator> nativeptr) {
+  CLI(internal:)
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(AttributesMutator<TKey, TValue>) Create(std::shared_ptr<native::AttributesMutator> nativeptr) {
     return __nullptr == nativeptr ? nullptr : gcnew AttributesMutator<TKey, TValue>(nativeptr);
   }
 

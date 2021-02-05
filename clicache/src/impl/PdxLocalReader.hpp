@@ -64,8 +64,7 @@ ref class PdxLocalReader : public IPdxReader {
     initialize();
   }
 
-  gc_ptr(PdxRemotePreservedData)
-      GetPreservedData(gc_ptr(PdxType) mergedVersion, gc_ptr(IPdxSerializable) object);
+  gc_ptr(PdxRemotePreservedData) GetPreservedData(gc_ptr(PdxType) mergedVersion, gc_ptr(IPdxSerializable) object);
 
   void MoveStream();
 

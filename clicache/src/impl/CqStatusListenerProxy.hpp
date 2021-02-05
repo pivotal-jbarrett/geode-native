@@ -25,8 +25,7 @@ namespace Geode {
 namespace Client {
 
 GENERIC(class TKey, class TResult)
-PUBLIC ref class CqStatusListenerGeneric
-    : Apache::Geode::Client::ICqStatusListener<gc_ptr(Object), gc_ptr(Object)> {
+PUBLIC ref class CqStatusListenerGeneric : Apache::Geode::Client::ICqStatusListener<gc_ptr(Object), gc_ptr(Object)> {
  private:
   gc_ptr(ICqStatusListener<TKey, TResult>) m_listener;
 

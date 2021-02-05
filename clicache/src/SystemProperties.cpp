@@ -39,9 +39,7 @@ gc_ptr(String) SystemProperties::StatisticsArchiveFile::get() {
   return marshal_as<gc_ptr(String)>(m_nativeptr->statisticsArchiveFile());
 }
 
-gc_ptr(String) SystemProperties::LogFileName::get() {
-  return marshal_as<gc_ptr(String)>(m_nativeptr->logFilename());
-}
+gc_ptr(String) SystemProperties::LogFileName::get() { return marshal_as<gc_ptr(String)>(m_nativeptr->logFilename()); }
 
 LogLevel SystemProperties::GFLogLevel::get() { return static_cast<LogLevel>(m_nativeptr->logLevel()); }
 
@@ -69,9 +67,7 @@ TimeSpan SystemProperties::NotifyDupCheckLife::get() {
 
 gc_ptr(String) SystemProperties::Name::get() { return marshal_as<gc_ptr(String)>(m_nativeptr->name()); }
 
-gc_ptr(String) SystemProperties::CacheXmlFile::get() {
-  return marshal_as<gc_ptr(String)>(m_nativeptr->cacheXMLFile());
-}
+gc_ptr(String) SystemProperties::CacheXmlFile::get() { return marshal_as<gc_ptr(String)>(m_nativeptr->cacheXMLFile()); }
 
 System::Int32 SystemProperties::LogFileSizeLimit::get() { return m_nativeptr->logFileSizeLimit(); }
 
@@ -83,9 +79,7 @@ System::Int32 SystemProperties::StatsDiskSpaceLimit::get() { return m_nativeptr-
 
 bool SystemProperties::SSLEnabled::get() { return m_nativeptr->sslEnabled(); }
 
-gc_ptr(String) SystemProperties::SSLKeyStore::get() {
-  return marshal_as<gc_ptr(String)>(m_nativeptr->sslKeyStore());
-}
+gc_ptr(String) SystemProperties::SSLKeyStore::get() { return marshal_as<gc_ptr(String)>(m_nativeptr->sslKeyStore()); }
 
 gc_ptr(String) SystemProperties::SSLTrustStore::get() {
   return marshal_as<gc_ptr(String)>(m_nativeptr->sslTrustStore());

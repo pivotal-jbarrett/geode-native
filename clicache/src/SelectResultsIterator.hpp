@@ -42,9 +42,7 @@ PUBLIC ref class SelectResultsIterator sealed : public System::Collections::Gene
   /// </returns>
   property TResult Current { virtual TResult get(); }
 
-  property gc_ptr(Object) Current2 {
-    virtual gc_ptr(Object) get() = System::Collections::IEnumerator::Current::get;
-  }
+  property gc_ptr(Object) Current2 { virtual gc_ptr(Object) get() = System::Collections::IEnumerator::Current::get; }
 
   /// <summary>
   /// Advances the enumerator to the next element of the collection.
@@ -64,17 +62,17 @@ PUBLIC ref class SelectResultsIterator sealed : public System::Collections::Gene
 
   ~SelectResultsIterator(){};
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(SelectResultsIterator<TResult>) Create(gc_ptr(ISelectResults<TResult>) results) {
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(SelectResultsIterator<TResult>) Create(gc_ptr(ISelectResults<TResult>) results) {
     return results == nullptr ? nullptr : gcnew SelectResultsIterator<TResult>(results);
   }
 

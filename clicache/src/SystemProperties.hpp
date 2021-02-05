@@ -238,17 +238,17 @@ PUBLIC ref class SystemProperties sealed {
   /// <returns>true if enabled</returns>
   property bool OnClientDisconnectClearPdxTypeIds { bool get(); }
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class, with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">native object pointer</param>
-      /// <returns>
-      /// the managed wrapper object, or null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(SystemProperties) Create(native::SystemProperties* nativeptr) {
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class, with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">native object pointer</param>
+  /// <returns>
+  /// the managed wrapper object, or null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(SystemProperties) Create(native::SystemProperties* nativeptr) {
     return (nativeptr != nullptr ? gcnew SystemProperties(nativeptr) : nullptr);
   }
 

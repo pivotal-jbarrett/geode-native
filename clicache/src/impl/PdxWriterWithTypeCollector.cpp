@@ -155,15 +155,13 @@ gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteString(gc_ptr(String) fieldN
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteUTFHuge(gc_ptr(String) fieldName,
-                                                                gc_ptr(String) value) {
+gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteUTFHuge(gc_ptr(String) fieldName, gc_ptr(String) value) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "stringUTFHuge", PdxFieldTypes::STRING);
   PdxLocalWriter::WriteUTFHuge(fieldName, value);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteASCIIHuge(gc_ptr(String) fieldName,
-                                                                  gc_ptr(String) value) {
+gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteASCIIHuge(gc_ptr(String) fieldName, gc_ptr(String) value) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "stringASCIIHuge", PdxFieldTypes::STRING);
   PdxLocalWriter::WriteASCIIHuge(fieldName, value);
   return this;
@@ -182,107 +180,103 @@ gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteDate(gc_ptr(String) fieldNam
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteBooleanArray(gc_ptr(String) fieldName,
-                                                                     gc_ptr(array<bool>) boolArray) {
+                                                                 gc_ptr(array<bool>) boolArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "bool[]", PdxFieldTypes::BOOLEAN_ARRAY);
   PdxLocalWriter::WriteBooleanArray(fieldName, boolArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteCharArray(gc_ptr(String) fieldName,
-                                                                  gc_ptr(array<Char>) charArray) {
+gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteCharArray(gc_ptr(String) fieldName, gc_ptr(array<Char>) charArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "char[]", PdxFieldTypes::CHAR_ARRAY);
   PdxLocalWriter::WriteCharArray(fieldName, charArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteByteArray(gc_ptr(String) fieldName,
-                                                                  gc_ptr(array<Byte>) byteArray) {
+gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteByteArray(gc_ptr(String) fieldName, gc_ptr(array<Byte>) byteArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "byte[]", PdxFieldTypes::BYTE_ARRAY);
   PdxLocalWriter::WriteByteArray(fieldName, byteArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteSByteArray(gc_ptr(String) fieldName,
-                                                                   gc_ptr(array<SByte>) sbyteArray) {
+                                                               gc_ptr(array<SByte>) sbyteArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "byte[]", PdxFieldTypes::BYTE_ARRAY);
   PdxLocalWriter::WriteSByteArray(fieldName, sbyteArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteShortArray(gc_ptr(String) fieldName,
-                                                                   gc_ptr(array<System::Int16>) shortArray) {
+                                                               gc_ptr(array<System::Int16>) shortArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "short[]", PdxFieldTypes::SHORT_ARRAY);
   PdxLocalWriter::WriteShortArray(fieldName, shortArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteUnsignedShortArray(gc_ptr(String) fieldName,
-                                                                           gc_ptr(array<System::UInt16>)
-                                                                               ushortArray) {
+                                                                       gc_ptr(array<System::UInt16>) ushortArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "short[]", PdxFieldTypes::SHORT_ARRAY);
   PdxLocalWriter::WriteUnsignedShortArray(fieldName, ushortArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteIntArray(gc_ptr(String) fieldName,
-                                                                 gc_ptr(array<System::Int32>) intArray) {
+                                                             gc_ptr(array<System::Int32>) intArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "int[]", PdxFieldTypes::INT_ARRAY);
   PdxLocalWriter::WriteIntArray(fieldName, intArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteUnsignedIntArray(gc_ptr(String) fieldName,
-                                                                         gc_ptr(array<System::UInt32>) uintArray) {
+                                                                     gc_ptr(array<System::UInt32>) uintArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "int[]", PdxFieldTypes::INT_ARRAY);
   PdxLocalWriter::WriteUnsignedIntArray(fieldName, uintArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteLongArray(gc_ptr(String) fieldName,
-                                                                  gc_ptr(array<Int64>) longArray) {
+                                                              gc_ptr(array<Int64>) longArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "long[]", PdxFieldTypes::LONG_ARRAY);
   PdxLocalWriter::WriteLongArray(fieldName, longArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteUnsignedLongArray(gc_ptr(String) fieldName,
-                                                                          gc_ptr(array<System::UInt64>)
-                                                                              ulongArray) {
+                                                                      gc_ptr(array<System::UInt64>) ulongArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "long[]", PdxFieldTypes::LONG_ARRAY);
   PdxLocalWriter::WriteUnsignedLongArray(fieldName, ulongArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteFloatArray(gc_ptr(String) fieldName,
-                                                                   gc_ptr(array<float>) floatArray) {
+                                                               gc_ptr(array<float>) floatArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "float[]", PdxFieldTypes::FLOAT_ARRAY);
   PdxLocalWriter::WriteFloatArray(fieldName, floatArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteDoubleArray(gc_ptr(String) fieldName,
-                                                                    gc_ptr(array<double>) doubleArray) {
+                                                                gc_ptr(array<double>) doubleArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "double[]", PdxFieldTypes::DOUBLE_ARRAY);
   PdxLocalWriter::WriteDoubleArray(fieldName, doubleArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteStringArray(gc_ptr(String) fieldName,
-                                                                    gc_ptr(array<String ^>) stringArray) {
+                                                                gc_ptr(array<String ^>) stringArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "String[]", PdxFieldTypes::STRING_ARRAY);
   PdxLocalWriter::WriteStringArray(fieldName, stringArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteObjectArray(gc_ptr(String) fieldName,
-                                                                    gc_ptr(List<Object ^>) objectArray) {
+                                                                gc_ptr(List<Object ^>) objectArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "Object[]", PdxFieldTypes::OBJECT_ARRAY);
   PdxLocalWriter::WriteObjectArray(fieldName, objectArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteArrayOfByteArrays(gc_ptr(String) fieldName,
-                                                                          array<gc_ptr(array<Byte>)> ^ byteArrays) {
+                                                                      array<gc_ptr(array<Byte>)> ^ byteArrays) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "byte[][]", PdxFieldTypes::ARRAY_OF_BYTE_ARRAYS);
   PdxLocalWriter::WriteArrayOfByteArrays(fieldName, byteArrays);
   return this;

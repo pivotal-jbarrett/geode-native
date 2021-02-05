@@ -119,9 +119,9 @@ System::Int32 ManagedCacheableKeyGeneric::hashcode() const {
   if (m_hashcode != 0) return m_hashcode;
   try {
     ManagedCacheableKeyGeneric* tmp = const_cast<ManagedCacheableKeyGeneric*>(this);
-    tmp->m_hashcode = ((gc_ptr(Apache::Geode::Client::ICacheableKey))(
-                           gc_ptr(Apache::Geode::Client::ISerializable))m_managedptr)
-                          ->GetHashCode();
+    tmp->m_hashcode =
+        ((gc_ptr(Apache::Geode::Client::ICacheableKey))(gc_ptr(Apache::Geode::Client::ISerializable))m_managedptr)
+            ->GetHashCode();
     return m_hashcode;
   } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
     ex->ThrowNative();

@@ -130,8 +130,8 @@ gc_ptr(System::Exception) GeodeException::Get(const apache::geode::client::Excep
             mgExType->GetConstructor(gcnew array<gc_ptr(Type)>{String::typeid, Exception::typeid});
         if (cInfo != nullptr) {
           gc_ptr(String) mgMsg = mgExStr->Substring(colonIndex + 1);
-          gc_ptr(Exception) mgEx = dynamic_cast<gc_ptr(Exception)>(
-              cInfo->Invoke(gcnew array<gc_ptr(Object)>{mgMsg, innerException}));
+          gc_ptr(Exception) mgEx =
+              dynamic_cast<gc_ptr(Exception)>(cInfo->Invoke(gcnew array<gc_ptr(Object)>{mgMsg, innerException}));
           if (mgEx != nullptr) {
             return mgEx;
           }

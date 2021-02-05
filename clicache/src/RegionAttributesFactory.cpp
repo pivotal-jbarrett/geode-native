@@ -146,8 +146,8 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TVal
 }
 
 GENERIC(class TKey, class TValue)
-gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetCacheLoader(
-    gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionAttributesFactory<TKey, TValue>)
+    RegionAttributesFactory<TKey, TValue>::SetCacheLoader(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 
   try {
@@ -159,8 +159,8 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TVal
 }
 
 GENERIC(class TKey, class TValue)
-gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetCacheWriter(
-    gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
+gc_ptr(RegionAttributesFactory<TKey, TValue>)
+    RegionAttributesFactory<TKey, TValue>::SetCacheWriter(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 
   try {
@@ -252,8 +252,7 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>)
 // PERSISTENCE
 GENERIC(class TKey, class TValue)
 gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetPersistenceManager(
-    gc_ptr(IPersistenceManager<TKey, TValue>) persistenceManager,
-    gc_ptr(Properties<String ^, String ^>) config) {
+    gc_ptr(IPersistenceManager<TKey, TValue>) persistenceManager, gc_ptr(Properties<String ^, String ^>) config) {
   std::shared_ptr<native::PersistenceManager> persistenceManagerptr;
   if (persistenceManager != nullptr) {
     gc_ptr(PersistenceManagerGeneric<TKey, TValue>) clg = gcnew PersistenceManagerGeneric<TKey, TValue>();
@@ -286,8 +285,7 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TVal
 
 GENERIC(class TKey, class TValue)
 gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetPersistenceManager(
-    gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName,
-    gc_ptr(Properties<String ^, String ^>) config) {
+    gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName, gc_ptr(Properties<String ^, String ^>) config) {
   try {
     m_nativeptr->get()->setPersistenceManager(marshal_as<std::string>(libPath),
                                               marshal_as<std::string>(factoryFunctionName), config->GetNative());
@@ -301,7 +299,7 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TVal
 
 GENERIC(class TKey, class TValue)
 gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetPoolName(gc_ptr(String)
-                                                                                                         poolName) {
+                                                                                                     poolName) {
   try {
     m_nativeptr->get()->setPoolName(marshal_as<std::string>(poolName));
   } finally {
@@ -329,8 +327,7 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>)
 }
 
 GENERIC(class TKey, class TValue)
-gc_ptr(RegionAttributesFactory<TKey, TValue>)
-    RegionAttributesFactory<TKey, TValue>::SetLoadFactor(Single loadFactor) {
+gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetLoadFactor(Single loadFactor) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     try {

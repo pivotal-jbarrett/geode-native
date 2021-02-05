@@ -28,7 +28,7 @@
 #define GENERIC(...) generic<__VA_ARGS__>
 
 // C++/CLI safe statement
-#define CLI(X) X
+#define CLI(...) __VA_ARGS__
 
 // public
 #define PUBLIC public

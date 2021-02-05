@@ -136,9 +136,7 @@ PUBLIC ref class CacheableString : public IDataSerializablePrimitive, public Cac
   /// This is similar to the C# string.IsNullOrEmpty method.
   /// </remarks>
   /// <param name="value">the CacheableString value to check</param>
-  inline static bool IsNullOrEmpty(gc_ptr(CacheableString) value) {
-    return (value == nullptr || value->Length == 0);
-  }
+  inline static bool IsNullOrEmpty(gc_ptr(CacheableString) value) { return (value == nullptr || value->Length == 0); }
 
   /// <summary>
   /// Implicit conversion operator to underlying <c>System.String</c>.
@@ -163,7 +161,8 @@ PUBLIC ref class CacheableString : public IDataSerializablePrimitive, public Cac
     }
   }
 
-  internal : static gc_ptr(ISerializable) CreateDeserializable() {
+  CLI(internal:)
+  static gc_ptr(ISerializable) CreateDeserializable() {
     return gcnew CacheableString(static_cast<int8_t>(DSCode::CacheableASCIIString));
   }
 

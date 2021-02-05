@@ -184,15 +184,12 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
 
     // End Region: IEnumerator Members
 
-    internal :
-        /// <summary>
-        /// Internal constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline Enumerator(gc_ptr(CacheableHashSetType<TYPEID, HSTYPE>) set)
-        : m_set(set) {
-      Reset();
-    }
+    CLI(internal:)
+    /// <summary>
+    /// Internal constructor to wrap a native object pointer
+    /// </summary>
+    /// <param name="nativeptr">The native object pointer</param>
+    inline Enumerator(gc_ptr(CacheableHashSetType<TYPEID, HSTYPE>) set) : m_set(set) { Reset(); }
 
    private:
     // Region: IEnumerator Members
@@ -451,11 +448,11 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
 
   // End Region: IEnumerable<gc_ptr(ICacheableKey)> Members
 
-  internal :
-      /// <summary>
-      /// Factory function to register wrapper
-      /// </summary>
-      static gc_ptr(ISerializable) Create(apache::geode::client::Serializable* obj) {
+  CLI(internal:)
+  /// <summary>
+  /// Factory function to register wrapper
+  /// </summary>
+  static gc_ptr(ISerializable) Create(apache::geode::client::Serializable* obj) {
     return (obj != NULL ? gcnew CacheableHashSetType<TYPEID, HSTYPE>(obj) : nullptr);
   }
 
@@ -497,49 +494,50 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
 };
 }  // namespace Internal
 
-#define _GFCLI_CACHEABLEHASHSET_DEF_GENERIC(m, HSTYPE)                                                             \
-  PUBLIC ref class m                                                                                               \
-      : public Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE> {          \
-   public:                                                                                                         \
-    /** <summary>                                                                                                  \
-     *  Allocates a new empty instance.                                                                            \
-     *  </summary>                                                                                                 \
-     */                                                                                                            \
-    inline m() : Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE>() {}     \
-                                                                                                                   \
-    /** <summary>                                                                                                  \
-     *  Allocates a new instance with the given size.                                                              \
-     *  </summary>                                                                                                 \
-     *  <param name="size">the initial size of the new instance</param>                                            \
-     */                                                                                                            \
-    inline m(System::Int32 size)                                                                                   \
-        : Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE>(size) {}        \
-                                                                                                                   \
-    /** <summary>                                                                                                  \
-     *  Static function to create a new empty instance.                                                            \
-     *  </summary>                                                                                                 \
-     */                                                                                                            \
-    inline static gc_ptr(m) Create() { return gcnew m(); }                                                     \
-                                                                                                                   \
-    /** <summary>                                                                                                  \
-     *  Static function to create a new instance with the given size.                                              \
-     *  </summary>                                                                                                 \
-     */                                                                                                            \
-    inline static gc_ptr(m) Create(System::Int32 size) { return gcnew m(size); }                               \
-                                                                                                                   \
-    /* <summary>                                                                                                   \
-     * Factory function to register this class.                                                                    \
-     * </summary>                                                                                                  \
-     */                                                                                                            \
-    static gc_ptr(ISerializable) CreateDeserializable() { return gcnew m(); }                                  \
-                                                                                                                   \
-    internal : static gc_ptr(ISerializable) Create(std::shared_ptr<apache::geode::client::Serializable> obj) { \
-      return gcnew m(obj);                                                                                         \
-    }                                                                                                              \
-                                                                                                                   \
-   private:                                                                                                        \
-    inline m(std::shared_ptr<apache::geode::client::Serializable> nativeptr)                                       \
-        : Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE>(nativeptr) {}   \
+#define _GFCLI_CACHEABLEHASHSET_DEF_GENERIC(m, HSTYPE)                                                           \
+  PUBLIC ref class m                                                                                             \
+      : public Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE> {        \
+   public:                                                                                                       \
+    /** <summary>                                                                                                \
+     *  Allocates a new empty instance.                                                                          \
+     *  </summary>                                                                                               \
+     */                                                                                                          \
+    inline m() : Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE>() {}   \
+                                                                                                                 \
+    /** <summary>                                                                                                \
+     *  Allocates a new instance with the given size.                                                            \
+     *  </summary>                                                                                               \
+     *  <param name="size">the initial size of the new instance</param>                                          \
+     */                                                                                                          \
+    inline m(System::Int32 size)                                                                                 \
+        : Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE>(size) {}      \
+                                                                                                                 \
+    /** <summary>                                                                                                \
+     *  Static function to create a new empty instance.                                                          \
+     *  </summary>                                                                                               \
+     */                                                                                                          \
+    inline static gc_ptr(m) Create() { return gcnew m(); }                                                       \
+                                                                                                                 \
+    /** <summary>                                                                                                \
+     *  Static function to create a new instance with the given size.                                            \
+     *  </summary>                                                                                               \
+     */                                                                                                          \
+    inline static gc_ptr(m) Create(System::Int32 size) { return gcnew m(size); }                                 \
+                                                                                                                 \
+    /* <summary>                                                                                                 \
+     * Factory function to register this class.                                                                  \
+     * </summary>                                                                                                \
+     */                                                                                                          \
+    static gc_ptr(ISerializable) CreateDeserializable() { return gcnew m(); }                                    \
+                                                                                                                 \
+    CLI(internal:)                                                                                               \
+    static gc_ptr(ISerializable) Create(std::shared_ptr<apache::geode::client::Serializable> obj) {              \
+      return gcnew m(obj);                                                                                       \
+    }                                                                                                            \
+                                                                                                                 \
+   private:                                                                                                      \
+    inline m(std::shared_ptr<apache::geode::client::Serializable> nativeptr)                                     \
+        : Internal::CacheableHashSetType<static_cast<int8_t>(native::internal::DSCode::m), HSTYPE>(nativeptr) {} \
   };
 
 /// <summary>

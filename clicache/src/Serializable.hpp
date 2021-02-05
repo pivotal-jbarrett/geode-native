@@ -104,8 +104,10 @@ PUBLIC ref class Serializable : public Apache::Geode::Client::ISerializable {
   /// </summary>
   virtual gc_ptr(String) ToString() override;
 
-  internal : static std::shared_ptr<CacheableKey> GetNativeCacheableKeyWrapperForManagedISerializable(
-                 gc_ptr(ISerializable) managedObject);
+  CLI(internal:)
+
+  static std::shared_ptr<CacheableKey> GetNativeCacheableKeyWrapperForManagedISerializable(gc_ptr(ISerializable)
+                                                                                               managedObject);
   static System::Int32 GetPDXIdForType(native::Pool* pool, gc_ptr(ISerializable) pdxType, gc_ptr(Cache) cache);
   static gc_ptr(ISerializable) GetPDXTypeById(native::Pool* pool, System::Int32 typeId, gc_ptr(Cache) cache);
 

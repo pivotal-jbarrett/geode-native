@@ -28,7 +28,6 @@ using namespace System::Text;
 namespace Apache {
 namespace Geode {
 namespace Client {
-
 namespace Internal {
 
 namespace native = apache::geode::client;
@@ -107,24 +106,21 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteDouble(gc_ptr(String) f
   return this;
 }
 
-gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteDate(gc_ptr(String) fieldName,
-                                                                  System::DateTime value) {
+gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteDate(gc_ptr(String) fieldName, System::DateTime value) {
   isFieldAdded(fieldName);
   m_pdxType->AddFixedLengthTypeField(fieldName, "Date", PdxFieldTypes::DATE, native::PdxTypes::DATE_SIZE);
   m_FieldVsValues->Add(fieldName, value);
   return this;
 }
 
-gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteString(gc_ptr(String) fieldName,
-                                                                    gc_ptr(String) value) {
+gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteString(gc_ptr(String) fieldName, gc_ptr(String) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "String", PdxFieldTypes::STRING);
   m_FieldVsValues->Add(fieldName, value);
   return this;
 }
 
-gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteObject(gc_ptr(String) fieldName,
-                                                                    gc_ptr(Object) value) {
+gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteObject(gc_ptr(String) fieldName, gc_ptr(Object) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, /*obj->GetType()->FullName*/ "Object", PdxFieldTypes::OBJECT);
   m_FieldVsValues->Add(fieldName, value);
@@ -132,7 +128,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteObject(gc_ptr(String) f
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteBooleanArray(gc_ptr(String) fieldName,
-                                                                          gc_ptr(array<Boolean>) value) {
+                                                                      gc_ptr(array<Boolean>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "bool[]", PdxFieldTypes::BOOLEAN_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -140,7 +136,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteBooleanArray(gc_ptr(Str
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteCharArray(gc_ptr(String) fieldName,
-                                                                       gc_ptr(array<Char>) value) {
+                                                                   gc_ptr(array<Char>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "char[]", PdxFieldTypes::CHAR_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -148,7 +144,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteCharArray(gc_ptr(String
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteByteArray(gc_ptr(String) fieldName,
-                                                                       gc_ptr(array<Byte>) value) {
+                                                                   gc_ptr(array<Byte>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "byte[]", PdxFieldTypes::BYTE_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -156,7 +152,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteByteArray(gc_ptr(String
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteShortArray(gc_ptr(String) fieldName,
-                                                                        gc_ptr(array<Int16>) value) {
+                                                                    gc_ptr(array<Int16>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "short[]", PdxFieldTypes::SHORT_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -164,7 +160,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteShortArray(gc_ptr(Strin
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteIntArray(gc_ptr(String) fieldName,
-                                                                      gc_ptr(array<Int32>) value) {
+                                                                  gc_ptr(array<Int32>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "int[]", PdxFieldTypes::INT_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -172,7 +168,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteIntArray(gc_ptr(String)
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteLongArray(gc_ptr(String) fieldName,
-                                                                       gc_ptr(array<Int64>) value) {
+                                                                   gc_ptr(array<Int64>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "long[]", PdxFieldTypes::LONG_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -180,7 +176,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteLongArray(gc_ptr(String
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteFloatArray(gc_ptr(String) fieldName,
-                                                                        gc_ptr(array<float>) value) {
+                                                                    gc_ptr(array<float>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "float[]", PdxFieldTypes::FLOAT_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -188,7 +184,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteFloatArray(gc_ptr(Strin
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteDoubleArray(gc_ptr(String) fieldName,
-                                                                         gc_ptr(array<double>) value) {
+                                                                     gc_ptr(array<double>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "double[]", PdxFieldTypes::DOUBLE_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -196,7 +192,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteDoubleArray(gc_ptr(Stri
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteStringArray(gc_ptr(String) fieldName,
-                                                                         gc_ptr(array<String ^>) value) {
+                                                                     gc_ptr(array<String ^>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "String[]", PdxFieldTypes::STRING_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -212,16 +208,15 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteObjectArray(
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteArrayOfByteArrays(gc_ptr(String) fieldName,
-                                                                               array<gc_ptr(array<Byte>)> ^ value) {
+                                                                           array<gc_ptr(array<Byte>)> ^ value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "byte[][]", PdxFieldTypes::ARRAY_OF_BYTE_ARRAYS);
   m_FieldVsValues->Add(fieldName, value);
   return this;
 }
 
-gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteField(gc_ptr(String) fieldName,
-                                                                   gc_ptr(Object) fieldValue,
-                                                                   gc_ptr(Type) type) {
+gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue,
+                                                               gc_ptr(Type) type) {
   isFieldAdded(fieldName);
   if (type->Equals(DotNetTypes::IntType)) {
     return this->WriteInt(fieldName, (int)fieldValue);
@@ -268,11 +263,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteField(gc_ptr(String) fi
                                   safe_cast<gc_ptr(System::Collections::Generic::List<Object ^>)>(fieldValue));
   } else {
     return this->WriteObject(fieldName, fieldValue);
-    // throw gcnew IllegalStateException("WriteField unable to serialize  "
-    //																	+ fieldName + " of " +
-    //type);
   }
-  // return this;
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::MarkIdentityField(gc_ptr(String) fieldName) {
@@ -290,10 +281,10 @@ void PdxInstanceFactoryImpl::isFieldAdded(gc_ptr(String) fieldName) {
   if (fieldName == nullptr || fieldName->Length == 0 || m_FieldVsValues->ContainsKey(fieldName)) {
     throw gcnew IllegalStateException("Field: " + fieldName +
                                       " either already added into PdxInstanceFactory or it is null");
-  }  // namespace Client
-}  // namespace Geode
-}  // namespace Internal
+  }
+}
 
+}  // namespace Internal
 }  // namespace Client
 }  // namespace Geode
 }  // namespace Apache

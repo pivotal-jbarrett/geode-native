@@ -38,8 +38,7 @@ ref class PdxRemoteWriter : public PdxLocalWriter {
   void writePreserveData();
 
  public:
-  PdxRemoteWriter(gc_ptr(DataOutput) dataOutput, gc_ptr(PdxType) pdxType,
-                  gc_ptr(PdxRemotePreservedData) preservedData)
+  PdxRemoteWriter(gc_ptr(DataOutput) dataOutput, gc_ptr(PdxType) pdxType, gc_ptr(PdxRemotePreservedData) preservedData)
       : PdxLocalWriter(dataOutput, pdxType) {
     m_pdxType = pdxType;
     m_preserveData = preservedData;
@@ -218,40 +217,35 @@ ref class PdxRemoteWriter : public PdxLocalWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="boolArray">The boolArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteBooleanArray(gc_ptr(String) fieldName, gc_ptr(array<Boolean>) boolArray) override;
+  virtual gc_ptr(IPdxWriter) WriteBooleanArray(gc_ptr(String) fieldName, gc_ptr(array<Boolean>) boolArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="charArray">The charArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteCharArray(gc_ptr(String) fieldName, gc_ptr(array<Char>) charArray) override;
+  virtual gc_ptr(IPdxWriter) WriteCharArray(gc_ptr(String) fieldName, gc_ptr(array<Char>) charArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="byteArray">The byteArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteByteArray(gc_ptr(String) fieldName, gc_ptr(array<Byte>) byteArray) override;
+  virtual gc_ptr(IPdxWriter) WriteByteArray(gc_ptr(String) fieldName, gc_ptr(array<Byte>) byteArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="sbyteArray">The sbyteArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteSByteArray(gc_ptr(String) fieldName, gc_ptr(array<SByte>) sbyteArray) override;
+  virtual gc_ptr(IPdxWriter) WriteSByteArray(gc_ptr(String) fieldName, gc_ptr(array<SByte>) sbyteArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="shortArray">The shortArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteShortArray(gc_ptr(String) fieldName, gc_ptr(array<short>) shortArray) override;
+  virtual gc_ptr(IPdxWriter) WriteShortArray(gc_ptr(String) fieldName, gc_ptr(array<short>) shortArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -266,8 +260,7 @@ ref class PdxRemoteWriter : public PdxLocalWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="intArray">The intArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteIntArray(gc_ptr(String) fieldName, gc_ptr(array<System::Int32>) intArray) override;
+  virtual gc_ptr(IPdxWriter) WriteIntArray(gc_ptr(String) fieldName, gc_ptr(array<System::Int32>) intArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -282,8 +275,7 @@ ref class PdxRemoteWriter : public PdxLocalWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="longArray">The longArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteLongArray(gc_ptr(String) fieldName, gc_ptr(array<Int64>) longArray) override;
+  virtual gc_ptr(IPdxWriter) WriteLongArray(gc_ptr(String) fieldName, gc_ptr(array<Int64>) longArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -298,32 +290,28 @@ ref class PdxRemoteWriter : public PdxLocalWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="floatArray">The floatArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteFloatArray(gc_ptr(String) fieldName, gc_ptr(array<float>) floatArray) override;
+  virtual gc_ptr(IPdxWriter) WriteFloatArray(gc_ptr(String) fieldName, gc_ptr(array<float>) floatArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="doubleArray">The doubleArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteDoubleArray(gc_ptr(String) fieldName, gc_ptr(array<double>) doubleArray) override;
+  virtual gc_ptr(IPdxWriter) WriteDoubleArray(gc_ptr(String) fieldName, gc_ptr(array<double>) doubleArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="stringArray">The stringArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) override;
+  virtual gc_ptr(IPdxWriter) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="objectArray">The objectArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) override;
+  virtual gc_ptr(IPdxWriter) WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.

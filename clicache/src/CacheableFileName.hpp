@@ -88,13 +88,11 @@ PUBLIC ref class CacheableFileName : public ICacheableKey, public IDataSerializa
     inline gc_ptr(String) get() { return m_str; }
   }
 
-  internal :
-      /// <summary>
-      /// Factory function to register this class.
-      /// </summary>
-      static gc_ptr(ISerializable) CreateDeserializable() {
-    return gcnew CacheableFileName((gc_ptr(String)) nullptr);
-  }
+  CLI(internal:)
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableFileName((gc_ptr(String)) nullptr); }
 
  private:
   /// <summary>

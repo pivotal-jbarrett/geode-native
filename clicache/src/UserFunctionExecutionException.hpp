@@ -58,14 +58,14 @@ PUBLIC ref class UserFunctionExecutionException sealed : public ISerializable {
   /// <returns>the String Exception Name</returns>
   property gc_ptr(String) Name { gc_ptr(String) get(); }
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Private constructor to wrap a native object pointer.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      inline UserFunctionExecutionException(
-          std::shared_ptr<apache::geode::client::UserFunctionExecutionException> nativeptr) {
+  /// <summary>
+  /// Private constructor to wrap a native object pointer.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline UserFunctionExecutionException(
+      std::shared_ptr<apache::geode::client::UserFunctionExecutionException> nativeptr) {
     m_nativeptr = gcnew native_shared_ptr<native::UserFunctionExecutionException>(nativeptr);
   }
 

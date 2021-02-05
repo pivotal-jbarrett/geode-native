@@ -87,13 +87,13 @@ PUBLIC ref class Struct sealed : public Apache::Geode::Client::Serializable {
       : Apache::Geode::Client::Serializable(std::shared_ptr<apache::geode::client::Serializable>(
             apache::geode::client::Struct::createDeserializable())) {}
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Factory function to register wrapper
-      /// </summary>
-      inline static gc_ptr(Apache::Geode::Client::ISerializable)
-          Create(::std::shared_ptr<apache::geode::client::Serializable> obj) {
+  /// <summary>
+  /// Factory function to register wrapper
+  /// </summary>
+  inline static gc_ptr(Apache::Geode::Client::ISerializable)
+      Create(::std::shared_ptr<apache::geode::client::Serializable> obj) {
     return (obj != nullptr ? gcnew Apache::Geode::Client::Struct(obj) : nullptr);
   }
 

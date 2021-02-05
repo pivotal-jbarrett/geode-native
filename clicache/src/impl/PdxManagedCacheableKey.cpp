@@ -159,8 +159,7 @@ void PdxManagedCacheableKey::fromDelta(native::DataInput& input) {
 
 std::shared_ptr<Delta> PdxManagedCacheableKey::clone() const {
   try {
-    if (auto cloneable =
-            dynamic_cast<gc_ptr(ICloneable)>((gc_ptr(Apache::Geode::Client::IDelta))m_managedDeltaptr)) {
+    if (auto cloneable = dynamic_cast<gc_ptr(ICloneable)>((gc_ptr(Apache::Geode::Client::IDelta))m_managedDeltaptr)) {
       auto managedclone = dynamic_cast<gc_ptr(Apache::Geode::Client::IPdxSerializable)>(cloneable->Clone());
 
       return std::shared_ptr<Delta>(

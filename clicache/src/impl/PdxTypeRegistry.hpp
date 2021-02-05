@@ -82,8 +82,7 @@ ref class PdxTypeRegistry {
 
   gc_ptr(Dictionary<Int32, PdxType ^>) remoteTypeIdToMergedPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
 
-  gc_ptr(Dictionary<String ^, PdxType ^>)
-      localTypeToPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxType)>();
+  gc_ptr(Dictionary<String ^, PdxType ^>) localTypeToPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxType)>();
 
   gc_ptr(Dictionary<EnumInfo ^, Int32>) enumToInt = gcnew Dictionary<gc_ptr(EnumInfo), Int32>();
 

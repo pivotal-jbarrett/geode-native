@@ -100,9 +100,7 @@ class ManagedPartitionResolverGeneric : public PartitionResolver {
   /// </summary>
   inline gc_ptr(Apache::Geode::Client::IPartitionResolverProxy) ptr() const { return m_managedptr; }
 
-  inline void setptr(gc_ptr(Apache::Geode::Client::IPartitionResolverProxy) managedptr) {
-    m_managedptr = managedptr;
-  }
+  inline void setptr(gc_ptr(Apache::Geode::Client::IPartitionResolverProxy) managedptr) { m_managedptr = managedptr; }
 
   inline gc_ptr(Object) userptr() const { return m_userptr; }
 

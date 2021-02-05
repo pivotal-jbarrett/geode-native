@@ -202,8 +202,7 @@ ref class PdxLocalWriter : public IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="collection">The collection to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteCollection(gc_ptr(String) fieldName, gc_ptr(System::Collections::IList) collection);
+  virtual gc_ptr(IPdxWriter) WriteCollection(gc_ptr(String) fieldName, gc_ptr(System::Collections::IList) collection);
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -270,8 +269,7 @@ ref class PdxLocalWriter : public IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="uintArray">The uintArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteUnsignedIntArray(gc_ptr(String) fieldName, gc_ptr(array<System::UInt32>) uintArray);
+  virtual gc_ptr(IPdxWriter) WriteUnsignedIntArray(gc_ptr(String) fieldName, gc_ptr(array<System::UInt32>) uintArray);
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -285,8 +283,7 @@ ref class PdxLocalWriter : public IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="ulongArray">The ulongArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteUnsignedLongArray(gc_ptr(String) fieldName, gc_ptr(array<System::UInt64>) ulongArray);
+  virtual gc_ptr(IPdxWriter) WriteUnsignedLongArray(gc_ptr(String) fieldName, gc_ptr(array<System::UInt64>) ulongArray);
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -307,8 +304,7 @@ ref class PdxLocalWriter : public IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="stringArray">The stringArray to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray);
+  virtual gc_ptr(IPdxWriter) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray);
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
@@ -322,8 +318,7 @@ ref class PdxLocalWriter : public IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="byteArrays">The byteArrays to write.</param>
-  virtual gc_ptr(IPdxWriter)
-      WriteArrayOfByteArrays(gc_ptr(String) fieldName, array<gc_ptr(array<Byte>)> ^ byteArrays);
+  virtual gc_ptr(IPdxWriter) WriteArrayOfByteArrays(gc_ptr(String) fieldName, array<gc_ptr(array<Byte>)> ^ byteArrays);
 
   // TODO:
   // virtual gc_ptr(IPdxWriter) WriteEnum(gc_ptr(String) fieldName, Enum e) ;
@@ -341,8 +336,7 @@ ref class PdxLocalWriter : public IPdxWriter {
   ///
   /// </summary>
   /// <returns>this PdxWriter</returns>
-  virtual gc_ptr(IPdxWriter)
-      WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue, gc_ptr(Type) type);
+  virtual gc_ptr(IPdxWriter) WriteField(gc_ptr(String) fieldName, gc_ptr(Object) fieldValue, gc_ptr(Type) type);
 
   virtual void WriteByte(Byte byte);  // for internal purpose
 

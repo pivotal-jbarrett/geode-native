@@ -28,8 +28,7 @@ namespace Client {
 namespace Internal {
 namespace native = apache::geode::client;
 
-void PdxReaderWithTypeCollector::checkType(gc_ptr(String) fieldName, PdxFieldTypes typeId,
-                                           gc_ptr(String) fieldType) {
+void PdxReaderWithTypeCollector::checkType(gc_ptr(String) fieldName, PdxFieldTypes typeId, gc_ptr(String) fieldType) {
   gc_ptr(PdxFieldType) pft = m_pdxType->GetPdxField(fieldName);
 
   if (pft != nullptr) {

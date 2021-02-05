@@ -196,8 +196,7 @@ PUBLIC interface class IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="byteArrays">The byteArrays to write.</param>
-  gc_ptr(IPdxWriter)
-      WriteArrayOfByteArrays(gc_ptr(String) fieldName, array<gc_ptr(array<Byte>)> ^ byteArrays);
+  gc_ptr(IPdxWriter) WriteArrayOfByteArrays(gc_ptr(String) fieldName, array<gc_ptr(array<Byte>)> ^ byteArrays);
 
   // TODO:
   // gc_ptr(IPdxWriter) WriteEnum(gc_ptr(String) fieldName, Enum e) ;

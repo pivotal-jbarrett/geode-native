@@ -48,8 +48,7 @@ PUBLIC ref class Utils STATICCLASS {
   /// The <c>System.Reflection.MethodInfo</c> for the given method,
   /// or null if the method is not found.
   /// </returns>
-  static gc_ptr(MethodInfo)
-      LoadMethod(gc_ptr(String) assemblyPath, gc_ptr(String) typeName, gc_ptr(String) methodName);
+  static gc_ptr(MethodInfo) LoadMethod(gc_ptr(String) assemblyPath, gc_ptr(String) typeName, gc_ptr(String) methodName);
 
   /// <summary>
   /// Load a method from the given assembly name using the default

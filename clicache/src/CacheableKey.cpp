@@ -48,9 +48,7 @@ bool CacheableKey::Equals(gc_ptr(Client::ICacheableKey) other) {
 
 bool CacheableKey::Equals(gc_ptr(Object) obj) { return Equals(dynamic_cast<gc_ptr(CacheableKey)>(obj)); }
 
-CacheableKey::operator gc_ptr(CacheableKey)(Byte value) {
-  return (gc_ptr(CacheableKey))CacheableByte::Create(value);
-}
+CacheableKey::operator gc_ptr(CacheableKey)(Byte value) { return (gc_ptr(CacheableKey))CacheableByte::Create(value); }
 
 CacheableKey::operator gc_ptr(CacheableKey)(bool value) {
   return (gc_ptr(CacheableKey))CacheableBoolean::Create(value);

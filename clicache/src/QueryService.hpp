@@ -67,8 +67,8 @@ PUBLIC ref class QueryService sealed {
   /// </summary>
   /// @endnativeclient
   GENERIC(class TKey, class TResult)
-  gc_ptr(CqQuery<TKey, TResult>) NewCq(gc_ptr(String) name, gc_ptr(String) query,
-                                           gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable);
+  gc_ptr(CqQuery<TKey, TResult>)
+      NewCq(gc_ptr(String) name, gc_ptr(String) query, gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable);
   /// @nativeclient
   /// <summary>
   /// Close all  <c>CqQuery</c> on this client.
@@ -120,17 +120,17 @@ PUBLIC ref class QueryService sealed {
   /// @endnativeclient
   gc_ptr(System::Collections::Generic::List<String ^>) GetAllDurableCqsFromServer();
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(QueryService) Create(std::shared_ptr<native::QueryService> nativeptr) {
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(QueryService) Create(std::shared_ptr<native::QueryService> nativeptr) {
     return __nullptr == nativeptr ? nullptr : gcnew QueryService(nativeptr);
   }
 

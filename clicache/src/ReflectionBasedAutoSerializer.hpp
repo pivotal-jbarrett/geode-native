@@ -180,8 +180,7 @@ PUBLIC ref class ReflectionBasedAutoSerializer : IPdxSerializer {
   /// <returns> the actual value to write for this field. Return <code>originalValue</code>
   ///   if you decide not to transform the value. </returns>
 
-  virtual gc_ptr(Object)
-      WriteTransform(gc_ptr(FieldInfo) fi, gc_ptr(Type) type, gc_ptr(Object) originalValue);
+  virtual gc_ptr(Object) WriteTransform(gc_ptr(FieldInfo) fi, gc_ptr(Type) type, gc_ptr(Object) originalValue);
 
   /// <summary>
   /// Controls what field value is read during auto deserialization.
@@ -196,8 +195,7 @@ PUBLIC ref class ReflectionBasedAutoSerializer : IPdxSerializer {
   /// <param value="serializeValue"> the value of the field that was serialized for this field.</param>
   /// <returns> the actual value to write for this field. Return <code>serializedValue</code>
   ///   if you decide not to transform the value. </returns>
-  virtual gc_ptr(Object)
-      ReadTransform(gc_ptr(FieldInfo) fi, gc_ptr(Type) type, gc_ptr(Object) serializeValue);
+  virtual gc_ptr(Object) ReadTransform(gc_ptr(FieldInfo) fi, gc_ptr(Type) type, gc_ptr(Object) serializeValue);
 
   /// <summary>
   /// Overirde this method to create default instance of <code>className</code>
@@ -219,8 +217,7 @@ PUBLIC ref class ReflectionBasedAutoSerializer : IPdxSerializer {
 
   bool IsPdxIdentityField(gc_ptr(FieldInfo) fi);
 
-  System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<FieldWrapper ^>)> ^
-      classNameVsFieldInfoWrapper;
+  System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<FieldWrapper ^>)> ^ classNameVsFieldInfoWrapper;
 
   gc_ptr(List<FieldWrapper ^>) GetFields(gc_ptr(Type) domaimType);
 

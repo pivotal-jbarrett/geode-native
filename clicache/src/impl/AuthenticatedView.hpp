@@ -124,17 +124,17 @@ PUBLIC ref class AuthenticatedView : public IRegionService {
   /// </summary>
   virtual gc_ptr(IPdxInstanceFactory) CreatePdxInstanceFactory(gc_ptr(String) className);
 
-  internal :
+  CLI(internal:)
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      inline static gc_ptr(AuthenticatedView) Create(native::AuthenticatedView&& nativeAuthenticatedView) {
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  inline static gc_ptr(AuthenticatedView) Create(native::AuthenticatedView&& nativeAuthenticatedView) {
     return gcnew AuthenticatedView(std::move(nativeAuthenticatedView));
   }
 

@@ -502,8 +502,7 @@ gc_ptr(Object) DataInput::ReadDotNetTypes(int8_t typeId) {
       return ReadHashtable();
     }
     case apache::geode::client::internal::DSCode::CacheableHashMap: {
-      gc_ptr(CacheableHashMap) chm =
-          static_cast<gc_ptr(CacheableHashMap)>(CacheableHashMap::CreateDeserializable());
+      gc_ptr(CacheableHashMap) chm = static_cast<gc_ptr(CacheableHashMap)>(CacheableHashMap::CreateDeserializable());
       chm->FromData(this);
       return chm->Value;
     }
