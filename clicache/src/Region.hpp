@@ -115,16 +115,16 @@ PUBLIC ref class Region : public IRegion<TKey, TValue>, public ISubscriptionServ
 
   virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions);
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions);
 
   virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
                       bool addToLocalCache);
 
   virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
                       bool addToLocalCache, gc_ptr(Object) callbackArg);
 
   virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys);
@@ -188,7 +188,7 @@ PUBLIC ref class Region : public IRegion<TKey, TValue>, public ISubscriptionServ
 
   virtual gc_ptr(System::Collections::Generic::ICollection<TKey>) GetInterestList();
 
-  virtual gc_ptr(System::Collections::Generic::ICollection<String ^>) GetInterestListRegex();
+  virtual gc_ptr(System::Collections::Generic::ICollection<gc_ptr(String)>) GetInterestListRegex();
 
   virtual void UnregisterAllKeys();
 

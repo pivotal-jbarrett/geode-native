@@ -43,8 +43,8 @@ using namespace msclr::interop;
 
 namespace native = apache::geode::client;
 
-generic<class TKey, class TValue> void Client::RegionAttributes<TKey, TValue>::ToData(
-    gc_ptr(Apache::Geode::Client::DataOutput) output) {
+GENERIC(class TKey, class TValue)
+void Client::RegionAttributes<TKey, TValue>::ToData(gc_ptr(Apache::Geode::Client::DataOutput) output) {
   auto nativeOutput = output->GetNative();
   if (nativeOutput != nullptr) {
     try {
@@ -55,8 +55,8 @@ generic<class TKey, class TValue> void Client::RegionAttributes<TKey, TValue>::T
   }
 }
 
-generic<class TKey, class TValue> void Client::RegionAttributes<TKey, TValue>::FromData(
-    gc_ptr(Apache::Geode::Client::DataInput) input) {
+GENERIC(class TKey, class TValue)
+void Client::RegionAttributes<TKey, TValue>::FromData(gc_ptr(Apache::Geode::Client::DataInput) input) {
   auto nativeInput = input->GetNative();
   if (nativeInput != nullptr) {
     try {
@@ -67,8 +67,8 @@ generic<class TKey, class TValue> void Client::RegionAttributes<TKey, TValue>::F
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    ICacheLoader<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::CacheLoader::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(ICacheLoader<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::CacheLoader::get() {
   try {
     auto loaderptr = m_nativeptr->get()->getCacheLoader();
     if (auto mg_loader = std::dynamic_pointer_cast<native::ManagedCacheLoaderGeneric>(loaderptr)) {
@@ -80,8 +80,8 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    ICacheWriter<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::CacheWriter::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(ICacheWriter<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::CacheWriter::get() {
   try {
     auto writerptr = m_nativeptr->get()->getCacheWriter();
     if (auto mg_writer = std::dynamic_pointer_cast<native::ManagedCacheWriterGeneric>(writerptr)) {
@@ -93,8 +93,8 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    ICacheListener<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::CacheListener::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(ICacheListener<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::CacheListener::get() {
   try {
     auto listenerptr = m_nativeptr->get()->getCacheListener();
     if (auto mg_listener = std::dynamic_pointer_cast<native::ManagedCacheListenerGeneric>(listenerptr)) {
@@ -106,8 +106,8 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    IPartitionResolver<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::PartitionResolver::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(IPartitionResolver<TKey, TValue>) Client::RegionAttributes<TKey, TValue>::PartitionResolver::get() {
   try {
     auto resolverptr = m_nativeptr->get()->getPartitionResolver();
     if (auto mg_resolver = std::dynamic_pointer_cast<native::ManagedPartitionResolverGeneric>(resolverptr)) {
@@ -124,7 +124,8 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue>::RegionTimeToLive::get() {
+GENERIC(class TKey, class TValue)
+TimeSpan Client::RegionAttributes<TKey, TValue>::RegionTimeToLive::get() {
   try {
     return TimeUtils::DurationToTimeSpan(m_nativeptr->get()->getRegionTimeToLive());
   } finally {
@@ -132,8 +133,8 @@ generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue
   }
 }
 
-generic<class TKey, class TValue> ExpirationAction
-Client::RegionAttributes<TKey, TValue>::RegionTimeToLiveAction::get() {
+GENERIC(class TKey, class TValue)
+ExpirationAction Client::RegionAttributes<TKey, TValue>::RegionTimeToLiveAction::get() {
   try {
     return static_cast<ExpirationAction>(m_nativeptr->get()->getRegionTimeToLiveAction());
   } finally {
@@ -141,7 +142,8 @@ Client::RegionAttributes<TKey, TValue>::RegionTimeToLiveAction::get() {
   }
 }
 
-generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue>::RegionIdleTimeout::get() {
+GENERIC(class TKey, class TValue)
+TimeSpan Client::RegionAttributes<TKey, TValue>::RegionIdleTimeout::get() {
   try {
     return TimeUtils::DurationToTimeSpan(m_nativeptr->get()->getRegionIdleTimeout());
   } finally {
@@ -149,8 +151,8 @@ generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue
   }
 }
 
-generic<class TKey, class TValue> ExpirationAction
-Client::RegionAttributes<TKey, TValue>::RegionIdleTimeoutAction::get() {
+GENERIC(class TKey, class TValue)
+ExpirationAction Client::RegionAttributes<TKey, TValue>::RegionIdleTimeoutAction::get() {
   try {
     return static_cast<ExpirationAction>(m_nativeptr->get()->getRegionIdleTimeoutAction());
   } finally {
@@ -158,7 +160,8 @@ Client::RegionAttributes<TKey, TValue>::RegionIdleTimeoutAction::get() {
   }
 }
 
-generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue>::EntryTimeToLive::get() {
+GENERIC(class TKey, class TValue)
+TimeSpan Client::RegionAttributes<TKey, TValue>::EntryTimeToLive::get() {
   try {
     return TimeUtils::DurationToTimeSpan(m_nativeptr->get()->getEntryTimeToLive());
   } finally {
@@ -166,8 +169,8 @@ generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue
   }
 }
 
-generic<class TKey, class TValue> ExpirationAction
-Client::RegionAttributes<TKey, TValue>::EntryTimeToLiveAction::get() {
+GENERIC(class TKey, class TValue)
+ExpirationAction Client::RegionAttributes<TKey, TValue>::EntryTimeToLiveAction::get() {
   try {
     return static_cast<ExpirationAction>(m_nativeptr->get()->getEntryTimeToLiveAction());
   } finally {
@@ -175,7 +178,8 @@ Client::RegionAttributes<TKey, TValue>::EntryTimeToLiveAction::get() {
   }
 }
 
-generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue>::EntryIdleTimeout::get() {
+GENERIC(class TKey, class TValue)
+TimeSpan Client::RegionAttributes<TKey, TValue>::EntryIdleTimeout::get() {
   try {
     return TimeUtils::DurationToTimeSpan(m_nativeptr->get()->getEntryIdleTimeout());
   } finally {
@@ -183,8 +187,8 @@ generic<class TKey, class TValue> TimeSpan Client::RegionAttributes<TKey, TValue
   }
 }
 
-generic<class TKey, class TValue> ExpirationAction
-Client::RegionAttributes<TKey, TValue>::EntryIdleTimeoutAction::get() {
+GENERIC(class TKey, class TValue)
+ExpirationAction Client::RegionAttributes<TKey, TValue>::EntryIdleTimeoutAction::get() {
   try {
     return static_cast<ExpirationAction>(m_nativeptr->get()->getEntryIdleTimeoutAction());
   } finally {
@@ -192,7 +196,8 @@ Client::RegionAttributes<TKey, TValue>::EntryIdleTimeoutAction::get() {
   }
 }
 
-generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::CachingEnabled::get() {
+GENERIC(class TKey, class TValue)
+bool Client::RegionAttributes<TKey, TValue>::CachingEnabled::get() {
   try {
     return m_nativeptr->get()->getCachingEnabled();
   } finally {
@@ -200,7 +205,8 @@ generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::C
   }
 }
 
-generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::CloningEnabled::get() {
+GENERIC(class TKey, class TValue)
+bool Client::RegionAttributes<TKey, TValue>::CloningEnabled::get() {
   try {
     return m_nativeptr->get()->getCloningEnabled();
   } finally {
@@ -208,7 +214,8 @@ generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::C
   }
 }
 
-generic<class TKey, class TValue> System::Int32 Client::RegionAttributes<TKey, TValue>::InitialCapacity::get() {
+GENERIC(class TKey, class TValue)
+System::Int32 Client::RegionAttributes<TKey, TValue>::InitialCapacity::get() {
   try {
     return m_nativeptr->get()->getInitialCapacity();
   } finally {
@@ -216,7 +223,8 @@ generic<class TKey, class TValue> System::Int32 Client::RegionAttributes<TKey, T
   }
 }
 
-generic<class TKey, class TValue> Single Client::RegionAttributes<TKey, TValue>::LoadFactor::get() {
+GENERIC(class TKey, class TValue)
+Single Client::RegionAttributes<TKey, TValue>::LoadFactor::get() {
   try {
     return m_nativeptr->get()->getLoadFactor();
   } finally {
@@ -224,7 +232,8 @@ generic<class TKey, class TValue> Single Client::RegionAttributes<TKey, TValue>:
   }
 }
 
-generic<class TKey, class TValue> System::Int32 Client::RegionAttributes<TKey, TValue>::ConcurrencyLevel::get() {
+GENERIC(class TKey, class TValue)
+System::Int32 Client::RegionAttributes<TKey, TValue>::ConcurrencyLevel::get() {
   try {
     return m_nativeptr->get()->getConcurrencyLevel();
   } finally {
@@ -232,7 +241,8 @@ generic<class TKey, class TValue> System::Int32 Client::RegionAttributes<TKey, T
   }
 }
 
-generic<class TKey, class TValue> System::UInt32 Client::RegionAttributes<TKey, TValue>::LruEntriesLimit::get() {
+GENERIC(class TKey, class TValue)
+System::UInt32 Client::RegionAttributes<TKey, TValue>::LruEntriesLimit::get() {
   try {
     return m_nativeptr->get()->getLruEntriesLimit();
   } finally {
@@ -240,7 +250,8 @@ generic<class TKey, class TValue> System::UInt32 Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> DiskPolicyType Client::RegionAttributes<TKey, TValue>::DiskPolicy::get() {
+GENERIC(class TKey, class TValue)
+DiskPolicyType Client::RegionAttributes<TKey, TValue>::DiskPolicy::get() {
   try {
     return static_cast<DiskPolicyType>(m_nativeptr->get()->getDiskPolicy());
   } finally {
@@ -248,7 +259,8 @@ generic<class TKey, class TValue> DiskPolicyType Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> ExpirationAction Client::RegionAttributes<TKey, TValue>::LruEvictionAction::get() {
+GENERIC(class TKey, class TValue)
+ExpirationAction Client::RegionAttributes<TKey, TValue>::LruEvictionAction::get() {
   try {
     return static_cast<ExpirationAction>(m_nativeptr->get()->getLruEvictionAction());
   } finally {
@@ -256,7 +268,8 @@ generic<class TKey, class TValue> ExpirationAction Client::RegionAttributes<TKey
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheLoaderLibrary::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheLoaderLibrary::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheLoaderLibrary());
   } finally {
@@ -264,7 +277,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheLoaderFactory::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheLoaderFactory::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheLoaderFactory());
   } finally {
@@ -272,7 +286,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheListenerLibrary::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheListenerLibrary::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheListenerLibrary());
   } finally {
@@ -280,8 +295,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    String) Client::RegionAttributes<TKey, TValue>::PartitionResolverLibrary::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PartitionResolverLibrary::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getPartitionResolverLibrary());
   } finally {
@@ -289,8 +304,8 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    String) Client::RegionAttributes<TKey, TValue>::PartitionResolverFactory::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PartitionResolverFactory::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getPartitionResolverFactory());
   } finally {
@@ -298,7 +313,8 @@ generic<class TKey, class TValue> gc_ptr(
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheListenerFactory::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheListenerFactory::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheListenerFactory());
   } finally {
@@ -306,7 +322,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheWriterLibrary::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheWriterLibrary::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getCacheWriterLibrary());
   } finally {
@@ -314,7 +331,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheWriterFactory::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::CacheWriterFactory::get() {
   try {
     return marshal_as<gc_ptr(System::String)>(m_nativeptr->get()->getCacheWriterFactory());
   } finally {
@@ -322,8 +340,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::Equals(
-    gc_ptr(Client::RegionAttributes<TKey, TValue>) other) {
+GENERIC(class TKey, class TValue)
+bool Client::RegionAttributes<TKey, TValue>::Equals(gc_ptr(Client::RegionAttributes<TKey, TValue>) other) {
   auto otherPtr = other->GetNative();
   try {
     if (GetNative() != __nullptr && otherPtr != __nullptr) {
@@ -335,11 +353,13 @@ generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::E
   }
 }
 
-generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::Equals(gc_ptr(Object) other) {
+GENERIC(class TKey, class TValue)
+bool Client::RegionAttributes<TKey, TValue>::Equals(gc_ptr(Object) other) {
   return Equals(dynamic_cast<gc_ptr(Client::RegionAttributes<TKey, TValue>)>(other));
 }
 
-generic<class TKey, class TValue> void Client::RegionAttributes<TKey, TValue>::ValidateSerializableAttributes() {
+GENERIC(class TKey, class TValue)
+void Client::RegionAttributes<TKey, TValue>::ValidateSerializableAttributes() {
   try {
     m_nativeptr->get()->validateSerializableAttributes();
   } finally {
@@ -347,7 +367,8 @@ generic<class TKey, class TValue> void Client::RegionAttributes<TKey, TValue>::V
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::Endpoints::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::Endpoints::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getEndpoints());
   } finally {
@@ -355,7 +376,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PoolName::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PoolName::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getPoolName());
   } finally {
@@ -363,7 +385,8 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> Boolean Client::RegionAttributes<TKey, TValue>::ClientNotificationEnabled::get() {
+GENERIC(class TKey, class TValue)
+Boolean Client::RegionAttributes<TKey, TValue>::ClientNotificationEnabled::get() {
   try {
     return m_nativeptr->get()->getClientNotificationEnabled();
   } finally {
@@ -371,7 +394,8 @@ generic<class TKey, class TValue> Boolean Client::RegionAttributes<TKey, TValue>
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PersistenceLibrary::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PersistenceLibrary::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getPersistenceLibrary());
   } finally {
@@ -379,14 +403,16 @@ generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, 
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PersistenceFactory::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(String) Client::RegionAttributes<TKey, TValue>::PersistenceFactory::get() {
   try {
     return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getPersistenceFactory());
   } finally {
     GC::KeepAlive(m_nativeptr);
   }
 }
-generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::ConcurrencyChecksEnabled::get() {
+GENERIC(class TKey, class TValue)
+bool Client::RegionAttributes<TKey, TValue>::ConcurrencyChecksEnabled::get() {
   try {
     return m_nativeptr->get()->getConcurrencyChecksEnabled();
   } finally {
@@ -394,8 +420,9 @@ generic<class TKey, class TValue> bool Client::RegionAttributes<TKey, TValue>::C
   }
 }
 
-generic<class TKey, class TValue> gc_ptr(
-    Properties<String ^, String ^>) Client::RegionAttributes<TKey, TValue>::PersistenceProperties::get() {
+GENERIC(class TKey, class TValue)
+gc_ptr(
+    Properties<gc_ptr(String), gc_ptr(String)>) Client::RegionAttributes<TKey, TValue>::PersistenceProperties::get() {
   try {
     return Properties<gc_ptr(String), gc_ptr(String)>::Create(m_nativeptr->get()->getPersistenceProperties());
   } finally {

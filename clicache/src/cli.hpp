@@ -27,6 +27,9 @@
 // C++/CLI generic<>
 #define GENERIC(...) generic<__VA_ARGS__>
 
+// C++/CLI where T : ...
+#define WHERE(T, ...) where T : __VA_ARGS__
+
 // C++/CLI safe statement
 #define CLI(...) __VA_ARGS__
 

@@ -192,7 +192,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteDoubleArray(gc_ptr(Stri
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteStringArray(gc_ptr(String) fieldName,
-                                                                     gc_ptr(array<String ^>) value) {
+                                                                     gc_ptr(array<gc_ptr(String)>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "String[]", PdxFieldTypes::STRING_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -200,7 +200,7 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteStringArray(gc_ptr(Stri
 }
 
 gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteObjectArray(
-    gc_ptr(String) fieldName, gc_ptr(System::Collections::Generic::List<Object ^>) value) {
+    gc_ptr(String) fieldName, gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>) value) {
   isFieldAdded(fieldName);
   m_pdxType->AddVariableLengthTypeField(fieldName, "Object[]", PdxFieldTypes::OBJECT_ARRAY);
   m_FieldVsValues->Add(fieldName, value);
@@ -253,14 +253,14 @@ gc_ptr(IPdxInstanceFactory) PdxInstanceFactoryImpl::WriteField(gc_ptr(String) fi
   } else if (type->Equals(DotNetTypes::CharArrayType)) {
     return this->WriteCharArray(fieldName, (gc_ptr(array<Char>))fieldValue);
   } else if (type->Equals(DotNetTypes::StringArrayType)) {
-    return this->WriteStringArray(fieldName, (gc_ptr(array<String ^>)) fieldValue);
+    return this->WriteStringArray(fieldName, (gc_ptr(array<gc_ptr(String)>))fieldValue);
   } else if (type->Equals(DotNetTypes::DateType)) {
     return this->WriteDate(fieldName, (DateTime)fieldValue);
   } else if (type->Equals(DotNetTypes::ByteArrayOfArrayType)) {
     return this->WriteArrayOfByteArrays(fieldName, (array<gc_ptr(array<Byte>)> ^) fieldValue);
   } else if (type->Equals(DotNetTypes::ObjectArrayType)) {
     return this->WriteObjectArray(fieldName,
-                                  safe_cast<gc_ptr(System::Collections::Generic::List<Object ^>)>(fieldValue));
+                                  safe_cast<gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>)>(fieldValue));
   } else {
     return this->WriteObject(fieldName, fieldValue);
   }

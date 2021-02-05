@@ -42,8 +42,8 @@ using namespace System;
 using namespace System::Text;
 
 // this is for PdxInstanceFactory
-PdxInstanceImpl::PdxInstanceImpl(gc_ptr(Dictionary<String ^, Object ^>) fieldVsValue, gc_ptr(PdxType) pdxType,
-                                 gc_ptr(Apache::Geode::Client::Cache) cache) {
+PdxInstanceImpl::PdxInstanceImpl(gc_ptr(Dictionary<gc_ptr(String), gc_ptr(Object)>) fieldVsValue,
+                                 gc_ptr(PdxType) pdxType, gc_ptr(Apache::Geode::Client::Cache) cache) {
   m_updatedFields = fieldVsValue;
   m_typeId = 0;
   m_own = false;
@@ -93,11 +93,11 @@ bool PdxInstanceImpl::HasField(gc_ptr(String) fieldName) {
   return pt->GetPdxField(fieldName) != nullptr;
 }
 
-gc_ptr(IList<String ^>) PdxInstanceImpl::GetFieldNames() {
+gc_ptr(IList<gc_ptr(String)>) PdxInstanceImpl::GetFieldNames() {
   gc_ptr(PdxType) pt = getPdxType();
 
-  gc_ptr(IList<PdxFieldType ^>) pdxFieldList = pt->PdxFieldList;
-  gc_ptr(IList<String ^>) retList = gcnew List<gc_ptr(String)>();
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) pdxFieldList = pt->PdxFieldList;
+  gc_ptr(IList<gc_ptr(String)>) retList = gcnew List<gc_ptr(String)>();
 
   for (int i = 0; i < pdxFieldList->Count; i++) {
     gc_ptr(PdxFieldType) currPf = pdxFieldList[i];
@@ -206,8 +206,8 @@ bool PdxInstanceImpl::Equals(gc_ptr(Object) other) {
 
   // gc_ptr(PdxType) pt = getPdxType();
 
-  gc_ptr(IList<PdxFieldType ^>) myPdxIdentityFieldList = getIdentityPdxFields(myPdxType);
-  gc_ptr(IList<PdxFieldType ^>) otherPdxIdentityFieldList = otherPdx->getIdentityPdxFields(otherPdxType);
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) myPdxIdentityFieldList = getIdentityPdxFields(myPdxType);
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) otherPdxIdentityFieldList = otherPdx->getIdentityPdxFields(otherPdxType);
 
   equatePdxFields(myPdxIdentityFieldList, otherPdxIdentityFieldList);
   equatePdxFields(otherPdxIdentityFieldList, myPdxIdentityFieldList);
@@ -355,7 +355,8 @@ bool PdxInstanceImpl::compareRawBytes(gc_ptr(PdxInstanceImpl) other, gc_ptr(PdxT
   }
 }
 
-void PdxInstanceImpl::equatePdxFields(gc_ptr(IList<PdxFieldType ^>) my, gc_ptr(IList<PdxFieldType ^>) other) {
+void PdxInstanceImpl::equatePdxFields(gc_ptr(IList<gc_ptr(PdxFieldType)>) my,
+                                      gc_ptr(IList<gc_ptr(PdxFieldType)>) other) {
   // Log::Debug("PdxInstanceImpl::equatePdxFields");
 
   for (int i = 0; i < my->Count; i++) {
@@ -479,7 +480,7 @@ int PdxInstanceImpl::GetHashCode() {
 
   gc_ptr(PdxType) pt = getPdxType();
 
-  gc_ptr(IList<PdxFieldType ^>) pdxIdentityFieldList = getIdentityPdxFields(pt);
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) pdxIdentityFieldList = getIdentityPdxFields(pt);
 
   gc_ptr(DataInput) dataInput = gcnew DataInput(m_buffer, m_bufferLength, m_cache);
   dataInput->setPdxdeserialization(true);
@@ -615,7 +616,8 @@ int PdxInstanceImpl::enumerateDictionary(gc_ptr(System::Collections::IDictionary
   return h;
 }
 
-generic<class T> int PdxInstanceImpl::primitiveArrayHashCode(T objArray) {
+GENERIC(class T)
+int PdxInstanceImpl::primitiveArrayHashCode(T objArray) {
   if (objArray == nullptr) return 0;
 
   bool isBooleanType = false;
@@ -734,11 +736,11 @@ bool PdxInstanceImpl::isPrimitiveArray(gc_ptr(Object) object) {
   return false;
 }
 
-gc_ptr(IList<PdxFieldType ^>) PdxInstanceImpl::getIdentityPdxFields(gc_ptr(PdxType) pt) {
-  gc_ptr(System::Comparison<PdxFieldType ^>) cd =
+gc_ptr(IList<gc_ptr(PdxFieldType)>) PdxInstanceImpl::getIdentityPdxFields(gc_ptr(PdxType) pt) {
+  gc_ptr(System::Comparison<gc_ptr(PdxFieldType)>) cd =
       gcnew System::Comparison<gc_ptr(PdxFieldType)>(PdxInstanceImpl::comparePdxField);
-  gc_ptr(IList<PdxFieldType ^>) pdxFieldList = pt->PdxFieldList;
-  gc_ptr(List<PdxFieldType ^>) retList = gcnew List<gc_ptr(PdxFieldType)>();
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) pdxFieldList = pt->PdxFieldList;
+  gc_ptr(List<gc_ptr(PdxFieldType)>) retList = gcnew List<gc_ptr(PdxFieldType)>();
 
   for (int i = 0; i < pdxFieldList->Count; i++) {
     gc_ptr(PdxFieldType) pft = pdxFieldList[i];
@@ -814,7 +816,7 @@ void PdxInstanceImpl::SetField(gc_ptr(String) fieldName, gc_ptr(Object) value) {
 void PdxInstanceImpl::ToData(gc_ptr(IPdxWriter) writer) {
   gc_ptr(PdxType) pt = getPdxType();
 
-  gc_ptr(IList<PdxFieldType ^>) pdxFieldList = pt->PdxFieldList;
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) pdxFieldList = pt->PdxFieldList;
 
   int position = 0;  // ignore typeid and length
   int nextFieldPosition;
@@ -1144,7 +1146,7 @@ void PdxInstanceImpl::writeField(gc_ptr(IPdxWriter) writer, gc_ptr(String) field
       break;
     }
     case PdxFieldTypes::STRING_ARRAY: {
-      writer->WriteStringArray(fieldName, (gc_ptr(array<String ^>)) value);
+      writer->WriteStringArray(fieldName, (gc_ptr(array<gc_ptr(String)>))value);
       break;
     }
     case PdxFieldTypes::DATE: {
@@ -1156,7 +1158,7 @@ void PdxInstanceImpl::writeField(gc_ptr(IPdxWriter) writer, gc_ptr(String) field
       break;
     }
     case PdxFieldTypes::OBJECT_ARRAY: {
-      writer->WriteObjectArray(fieldName, (gc_ptr(List<Object ^>)) value);
+      writer->WriteObjectArray(fieldName, (gc_ptr(List<gc_ptr(Object)>))value);
       break;
     }
     default: {

@@ -43,7 +43,7 @@ class ManagedCacheLoaderGeneric : public apache::geode::client::CacheLoader {
   /// The managed object.
   /// </param>
   inline ManagedCacheLoaderGeneric(
-      /*gc_ptr(Generic::ICacheLoader<Object^, Object^>) managedptr,*/ gc_ptr(Object) userptr)
+      /*gc_ptr(Generic::ICacheLoader<gc_ptr(Object), gc_ptr(Object)>) managedptr,*/ gc_ptr(Object) userptr)
       : /*m_managedptr( managedptr ),*/ m_userptr(userptr) {}
 
   /// <summary>

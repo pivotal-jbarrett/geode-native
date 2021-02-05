@@ -34,7 +34,7 @@ namespace Client {
 void CacheableStack::ToData(gc_ptr(DataOutput) output) {
   if (m_stack != nullptr) {
     output->WriteArrayLen((System::Int32)m_stack->Count);
-    auto stack = safe_cast<gc_ptr(System::Collections::Generic::Stack<Object ^>)>(m_stack);
+    auto stack = safe_cast<gc_ptr(System::Collections::Generic::Stack<gc_ptr(Object)>)>(m_stack);
     FOR_EACH (auto obj in Linq::Enumerable::Reverse(stack)) { output->WriteObject(obj); }
   } else {
     output->WriteByte(0xFF);
@@ -44,7 +44,7 @@ void CacheableStack::ToData(gc_ptr(DataOutput) output) {
 void CacheableStack::FromData(gc_ptr(DataInput) input) {
   auto len = input->ReadArrayLen();
   if (len > 0) {
-    auto stack = safe_cast<gc_ptr(System::Collections::Generic::Stack<Object ^>)>(m_stack);
+    auto stack = safe_cast<gc_ptr(System::Collections::Generic::Stack<gc_ptr(Object)>)>(m_stack);
     for (int i = 0; i < len; i++) {
       stack->Push(input->ReadObject());
     }

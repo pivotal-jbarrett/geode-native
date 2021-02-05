@@ -40,53 +40,59 @@ PUBLIC ref class CacheListenerGeneric : CacheListenerAdapter<gc_ptr(Object), gc_
  public:
   void SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) listener) { m_listener = listener; }
 
-  virtual void AfterUpdate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+  virtual void AfterUpdate(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>) event) override {
     EntryEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterUpdate(% gevent);
   }
 
-  virtual void AfterCreate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+  virtual void AfterCreate(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>) event) override {
     EntryEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterCreate(% gevent);
   }
 
-  virtual void AfterInvalidate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+  virtual void AfterInvalidate(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>)
+                                   event) override {
     EntryEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterInvalidate(% gevent);
   }
 
-  virtual void AfterDestroy(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+  virtual void AfterDestroy(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>) event) override {
     EntryEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterDestroy(% gevent);
   }
 
-  virtual void AfterRegionLive(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+  virtual void AfterRegionLive(gc_ptr(Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)>)
+                                   event) override {
     RegionEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterRegionLive(% gevent);
   }
 
-  virtual void AfterRegionClear(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+  virtual void AfterRegionClear(gc_ptr(Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)>)
+                                    event) override {
     RegionEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterRegionClear(% gevent);
   }
 
-  virtual void AfterRegionDestroy(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+  virtual void AfterRegionDestroy(gc_ptr(Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)>)
+                                      event) override {
     RegionEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterRegionDestroy(% gevent);
   }
 
-  virtual void AfterRegionInvalidate(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+  virtual void AfterRegionInvalidate(gc_ptr(Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)>)
+                                         event) override {
     RegionEvent<TKey, TValue> gevent(event->GetNative());
     m_listener->AfterRegionInvalidate(% gevent);
   }
 
-  virtual void AfterRegionDisconnected(gc_ptr(Apache::Geode::Client::IRegion<Object ^, Object ^>) region) override {
-    auto gregion = Region<TKey, TValue>::Create(((gc_ptr(Region<Object ^, Object ^>)) region)->GetNative());
+  virtual void AfterRegionDisconnected(gc_ptr(Apache::Geode::Client::IRegion<gc_ptr(Object), gc_ptr(Object)>)
+                                           region) override {
+    auto gregion = Region<TKey, TValue>::Create(((gc_ptr(Region<gc_ptr(Object), gc_ptr(Object)>))region)->GetNative());
     m_listener->AfterRegionDisconnected(gregion);
   }
 
-  virtual void Close(gc_ptr(Apache::Geode::Client::IRegion<Object ^, Object ^>) region) override {
-    auto gregion = Region<TKey, TValue>::Create(((gc_ptr(Region<Object ^, Object ^>)) region)->GetNative());
+  virtual void Close(gc_ptr(Apache::Geode::Client::IRegion<gc_ptr(Object), gc_ptr(Object)>) region) override {
+    auto gregion = Region<TKey, TValue>::Create(((gc_ptr(Region<gc_ptr(Object), gc_ptr(Object)>))region)->GetNative());
     m_listener->Close(gregion);
   }
 };

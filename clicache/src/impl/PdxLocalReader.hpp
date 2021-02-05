@@ -258,13 +258,13 @@ ref class PdxLocalReader : public IPdxReader {
   /// Read a string array from the data.
   /// </summary>
   /// <param name="fieldName">The name of a member field whose value to read.</param>
-  virtual gc_ptr(array<String ^>) ReadStringArray(gc_ptr(String) fieldName);
+  virtual gc_ptr(array<gc_ptr(String)>) ReadStringArray(gc_ptr(String) fieldName);
 
   /// <summary>
   /// Read a object array from the data.
   /// </summary>
   /// <param name="fieldName">The name of a member field whose value to read.</param>
-  virtual gc_ptr(List<Object ^>) ReadObjectArray(gc_ptr(String) fieldName);
+  virtual gc_ptr(List<gc_ptr(Object)>) ReadObjectArray(gc_ptr(String) fieldName);
 
   /// <summary>
   /// Read a two-dimenesional byte array from the data.

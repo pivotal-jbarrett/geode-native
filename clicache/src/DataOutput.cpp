@@ -225,7 +225,7 @@ void DataOutput::WriteCharArray(gc_ptr(array<Char>) charArray) {
     this->WriteByte((int8_t)-1);
 }
 
-void DataOutput::WriteObjectArray(gc_ptr(List<Object ^>) objectArray) {
+void DataOutput::WriteObjectArray(gc_ptr(List<gc_ptr(Object)>) objectArray) {
   if (objectArray != nullptr) {
     gc_ptr(CacheableObjectArray) coa = CacheableObjectArray::Create(objectArray);
     coa->ToData(this);
@@ -476,7 +476,7 @@ void DataOutput::WriteObject(gc_ptr(Object) obj) {
     }
     case DSCode::CacheableStringArray: {
       WriteByte(static_cast<unsigned char>(typeId));
-      WriteObject((gc_ptr(array<String ^>)) obj);
+      WriteObject((gc_ptr(array<gc_ptr(String)>))obj);
       return;
     }
     case DSCode::CacheableHashTable:
@@ -550,7 +550,7 @@ void DataOutput::WriteObject(gc_ptr(Object) obj) {
   }
 }
 
-void DataOutput::WriteStringArray(gc_ptr(array<String ^>) strArray) {
+void DataOutput::WriteStringArray(gc_ptr(array<gc_ptr(String)>) strArray) {
   if (strArray != nullptr) {
     this->WriteArrayLen(strArray->Length);
     for (int i = 0; i < strArray->Length; i++) {

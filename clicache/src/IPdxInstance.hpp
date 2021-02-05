@@ -72,7 +72,7 @@ PUBLIC interface class IPdxInstance : public IDisposable {
   /// Return an list of the field names on this PdxInstance.
   /// </summary>
   ///< returns> an list of the field names on this PdxInstance</returns>
-  gc_ptr(IList<String ^>) GetFieldNames();
+  gc_ptr(IList<gc_ptr(String)>) GetFieldNames();
 
   /// <summary>
   /// Checks if the named field was <see cref="IPdxWriter.MarkIdentityField" /> marked as an identity field.

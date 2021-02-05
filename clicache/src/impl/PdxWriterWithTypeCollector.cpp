@@ -262,14 +262,14 @@ gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteDoubleArray(gc_ptr(String) f
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteStringArray(gc_ptr(String) fieldName,
-                                                                gc_ptr(array<String ^>) stringArray) {
+                                                                gc_ptr(array<gc_ptr(String)>) stringArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "String[]", PdxFieldTypes::STRING_ARRAY);
   PdxLocalWriter::WriteStringArray(fieldName, stringArray);
   return this;
 }
 
 gc_ptr(IPdxWriter) PdxWriterWithTypeCollector::WriteObjectArray(gc_ptr(String) fieldName,
-                                                                gc_ptr(List<Object ^>) objectArray) {
+                                                                gc_ptr(List<gc_ptr(Object)>) objectArray) {
   m_pdxType->AddVariableLengthTypeField(fieldName, "Object[]", PdxFieldTypes::OBJECT_ARRAY);
   PdxLocalWriter::WriteObjectArray(fieldName, objectArray);
   return this;

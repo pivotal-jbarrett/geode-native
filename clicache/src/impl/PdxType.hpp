@@ -39,8 +39,8 @@ ref class PdxType : public IDataSerializableInternal {
  private:
   gc_ptr(Object) m_lockObj;
   static const gc_ptr(String) m_javaPdxClass = "org.apache.geode.pdx.internal.PdxType";
-  gc_ptr(IList<PdxFieldType ^>) m_pdxFieldTypes;
-  gc_ptr(IList<PdxType ^>) m_otherVersions;
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) m_pdxFieldTypes;
+  gc_ptr(IList<gc_ptr(PdxType)>) m_otherVersions;
   Int32 m_cachedHashcode;
 
   // gc_ptr(Type)                 m_pdxDomainType;
@@ -56,7 +56,7 @@ ref class PdxType : public IDataSerializableInternal {
   gc_ptr(array<Int32>) m_localToRemoteFieldMap;
 
   gc_ptr(array<Int32, 2>) m_positionMap;
-  gc_ptr(IDictionary<String ^, PdxFieldType ^>) m_fieldNameVsPdxType;
+  gc_ptr(IDictionary<gc_ptr(String), gc_ptr(PdxFieldType)>) m_fieldNameVsPdxType;
 
   bool m_isVarLenFieldAdded;
   bool m_noJavaClass;
@@ -116,8 +116,8 @@ ref class PdxType : public IDataSerializableInternal {
   property Int32 Totalfields {
     Int32 get() { return m_pdxFieldTypes->Count; };
   }
-  property gc_ptr(IList<PdxFieldType ^>) PdxFieldList {
-    gc_ptr(IList<PdxFieldType ^>) get() { return m_pdxFieldTypes; }
+  property gc_ptr(IList<gc_ptr(PdxFieldType)>) PdxFieldList {
+    gc_ptr(IList<gc_ptr(PdxFieldType)>) get() { return m_pdxFieldTypes; }
   }
   property Int32 TypeId {
     Int32 get() { return m_geodeTypeId; }

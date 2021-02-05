@@ -132,9 +132,10 @@ gc_ptr(RegionFactory) RegionFactory::SetRegionTimeToLive(ExpirationAction action
 
 // PERSISTENCE
 
-generic<class TKey, class TValue> gc_ptr(RegionFactory)
-    RegionFactory::SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager,
-                                         gc_ptr(Properties<String ^, String ^>) config) {
+GENERIC(class TKey, class TValue)
+gc_ptr(RegionFactory) RegionFactory::SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>)
+                                                               persistenceManager,
+                                                           gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config) {
   std::shared_ptr<native::PersistenceManager> persistenceManagerptr;
   if (persistenceManager != nullptr) {
     gc_ptr(PersistenceManagerGeneric<TKey, TValue>) clg = gcnew PersistenceManagerGeneric<TKey, TValue>();
@@ -151,8 +152,9 @@ generic<class TKey, class TValue> gc_ptr(RegionFactory)
   return this;
 }
 
-generic<class TKey, class TValue> gc_ptr(RegionFactory)
-    RegionFactory::SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager) {
+GENERIC(class TKey, class TValue)
+gc_ptr(RegionFactory) RegionFactory::SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>)
+                                                               persistenceManager) {
   return SetPersistenceManager(persistenceManager, nullptr);
 }
 
@@ -163,7 +165,7 @@ gc_ptr(RegionFactory) RegionFactory::SetPersistenceManager(gc_ptr(String) libPat
 
 gc_ptr(RegionFactory) RegionFactory::SetPersistenceManager(
     gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName,
-    /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<String ^, String ^>) config) {
+    /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config) {
   try {
     m_nativeptr->get()->setPersistenceManager(marshal_as<std::string>(libPath),
                                               marshal_as<std::string>(factoryFunctionName), config->GetNative());
@@ -269,7 +271,8 @@ gc_ptr(RegionFactory) RegionFactory::SetConcurrencyChecksEnabled(bool concurrenc
 }
 // NEW GENERIC APIs:
 
-generic<class TKey, class TValue> gc_ptr(IRegion<TKey, TValue>) RegionFactory::Create(gc_ptr(String) regionName) {
+GENERIC(class TKey, class TValue)
+gc_ptr(IRegion<TKey, TValue>) RegionFactory::Create(gc_ptr(String) regionName) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     try {
@@ -282,8 +285,8 @@ generic<class TKey, class TValue> gc_ptr(IRegion<TKey, TValue>) RegionFactory::C
   _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
 }
 
-generic<class TKey, class TValue> gc_ptr(RegionFactory)
-    RegionFactory::SetCacheLoader(gc_ptr(Client::ICacheLoader<TKey, TValue>) cacheLoader) {
+GENERIC(class TKey, class TValue)
+gc_ptr(RegionFactory) RegionFactory::SetCacheLoader(gc_ptr(Client::ICacheLoader<TKey, TValue>) cacheLoader) {
   std::shared_ptr<native::CacheLoader> loaderptr;
   if (cacheLoader != nullptr) {
     gc_ptr(CacheLoaderGeneric<TKey, TValue>) clg = gcnew CacheLoaderGeneric<TKey, TValue>();
@@ -299,8 +302,8 @@ generic<class TKey, class TValue> gc_ptr(RegionFactory)
   return this;
 }
 
-generic<class TKey, class TValue> gc_ptr(RegionFactory)
-    RegionFactory::SetCacheWriter(gc_ptr(Client::ICacheWriter<TKey, TValue>) cacheWriter) {
+GENERIC(class TKey, class TValue)
+gc_ptr(RegionFactory) RegionFactory::SetCacheWriter(gc_ptr(Client::ICacheWriter<TKey, TValue>) cacheWriter) {
   std::shared_ptr<native::CacheWriter> writerptr;
   if (cacheWriter != nullptr) {
     gc_ptr(CacheWriterGeneric<TKey, TValue>) cwg = gcnew CacheWriterGeneric<TKey, TValue>();
@@ -316,8 +319,8 @@ generic<class TKey, class TValue> gc_ptr(RegionFactory)
   return this;
 }
 
-generic<class TKey, class TValue> gc_ptr(RegionFactory)
-    RegionFactory::SetCacheListener(gc_ptr(Client::ICacheListener<TKey, TValue>) cacheListener) {
+GENERIC(class TKey, class TValue)
+gc_ptr(RegionFactory) RegionFactory::SetCacheListener(gc_ptr(Client::ICacheListener<TKey, TValue>) cacheListener) {
   std::shared_ptr<native::CacheListener> listenerptr;
   if (cacheListener != nullptr) {
     gc_ptr(CacheListenerGeneric<TKey, TValue>) clg = gcnew CacheListenerGeneric<TKey, TValue>();
@@ -327,7 +330,7 @@ generic<class TKey, class TValue> gc_ptr(RegionFactory)
     ((native::ManagedCacheListenerGeneric*)listenerptr.get())->setptr(clg);
     /*
     listenerptr = new native::ManagedCacheListenerGeneric(
-      (gc_ptr(Client::ICacheListener<Object^, Object^>))cacheListener);
+      (gc_ptr(Client::ICacheListener<gc_ptr(Object), gc_ptr(Object)>))cacheListener);
       */
   }
   try {
@@ -338,8 +341,9 @@ generic<class TKey, class TValue> gc_ptr(RegionFactory)
   return this;
 }
 
-generic<class TKey, class TValue> gc_ptr(RegionFactory)
-    RegionFactory::SetPartitionResolver(gc_ptr(Client::IPartitionResolver<TKey, TValue>) partitionresolver) {
+GENERIC(class TKey, class TValue)
+gc_ptr(RegionFactory) RegionFactory::SetPartitionResolver(gc_ptr(Client::IPartitionResolver<TKey, TValue>)
+                                                              partitionresolver) {
   std::shared_ptr<native::PartitionResolver> resolverptr;
   if (partitionresolver != nullptr) {
     gc_ptr(Client::IFixedPartitionResolver<TKey, TValue>) resolver =

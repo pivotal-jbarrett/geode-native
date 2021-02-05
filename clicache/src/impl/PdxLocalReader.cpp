@@ -217,11 +217,11 @@ gc_ptr(array<double>) PdxLocalReader::ReadDoubleArray(gc_ptr(String) fieldName) 
   return m_dataInput->ReadDoubleArray();
 }
 
-gc_ptr(array<String ^>) PdxLocalReader::ReadStringArray(gc_ptr(String) fieldName) {
+gc_ptr(array<gc_ptr(String)>) PdxLocalReader::ReadStringArray(gc_ptr(String) fieldName) {
   return m_dataInput->ReadStringArray();
 }
 
-gc_ptr(List<Object ^>) PdxLocalReader::ReadObjectArray(gc_ptr(String) fieldName) {
+gc_ptr(List<gc_ptr(Object)>) PdxLocalReader::ReadObjectArray(gc_ptr(String) fieldName) {
   return m_dataInput->ReadObjectArray();
 }
 
@@ -286,7 +286,8 @@ gc_ptr(Object) PdxLocalReader::ReadField(gc_ptr(String) fieldName, gc_ptr(Type) 
   } else {
     return this->ReadObject(fieldName);
     // throw gcnew IllegalStateException("ReadField unable to de-serialize  "
-    //																	+ fieldName + " of "
+    //																	+ fieldName + " of
+    //"
     //+ type);
   }
 }

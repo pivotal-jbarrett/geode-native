@@ -33,8 +33,9 @@ namespace Geode {
 namespace Client {
 namespace native = apache::geode::client;
 
-generic<class TResult> generic<class TKey, class TValue> gc_ptr(Execution<TResult>)
-    FunctionService<TResult>::OnRegion(gc_ptr(IRegion<TKey, TValue>) rg) {
+GENERIC(class TResult)
+GENERIC(class TKey, class TValue)
+gc_ptr(Execution<TResult>) FunctionService<TResult>::OnRegion(gc_ptr(IRegion<TKey, TValue>) rg) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     auto nativeRegion = ((gc_ptr(Region<TKey, TValue>))rg)->GetNative();
@@ -44,7 +45,8 @@ generic<class TResult> generic<class TKey, class TValue> gc_ptr(Execution<TResul
   _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
 }
 
-generic<class TResult> gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServer(gc_ptr(Pool) pl) {
+GENERIC(class TResult)
+gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServer(gc_ptr(Pool) pl) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     auto nativeptr = native::FunctionService::onServer(pl->GetNative());
@@ -53,7 +55,8 @@ generic<class TResult> gc_ptr(Execution<TResult>) FunctionService<TResult>::OnSe
   _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
 }
 
-generic<class TResult> gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServers(gc_ptr(Pool) pl) {
+GENERIC(class TResult)
+gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServers(gc_ptr(Pool) pl) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     auto nativeptr = native::FunctionService::onServers(pl->GetNative());

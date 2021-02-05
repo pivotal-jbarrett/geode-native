@@ -42,7 +42,7 @@ namespace native = apache::geode::client;
 
 CacheFactory::CacheFactory() : CacheFactory(Properties<gc_ptr(String), gc_ptr(String)>::Create()) {}
 
-CacheFactory::CacheFactory(gc_ptr(Properties<String ^, String ^>) dsProps)
+CacheFactory::CacheFactory(gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) dsProps)
     : CacheFactory(native::CacheFactory(dsProps->GetNative()), dsProps) {}
 
 gc_ptr(Cache) CacheFactory::Create() {

@@ -125,16 +125,16 @@ PUBLIC ref class LocalRegion : public IRegion<TKey, TValue> {
 
   virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions);
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions);
 
   virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
                       bool addToLocalCache);
 
   virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
                       bool addToLocalCache, gc_ptr(Object) callbackArg);
 
   virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys);

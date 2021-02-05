@@ -257,13 +257,15 @@ gc_ptr(IPdxWriter) PdxRemoteWriter::WriteDoubleArray(gc_ptr(String) fieldName, g
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteStringArray(gc_ptr(String) fieldName,
+                                                     gc_ptr(array<gc_ptr(String)>) stringArray) {
   writePreserveData();
   PdxLocalWriter::WriteStringArray(fieldName, stringArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxRemoteWriter::WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) {
+gc_ptr(IPdxWriter) PdxRemoteWriter::WriteObjectArray(gc_ptr(String) fieldName,
+                                                     gc_ptr(List<gc_ptr(Object)>) objectArray) {
   writePreserveData();
   PdxLocalWriter::WriteObjectArray(fieldName, objectArray);
   return this;

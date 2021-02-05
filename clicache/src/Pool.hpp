@@ -153,13 +153,13 @@ PUBLIC ref class Pool sealed {
   /// <remarks>
   /// If a pool has no locators then it can not discover servers or locators at runtime.
   /// </remarks>
-  property gc_ptr(array<String ^>) Locators { gc_ptr(array<String ^>) get(); }
+  property gc_ptr(array<gc_ptr(String)>) Locators { gc_ptr(array<gc_ptr(String)>) get(); }
 
   /// <summary>
   /// Returns an unmodifiable list of
   /// servers this pool is using. These servers were added
   /// explicitly when the pool was created.
-  property gc_ptr(array<String ^>) Servers { gc_ptr(array<String ^>) get(); }
+  property gc_ptr(array<gc_ptr(String)>) Servers { gc_ptr(array<gc_ptr(String)>) get(); }
 
   /// <summary>
   /// Returns the true if ThreadLocalConnections are enabled on this pool.

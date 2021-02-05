@@ -195,54 +195,56 @@ CLI(PUBLIC ref class TypeRegistry) {
   gc_ptr(Cache) m_cache;
   gc_ptr(IPdxSerializer) pdxSerializer;
   gc_ptr(IPdxTypeMapper) pdxTypeMapper;
-  gc_ptr(ConcurrentDictionary<String ^, String ^>) pdxTypeNameToLocal =
+  gc_ptr(ConcurrentDictionary<gc_ptr(String), gc_ptr(String)>) pdxTypeNameToLocal =
       gcnew ConcurrentDictionary<gc_ptr(String), gc_ptr(String)>();
-  gc_ptr(ConcurrentDictionary<String ^, String ^>) localTypeNameToPdx =
+  gc_ptr(ConcurrentDictionary<gc_ptr(String), gc_ptr(String)>) localTypeNameToPdx =
       gcnew ConcurrentDictionary<gc_ptr(String), gc_ptr(String)>();
-  gc_ptr(ConcurrentDictionary<String ^, Type ^>) classNameVsType =
+  gc_ptr(ConcurrentDictionary<gc_ptr(String), gc_ptr(Type)>) classNameVsType =
       gcnew ConcurrentDictionary<gc_ptr(String), gc_ptr(Type)>();
-  gc_ptr(Dictionary<String ^, PdxTypeFactoryMethod ^>) PdxDelegateMap =
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(PdxTypeFactoryMethod)>) PdxDelegateMap =
       gcnew Dictionary<gc_ptr(String), gc_ptr(PdxTypeFactoryMethod)>();
 
-  gc_ptr(Dictionary<System::Int64, TypeFactoryMethod ^>) ObjectIDDelegatesMap =
+  gc_ptr(Dictionary<System::Int64, gc_ptr(TypeFactoryMethod)>) ObjectIDDelegatesMap =
       gcnew Dictionary<System::Int64, gc_ptr(TypeFactoryMethod)>();
-  gc_ptr(List<TypeFactoryNativeMethodGeneric ^>) NativeDelegatesGeneric =
+  gc_ptr(List<gc_ptr(TypeFactoryNativeMethodGeneric)>) NativeDelegatesGeneric =
       gcnew List<gc_ptr(TypeFactoryNativeMethodGeneric)>();
-  gc_ptr(Dictionary<UInt32, TypeFactoryMethod ^>) DelegateMapGeneric =
+  gc_ptr(Dictionary<UInt32, gc_ptr(TypeFactoryMethod)>) DelegateMapGeneric =
       gcnew Dictionary<UInt32, gc_ptr(TypeFactoryMethod)>();
 
-  gc_ptr(Dictionary<System::Type ^, System::Int32>) ObjectTypeIDMap =
+  gc_ptr(Dictionary<gc_ptr(System::Type), System::Int32>) ObjectTypeIDMap =
       gcnew Dictionary<gc_ptr(System::Type), System::Int32>();
 
-  gc_ptr(Dictionary<Byte, TypeFactoryMethod ^>) DsCodeToDataSerializablePrimitiveTypeFactoryMethod =
+  gc_ptr(Dictionary<Byte, gc_ptr(TypeFactoryMethod)>) DsCodeToDataSerializablePrimitiveTypeFactoryMethod =
       gcnew Dictionary<Byte, gc_ptr(TypeFactoryMethod)>();
 
-  gc_ptr(Dictionary<Byte, TypeFactoryNativeMethodGeneric ^>) DsCodeToDataSerializablePrimitiveNativeDelegate =
+  gc_ptr(Dictionary<Byte, gc_ptr(TypeFactoryNativeMethodGeneric)>) DsCodeToDataSerializablePrimitiveNativeDelegate =
       gcnew Dictionary<Byte, gc_ptr(TypeFactoryNativeMethodGeneric)>();
 
-  gc_ptr(Dictionary<Int32, TypeFactoryMethod ^>) FixedIdToDataSerializableFixedIdTypeFactoryMethod =
+  gc_ptr(Dictionary<Int32, gc_ptr(TypeFactoryMethod)>) FixedIdToDataSerializableFixedIdTypeFactoryMethod =
       gcnew Dictionary<Int32, gc_ptr(TypeFactoryMethod)>();
 
-  gc_ptr(Dictionary<Int32, TypeFactoryNativeMethodGeneric ^>) FixedIdToDataSerializableFixedIdNativeDelegate =
+  gc_ptr(Dictionary<Int32, gc_ptr(TypeFactoryNativeMethodGeneric)>) FixedIdToDataSerializableFixedIdNativeDelegate =
       gcnew Dictionary<Int32, gc_ptr(TypeFactoryNativeMethodGeneric)>();
 
   // Fixed .NET to DSCode mapping
-  static gc_ptr(Dictionary<System::Type ^, int8_t>) ManagedTypeToDsCode =
+  static gc_ptr(Dictionary<gc_ptr(System::Type), int8_t>) ManagedTypeToDsCode =
       gcnew Dictionary<gc_ptr(System::Type), int8_t>();
 
-  static gc_ptr(array<DataSerializablePrimitiveWrapperDelegate ^>) DsCodeToDataSerializablePrimitiveWrapperDelegate =
-      gcnew array<gc_ptr(DataSerializablePrimitiveWrapperDelegate)>(128);
+  static gc_ptr(array<gc_ptr(DataSerializablePrimitiveWrapperDelegate)>)
+      DsCodeToDataSerializablePrimitiveWrapperDelegate =
+          gcnew array<gc_ptr(DataSerializablePrimitiveWrapperDelegate)>(128);
 
-  gc_ptr(Type) GetTypeFromRefrencedAssemblies(
-      gc_ptr(String) className, gc_ptr(Dictionary<Assembly ^, bool>) referedAssembly, gc_ptr(Assembly) currentAssembly);
+  gc_ptr(Type) GetTypeFromRefrencedAssemblies(gc_ptr(String) className,
+                                              gc_ptr(Dictionary<gc_ptr(Assembly), bool>) referedAssembly,
+                                              gc_ptr(Assembly) currentAssembly);
 
   gc_ptr(Object) ClassNameVsCreateNewObjectLockObj;
 
-  gc_ptr(array<Type ^>) singleIntTypeA;
-  gc_ptr(array<Type ^>) singleIntType;
+  gc_ptr(array<gc_ptr(Type)>) singleIntTypeA;
+  gc_ptr(array<gc_ptr(Type)>) singleIntType;
 
-  gc_ptr(Dictionary<String ^, CreateNewObjectDelegate ^>) ClassNameVsCreateNewObjectDelegate;
-  gc_ptr(Dictionary<String ^, CreateNewObjectArrayDelegate ^>) ClassNameVsCreateNewObjectArrayDelegate;
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateNewObjectDelegate)>) ClassNameVsCreateNewObjectDelegate;
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateNewObjectArrayDelegate)>) ClassNameVsCreateNewObjectArrayDelegate;
 
   gc_ptr(Type) createNewObjectDelegateType;
   gc_ptr(Type) createNewObjectArrayDelegateType;
@@ -257,7 +259,7 @@ CLI(PUBLIC ref class TypeRegistry) {
   /// we call it TypeId.
   /// </summary>
   static void InitializeManagedTypeToDsCode() {
-    gc_ptr(Dictionary<Object ^, Object ^>) dic = gcnew Dictionary<gc_ptr(Object), gc_ptr(Object)>();
+    gc_ptr(Dictionary<gc_ptr(Object), gc_ptr(Object)>) dic = gcnew Dictionary<gc_ptr(Object), gc_ptr(Object)>();
     ManagedTypeToDsCode[dic->GetType()] = static_cast<int8_t>(native::internal::DSCode::CacheableHashMap);
     ManagedTypeToDsCode[dic->GetType()->GetGenericTypeDefinition()] =
         static_cast<int8_t>(native::internal::DSCode::CacheableHashMap);
@@ -265,13 +267,13 @@ CLI(PUBLIC ref class TypeRegistry) {
     gc_ptr(System::Collections::ArrayList) arr = gcnew System::Collections::ArrayList();
     ManagedTypeToDsCode[arr->GetType()] = static_cast<int8_t>(native::internal::DSCode::CacheableVector);
 
-    gc_ptr(System::Collections::Generic::LinkedList<Object ^>) linketList =
+    gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) linketList =
         gcnew System::Collections::Generic::LinkedList<gc_ptr(Object)>();
     ManagedTypeToDsCode[linketList->GetType()] = static_cast<int8_t>(native::internal::DSCode::CacheableLinkedList);
     ManagedTypeToDsCode[linketList->GetType()->GetGenericTypeDefinition()] =
         static_cast<int8_t>(native::internal::DSCode::CacheableLinkedList);
 
-    gc_ptr(System::Collections::Generic::IList<Object ^>) iList =
+    gc_ptr(System::Collections::Generic::IList<gc_ptr(Object)>) iList =
         gcnew System::Collections::Generic::List<gc_ptr(Object)>();
     ManagedTypeToDsCode[iList->GetType()] = static_cast<int8_t>(native::internal::DSCode::CacheableArrayList);
     ManagedTypeToDsCode[iList->GetType()->GetGenericTypeDefinition()] =
@@ -279,7 +281,7 @@ CLI(PUBLIC ref class TypeRegistry) {
 
     // TODO: Linked list, non generic stack, some other map types and see if more
 
-    gc_ptr(System::Collections::Generic::Stack<Object ^>) stack =
+    gc_ptr(System::Collections::Generic::Stack<gc_ptr(Object)>) stack =
         gcnew System::Collections::Generic::Stack<gc_ptr(Object)>();
     ManagedTypeToDsCode[stack->GetType()] = static_cast<int8_t>(native::internal::DSCode::CacheableStack);
     ManagedTypeToDsCode[stack->GetType()->GetGenericTypeDefinition()] =

@@ -40,32 +40,32 @@ PUBLIC ref class CacheWriterGeneric : Apache::Geode::Client::CacheWriterAdapter<
  public:
   void SetCacheWriter(gc_ptr(ICacheWriter<TKey, TValue>) writer) { m_writer = writer; }
 
-  bool BeforeUpdate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) ev) override {
+  bool BeforeUpdate(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>) ev) override {
     EntryEvent<TKey, TValue> gevent(ev->GetNative());
     return m_writer->BeforeUpdate(% gevent);
   }
 
-  bool BeforeCreate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) ev) override {
+  bool BeforeCreate(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>) ev) override {
     EntryEvent<TKey, TValue> gevent(ev->GetNative());
     return m_writer->BeforeCreate(% gevent);
   }
 
-  bool BeforeDestroy(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) ev) override {
+  bool BeforeDestroy(gc_ptr(Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)>) ev) override {
     EntryEvent<TKey, TValue> gevent(ev->GetNative());
     return m_writer->BeforeDestroy(% gevent);
   }
 
-  bool BeforeRegionClear(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) ev) override {
+  bool BeforeRegionClear(gc_ptr(Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)>) ev) override {
     RegionEvent<TKey, TValue> gevent(ev->GetNative());
     return m_writer->BeforeRegionClear(% gevent);
   }
 
-  bool BeforeRegionDestroy(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) ev) override {
+  bool BeforeRegionDestroy(gc_ptr(Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)>) ev) override {
     RegionEvent<TKey, TValue> gevent(ev->GetNative());
     return m_writer->BeforeRegionDestroy(% gevent);
   }
 
-  void Close(gc_ptr(Apache::Geode::Client::IRegion<Object ^, Object ^>) region) override {
+  void Close(gc_ptr(Apache::Geode::Client::IRegion<gc_ptr(Object), gc_ptr(Object)>) region) override {
     m_writer->Close((gc_ptr(IRegion<TKey, TValue>))region);
   }
 };

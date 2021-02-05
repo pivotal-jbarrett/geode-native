@@ -180,7 +180,7 @@ std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(gc_
     }
     case native::internal::DSCode::CacheableStringArray: {
       return GetNativeCacheableKeyWrapperForManagedISerializable(
-          Apache::Geode::Client::CacheableStringArray::Create((gc_ptr(array<String ^>)) key));
+          Apache::Geode::Client::CacheableStringArray::Create((gc_ptr(array<gc_ptr(String)>))key));
     }
     case native::internal::DSCode::CacheableFileName: {
       return GetNativeCacheableKeyWrapperForManagedISerializable((gc_ptr(Apache::Geode::Client::CacheableFileName))key);
@@ -208,7 +208,7 @@ std::shared_ptr<native::CacheableKey> Serializable::GetUnmanagedValueGeneric(gc_
     case native::internal::DSCode::CacheableLinkedList:  // generic linked list
     {
       return GetNativeCacheableKeyWrapperForManagedISerializable(Apache::Geode::Client::CacheableLinkedList::Create(
-          (gc_ptr(System::Collections::Generic::LinkedList<Object ^>)) key));
+          (gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>))key));
     }
     case native::internal::DSCode::CacheableStack: {
       return GetNativeCacheableKeyWrapperForManagedISerializable(

@@ -66,9 +66,9 @@ apache::geode::client::CqListener* ManagedCqStatusListenerGeneric::create(const 
       gc_ptr(MethodInfo) mInfo = typeInst->GetType()->GetMethod(
           mg_factoryFunctionName, BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
       if (mInfo != nullptr) {
-        gc_ptr(Apache::Geode::Client::ICqStatusListener<Object ^, Object ^>) managedptr = nullptr;
+        gc_ptr(Apache::Geode::Client::ICqStatusListener<gc_ptr(Object), gc_ptr(Object)>) managedptr = nullptr;
         try {
-          managedptr = dynamic_cast<gc_ptr(Apache::Geode::Client::ICqStatusListener<Object ^, Object ^>)>(
+          managedptr = dynamic_cast<gc_ptr(Apache::Geode::Client::ICqStatusListener<gc_ptr(Object), gc_ptr(Object)>)>(
               mInfo->Invoke(typeInst, nullptr));
         } catch (gc_ptr(System::Exception)) {
           managedptr = nullptr;
@@ -82,8 +82,8 @@ apache::geode::client::CqListener* ManagedCqStatusListenerGeneric::create(const 
           ex_str += assemblyPath;
           throw IllegalArgumentException(ex_str.c_str());
         }
-        return new ManagedCqStatusListenerGeneric((gc_ptr(Apache::Geode::Client::ICqListener<Object ^, Object ^>))
-                                                      managedptr);
+        return new ManagedCqStatusListenerGeneric(
+            (gc_ptr(Apache::Geode::Client::ICqListener<gc_ptr(Object), gc_ptr(Object)>))managedptr);
       } else {
         std::string ex_str =
             "ManagedCqStatusListenerGeneric: Could not load "

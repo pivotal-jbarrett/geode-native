@@ -43,7 +43,7 @@ PUBLIC interface class IPersistenceManager {
   /// <param name="diskProperties">
   /// Configuration Properties used by PersistenceManager implementation.
   /// </param>
-  void Init(gc_ptr(IRegion<TKey, TValue>) region, gc_ptr(Properties<String ^, String ^>) diskProperties);
+  void Init(gc_ptr(IRegion<TKey, TValue>) region, gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) diskProperties);
 
   /// <summary>
   /// Writes a key, value pair of region to the disk. The actual file or database related write operations should be

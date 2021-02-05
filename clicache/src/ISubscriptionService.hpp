@@ -296,7 +296,7 @@ PUBLIC interface class ISubscriptionService {
   /// <summary>
   /// get the list of interest regular expressions on this client
   /// </summary>
-  gc_ptr(System::Collections::Generic::ICollection<String ^>) GetInterestListRegex();
+  gc_ptr(System::Collections::Generic::ICollection<gc_ptr(String)>) GetInterestListRegex();
 
   /// <summary>
   /// Unregister interest for all the keys of the region to stop

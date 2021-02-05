@@ -118,7 +118,7 @@ PUBLIC ref class QueryService sealed {
   /// Get all durableCq nanes from server for this client.
   /// </summary>
   /// @endnativeclient
-  gc_ptr(System::Collections::Generic::List<String ^>) GetAllDurableCqsFromServer();
+  gc_ptr(System::Collections::Generic::List<gc_ptr(String)>) GetAllDurableCqsFromServer();
 
   CLI(internal:)
 

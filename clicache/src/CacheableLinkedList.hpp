@@ -33,13 +33,15 @@ namespace Client {
 /// <c>List</c> class.
 /// </summary>
 ref class CacheableLinkedList : public IDataSerializablePrimitive {
-  gc_ptr(System::Collections::Generic::LinkedList<Object ^>) m_linkedList;
+  gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) m_linkedList;
 
  public:
   /// <summary>
   /// Allocates a new empty instance.
   /// </summary>
-  inline CacheableLinkedList(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) { m_linkedList = list; }
+  inline CacheableLinkedList(gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) list) {
+    m_linkedList = list;
+  }
 
   /// <summary>
   /// Static function to create a new empty instance.
@@ -51,7 +53,8 @@ ref class CacheableLinkedList : public IDataSerializablePrimitive {
   /// <summary>
   /// Static function to create a new empty instance.
   /// </summary>
-  inline static gc_ptr(CacheableLinkedList) Create(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) {
+  inline static gc_ptr(CacheableLinkedList)
+      Create(gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) list) {
     return gcnew CacheableLinkedList(list);
   }
 
@@ -91,8 +94,8 @@ ref class CacheableLinkedList : public IDataSerializablePrimitive {
     virtual System::UInt64 get() { return m_linkedList->Count; }
   }
 
-  virtual property gc_ptr(System::Collections::Generic::LinkedList<Object ^>) Value {
-    virtual gc_ptr(System::Collections::Generic::LinkedList<Object ^>) get() { return m_linkedList; }
+  virtual property gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) Value {
+    virtual gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) get() { return m_linkedList; }
   }
   // End Region: ISerializable Members
 

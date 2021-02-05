@@ -170,8 +170,8 @@ PUBLIC ref class RegionFactory sealed {
   /// a user-defined persistence manager, or null for no persistence manager
   /// </param>
   /// <returns>the instance of RegionFactory</returns>
-  generic<class TKey, class TValue> gc_ptr(RegionFactory)
-      SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(RegionFactory) SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager);
 
   /// <summary>
   /// Sets the persistence manager for the <c>RegionAttributes</c> being created.
@@ -183,9 +183,9 @@ PUBLIC ref class RegionFactory sealed {
   /// The configuration properties to use for the PersistenceManager.
   /// </param>
   /// <returns>the instance of RegionFactory</returns>
-  generic<class TKey, class TValue> gc_ptr(RegionFactory)
-      SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager,
-                            gc_ptr(Properties<String ^, String ^>) config);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(RegionFactory) SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager,
+                                              gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config);
 
   /// <summary>
   /// Sets the library path for the library that will be invoked for the persistence of the region.
@@ -214,7 +214,7 @@ PUBLIC ref class RegionFactory sealed {
   /// <returns>the instance of RegionFactory</returns>
   gc_ptr(RegionFactory) SetPersistenceManager(
       gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName,
-      /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<String ^, String ^>) config);
+      /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config);
 
   /// <summary>
   /// Set the pool name for a Thin Client region.
@@ -369,7 +369,8 @@ PUBLIC ref class RegionFactory sealed {
   /// if the optional PersistenceManager fails to initialize
   /// </exception>
   /// <exception cref="UnknownException">otherwise</exception>
-  generic<class TKey, class TValue> gc_ptr(IRegion<TKey, TValue>) Create(gc_ptr(String) regionName);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(IRegion<TKey, TValue>) Create(gc_ptr(String) regionName);
 
   /// <summary>
   /// Sets the cache loader for the <c>RegionAttributes</c> being created.
@@ -378,8 +379,8 @@ PUBLIC ref class RegionFactory sealed {
   /// a user-defined cache loader, or null for no cache loader
   /// </param>
   /// <returns>the instance of RegionFactory</returns>
-  generic<class TKey, class TValue> gc_ptr(RegionFactory)
-      SetCacheLoader(gc_ptr(ICacheLoader<TKey, TValue>) cacheLoader);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(RegionFactory) SetCacheLoader(gc_ptr(ICacheLoader<TKey, TValue>) cacheLoader);
 
   /// <summary>
   /// Sets the cache writer for the <c>RegionAttributes</c> being created.
@@ -388,8 +389,8 @@ PUBLIC ref class RegionFactory sealed {
   /// user-defined cache writer, or null for no cache writer
   /// </param>
   /// <returns>the instance of RegionFactory</returns>
-  generic<class TKey, class TValue> gc_ptr(RegionFactory)
-      SetCacheWriter(gc_ptr(ICacheWriter<TKey, TValue>) cacheWriter);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(RegionFactory) SetCacheWriter(gc_ptr(ICacheWriter<TKey, TValue>) cacheWriter);
 
   /// <summary>
   /// Sets the CacheListener for the <c>RegionAttributes</c> being created.
@@ -398,8 +399,8 @@ PUBLIC ref class RegionFactory sealed {
   /// user-defined cache listener, or null for no cache listener
   /// </param>
   /// <returns>the instance of RegionFactory</returns>
-  generic<class TKey, class TValue> gc_ptr(RegionFactory)
-      SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) cacheListener);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(RegionFactory) SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) cacheListener);
 
   /// <summary>
   /// Sets the PartitionResolver for the <c>RegionAttributes</c> being created.
@@ -408,8 +409,8 @@ PUBLIC ref class RegionFactory sealed {
   /// user-defined partition resolver, or null for no partition resolver
   /// </param>
   /// <returns>the instance of RegionFactory</returns>
-  generic<class TKey, class TValue> gc_ptr(RegionFactory)
-      SetPartitionResolver(gc_ptr(IPartitionResolver<TKey, TValue>) partitionresolver);
+  GENERIC(class TKey, class TValue)
+  gc_ptr(RegionFactory) SetPartitionResolver(gc_ptr(IPartitionResolver<TKey, TValue>) partitionresolver);
 
   CLI(internal:)
 

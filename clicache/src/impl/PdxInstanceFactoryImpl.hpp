@@ -34,7 +34,7 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
  private:
   bool m_created;
   gc_ptr(PdxType) m_pdxType;
-  gc_ptr(Dictionary<String ^, Object ^>) m_FieldVsValues;
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(Object)>) m_FieldVsValues;
   gc_ptr(Cache) m_cache;
 
   CLI(internal:)
@@ -298,7 +298,7 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
   /// @throws PdxFieldAlreadyExistsException if the named field has already been written
   /// @throws PdxSerializationException if serialization of the field fails.
   /// </summary>
-  virtual gc_ptr(IPdxInstanceFactory) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) value);
+  virtual gc_ptr(IPdxInstanceFactory) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<gc_ptr(String)>) value);
 
   /// <summary>
   /// Writes the named field with the given value to the serialized form.
@@ -314,7 +314,7 @@ ref class PdxInstanceFactoryImpl : IPdxInstanceFactory {
   /// @throws PdxSerializationException if serialization of the field fails.
   /// </summary>
   virtual gc_ptr(IPdxInstanceFactory)
-      WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(System::Collections::Generic::List<Object ^>) value);
+      WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>) value);
   /// <summary>
   /// Writes the named field with the given value to the serialized form.
   /// The fields type is <code>byte[][]</code>.

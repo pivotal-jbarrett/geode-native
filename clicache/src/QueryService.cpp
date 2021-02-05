@@ -136,7 +136,7 @@ gc_ptr(CqServiceStatistics) QueryService::GetCqStatistics() {
   }
 }
 
-gc_ptr(System::Collections::Generic::List<String ^>) QueryService::GetAllDurableCqsFromServer() {
+gc_ptr(System::Collections::Generic::List<gc_ptr(String)>) QueryService::GetAllDurableCqsFromServer() {
   try {
     auto durableCqsArrayListPtr = m_nativeptr->get()->getAllDurableCqsFromServer();
     auto durableCqsList = gcnew System::Collections::Generic::List<gc_ptr(String)>();

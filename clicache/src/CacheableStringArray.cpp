@@ -27,9 +27,9 @@ namespace Apache {
 namespace Geode {
 namespace Client {
 
-CacheableStringArray::CacheableStringArray(gc_ptr(array<String ^>) strings) { m_value = strings; }
+CacheableStringArray::CacheableStringArray(gc_ptr(array<gc_ptr(String)>) strings) { m_value = strings; }
 
-gc_ptr(array<String ^>) CacheableStringArray::GetValues() { return m_value; }
+gc_ptr(array<gc_ptr(String)>) CacheableStringArray::GetValues() { return m_value; }
 
 gc_ptr(String) CacheableStringArray::default ::get(System::Int32 index) { return m_value[index]; }
 

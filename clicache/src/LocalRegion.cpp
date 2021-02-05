@@ -157,7 +157,7 @@ gc_ptr(System::Collections::IEnumerator) LocalRegion<TKey, TValue>::GetEnumerato
     TValue val = TypeRegistry::GetManagedValueGeneric<TValue>(nativeptr->getValue());
     toArray[index] = KeyValuePair<TKey, TValue>(key, val);
   }
-  return ((gc_ptr(System::Collections::Generic::IEnumerable<Object ^>)) toArray)->GetEnumerator();
+  return ((gc_ptr(System::Collections::Generic::IEnumerable<gc_ptr(Object)>))toArray)->GetEnumerator();
 }
 
 GENERIC(class TKey, class TValue)
@@ -446,28 +446,28 @@ void LocalRegion<TKey, TValue>::PutAll(gc_ptr(System::Collections::Generic::IDic
 }
 
 GENERIC(class TKey, class TValue)
-void LocalRegion<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
-                                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                                       gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>)
-                                           exceptions) {
+void LocalRegion<TKey, TValue>::GetAll(
+    gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+    gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
+    gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions) {
   throw gcnew System::NotSupportedException;
 }
 
 GENERIC(class TKey, class TValue)
-void LocalRegion<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
-                                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                                       gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>)
-                                           exceptions,
-                                       bool addToLocalCache) {
+void LocalRegion<TKey, TValue>::GetAll(
+    gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+    gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
+    gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
+    bool addToLocalCache) {
   throw gcnew System::NotSupportedException;
 }
 
 GENERIC(class TKey, class TValue)
-void LocalRegion<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
-                                       gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                                       gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>)
-                                           exceptions,
-                                       bool addToLocalCache, gc_ptr(Object) callbackArg) {
+void LocalRegion<TKey, TValue>::GetAll(
+    gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+    gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
+    gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions, bool addToLocalCache,
+    gc_ptr(Object) callbackArg) {
   throw gcnew System::NotSupportedException;
 }
 

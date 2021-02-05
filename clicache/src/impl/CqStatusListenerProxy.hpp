@@ -34,13 +34,13 @@ PUBLIC ref class CqStatusListenerGeneric : Apache::Geode::Client::ICqStatusListe
     m_listener = dynamic_cast<gc_ptr(ICqStatusListener<TKey, TResult>)>(listener);
   }
 
-  virtual void OnEvent(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+  virtual void OnEvent(gc_ptr(Apache::Geode::Client::CqEvent<gc_ptr(Object), gc_ptr(Object)>) ev) {
     // TODO:split---Done
     CqEvent<TKey, TResult> gevent(ev->GetNative());
     m_listener->OnEvent(% gevent);
   }
 
-  virtual void OnError(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+  virtual void OnError(gc_ptr(Apache::Geode::Client::CqEvent<gc_ptr(Object), gc_ptr(Object)>) ev) {
     // TODO::split--Done
     CqEvent<TKey, TResult> gevent(ev->GetNative());
     m_listener->OnError(% gevent);

@@ -52,12 +52,12 @@ gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(TimeSpan timeout) {
 }
 
 GENERIC(class TResult)
-gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<Object ^>) paramList) {
+gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<gc_ptr(Object)>) paramList) {
   return Execute(paramList, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
 }
 
 GENERIC(class TResult)
-gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<Object ^>) paramList, TimeSpan timeout) {
+gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<gc_ptr(Object)>) paramList, TimeSpan timeout) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     auto rsptr = apache::geode::client::CacheableVector::create();

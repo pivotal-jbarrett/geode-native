@@ -198,8 +198,8 @@ PUBLIC ref class SystemProperties sealed {
   /// </summary>
   /// <returns>the security properties</returns>
   // generic <class TPropKey, class TPropValue>
-  property gc_ptr(Properties<String ^, String ^>) GetSecurityProperties {
-    gc_ptr(Properties<String ^, String ^>) get();
+  property gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) GetSecurityProperties {
+    gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) get();
   }
 
   /// <summary>

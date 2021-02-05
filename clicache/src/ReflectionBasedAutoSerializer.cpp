@@ -31,9 +31,9 @@ namespace Client {
 ref class FieldWrapper {
  private:
   // static readonly Module Module = typeof(Program).Module;
-  static gc_ptr(array<Type ^>) oneObj = gcnew array<gc_ptr(Type)>(1){Type::GetType("System.Object")};
-  static gc_ptr(array<Type ^>) twoObj = gcnew array<gc_ptr(Type)>(2){Type::GetType("System.Object"),
-                                                                     Type::GetType("System.Object")};
+  static gc_ptr(array<gc_ptr(Type)>) oneObj = gcnew array<gc_ptr(Type)>(1){Type::GetType("System.Object")};
+  static gc_ptr(array<gc_ptr(Type)>) twoObj = gcnew array<gc_ptr(Type)>(2){Type::GetType("System.Object"),
+                                                                           Type::GetType("System.Object")};
   delegate void MySetter(gc_ptr(Object) t1, gc_ptr(Object) t2);
   delegate gc_ptr(Object) MyGetter(gc_ptr(Object) t1);
 
@@ -203,10 +203,10 @@ ref class FieldWrapper {
         w->WriteDoubleArray(m_fieldName, (gc_ptr(array<double>))value);
         break;
       case FieldType::STRING_ARRAY:
-        w->WriteStringArray(m_fieldName, (gc_ptr(array<String ^>)) value);
+        w->WriteStringArray(m_fieldName, (gc_ptr(array<gc_ptr(String)>))value);
         break;
       case FieldType::OBJECT_ARRAY:
-        w->WriteObjectArray(m_fieldName, safe_cast<gc_ptr(System::Collections::Generic::List<Object ^>)>(value));
+        w->WriteObjectArray(m_fieldName, safe_cast<gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>)>(value));
         break;
       case FieldType::ARRAY_OF_BYTE_ARRAYS:
         w->WriteArrayOfByteArrays(m_fieldName, (array<gc_ptr(array<Byte>)> ^) value);
@@ -330,7 +330,7 @@ ref class FieldWrapper {
 ReflectionBasedAutoSerializer::ReflectionBasedAutoSerializer() {
   gc_ptr(PdxIdentityFieldAttribute) pif = gcnew PdxIdentityFieldAttribute();
   PdxIdentityFieldAttributeType = pif->GetType();
-  classNameVsFieldInfoWrapper = gcnew Dictionary<gc_ptr(String), gc_ptr(List<FieldWrapper ^>)>();
+  classNameVsFieldInfoWrapper = gcnew Dictionary<gc_ptr(String), gc_ptr(List<gc_ptr(FieldWrapper)>)>();
 }
 
 bool ReflectionBasedAutoSerializer::ToData(gc_ptr(Object) o, gc_ptr(IPdxWriter) writer) {
@@ -378,7 +378,7 @@ gc_ptr(Object) ReflectionBasedAutoSerializer::CreateObject(gc_ptr(String) classN
 }
 
 bool ReflectionBasedAutoSerializer::IsPdxIdentityField(gc_ptr(FieldInfo) fi) {
-  gc_ptr(array<Object ^>) cAttr = fi->GetCustomAttributes(PdxIdentityFieldAttributeType, true);
+  gc_ptr(array<gc_ptr(Object)>) cAttr = fi->GetCustomAttributes(PdxIdentityFieldAttributeType, true);
   if (cAttr != nullptr && cAttr->Length > 0) {
     gc_ptr(PdxIdentityFieldAttribute) pifa = (gc_ptr(PdxIdentityFieldAttribute))(cAttr[0]);
     return true;
@@ -386,11 +386,11 @@ bool ReflectionBasedAutoSerializer::IsPdxIdentityField(gc_ptr(FieldInfo) fi) {
   return false;
 }
 
-gc_ptr(List<FieldWrapper ^>) ReflectionBasedAutoSerializer::GetFields(gc_ptr(Type) domaimType) {
-  gc_ptr(List<FieldWrapper ^>) retVal = nullptr;
+gc_ptr(List<gc_ptr(FieldWrapper)>) ReflectionBasedAutoSerializer::GetFields(gc_ptr(Type) domaimType) {
+  gc_ptr(List<gc_ptr(FieldWrapper)>) retVal = nullptr;
 
   gc_ptr(String) className = domaimType->FullName;
-  System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<FieldWrapper ^>)> ^ tmp =
+  System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<gc_ptr(FieldWrapper)>)> ^ tmp =
       classNameVsFieldInfoWrapper;
   tmp->TryGetValue(className, retVal);
   if (retVal != nullptr) return retVal;
@@ -400,7 +400,7 @@ gc_ptr(List<FieldWrapper ^>) ReflectionBasedAutoSerializer::GetFields(gc_ptr(Typ
     tmp->TryGetValue(className, retVal);
     if (retVal != nullptr) return retVal;
 
-    gc_ptr(List<FieldWrapper ^>) collectFields = gcnew List<gc_ptr(FieldWrapper)>();
+    gc_ptr(List<gc_ptr(FieldWrapper)>) collectFields = gcnew List<gc_ptr(FieldWrapper)>();
     while (domaimType != nullptr) {
       FOR_EACH (gc_ptr(FieldInfo) fi in domaimType->GetFields(BindingFlags::Public | BindingFlags::NonPublic |
                                                               BindingFlags::Instance | BindingFlags::DeclaredOnly)) {
@@ -421,7 +421,7 @@ gc_ptr(List<FieldWrapper ^>) ReflectionBasedAutoSerializer::GetFields(gc_ptr(Typ
       }
       domaimType = domaimType->BaseType;
     }
-    tmp = gcnew System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<FieldWrapper ^>)>(
+    tmp = gcnew System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<gc_ptr(FieldWrapper)>)>(
         classNameVsFieldInfoWrapper);
     tmp->Add(className, collectFields);
     classNameVsFieldInfoWrapper = tmp;
@@ -516,7 +516,7 @@ FieldType ReflectionBasedAutoSerializer::getPdxFieldType(gc_ptr(Type) type) {
   {
     //Giving more preference to arraylist instead of Object[] in java side
     //return this->WriteObjectArray(fieldName,
-  safe_cast<gc_ptr(System::Collections::Generic::List<Object^>)>(fieldValue)); return FieldType::OBJECT_ARRAY;
+  safe_cast<gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>)>(fieldValue)); return FieldType::OBJECT_ARRAY;
   }*/
   else {
     return FieldType::OBJECT;

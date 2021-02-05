@@ -107,7 +107,7 @@ gc_ptr(Type) TypeRegistry::GetType(gc_ptr(String) className) {
 
   auto referedAssembly = gcnew Dictionary<gc_ptr(Assembly), bool>();
   auto MyDomain = AppDomain::CurrentDomain;
-  gc_ptr(array<Assembly ^>) AssembliesLoaded = MyDomain->GetAssemblies();
+  gc_ptr(array<gc_ptr(Assembly)>) AssembliesLoaded = MyDomain->GetAssemblies();
   FOR_EACH (gc_ptr(Assembly) assembly in AssembliesLoaded) {
     type = GetTypeFromRefrencedAssemblies(className, referedAssembly, assembly);
     if (type) {
@@ -258,7 +258,7 @@ void TypeRegistry::UnregisterNativesGeneric(gc_ptr(Cache) cache) {
 }
 
 gc_ptr(Type) TypeRegistry::GetTypeFromRefrencedAssemblies(gc_ptr(String) className,
-                                                          gc_ptr(Dictionary<Assembly ^, bool>) referedAssembly,
+                                                          gc_ptr(Dictionary<gc_ptr(Assembly), bool>) referedAssembly,
                                                           gc_ptr(Assembly) currentAssembly) {
   auto type = currentAssembly->GetType(className);
   if (type != nullptr) {
@@ -269,7 +269,7 @@ gc_ptr(Type) TypeRegistry::GetTypeFromRefrencedAssemblies(gc_ptr(String) classNa
   referedAssembly[currentAssembly] = true;
 
   // get all refrenced assembly
-  gc_ptr(array<AssemblyName ^>) ReferencedAssemblies = currentAssembly->GetReferencedAssemblies();
+  gc_ptr(array<gc_ptr(AssemblyName)>) ReferencedAssemblies = currentAssembly->GetReferencedAssemblies();
   FOR_EACH (gc_ptr(AssemblyName) assembly in ReferencedAssemblies) {
     try {
       gc_ptr(Assembly) loadedAssembly = Assembly::Load(assembly);
@@ -389,8 +389,8 @@ TValue wrap(std::shared_ptr<native::DataSerializablePrimitive> dataSerializableP
       /*
 case native::internal::DSCode::Properties: // TODO: replace with IDictionary<K, V>
 {
-auto ret = SafeGenericUMSerializableConvert<gc_ptr(Properties<Object^, Object^>)>(dataSerializablePrimitive);
-return safe_cast<TValue>(ret);
+auto ret = SafeGenericUMSerializableConvert<gc_ptr(Properties<gc_ptr(Object),
+gc_ptr(Object)>)>(dataSerializablePrimitive); return safe_cast<TValue>(ret);
 }
       */
     case native::internal::DSCode::BooleanArray: {
@@ -504,7 +504,7 @@ gc_ptr(Object) TypeRegistry::CreateObject(gc_ptr(String) className) {
 
 gc_ptr(Object) TypeRegistry::CreateObjectEx(gc_ptr(String) className) {
   gc_ptr(CreateNewObjectDelegate) del = nullptr;
-  gc_ptr(Dictionary<String ^, CreateNewObjectDelegate ^>) tmp = ClassNameVsCreateNewObjectDelegate;
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateNewObjectDelegate)>) tmp = ClassNameVsCreateNewObjectDelegate;
 
   tmp->TryGetValue(className, del);
 
@@ -540,7 +540,8 @@ gc_ptr(Object) TypeRegistry::GetArrayObject(gc_ptr(String) className, int length
 
 gc_ptr(Object) TypeRegistry::GetArrayObjectEx(gc_ptr(String) className, int length) {
   gc_ptr(CreateNewObjectArrayDelegate) del = nullptr;
-  gc_ptr(Dictionary<String ^, CreateNewObjectArrayDelegate ^>) tmp = ClassNameVsCreateNewObjectArrayDelegate;
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateNewObjectArrayDelegate)>) tmp =
+      ClassNameVsCreateNewObjectArrayDelegate;
 
   tmp->TryGetValue(className, del);
 

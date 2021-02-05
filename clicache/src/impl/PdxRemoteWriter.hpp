@@ -304,14 +304,16 @@ ref class PdxRemoteWriter : public PdxLocalWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="stringArray">The stringArray to write.</param>
-  virtual gc_ptr(IPdxWriter) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) override;
+  virtual gc_ptr(IPdxWriter)
+      WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<gc_ptr(String)>) stringArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="objectArray">The objectArray to write.</param>
-  virtual gc_ptr(IPdxWriter) WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) override;
+  virtual gc_ptr(IPdxWriter)
+      WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<gc_ptr(Object)>) objectArray) override;
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.

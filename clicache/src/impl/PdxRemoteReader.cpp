@@ -635,7 +635,7 @@ gc_ptr(array<double>) PdxRemoteReader::ReadDoubleArray(gc_ptr(String) fieldName)
   }
 }
 
-gc_ptr(array<String ^>) PdxRemoteReader::ReadStringArray(gc_ptr(String) fieldName) {
+gc_ptr(array<gc_ptr(String)>) PdxRemoteReader::ReadStringArray(gc_ptr(String) fieldName) {
   int choice = m_localToRemoteMap[m_currentIndex++];
 
   switch (choice) {
@@ -648,14 +648,14 @@ gc_ptr(array<String ^>) PdxRemoteReader::ReadStringArray(gc_ptr(String) fieldNam
       // sequence id read field and then update
       int position = m_pdxType->GetFieldPosition(choice, m_offsetsBuffer, m_offsetSize, m_serializedLength);
       m_dataInput->ResetAndAdvanceCursorPdx(position);
-      gc_ptr(array<String ^>) retVal = PdxLocalReader::ReadStringArray(fieldName);
+      gc_ptr(array<gc_ptr(String)>) retVal = PdxLocalReader::ReadStringArray(fieldName);
       m_dataInput->RewindCursorPdx(position);
       return retVal;
     }
   }
 }
 
-gc_ptr(List<Object ^>) PdxRemoteReader::ReadObjectArray(gc_ptr(String) fieldName) {
+gc_ptr(List<gc_ptr(Object)>) PdxRemoteReader::ReadObjectArray(gc_ptr(String) fieldName) {
   int choice = m_localToRemoteMap[m_currentIndex++];
 
   switch (choice) {
@@ -668,7 +668,7 @@ gc_ptr(List<Object ^>) PdxRemoteReader::ReadObjectArray(gc_ptr(String) fieldName
       // sequence id read field and then update
       int position = m_pdxType->GetFieldPosition(choice, m_offsetsBuffer, m_offsetSize, m_serializedLength);
       m_dataInput->ResetAndAdvanceCursorPdx(position);
-      gc_ptr(List<Object ^>) retVal = PdxLocalReader::ReadObjectArray(fieldName);
+      gc_ptr(List<gc_ptr(Object)>) retVal = PdxLocalReader::ReadObjectArray(fieldName);
       m_dataInput->ResetPdx(m_startPosition);  // force native as well
       m_dataInput->RewindCursorPdx(position);
       return retVal;

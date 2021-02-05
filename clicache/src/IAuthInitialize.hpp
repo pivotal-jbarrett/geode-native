@@ -67,16 +67,16 @@ PUBLIC interface class IAuthInitialize {
   /// the user.
   /// </remarks>
   // generic <class TPropKey, class TPropValue>
-  gc_ptr(Properties<String ^, Object ^>)
-      GetCredentials(gc_ptr(Properties<String ^, String ^>) props, gc_ptr(String) server);
+  gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>)
+      GetCredentials(gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) props, gc_ptr(String) server);
 
   /// <summary>
   /// Invoked before the cache goes down.
   /// </summary>
   void Close();
 
-  delegate gc_ptr(Properties<String ^, Object ^>)
-      GetCredentialsDelegate(gc_ptr(Properties<String ^, String ^>) props, gc_ptr(String) server);
+  delegate gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>)
+      GetCredentialsDelegate(gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) props, gc_ptr(String) server);
   delegate void CloseDelegate();
 };
 }  // namespace Client

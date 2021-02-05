@@ -37,13 +37,13 @@ PUBLIC ref class CqListenerGeneric : Apache::Geode::Client::ICqListener<gc_ptr(O
  public:
   virtual void AddCqListener(gc_ptr(ICqListener<TKey, TResult>) listener) { m_listener = listener; }
 
-  virtual void OnEvent(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+  virtual void OnEvent(gc_ptr(Apache::Geode::Client::CqEvent<gc_ptr(Object), gc_ptr(Object)>) ev) {
     // TODO:split---Done
     CqEvent<TKey, TResult> gevent(ev->GetNative());
     m_listener->OnEvent(% gevent);
   }
 
-  virtual void OnError(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+  virtual void OnError(gc_ptr(Apache::Geode::Client::CqEvent<gc_ptr(Object), gc_ptr(Object)>) ev) {
     // TODO::split--Done
     CqEvent<TKey, TResult> gevent(ev->GetNative());
     m_listener->OnError(% gevent);

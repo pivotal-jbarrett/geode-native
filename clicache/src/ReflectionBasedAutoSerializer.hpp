@@ -217,9 +217,10 @@ PUBLIC ref class ReflectionBasedAutoSerializer : IPdxSerializer {
 
   bool IsPdxIdentityField(gc_ptr(FieldInfo) fi);
 
-  System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<FieldWrapper ^>)> ^ classNameVsFieldInfoWrapper;
+  System::Collections::Generic::Dictionary<gc_ptr(String), gc_ptr(List<gc_ptr(FieldWrapper)>)> ^
+      classNameVsFieldInfoWrapper;
 
-  gc_ptr(List<FieldWrapper ^>) GetFields(gc_ptr(Type) domaimType);
+  gc_ptr(List<gc_ptr(FieldWrapper)>) GetFields(gc_ptr(Type) domaimType);
 
   static gc_ptr(Type) PdxIdentityFieldAttributeType = nullptr;
 };

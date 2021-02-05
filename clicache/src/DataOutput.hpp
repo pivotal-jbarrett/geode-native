@@ -310,7 +310,7 @@ PUBLIC ref class DataOutput sealed {
   /// Write a object array to the DataOutput.
   /// </summary>
   /// <param name="value">The object array to write.</param>
-  void WriteObjectArray(gc_ptr(List<Object ^>) value);
+  void WriteObjectArray(gc_ptr(List<gc_ptr(Object)>) value);
 
   /// <summary>
   /// Write a array of sign byte array to the DataOutput.
@@ -376,7 +376,7 @@ PUBLIC ref class DataOutput sealed {
 
   native::Pool* GetPool();
 
-  void WriteStringArray(gc_ptr(array<String ^>) strArray);
+  void WriteStringArray(gc_ptr(array<gc_ptr(String)>) strArray);
 
   void EncodeUTF8String(gc_ptr(String) input, int encLength) {
     const int strLength = input->Length;

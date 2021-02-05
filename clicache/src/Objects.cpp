@@ -28,7 +28,7 @@ using namespace Apache::Geode::Client;
 namespace Apache {
 namespace Geode {
 
-Int32 Objects::Hash(... gc_ptr(array<Object ^>) values) { return Objects::GetHashCode(values); }
+Int32 Objects::Hash(... gc_ptr(array<gc_ptr(Object)>) values) { return Objects::GetHashCode(values); }
 
 Int32 Objects::GetHashCode(gc_ptr(Object) value) {
   if (nullptr == value) {

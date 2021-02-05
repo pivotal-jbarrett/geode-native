@@ -45,7 +45,8 @@ namespace native = apache::geode::client;
 delegate void PropertyVisitor(gc_ptr(Apache::Geode::Client::ICacheableKey) key,
                               gc_ptr(Apache::Geode::Client::ISerializable) value);
 
-generic<class TPropKey, class TPropValue> ref class PropertyVisitorProxy;
+GENERIC(class TPropKey, class TPropValue)
+ref class PropertyVisitorProxy;
 
 /// <summary>
 /// Delegate that represents visitor for the <c>Properties</c> class.
@@ -205,7 +206,8 @@ GENERIC(class TPropKey, class TPropValue)
   void FromData(native::DataInput & input);
 };
 
-generic<class TPropKey, class TPropValue> ref class PropertyVisitorProxy {
+GENERIC(class TPropKey, class TPropValue)
+ref class PropertyVisitorProxy {
  public:
   void Visit(gc_ptr(ICacheableKey) key, gc_ptr(ISerializable) value) {
     auto tpkey = TypeRegistry::GetManagedValueGeneric<TPropKey>(

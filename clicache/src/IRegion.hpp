@@ -1582,7 +1582,7 @@ PUBLIC interface class IRegion : public System::Collections::Generic::IDictionar
   /// <seealso cref="Get"/>
   void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
               gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-              gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions);
+              gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions);
 
   /// <summary>
   /// Gets values for collection of keys from the local cache or server.
@@ -1641,7 +1641,7 @@ PUBLIC interface class IRegion : public System::Collections::Generic::IDictionar
   /// <seealso cref="Get"/>
   void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
               gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-              gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+              gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
               bool addToLocalCache);
 
   /// <summary>
@@ -1704,7 +1704,7 @@ PUBLIC interface class IRegion : public System::Collections::Generic::IDictionar
   /// <seealso cref="Get"/>
   void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
               gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-              gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+              gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>) exceptions,
               bool addToLocalCache, gc_ptr(Object) callbackArg);
 
   /// <summary>

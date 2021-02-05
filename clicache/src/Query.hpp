@@ -125,7 +125,7 @@ PUBLIC ref class Query sealed {
   /// An <see cref="ISelectResults"/> object which can either be a
   /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
   /// </returns>
-  gc_ptr(ISelectResults<TResult>) Execute(gc_ptr(array<Object ^>) paramList, TimeSpan timeout);
+  gc_ptr(ISelectResults<TResult>) Execute(gc_ptr(array<gc_ptr(Object)>) paramList, TimeSpan timeout);
 
   /// <summary>
   /// Executes the OQL Parameterized Query on the cache server with the specified
@@ -151,7 +151,7 @@ PUBLIC ref class Query sealed {
   /// An <see cref="ISelectResults"/> object which can either be a
   /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
   /// </returns>
-  gc_ptr(ISelectResults<TResult>) Execute(gc_ptr(array<Object ^>) paramList);
+  gc_ptr(ISelectResults<TResult>) Execute(gc_ptr(array<gc_ptr(Object)>) paramList);
   /// <summary>
   /// Get the string for this query.
   /// </summary>

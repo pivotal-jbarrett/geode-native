@@ -61,7 +61,8 @@ namespace native = apache::geode::client;
 /// <seealso cref="RegionAttributesFactory" />
 /// <seealso cref="AttributesMutator" />
 /// <seealso cref="Region.Attributes" />
-generic<class TKey, class TValue> PUBLIC ref class RegionAttributes sealed : public IDataSerializableInternal {
+GENERIC(class TKey, class TValue)
+PUBLIC ref class RegionAttributes sealed : public IDataSerializableInternal {
  public:
   /// <summary>
   /// Gets the cache loader for the region.
@@ -313,8 +314,8 @@ generic<class TKey, class TValue> PUBLIC ref class RegionAttributes sealed : pub
   /// Returns the properties set for persistence.
   /// </summary>
   /// <returns>properties for the PersistenceManager</returns>
-  property gc_ptr(Properties<String ^, String ^>) PersistenceProperties {
-    gc_ptr(Properties<String ^, String ^>) get();
+  property gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) PersistenceProperties {
+    gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) get();
   }
 
   /// <summary>

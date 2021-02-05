@@ -76,17 +76,18 @@ ref class PdxTypeRegistry {
  private:
   gc_ptr(Cache) m_cache;
 
-  gc_ptr(Dictionary<Int32, PdxType ^>) typeIdToPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
+  gc_ptr(Dictionary<Int32, gc_ptr(PdxType)>) typeIdToPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
 
-  gc_ptr(Dictionary<PdxType ^, Int32>) pdxTypeToTypeId = gcnew Dictionary<gc_ptr(PdxType), Int32>();
+  gc_ptr(Dictionary<gc_ptr(PdxType), Int32>) pdxTypeToTypeId = gcnew Dictionary<gc_ptr(PdxType), Int32>();
 
-  gc_ptr(Dictionary<Int32, PdxType ^>) remoteTypeIdToMergedPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
+  gc_ptr(Dictionary<Int32, gc_ptr(PdxType)>) remoteTypeIdToMergedPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
 
-  gc_ptr(Dictionary<String ^, PdxType ^>) localTypeToPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxType)>();
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(PdxType)>)
+      localTypeToPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxType)>();
 
-  gc_ptr(Dictionary<EnumInfo ^, Int32>) enumToInt = gcnew Dictionary<gc_ptr(EnumInfo), Int32>();
+  gc_ptr(Dictionary<gc_ptr(EnumInfo), Int32>) enumToInt = gcnew Dictionary<gc_ptr(EnumInfo), Int32>();
 
-  gc_ptr(Dictionary<Int32, EnumInfo ^>) intToEnum = gcnew Dictionary<Int32, gc_ptr(EnumInfo)>();
+  gc_ptr(Dictionary<Int32, gc_ptr(EnumInfo)>) intToEnum = gcnew Dictionary<Int32, gc_ptr(EnumInfo)>();
 
   gc_ptr(WeakHashMap) preserveData = gcnew WeakHashMap();
 

@@ -82,7 +82,7 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
   }
 
   int GetHashCode() override {
-    gc_ptr(IEnumerator<Object ^>) ie = GetEnumerator();
+    gc_ptr(IEnumerator<gc_ptr(Object)>) ie = GetEnumerator();
 
     int h = 0;
     while (ie->MoveNext() == true) {
@@ -100,7 +100,7 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
 
     if (Count != otherCHST->Count) return false;
 
-    gc_ptr(IEnumerator<Object ^>) ie = GetEnumerator();
+    gc_ptr(IEnumerator<gc_ptr(Object)>) ie = GetEnumerator();
 
     while (ie->MoveNext() == true) {
       if (otherCHST->Contains(ie->Current))
@@ -363,7 +363,7 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
   /// is greater than the available space from arrayIndex to the end
   /// of the destination array.
   /// </exception>
-  virtual void CopyTo(gc_ptr(array<Object ^>) array, System::Int32 arrayIndex) {
+  virtual void CopyTo(gc_ptr(array<gc_ptr(Object)>) array, System::Int32 arrayIndex) {
     if (array == nullptr || arrayIndex < 0) {
       throw gcnew IllegalArgumentException(
           "CacheableHashSet.CopyTo():"
@@ -444,7 +444,7 @@ PUBLIC ref class CacheableHashSetType : public IDataSerializablePrimitive,
   /// A <c>System.Collections.Generic.IEnumerator</c> that
   /// can be used to iterate through the <c>CacheableHashSet</c>.
   /// </returns>
-  virtual gc_ptr(IEnumerator<Object ^>) GetEnumerator() { return gcnew Enumerator(this); }
+  virtual gc_ptr(IEnumerator<gc_ptr(Object)>) GetEnumerator() { return gcnew Enumerator(this); }
 
   // End Region: IEnumerable<gc_ptr(ICacheableKey)> Members
 

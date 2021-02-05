@@ -108,7 +108,7 @@ CacheWriter* ManagedCacheWriterGeneric::create(const char* assemblyPath, const c
     gc_ptr(Type) typeInst = assmb->GetType(mg_typeName, false, true);
 
     if (typeInst != nullptr) {
-      gc_ptr(array<Type ^>) types = gcnew array<gc_ptr(Type)>(2);
+      gc_ptr(array<gc_ptr(Type)>) types = gcnew array<gc_ptr(Type)>(2);
       types[0] = Type::GetType(mg_genericKey, false, true);
       types[1] = Type::GetType(mg_genericVal, false, true);
 
@@ -146,11 +146,11 @@ CacheWriter* ManagedCacheWriterGeneric::create(const char* assemblyPath, const c
         gc_ptr(Object) cwg = Activator::CreateInstance(cwgType);
 
         mInfo = cwgType->GetMethod("SetCacheWriter");
-        gc_ptr(array<Object ^>) params = gcnew array<gc_ptr(Object)>(1);
+        gc_ptr(array<gc_ptr(Object)>) params = gcnew array<gc_ptr(Object)>(1);
         params[0] = managedptr;
         mInfo->Invoke(cwg, params);
 
-        mgcw->setptr((gc_ptr(Apache::Geode::Client::ICacheWriter<Object ^, Object ^>)) cwg);
+        mgcw->setptr((gc_ptr(Apache::Geode::Client::ICacheWriter<gc_ptr(Object), gc_ptr(Object)>))cwg);
 
         return mgcw;
       } else {

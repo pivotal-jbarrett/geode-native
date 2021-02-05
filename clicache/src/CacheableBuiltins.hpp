@@ -265,46 +265,47 @@ ref class CacheableBuiltinArray : public IDataSerializablePrimitive {
 // n = native type
 // m = CacheableInt(managed cacheable)
 // mt = managed type(bool, int)
-#define _GFCLI_CACHEABLE_KEY_DEF_NEW(n, m, mt)                                                                  \
-  ref class m : public CacheableBuiltinKey<n, mt, static_cast<int8_t>(DSCode::m)> {                             \
-   public:                                                                                                      \
-    /** <summary>                                                                                               \
-     *  Allocates a new instance with the given value.                                                          \
-     *  </summary>                                                                                              \
-     *  <param name="value">the value of the new instance</param>                                               \
-     */                                                                                                         \
-    inline m() : CacheableBuiltinKey() {}                                                                       \
-    /** <summary>                                                                                               \
-     *  Allocates a new instance with the given value.                                                          \
-     *  </summary>                                                                                              \
-     *  <param name="value">the value of the new instance</param>                                               \
-     */                                                                                                         \
-    inline m(mt value) : CacheableBuiltinKey(value) {}                                                          \
-    /** <summary>                                                                                               \
-     *  Static function to create a new instance given value.                                                   \
-     *  </summary>                                                                                              \
-     *  <param name="value">the value of the new instance</param>                                               \
-     */                                                                                                         \
-    inline static gc_ptr(m) Create(mt value) {                                                                  \
-      return gcnew m(value);                                                                                    \
-    } /** <summary>                                                                                             \
-       * Explicit conversion operator to contained value type.                                                  \
-       * </summary>                                                                                             \
-       */                                                                                                       \
-    inline static explicit operator mt(gc_ptr(m) value) { return value->Value; }                                \
-                                                                                                                \
-    /** <summary>                                                                                               \
-     * Factory function to register this class.                                                                 \
-     * </summary>                                                                                               \
-     */                                                                                                         \
-    static gc_ptr(ISerializable) CreateDeserializable() { return gcnew m(); }                                   \
-                                                                                                                \
-    CLI(internal:)                                                                                              \
-        static ISerializable ^                                                                                  \
-        Create(std::shared_ptr<native::Serializable> obj) { return (obj != nullptr ? gcnew m(obj) : nullptr); } \
-                                                                                                                \
-        private : inline m(std::shared_ptr<native::Serializable> nativeptr)                                     \
-        : CacheableBuiltinKey(nativeptr) {}                                                                     \
+#define _GFCLI_CACHEABLE_KEY_DEF_NEW(n, m, mt)                                                    \
+  ref class m : public CacheableBuiltinKey<n, mt, static_cast<int8_t>(DSCode::m)> {               \
+   public:                                                                                        \
+    /** <summary>                                                                                 \
+     *  Allocates a new instance with the given value.                                            \
+     *  </summary>                                                                                \
+     *  <param name="value">the value of the new instance</param>                                 \
+     */                                                                                           \
+    inline m() : CacheableBuiltinKey() {}                                                         \
+    /** <summary>                                                                                 \
+     *  Allocates a new instance with the given value.                                            \
+     *  </summary>                                                                                \
+     *  <param name="value">the value of the new instance</param>                                 \
+     */                                                                                           \
+    inline m(mt value) : CacheableBuiltinKey(value) {}                                            \
+    /** <summary>                                                                                 \
+     *  Static function to create a new instance given value.                                     \
+     *  </summary>                                                                                \
+     *  <param name="value">the value of the new instance</param>                                 \
+     */                                                                                           \
+    inline static gc_ptr(m) Create(mt value) {                                                    \
+      return gcnew m(value);                                                                      \
+    } /** <summary>                                                                               \
+       * Explicit conversion operator to contained value type.                                    \
+       * </summary>                                                                               \
+       */                                                                                         \
+    inline static explicit operator mt(gc_ptr(m) value) { return value->Value; }                  \
+                                                                                                  \
+    /** <summary>                                                                                 \
+     * Factory function to register this class.                                                   \
+     * </summary>                                                                                 \
+     */                                                                                           \
+    static gc_ptr(ISerializable) CreateDeserializable() { return gcnew m(); }                     \
+                                                                                                  \
+    CLI(internal:)                                                                                \
+    static gc_ptr(ISerializable) Create(std::shared_ptr<native::Serializable> obj) {              \
+      return (obj != nullptr ? gcnew m(obj) : nullptr);                                           \
+    }                                                                                             \
+                                                                                                  \
+   private:                                                                                       \
+    inline m(std::shared_ptr<native::Serializable> nativeptr) : CacheableBuiltinKey(nativeptr) {} \
   };
 
 // Built-in CacheableKeys
@@ -383,29 +384,25 @@ ref class CacheableArray : public CacheableBuiltinArray<NativeArray, NativeArray
    *  </remarks>
    *  <param name="value">the array to create the new instance</param>
    */
-  inline static CacheableArray ^
-      Create(gc_ptr(array<ManagedType>) value, System::Int32 length) {
-        return (value != nullptr && value->Length > 0 ? gcnew CacheableArray(value, length) : nullptr);
-      }
-      /** <summary>
-       * Explicit conversion operator to contained array type.
-       * </summary>
-       */
-      inline static explicit
-      operator gc_ptr(array<ManagedType>)(gc_ptr(CacheableArray) value) {
+  inline static gc_ptr(CacheableArray) Create(gc_ptr(array<ManagedType>) value, System::Int32 length) {
+    return (value != nullptr && value->Length > 0 ? gcnew CacheableArray(value, length) : nullptr);
+  }
+  /** <summary>
+   * Explicit conversion operator to contained array type.
+   * </summary>
+   */
+  inline static explicit operator gc_ptr(array<ManagedType>)(gc_ptr(CacheableArray) value) {
     return (value != nullptr ? value->Value : nullptr);
   }
   /** <summary>
    * Factory function to register this class.
    * </summary>
    */
-  static ISerializable ^
-      CreateDeserializable() { return gcnew CacheableArray(); } internal
-      : static ISerializable
-        ^
-        Create(std::shared_ptr<native::Serializable> obj) {
-          return (obj != nullptr ? gcnew CacheableArray(obj) : nullptr);
-        } private :
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableArray(); }
+  internal : static ISerializable ^
+             Create(std::shared_ptr<native::Serializable> obj) {
+               return (obj != nullptr ? gcnew CacheableArray(obj) : nullptr);
+             } private :
       /** <summary>
        * Allocates a new instance
        *  </summary>

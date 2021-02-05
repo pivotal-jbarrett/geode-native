@@ -252,7 +252,8 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>)
 // PERSISTENCE
 GENERIC(class TKey, class TValue)
 gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetPersistenceManager(
-    gc_ptr(IPersistenceManager<TKey, TValue>) persistenceManager, gc_ptr(Properties<String ^, String ^>) config) {
+    gc_ptr(IPersistenceManager<TKey, TValue>) persistenceManager,
+    gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config) {
   std::shared_ptr<native::PersistenceManager> persistenceManagerptr;
   if (persistenceManager != nullptr) {
     gc_ptr(PersistenceManagerGeneric<TKey, TValue>) clg = gcnew PersistenceManagerGeneric<TKey, TValue>();
@@ -285,7 +286,8 @@ gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TVal
 
 GENERIC(class TKey, class TValue)
 gc_ptr(RegionAttributesFactory<TKey, TValue>) RegionAttributesFactory<TKey, TValue>::SetPersistenceManager(
-    gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName, gc_ptr(Properties<String ^, String ^>) config) {
+    gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName,
+    gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config) {
   try {
     m_nativeptr->get()->setPersistenceManager(marshal_as<std::string>(libPath),
                                               marshal_as<std::string>(factoryFunctionName), config->GetNative());

@@ -114,7 +114,7 @@ PUBLIC ref class MapEntry {
 
 PUBLIC ref class WeakHashMap {
   // not thread safe
-  gc_ptr(Dictionary<int, MapEntry ^>) m_dictionary;
+  gc_ptr(Dictionary<int, gc_ptr(MapEntry)>) m_dictionary;
   gc_ptr(ReaderWriterLock) m_readerWriterLock;
 
  public:

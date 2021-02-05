@@ -106,7 +106,7 @@ CacheLoader* ManagedCacheLoaderGeneric::create(const char* assemblyPath, const c
     gc_ptr(Type) typeInst = assmb->GetType(mg_typeName, false, true);
 
     if (typeInst != nullptr) {
-      gc_ptr(array<Type ^>) types = gcnew array<gc_ptr(Type)>(2);
+      gc_ptr(array<gc_ptr(Type)>) types = gcnew array<gc_ptr(Type)>(2);
       types[0] = Type::GetType(mg_genericKey, false, true);
       types[1] = Type::GetType(mg_genericVal, false, true);
 
@@ -146,7 +146,7 @@ CacheLoader* ManagedCacheLoaderGeneric::create(const char* assemblyPath, const c
         gc_ptr(Object) clg = Activator::CreateInstance(clgType);
 
         mInfo = clgType->GetMethod("SetCacheLoader");
-        gc_ptr(array<Object ^>) params = gcnew array<gc_ptr(Object)>(1);
+        gc_ptr(array<gc_ptr(Object)>) params = gcnew array<gc_ptr(Object)>(1);
         params[0] = managedptr;
         mInfo->Invoke(clg, params);
 

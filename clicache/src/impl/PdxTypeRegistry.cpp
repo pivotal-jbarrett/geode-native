@@ -59,7 +59,7 @@ Int32 PdxTypeRegistry::GetPDXIdForType(gc_ptr(Type) pdxType, native::Pool* pool,
 }
 
 Int32 PdxTypeRegistry::GetPDXIdForType(gc_ptr(PdxType) pType, native::Pool* pool) {
-  gc_ptr(IDictionary<PdxType ^, Int32>) tmp = pdxTypeToTypeId;
+  gc_ptr(IDictionary<gc_ptr(PdxType), Int32>) tmp = pdxTypeToTypeId;
   Int32 typeId = 0;
 
   tmp->TryGetValue(pType, typeId);
@@ -116,7 +116,7 @@ void PdxTypeRegistry::AddPdxType(Int32 typeId, gc_ptr(PdxType) pdxType) {
 gc_ptr(PdxType) PdxTypeRegistry::GetPdxType(Int32 typeId) {
   try {
     // g_readerWriterLock->AcquireReaderLock(-1);
-    gc_ptr(IDictionary<Int32, PdxType ^>) tmpDict = typeIdToPdxType;
+    gc_ptr(IDictionary<Int32, gc_ptr(PdxType)>) tmpDict = typeIdToPdxType;
     gc_ptr(PdxType) retVal = nullptr;
 
     tmpDict->TryGetValue(typeId, retVal);

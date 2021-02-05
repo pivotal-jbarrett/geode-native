@@ -296,7 +296,7 @@ void PdxType::initRemoteToLocal(gc_ptr(Cache) cache) {
   m_numberOfFieldsExtra = 0;
 
   if (localPdxType != nullptr) {
-    gc_ptr(IList<PdxFieldType ^>) localPdxFields = localPdxType->m_pdxFieldTypes;
+    gc_ptr(IList<gc_ptr(PdxFieldType)>) localPdxFields = localPdxType->m_pdxFieldTypes;
     Int32 fieldIdx = 0;
 
     m_remoteToLocalFieldMap = gcnew array<Int32>(m_pdxFieldTypes->Count);
@@ -329,7 +329,7 @@ void PdxType::initLocalToRemote(gc_ptr(Cache) cache) {
 
   if (localPdxType != nullptr) {
     // Log::Debug("In initLocalToRemote: " + m_geodeTypeId);
-    gc_ptr(IList<PdxFieldType ^>) localPdxFields = localPdxType->m_pdxFieldTypes;
+    gc_ptr(IList<gc_ptr(PdxFieldType)>) localPdxFields = localPdxType->m_pdxFieldTypes;
 
     Int32 fieldIdx = 0;
     // type which need to read/write should control local type

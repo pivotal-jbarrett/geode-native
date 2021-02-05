@@ -58,7 +58,7 @@ PUBLIC ref class Objects {
   /// <param name="values">
   /// Variable arguments to combine into hash.
   /// </param>
-  static Int32 Hash(... gc_ptr(array<Object ^>) values);
+  static Int32 Hash(... gc_ptr(array<gc_ptr(Object)>) values);
 
   /// <summary>
   /// Hashes consistent with java.util.Objects.hashCode(Object).

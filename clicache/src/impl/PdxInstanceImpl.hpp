@@ -85,7 +85,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
 
   CLI(internal:)
 
-  gc_ptr(Dictionary<String ^, Object ^>) m_updatedFields;
+  gc_ptr(Dictionary<gc_ptr(String), gc_ptr(Object)>) m_updatedFields;
 
   gc_ptr(Object) readField(gc_ptr(DataInput) dataInput, gc_ptr(String) fieldName, int typeId);
 
@@ -101,7 +101,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
 
   int getNextFieldPosition(gc_ptr(DataInput) dataInput, int fieldId, gc_ptr(PdxType) pt);
 
-  gc_ptr(IList<PdxFieldType ^>) getIdentityPdxFields(gc_ptr(PdxType) pt);
+  gc_ptr(IList<gc_ptr(PdxFieldType)>) getIdentityPdxFields(gc_ptr(PdxType) pt);
 
   bool isPrimitiveArray(gc_ptr(Object) object);
 
@@ -109,10 +109,9 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
 
   static int deepArrayHashCode(gc_ptr(Object) obj);
 
-  generic<class T> where T : System::Collections::ICollection,
-                             System::Collections::IList,
-                             System::Collections::IEnumerable static int
-                             primitiveArrayHashCode(T objArray);
+  GENERIC(class T)
+  WHERE(T, System::Collections::ICollection, System::Collections::IList, System::Collections::IEnumerable)
+  static int primitiveArrayHashCode(T objArray);
 
   static int enumerableHashCode(gc_ptr(System::Collections::IEnumerable) enumObj);
 
@@ -122,7 +121,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
 
   static int comparePdxField(gc_ptr(PdxFieldType) a, gc_ptr(PdxFieldType) b);
 
-  void equatePdxFields(gc_ptr(IList<PdxFieldType ^>) my, gc_ptr(IList<PdxFieldType ^>) other);
+  void equatePdxFields(gc_ptr(IList<gc_ptr(PdxFieldType)>) my, gc_ptr(IList<gc_ptr(PdxFieldType)>) other);
 
   // bool compareRawBytes(gc_ptr(PdxInstanceImpl) other, gc_ptr(PdxType) myPT,  gc_ptr(PdxFieldType) myF,
   // gc_ptr(PdxType) otherPT,  gc_ptr(PdxFieldType) otherF);
@@ -152,7 +151,8 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
   }
 
   // for pdxInstance factory
-  PdxInstanceImpl(gc_ptr(Dictionary<String ^, Object ^>) fieldVsValue, gc_ptr(PdxType) pdxType, gc_ptr(Cache) cache);
+  PdxInstanceImpl(gc_ptr(Dictionary<gc_ptr(String), gc_ptr(Object)>) fieldVsValue, gc_ptr(PdxType) pdxType,
+                  gc_ptr(Cache) cache);
 
   ~PdxInstanceImpl() { cleanup(); }
   !PdxInstanceImpl() { cleanup(); }
@@ -167,7 +167,7 @@ ref class PdxInstanceImpl : public IWritablePdxInstance, public IPdxInstance, pu
 
   virtual bool HasField(gc_ptr(String) fieldName);
 
-  virtual gc_ptr(IList<String ^>) GetFieldNames();
+  virtual gc_ptr(IList<gc_ptr(String)>) GetFieldNames();
 
   virtual bool IsIdentityField(gc_ptr(String) fieldName);
 

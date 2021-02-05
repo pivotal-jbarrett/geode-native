@@ -214,7 +214,7 @@ ref class Log STATICCLASS {
   /// Error level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Error(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Error(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Error)
       Log::Write(LogLevel::Error, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -223,7 +223,7 @@ ref class Log STATICCLASS {
   /// Warning level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Warning(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Warning(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Warning)
       Log::Write(LogLevel::Warning, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -232,7 +232,7 @@ ref class Log STATICCLASS {
   /// Info level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Info(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Info(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Info)
       Log::Write(LogLevel::Info, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -241,7 +241,7 @@ ref class Log STATICCLASS {
   /// Config level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Config(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Config(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Config)
       Log::Write(LogLevel::Config, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -250,7 +250,7 @@ ref class Log STATICCLASS {
   /// Fine level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Fine(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Fine(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Fine)
       Log::Write(LogLevel::Fine, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -259,7 +259,7 @@ ref class Log STATICCLASS {
   /// Finer level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Finer(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Finer(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Finer)
       Log::Write(LogLevel::Finer, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -268,7 +268,7 @@ ref class Log STATICCLASS {
   /// Finest level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Finest(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Finest(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Finest)
       Log::Write(LogLevel::Finest, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }
@@ -277,7 +277,7 @@ ref class Log STATICCLASS {
   /// Debug level logging with variable number of arguments using
   /// format as in <c>System.String.Format</c>.
   /// </summary>
-  inline static void Debug(gc_ptr(String) format, ... gc_ptr(array<Object ^>) args) {
+  inline static void Debug(gc_ptr(String) format, ... gc_ptr(array<gc_ptr(Object)>) args) {
     if (staticLogLevel >= LogLevel::Debug)
       Log::Write(LogLevel::Debug, String::Format(System::Globalization::CultureInfo::CurrentCulture, format, args));
   }

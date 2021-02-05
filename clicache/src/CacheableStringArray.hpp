@@ -50,7 +50,7 @@ ref class CacheableStringArray : public IDataSerializablePrimitive {
   /// <exception cref="IllegalArgumentException">
   /// If the array contains a string greater than or equal 64K in length.
   /// </exception>
-  inline static gc_ptr(CacheableStringArray) Create(gc_ptr(array<String ^>) strings) {
+  inline static gc_ptr(CacheableStringArray) Create(gc_ptr(array<gc_ptr(String)>) strings) {
     return (strings != nullptr && strings->Length > 0 ? gcnew CacheableStringArray(strings) : nullptr);
   }
 
@@ -75,7 +75,7 @@ ref class CacheableStringArray : public IDataSerializablePrimitive {
   /// <summary>
   /// Returns a copy of the underlying array of strings.
   /// </summary>
-  gc_ptr(array<String ^>) GetValues();
+  gc_ptr(array<gc_ptr(String)>) GetValues();
 
   /// <summary>
   /// Returns a copy of the underlying string at the given index.
@@ -97,14 +97,14 @@ ref class CacheableStringArray : public IDataSerializablePrimitive {
   static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableStringArray(); }
 
  private:
-  gc_ptr(array<String ^>) m_value;
+  gc_ptr(array<gc_ptr(String)>) m_value;
   /// <summary>
   /// Allocates a new instance copying from the given string array.
   /// </summary>
   /// <exception cref="IllegalArgumentException">
   /// If the array contains a string greater than or equal 64K in length.
   /// </exception>
-  CacheableStringArray(gc_ptr(array<String ^>) strings);
+  CacheableStringArray(gc_ptr(array<gc_ptr(String)>) strings);
 
   inline CacheableStringArray() {}
 };

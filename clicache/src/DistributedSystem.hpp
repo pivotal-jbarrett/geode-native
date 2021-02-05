@@ -78,7 +78,7 @@ ref class DistributedSystem sealed {
   /// </exception>
   /// <exception cref="UnknownException">otherwise</exception>
   static gc_ptr(DistributedSystem)
-      Connect(gc_ptr(String) name, gc_ptr(Properties<String ^, String ^>) config, gc_ptr(Cache) cache);
+      Connect(gc_ptr(String) name, gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config, gc_ptr(Cache) cache);
 
   /// <summary>
   /// Disconnect from the distributed system.

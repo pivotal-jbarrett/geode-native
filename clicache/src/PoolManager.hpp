@@ -60,7 +60,7 @@ PUBLIC ref class PoolManager {
   /// <summary>
   /// Find the pool used by the given region.
   /// </summary>
-  Pool /*<TKey, TValue>*/ ^ Find(gc_ptr(Client::Region<Object ^, Object ^>) region);
+  Pool /*<TKey, TValue>*/ ^ Find(gc_ptr(Client::Region<gc_ptr(Object), gc_ptr(Object)>) region);
 
   /// <summary>
   /// Destroys all created pools.

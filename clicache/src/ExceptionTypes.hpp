@@ -62,7 +62,7 @@ delegate gc_ptr(GeodeException)
   /// name to the factory delegate of the corresponding managed Geode
   /// exception class.
   /// </summary>
-  static gc_ptr(Dictionary<String ^, CreateException2 ^>) Native2ManagedExMap = Init();
+  static gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateException2)>) Native2ManagedExMap = Init();
 
   /// <summary>
   /// Name and delegate pair class. The Native2ManagedExMap dictionary
@@ -91,7 +91,7 @@ delegate gc_ptr(GeodeException)
   /// <remarks>
   /// This method is not thread-safe and should be called in a single thread.
   /// </remarks>
-  static gc_ptr(Dictionary<String ^, CreateException2 ^>) Init();
+  static gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateException2)>) Init();
 
   /// <summary>
   /// Create the managed Geode exception for a given native Geode exception.

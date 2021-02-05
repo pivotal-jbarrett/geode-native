@@ -33,7 +33,7 @@ gc_ptr(PoolFactory) PoolManager::CreateFactory() {
       std::unique_ptr<native::PoolFactory>(new native::PoolFactory(m_nativeref.createFactory())));
 }
 
-const gc_ptr(Dictionary<String ^, Pool ^>) PoolManager::GetAll() {
+const gc_ptr(Dictionary<gc_ptr(String), gc_ptr(Pool)>) PoolManager::GetAll() {
   auto pools = m_nativeref.getAll();
   auto result = gcnew Dictionary<gc_ptr(String), gc_ptr(Pool)>();
   for (const auto& iter : pools) {
@@ -49,7 +49,7 @@ gc_ptr(Pool) PoolManager::Find(gc_ptr(String) name) {
   return Pool::Create(pool);
 }
 
-gc_ptr(Pool) PoolManager::Find(gc_ptr(Client::Region<Object ^, Object ^>) region) {
+gc_ptr(Pool) PoolManager::Find(gc_ptr(Client::Region<gc_ptr(Object), gc_ptr(Object)>) region) {
   return Pool::Create(m_nativeref.find(region->GetNative()));
 }
 

@@ -224,13 +224,13 @@ ref class PdxReaderWithTypeCollector : public PdxLocalReader {
   /// Read a string array from the data.
   /// </summary>
   /// <param name="fieldName">The name of a member field whose value to read.</param>
-  virtual gc_ptr(array<String ^>) ReadStringArray(gc_ptr(String) fieldName) override;
+  virtual gc_ptr(array<gc_ptr(String)>) ReadStringArray(gc_ptr(String) fieldName) override;
 
   /// <summary>
   /// Read a object array from the data.
   /// </summary>
   /// <param name="fieldName">The name of a member field whose value to read.</param>
-  virtual gc_ptr(List<Object ^>) ReadObjectArray(gc_ptr(String) fieldName) override;
+  virtual gc_ptr(List<gc_ptr(Object)>) ReadObjectArray(gc_ptr(String) fieldName) override;
 
   /// <summary>
   /// Read a two-dimenesional byte array from the data.

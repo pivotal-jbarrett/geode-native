@@ -199,7 +199,7 @@ gc_ptr(System::Collections::IEnumerator) Region<TKey, TValue>::GetEnumeratorOld(
     auto val = TypeRegistry::GetManagedValueGeneric<TValue>(nativeptr->getValue());
     toArray[index] = KeyValuePair<TKey, TValue>(key, val);
   }
-  return ((gc_ptr(System::Collections::Generic::IEnumerable<Object ^>)) toArray)->GetEnumerator();
+  return ((gc_ptr(System::Collections::Generic::IEnumerable<gc_ptr(Object)>))toArray)->GetEnumerator();
 }
 
 GENERIC(class TKey, class TValue)
@@ -526,7 +526,7 @@ void Region<TKey, TValue>::PutAll(gc_ptr(System::Collections::Generic::IDictiona
 GENERIC(class TKey, class TValue)
 void Region<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                                   gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                                  gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>)
+                                  gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>)
                                       exceptions) {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
@@ -538,7 +538,7 @@ void Region<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollecti
 GENERIC(class TKey, class TValue)
 void Region<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                                   gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                                  gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>)
+                                  gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>)
                                       exceptions,
                                   bool addToLocalCache) {
   if (keys != nullptr) {
@@ -575,7 +575,7 @@ void Region<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollecti
 GENERIC(class TKey, class TValue)
 void Region<TKey, TValue>::GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
                                   gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
-                                  gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>)
+                                  gc_ptr(System::Collections::Generic::IDictionary<TKey, gc_ptr(System::Exception)>)
                                       exceptions,
                                   bool addToLocalCache, gc_ptr(Object) callbackArg) {
   if (keys != nullptr) {
@@ -999,7 +999,7 @@ gc_ptr(System::Collections::Generic::ICollection<TKey>) Region<TKey, TValue>::Ge
 }
 
 GENERIC(class TKey, class TValue)
-gc_ptr(System::Collections::Generic::ICollection<String ^>) Region<TKey, TValue>::GetInterestListRegex() {
+gc_ptr(System::Collections::Generic::ICollection<gc_ptr(String)>) Region<TKey, TValue>::GetInterestListRegex() {
   _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
     std::vector<std::shared_ptr<native::CacheableString>> vc;
@@ -1013,7 +1013,7 @@ gc_ptr(System::Collections::Generic::ICollection<String ^>) Region<TKey, TValue>
       strarr[index] = marshal_as<gc_ptr(String)>(vc[index]->value());
       // collectionlist[ index ] = Serializable::GetManagedValue<TValue>(nativeptr);
     }
-    auto collectionlist = (gc_ptr(System::Collections::Generic::ICollection<String ^>)) strarr;
+    auto collectionlist = (gc_ptr(System::Collections::Generic::ICollection<gc_ptr(String)>))strarr;
     return collectionlist;
 
   _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */

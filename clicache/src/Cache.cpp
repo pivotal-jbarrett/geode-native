@@ -147,7 +147,7 @@ gc_ptr(RegionFactory) Cache::CreateRegionFactory(RegionShortcut preDefinedRegion
   END_NATIVE;
 }
 
-gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<String ^, Object ^>) credentials) {
+gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials) {
   BEGIN_NATIVE {
     return AuthenticatedView::Create(
         m_nativeptr->get()->native::Cache::createAuthenticatedView(credentials->GetNative(), ""));
@@ -165,7 +165,7 @@ bool Cache::GetPdxReadSerialized() {
   END_NATIVE;
 }
 
-gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<String ^, Object ^>) credentials,
+gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials,
                                                       gc_ptr(String) poolName) {
   BEGIN_NATIVE {
     return AuthenticatedView::Create(m_nativeptr->get()->native::Cache::createAuthenticatedView(

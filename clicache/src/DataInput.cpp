@@ -529,7 +529,7 @@ gc_ptr(Object) DataInput::ReadDotNetTypes(int8_t typeId) {
       static_cast<gc_ptr(CacheableArrayList)>(CacheableArrayList::CreateDeserializable()); cv->FromData(this);
       return cv->Value;*/
       int len = ReadArrayLen();
-      gc_ptr(System::Collections::Generic::List<Object ^>) retA =
+      gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>) retA =
           gcnew System::Collections::Generic::List<gc_ptr(Object)>(len);
       for (int i = 0; i < len; i++) {
         retA->Add(this->ReadObject());
@@ -541,7 +541,7 @@ gc_ptr(Object) DataInput::ReadDotNetTypes(int8_t typeId) {
       static_cast<gc_ptr(CacheableArrayList)>(CacheableArrayList::CreateDeserializable()); cv->FromData(this);
       return cv->Value;*/
       int len = ReadArrayLen();
-      gc_ptr(System::Collections::Generic::LinkedList<Object ^>) retA =
+      gc_ptr(System::Collections::Generic::LinkedList<gc_ptr(Object)>) retA =
           gcnew System::Collections::Generic::LinkedList<gc_ptr(Object)>();
       for (int i = 0; i < len; i++) {
         retA->AddLast(this->ReadObject());
@@ -751,13 +751,13 @@ void DataInput::ReadDictionary(gc_ptr(System::Collections::IDictionary) dict) {
   }
 }
 
-gc_ptr(IDictionary<Object ^, Object ^>) DataInput::ReadDictionary() {
+gc_ptr(IDictionary<gc_ptr(Object), gc_ptr(Object)>) DataInput::ReadDictionary() {
   int len = this->ReadArrayLen();
 
   if (len == -1)
     return nullptr;
   else {
-    gc_ptr(IDictionary<Object ^, Object ^>) dict = gcnew Dictionary<gc_ptr(Object), gc_ptr(Object)>();
+    gc_ptr(IDictionary<gc_ptr(Object), gc_ptr(Object)>) dict = gcnew Dictionary<gc_ptr(Object), gc_ptr(Object)>();
     for (int i = 0; i < len; i++) {
       gc_ptr(Object) key = this->ReadObject();
       gc_ptr(Object) val = this->ReadObject();
@@ -830,7 +830,7 @@ gc_ptr(array<double>) DataInput::ReadDoubleArray() {
   return arr;
 }
 
-gc_ptr(List<Object ^>) DataInput::ReadObjectArray() {
+gc_ptr(List<gc_ptr(Object)>) DataInput::ReadObjectArray() {
   // this to know whether it is null or it is empty
   auto storeCursor = m_cursor;
   auto len = this->ReadArrayLen();
@@ -840,7 +840,7 @@ gc_ptr(List<Object ^>) DataInput::ReadObjectArray() {
 
   gc_ptr(CacheableObjectArray) coa = CacheableObjectArray::Create();
   coa->FromData(this);
-  gc_ptr(List<Object ^>) retObj = (gc_ptr(List<Object ^>)) coa;
+  gc_ptr(List<gc_ptr(Object)>) retObj = (gc_ptr(List<gc_ptr(Object)>))coa;
 
   if (retObj->Count >= 0) return retObj;
   return nullptr;

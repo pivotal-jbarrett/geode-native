@@ -51,7 +51,7 @@ PUBLIC ref class CacheFactory {
   /// A factory class that must be used to obtain instance of <see cref="Cache" />.
   /// </summary>
   /// <param name="dsProps">Properties which are applicable at client level.</param>
-  CacheFactory(gc_ptr(Properties<String ^, String ^>) dsProps);
+  CacheFactory(gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) dsProps);
 
   /// <summary>
   /// A factory class that must be used to obtain instance of <see cref="Cache" />.
@@ -144,13 +144,13 @@ PUBLIC ref class CacheFactory {
   /// Private constructor to wrap a native object pointer
   /// </summary>
   /// <param name="nativeptr">The native object pointer</param>
-  inline CacheFactory(native::CacheFactory nativeptr, gc_ptr(Properties<String ^, String ^>) dsProps) {
+  inline CacheFactory(native::CacheFactory nativeptr, gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) dsProps) {
     m_nativeptr = gcnew native_conditional_shared_ptr<native::CacheFactory>(
         std::unique_ptr<native::CacheFactory>(new native::CacheFactory(nativeptr)));
     m_dsProps = dsProps;
   }
 
-  gc_ptr(Properties<String ^, String ^>) m_dsProps;
+  gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) m_dsProps;
 
   static gc_ptr(System::Object) m_singletonSync = gcnew System::Object();
 

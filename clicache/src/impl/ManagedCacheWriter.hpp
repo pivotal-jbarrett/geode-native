@@ -150,9 +150,11 @@ class ManagedCacheWriterGeneric : public CacheWriter {
   /// <summary>
   /// Returns the wrapped managed object reference.
   /// </summary>
-  inline gc_ptr(Apache::Geode::Client::ICacheWriter<Object ^, Object ^>) ptr() const { return m_managedptr; }
+  inline gc_ptr(Apache::Geode::Client::ICacheWriter<gc_ptr(Object), gc_ptr(Object)>) ptr() const {
+    return m_managedptr;
+  }
 
-  inline void setptr(gc_ptr(Apache::Geode::Client::ICacheWriter<Object ^, Object ^>) managedptr) {
+  inline void setptr(gc_ptr(Apache::Geode::Client::ICacheWriter<gc_ptr(Object), gc_ptr(Object)>) managedptr) {
     m_managedptr = managedptr;
   }
 
@@ -165,7 +167,7 @@ class ManagedCacheWriterGeneric : public CacheWriter {
   /// to be called which is not what is desired when this object is destroyed. Normally this
   /// managed object may be created by the user and will be handled automatically by the GC.
   /// </summary>
-  gcroot<gc_ptr(Apache::Geode::Client::ICacheWriter<Object ^, Object ^>)> m_managedptr;
+  gcroot<gc_ptr(Apache::Geode::Client::ICacheWriter<gc_ptr(Object), gc_ptr(Object)>)> m_managedptr;
 
   gcroot<gc_ptr(Object)> m_userptr;
 };

@@ -75,7 +75,8 @@ namespace Client {
 /// <seealso cref="RegionAttributes.CacheWriter" />
 /// <seealso cref="ICacheLoader" />
 /// <seealso cref="ICacheListener" />
-generic<class TKey, class TValue> PUBLIC interface class ICacheWriter {
+GENERIC(class TKey, class TValue)
+PUBLIC interface class ICacheWriter {
  public:
   /// <summary>
   /// Called before an entry is updated. The entry update is initiated by a

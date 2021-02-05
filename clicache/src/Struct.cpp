@@ -49,7 +49,7 @@ gc_ptr(Object) Struct::default ::get(gc_ptr(String) fieldName) {
   }
 }
 
-gc_ptr(StructSet<Object ^>) Struct::Set::get() {
+gc_ptr(StructSet<gc_ptr(Object)>) Struct::Set::get() {
   try {
     return StructSet<gc_ptr(Object)>::Create(dynamic_cast<native::Struct*>(m_nativeptr->get())->getStructSet());
   } finally {

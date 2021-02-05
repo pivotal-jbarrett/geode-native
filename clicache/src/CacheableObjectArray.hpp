@@ -52,7 +52,7 @@ PUBLIC ref class CacheableObjectArray : public List<gc_ptr(Object)>, public IDat
   /// <param name="collection">
   /// The collection whose elements are copied to this list.
   /// </param>
-  inline CacheableObjectArray(gc_ptr(IEnumerable<Object ^>) collection) : List<gc_ptr(Object)>(collection) {}
+  inline CacheableObjectArray(gc_ptr(IEnumerable<gc_ptr(Object)>) collection) : List<gc_ptr(Object)>(collection) {}
 
   /// <summary>
   /// Allocates a new empty instance with given initial size.
@@ -71,7 +71,7 @@ PUBLIC ref class CacheableObjectArray : public List<gc_ptr(Object)>, public IDat
   /// Static function to create a new instance copying from the
   /// given collection.
   /// </summary>
-  inline static gc_ptr(CacheableObjectArray) Create(gc_ptr(IEnumerable<Object ^>) collection) {
+  inline static gc_ptr(CacheableObjectArray) Create(gc_ptr(IEnumerable<gc_ptr(Object)>) collection) {
     return gcnew CacheableObjectArray(collection);
   }
 

@@ -320,13 +320,15 @@ gc_ptr(IPdxWriter) PdxLocalWriter::WriteDoubleArray(gc_ptr(String) fieldName, gc
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteStringArray(gc_ptr(String) fieldName,
+                                                    gc_ptr(array<gc_ptr(String)>) stringArray) {
   AddOffset();
   m_dataOutput->WriteStringArray(stringArray);
   return this;
 }
 
-gc_ptr(IPdxWriter) PdxLocalWriter::WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray) {
+gc_ptr(IPdxWriter) PdxLocalWriter::WriteObjectArray(gc_ptr(String) fieldName,
+                                                    gc_ptr(List<gc_ptr(Object)>) objectArray) {
   AddOffset();
   m_dataOutput->WriteObjectArray(objectArray);
   return this;
@@ -381,14 +383,14 @@ gc_ptr(IPdxWriter) PdxLocalWriter::WriteField(gc_ptr(String) fieldName, gc_ptr(O
   } else if (type->Equals(DotNetTypes::CharArrayType)) {
     return this->WriteCharArray(fieldName, (gc_ptr(array<Char>))fieldValue);
   } else if (type->Equals(DotNetTypes::StringArrayType)) {
-    return this->WriteStringArray(fieldName, (gc_ptr(array<String ^>)) fieldValue);
+    return this->WriteStringArray(fieldName, (gc_ptr(array<gc_ptr(String)>))fieldValue);
   } else if (type->Equals(DotNetTypes::DateType)) {
     return this->WriteDate(fieldName, (DateTime)fieldValue);
   } else if (type->Equals(DotNetTypes::ByteArrayOfArrayType)) {
     return this->WriteArrayOfByteArrays(fieldName, (array<gc_ptr(array<Byte>)> ^) fieldValue);
   } else if (type->Equals(DotNetTypes::ObjectArrayType)) {
     return this->WriteObjectArray(fieldName,
-                                  safe_cast<gc_ptr(System::Collections::Generic::List<Object ^>)>(fieldValue));
+                                  safe_cast<gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>)>(fieldValue));
   } else {
     return this->WriteObject(fieldName, fieldValue);
   }

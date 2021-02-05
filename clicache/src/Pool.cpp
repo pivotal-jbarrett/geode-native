@@ -190,7 +190,7 @@ gc_ptr(String) Pool::ServerGroup::get() {
   }
 }
 
-gc_ptr(array<String ^>) Pool::Locators::get() {
+gc_ptr(array<gc_ptr(String)>) Pool::Locators::get() {
   try {
     auto locators = m_nativeptr->get()->getLocators();
     int length = locators->length();
@@ -208,12 +208,12 @@ gc_ptr(array<String ^>) Pool::Locators::get() {
   }
 }
 
-gc_ptr(array<String ^>) Pool::Servers::get() {
+gc_ptr(array<gc_ptr(String)>) Pool::Servers::get() {
   try {
     auto servers = m_nativeptr->get()->getServers();
     int length = servers->length();
     if (length > 0) {
-      gc_ptr(array<String ^>) result = gcnew array<gc_ptr(String)>(length);
+      gc_ptr(array<gc_ptr(String)>) result = gcnew array<gc_ptr(String)>(length);
       for (int item = 0; item < length; item++) {
         result[item] = marshal_as<gc_ptr(String)>((*servers)[item]->toString());
       }

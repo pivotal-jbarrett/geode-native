@@ -68,11 +68,11 @@ apache::geode::client::ResultCollector* ManagedResultCollectorGeneric::create(co
       gc_ptr(MethodInfo) mInfo = typeInst->GetType()->GetMethod(
           mg_factoryFunctionName, BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
       if (mInfo != nullptr) {
-        // gc_ptr(Apache::Geode::Client::ResultCollector<Object^>) managedptr = nullptr;
+        // gc_ptr(Apache::Geode::Client::ResultCollector<gc_ptr(Object)>) managedptr = nullptr;
         gc_ptr(Object) userptr = nullptr;
         try {
           throw apache::geode::client::UnsupportedOperationException("Not supported");
-          /*managedptr = dynamic_cast<gc_ptr(Apache::Geode::Client::ResultCollector<Object^>)>(
+          /*managedptr = dynamic_cast<gc_ptr(Apache::Geode::Client::ResultCollector<gc_ptr(Object)>)>(
             mInfo->Invoke( typeInst, nullptr ) );*/
           userptr = mInfo->Invoke(typeInst, nullptr);
         } catch (gc_ptr(System::Exception) ex) {
@@ -90,7 +90,7 @@ apache::geode::client::ResultCollector* ManagedResultCollectorGeneric::create(co
         }
         // TODO::need to pass proper pointer here
         return new ManagedResultCollectorGeneric(
-            /*(gc_ptr(Apache::Geode::Client::ResultCollector<Object^>)) managedptr*/ nullptr);
+            /*(gc_ptr(Apache::Geode::Client::ResultCollector<gc_ptr(Object)>)) managedptr*/ nullptr);
       } else {
         std::string ex_str =
             "ManagedResultCollector: Could not load "
@@ -137,7 +137,7 @@ void ManagedResultCollectorGeneric::addResult(const std::shared_ptr<Cacheable>& 
 
 std::shared_ptr<CacheableVector> ManagedResultCollectorGeneric::getResult(std::chrono::milliseconds timeout) {
   try {
-    // gc_ptr(array<ISerializable^>) rs = m_managedptr->GetResult(timeout);
+    // gc_ptr(array<gc_ptr(ISerializable)>) rs = m_managedptr->GetResult(timeout);
     // std::shared_ptr<apache::geode::client::CacheableVector> rsptr = apache::geode::client::CacheableVector::create();
     // for( int index = 0; index < rs->Length; index++ )
     //{

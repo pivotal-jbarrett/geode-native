@@ -90,7 +90,7 @@ gc_ptr(String) SystemProperties::SSLKeystorePassword::get() {
   return marshal_as<gc_ptr(String)>(m_nativeptr->sslKeystorePassword());
 }
 
-gc_ptr(Properties<String ^, String ^>) SystemProperties::GetSecurityProperties::get() {
+gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) SystemProperties::GetSecurityProperties::get() {
   return Properties<gc_ptr(String), gc_ptr(String)>::Create(m_nativeptr->getSecurityProperties());
 }
 

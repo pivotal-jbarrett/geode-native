@@ -182,14 +182,14 @@ PUBLIC interface class IPdxWriter {
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="stringArray">The stringArray to write.</param>
-  gc_ptr(IPdxWriter) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) stringArray);
+  gc_ptr(IPdxWriter) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<gc_ptr(String)>) stringArray);
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.
   /// </summary>
   /// <param name="fieldName">The name of the field associated with the value.</param>
   /// <param name="objectArray">The objectArray to write.</param>
-  gc_ptr(IPdxWriter) WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<Object ^>) objectArray);
+  gc_ptr(IPdxWriter) WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(List<gc_ptr(Object)>) objectArray);
 
   /// <summary>
   /// Write an collection to the <c>IPdxWriter</c>.

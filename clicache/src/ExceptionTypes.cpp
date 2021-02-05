@@ -30,7 +30,7 @@ namespace Geode {
 namespace Client {
 using namespace msclr::interop;
 
-gc_ptr(Dictionary<String ^, CreateException2 ^>) GeodeException::Init() {
+gc_ptr(Dictionary<gc_ptr(String), gc_ptr(CreateException2)>) GeodeException::Init() {
   if (Native2ManagedExMap != nullptr) {
     return Native2ManagedExMap;
   }

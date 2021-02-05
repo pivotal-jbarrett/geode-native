@@ -413,26 +413,26 @@ gc_ptr(array<double>) PdxReaderWithTypeCollector::ReadDoubleArray(gc_ptr(String)
   return nullptr;
 }
 
-gc_ptr(array<String ^>) PdxReaderWithTypeCollector::ReadStringArray(gc_ptr(String) fieldName) {
+gc_ptr(array<gc_ptr(String)>) PdxReaderWithTypeCollector::ReadStringArray(gc_ptr(String) fieldName) {
   checkType(fieldName, PdxFieldTypes::STRING_ARRAY, "String[]");
   m_newPdxType->AddVariableLengthTypeField(fieldName, "String[]", PdxFieldTypes::STRING_ARRAY);
   int position = m_pdxType->GetFieldPosition(fieldName, m_offsetsBuffer, m_offsetSize, m_serializedLength);
   if (position != -1) {
     m_dataInput->AdvanceCursorPdx(position);
-    gc_ptr(array<String ^>) retVal = PdxLocalReader::ReadStringArray(fieldName);
+    gc_ptr(array<gc_ptr(String)>) retVal = PdxLocalReader::ReadStringArray(fieldName);
     m_dataInput->RewindCursorPdx(position);
     return retVal;
   }
   return nullptr;
 }
 
-gc_ptr(List<Object ^>) PdxReaderWithTypeCollector::ReadObjectArray(gc_ptr(String) fieldName) {
+gc_ptr(List<gc_ptr(Object)>) PdxReaderWithTypeCollector::ReadObjectArray(gc_ptr(String) fieldName) {
   checkType(fieldName, PdxFieldTypes::OBJECT_ARRAY, "Object[]");
   m_newPdxType->AddVariableLengthTypeField(fieldName, "Object[]", PdxFieldTypes::OBJECT_ARRAY);
   int position = m_pdxType->GetFieldPosition(fieldName, m_offsetsBuffer, m_offsetSize, m_serializedLength);
   if (position != -1) {
     m_dataInput->AdvanceCursorPdx(position);
-    gc_ptr(List<Object ^>) retVal = PdxLocalReader::ReadObjectArray(fieldName);
+    gc_ptr(List<gc_ptr(Object)>) retVal = PdxLocalReader::ReadObjectArray(fieldName);
     m_dataInput->ResetPdx(m_startPosition);  // force native as well
     m_dataInput->RewindCursorPdx(position);
     return retVal;

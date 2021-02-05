@@ -65,8 +65,8 @@ PUBLIC ref class Struct sealed : public Apache::Geode::Client::Serializable {
   /// <returns>
   /// A reference to the parent <c>StructSet</c> of this <c>Struct</c>.
   /// </returns>
-  property gc_ptr(Apache::Geode::Client::StructSet<Object ^>) Set {
-    gc_ptr(Apache::Geode::Client::StructSet<Object ^>) get();
+  property gc_ptr(Apache::Geode::Client::StructSet<gc_ptr(Object)>) Set {
+    gc_ptr(Apache::Geode::Client::StructSet<gc_ptr(Object)>) get();
   }
 
   /// <summary>

@@ -145,13 +145,13 @@ namespace Apache
         {
         public:
 
-          static gc_ptr(array<QueryStrings^>) ResultSetQueries;
+          static gc_ptr(array<gc_ptr(QueryStrings)>) ResultSetQueries;
 
-          static gc_ptr(array<QueryStrings^>) ResultSetParamQueries;
+          static gc_ptr(array<gc_ptr(QueryStrings)>) ResultSetParamQueries;
 
-          static array<gc_ptr(array<String^>)>^ QueryParamSet;
+          static array<gc_ptr(array<gc_ptr(String)>)>^ QueryParamSet;
 
-          static array<gc_ptr(array<String^>)>^ QueryParamSetSS;
+          static array<gc_ptr(array<gc_ptr(String)>)>^ QueryParamSetSS;
 
           static gc_ptr(array<Int32>) NoOfQueryParam;
 
@@ -165,9 +165,9 @@ namespace Apache
 
           static gc_ptr(array<Int32>) ConstantExpectedRowsPQRS;
 
-          static gc_ptr(array<QueryStrings^>) StructSetQueries;
+          static gc_ptr(array<gc_ptr(QueryStrings)>) StructSetQueries;
 
-          static gc_ptr(array<QueryStrings^>) StructSetParamQueries;
+          static gc_ptr(array<gc_ptr(QueryStrings)>) StructSetParamQueries;
 
           static gc_ptr(array<Int32>) StructSetRowCounts;
 
@@ -181,11 +181,11 @@ namespace Apache
 
           static gc_ptr(array<Int32>) ConstantExpectedRowsPQSS;
 
-          static gc_ptr(array<QueryStrings^>) RegionQueries;
+          static gc_ptr(array<gc_ptr(QueryStrings)>) RegionQueries;
 
           static gc_ptr(array<Int32>) RegionQueryRowCounts;
 
-          static gc_ptr(array<QueryStrings^>) CqResultSetQueries;
+          static gc_ptr(array<gc_ptr(QueryStrings)>) CqResultSetQueries;
 
           static gc_ptr(array<Int32>) CqResultSetRowCounts;
 

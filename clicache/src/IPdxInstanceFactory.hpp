@@ -275,7 +275,7 @@ PUBLIC interface class IPdxInstanceFactory {
   /// <param name="value"> the value of the field to write</param>
   /// <returns> this PdxInstanceFactory</returns>
   /// <exception cref="IllegalStateException"/> if the named field has already been written</exception>
-  gc_ptr(IPdxInstanceFactory) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<String ^>) value);
+  gc_ptr(IPdxInstanceFactory) WriteStringArray(gc_ptr(String) fieldName, gc_ptr(array<gc_ptr(String)>) value);
 
   /// <summary>
   /// Writes the named field with the given value to the serialized form.
@@ -287,7 +287,7 @@ PUBLIC interface class IPdxInstanceFactory {
   /// <returns> this PdxInstanceFactory</returns>
   /// <exception cref="IllegalStateException"/> if the named field has already been written</exception>
   gc_ptr(IPdxInstanceFactory)
-      WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(System::Collections::Generic::List<Object ^>) value);
+      WriteObjectArray(gc_ptr(String) fieldName, gc_ptr(System::Collections::Generic::List<gc_ptr(Object)>) value);
 
   /// <summary>
   /// Writes the named field with the given value to the serialized form.

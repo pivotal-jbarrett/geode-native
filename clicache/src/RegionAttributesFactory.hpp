@@ -345,7 +345,7 @@ PUBLIC ref class RegionAttributesFactory sealed {
   // GENERIC(class TKey, class TValue)
   gc_ptr(RegionAttributesFactory<TKey, TValue>)
       SetPersistenceManager(gc_ptr(IPersistenceManager<TKey, TValue>) persistenceManager,
-                            gc_ptr(Properties<String ^, String ^>) config);
+                            gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config);
 
   /// <summary>
   /// Sets the library path for the library that will be invoked for the persistence of the region.
@@ -373,7 +373,7 @@ PUBLIC ref class RegionAttributesFactory sealed {
   /// </param>
   gc_ptr(RegionAttributesFactory<TKey, TValue>) SetPersistenceManager(
       gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName,
-      /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<String ^, String ^>) config);
+      /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<gc_ptr(String), gc_ptr(String)>) config);
 
   // STORAGE ATTRIBUTES
 

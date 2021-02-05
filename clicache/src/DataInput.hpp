@@ -256,7 +256,7 @@ PUBLIC ref class DataInput sealed {
   /// <summary>
   /// Read a object array from the stream from the stream.
   /// </summary>
-  gc_ptr(List<Object ^>) ReadObjectArray();
+  gc_ptr(List<gc_ptr(Object)>) ReadObjectArray();
 
   /// <summary>
   /// Read a array of signed byte array from the stream.
@@ -272,7 +272,7 @@ PUBLIC ref class DataInput sealed {
   void setRootObjectPdx(bool val) { m_isRootObjectPdx = val; }
 
   gc_ptr(Object) readDotNetObjectArray();
-  gc_ptr(System::Collections::Generic::IDictionary<Object ^, Object ^>) ReadDictionary();
+  gc_ptr(System::Collections::Generic::IDictionary<gc_ptr(Object), gc_ptr(Object)>) ReadDictionary();
 
   /// <summary>
   /// Read a string after java-modified UTF-8 decoding from the stream.
@@ -410,12 +410,12 @@ PUBLIC ref class DataInput sealed {
     }
   }
 
-  gc_ptr(array<String ^>) ReadStringArray() {
+  gc_ptr(array<gc_ptr(String)>) ReadStringArray() {
     int len = this->ReadArrayLen();
     if (len == -1) {
       return nullptr;
     } else {
-      gc_ptr(array<String ^>) ret = gcnew array<gc_ptr(String)>(len);
+      gc_ptr(array<gc_ptr(String)>) ret = gcnew array<gc_ptr(String)>(len);
       if (len > 0) {
         for (int i = 0; i < len; i++) {
           gc_ptr(Object) obj = this->ReadObject();
