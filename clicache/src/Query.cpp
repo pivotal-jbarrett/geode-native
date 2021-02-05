@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "Query.hpp"
 #include "ISelectResults.hpp"
 #include "ResultSet.hpp"
@@ -24,135 +23,108 @@
 #include "impl/SafeConvert.hpp"
 #include "TimeUtils.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+using namespace System;
+using namespace msclr::interop;
 
-      using namespace System;
-      using namespace msclr::interop;
+namespace native = apache::geode::client;
 
-      namespace native = apache::geode::client;
+GENERIC(class TResult)
+gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute() {
+  return Execute(TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
+}
 
-      GENERIC(class TResult)
-      ISelectResults<TResult>^ Query<TResult>::Execute(  )
-      {
-        return Execute( TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT) );
-      }
+GENERIC(class TResult)
+gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(TimeSpan timeout) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-      GENERIC(class TResult)
-      ISelectResults<TResult>^ Query<TResult>::Execute( TimeSpan timeout )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+    try {
+      return WrapResults(
+          m_nativeptr->get()->execute(TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout)));
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-          try
-          {
-            return WrapResults( m_nativeptr->get()->execute( TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout) ));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }        
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-	
-      GENERIC(class TResult)
-      ISelectResults<TResult>^ Query<TResult>::Execute( array<Object^>^ paramList)
-      {
-        return Execute(paramList, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
-      }
+GENERIC(class TResult)
+gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<Object ^>) paramList) {
+  return Execute(paramList, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
+}
 
-      GENERIC(class TResult)
-      ISelectResults<TResult>^ Query<TResult>::Execute( array<Object^>^ paramList, TimeSpan timeout )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+GENERIC(class TResult)
+gc_ptr(ISelectResults<TResult>) Query<TResult>::Execute(gc_ptr(array<Object ^>) paramList, TimeSpan timeout) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-          auto rsptr = apache::geode::client::CacheableVector::create();
-          for( int index = 0; index < paramList->Length; index++ )
-          {
-            auto valueptr = Serializable::GetUnmanagedValueGeneric<Object^>(paramList[index]->GetType(), (Object^)paramList[index]);
-            rsptr->push_back(valueptr);
-		      }
+    auto rsptr = apache::geode::client::CacheableVector::create();
+    for (int index = 0; index < paramList->Length; index++) {
+      auto valueptr = Serializable::GetUnmanagedValueGeneric<gc_ptr(Object)>(paramList[index]->GetType(),
+                                                                                 (gc_ptr(Object))paramList[index]);
+      rsptr->push_back(valueptr);
+    }
 
-          try
-          {
-            return WrapResults( m_nativeptr->get()->execute(rsptr, TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout) ));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+    try {
+      return WrapResults(
+          m_nativeptr->get()->execute(rsptr, TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout)));
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-      GENERIC(class TResult)
-      ISelectResults<TResult>^ Query<TResult>::WrapResults(const std::shared_ptr<apache::geode::client::SelectResults>& selectResults)
-      {
-        if ( __nullptr == selectResults ) return nullptr;
+GENERIC(class TResult)
+gc_ptr(ISelectResults<TResult>) Query<TResult>::WrapResults(
+    const std::shared_ptr<apache::geode::client::SelectResults>& selectResults) {
+  if (__nullptr == selectResults) return nullptr;
 
-        if (auto resultptr = std::dynamic_pointer_cast<apache::geode::client::ResultSet>(selectResults))
-        {
-          return ResultSet<TResult>::Create(resultptr);
-        }
-        else if (auto structptr = std::dynamic_pointer_cast<apache::geode::client::StructSet>(selectResults))
-        {
-          return StructSet<TResult>::Create(structptr);
-        }
+  if (auto resultptr = std::dynamic_pointer_cast<apache::geode::client::ResultSet>(selectResults)) {
+    return ResultSet<TResult>::Create(resultptr);
+  } else if (auto structptr = std::dynamic_pointer_cast<apache::geode::client::StructSet>(selectResults)) {
+    return StructSet<TResult>::Create(structptr);
+  }
 
-        return nullptr;
-      }
+  return nullptr;
+}
 
-      GENERIC(class TResult)
-      String^ Query<TResult>::QueryString::get( )
-      {
-        try
-        {
-          return marshal_as<String^>(m_nativeptr->get()->getQueryString());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TResult)
+gc_ptr(String) Query<TResult>::QueryString::get() {
+  try {
+    return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getQueryString());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TResult)
-      void Query<TResult>::Compile( )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+GENERIC(class TResult)
+void Query<TResult>::Compile() {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-          try
-          {
-            m_nativeptr->get()->compile( );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+    try {
+      m_nativeptr->get()->compile();
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-      GENERIC(class TResult)
-      bool Query<TResult>::IsCompiled::get()
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+GENERIC(class TResult)
+bool Query<TResult>::IsCompiled::get() {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-          try
-          {
-            return m_nativeptr->get()->isCompiled();
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+    try {
+      return m_nativeptr->get()->isCompiled();
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-    }  // namespace Client
-  }  // namespace Geode
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

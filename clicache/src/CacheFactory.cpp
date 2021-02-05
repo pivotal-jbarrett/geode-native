@@ -34,142 +34,109 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace msclr::interop;
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace msclr::interop;
+namespace native = apache::geode::client;
 
-      CacheFactory::CacheFactory() :
-          CacheFactory(Properties<String^, String^>::Create())
-      {
+CacheFactory::CacheFactory() : CacheFactory(Properties<gc_ptr(String), gc_ptr(String)>::Create()) {}
+
+CacheFactory::CacheFactory(gc_ptr(Properties<String ^, String ^>) dsProps)
+    : CacheFactory(native::CacheFactory(dsProps->GetNative()), dsProps) {}
+
+gc_ptr(Cache) CacheFactory::Create() {
+  native::createAppDomainContext = &Apache::Geode::Client::createAppDomainContext;
+  bool pdxIgnoreUnreadFields = false;
+  bool pdxReadSerialized = false;
+  _GF_MG_EXCEPTION_TRY2
+    // msclr::lock lockInstance(m_singletonSync);
+    auto nativeCache = std::make_shared<native::Cache>(m_nativeptr->get()->create());
+
+    auto cache = Cache::Create(nativeCache);
+    CacheResolver::Add(nativeCache.get(), cache);
+
+    DistributedSystem::AppDomainInstanceInitialization(cache);
+
+    pdxIgnoreUnreadFields = nativeCache->getPdxIgnoreUnreadFields();
+    pdxReadSerialized = nativeCache->getPdxReadSerialized();
+
+    Log::SetLogLevel(static_cast<LogLevel>(native::Log::logLevel()));
+
+    DistributedSystem::ManagedPostConnect(cache);
+    DistributedSystem::registerCliCallback();
+    auto&& cacheImpl = CacheRegionHelper::getCacheImpl(nativeCache.get());
+    cacheImpl->getSerializationRegistry()->setPdxTypeHandler(new ManagedPdxTypeHandler());
+    cacheImpl->getSerializationRegistry()->setDataSerializableHandler(new ManagedDataSerializableHandler());
+
+    return cache;
+  _GF_MG_EXCEPTION_CATCH_ALL2
+  finally { GC::KeepAlive(m_nativeptr); }
+}
+
+gc_ptr(String) CacheFactory::Version::get() {
+  return marshal_as<gc_ptr(String)>(native::CacheFactory::getVersion());
+}
+
+gc_ptr(String) CacheFactory::ProductDescription::get() {
+  return marshal_as<gc_ptr(String)>(native::CacheFactory::getProductDescription());
+}
+
+gc_ptr(CacheFactory) CacheFactory::SetPdxIgnoreUnreadFields(bool ignore) {
+  _GF_MG_EXCEPTION_TRY2
+
+    try {
+      m_nativeptr->get()->setPdxIgnoreUnreadFields(ignore);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+    return this;
+
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
+
+gc_ptr(CacheFactory) CacheFactory::SetPdxReadSerialized(bool pdxReadSerialized) {
+  _GF_MG_EXCEPTION_TRY2
+
+    try {
+      m_nativeptr->get()->setPdxReadSerialized(pdxReadSerialized);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+    return this;
+
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
+
+gc_ptr(CacheFactory) CacheFactory::Set(gc_ptr(String) name, gc_ptr(String) value) {
+  _GF_MG_EXCEPTION_TRY2
+    try {
+      m_nativeptr->get()->set(marshal_as<std::string>(name), marshal_as<std::string>(value));
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+    return this;
+
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
+
+gc_ptr(CacheFactory) CacheFactory::SetAuthInitialize(gc_ptr(IAuthInitialize) authInitialize) {
+  _GF_MG_EXCEPTION_TRY2
+
+    try {
+      std::shared_ptr<ManagedAuthInitializeGeneric> nativeAuthInitialize;
+      if (authInitialize != nullptr) {
+        nativeAuthInitialize.reset(new ManagedAuthInitializeGeneric(authInitialize));
       }
+      m_nativeptr->get()->setAuthInitialize(nativeAuthInitialize);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+    return this;
 
-      CacheFactory::CacheFactory(Properties<String^, String^>^ dsProps) :       
-          CacheFactory(native::CacheFactory(dsProps->GetNative()), dsProps)
-      {
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-      Cache^ CacheFactory::Create()
-      {
-        native::createAppDomainContext = &Apache::Geode::Client::createAppDomainContext;
-				bool pdxIgnoreUnreadFields = false;
-        bool pdxReadSerialized = false;
-        _GF_MG_EXCEPTION_TRY2
-          //msclr::lock lockInstance(m_singletonSync);
-          auto nativeCache = std::make_shared<native::Cache>(m_nativeptr->get()->create( ));
-
-          auto cache = Cache::Create( nativeCache );
-          CacheResolver::Add(nativeCache.get(), cache);
-
-          DistributedSystem::AppDomainInstanceInitialization(cache);                  
-
-					pdxIgnoreUnreadFields = nativeCache->getPdxIgnoreUnreadFields();
-          pdxReadSerialized = nativeCache->getPdxReadSerialized();
-
-          Log::SetLogLevel(static_cast<LogLevel>(native::Log::logLevel( )));
-
-          DistributedSystem::ManagedPostConnect(cache);
-          DistributedSystem::registerCliCallback();
-          auto&& cacheImpl = CacheRegionHelper::getCacheImpl(nativeCache.get());
-          cacheImpl->getSerializationRegistry()->setPdxTypeHandler(new ManagedPdxTypeHandler());
-          cacheImpl->getSerializationRegistry()->setDataSerializableHandler(new ManagedDataSerializableHandler());
-
-          return cache;
-        _GF_MG_EXCEPTION_CATCH_ALL2
-        finally {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-   
-
-      String^ CacheFactory::Version::get( )
-      {
-        return marshal_as<String^>(native::CacheFactory::getVersion());
-      }
-
-      String^ CacheFactory::ProductDescription::get( )
-      {
-        return marshal_as<String^>(native::CacheFactory::getProductDescription());
-      }
-
-
-			CacheFactory^ CacheFactory::SetPdxIgnoreUnreadFields(bool ignore)
-			{
-				_GF_MG_EXCEPTION_TRY2
-
-          try
-          {
-            m_nativeptr->get()->setPdxIgnoreUnreadFields( ignore );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-          return this;
-
-			  _GF_MG_EXCEPTION_CATCH_ALL2
-			}
-
-      CacheFactory^ CacheFactory::SetPdxReadSerialized(bool pdxReadSerialized)
-      {
-        	_GF_MG_EXCEPTION_TRY2
-
-          try
-          {
-            m_nativeptr->get()->setPdxReadSerialized( pdxReadSerialized );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-          return this;
-
-			  _GF_MG_EXCEPTION_CATCH_ALL2
-      }
-
-      CacheFactory^ CacheFactory::Set(String^ name, String^ value)
-      {
-        _GF_MG_EXCEPTION_TRY2
-          try
-          {
-            m_nativeptr->get()->set(marshal_as<std::string>(name), marshal_as<std::string>(value));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-          return this;
-
-			  _GF_MG_EXCEPTION_CATCH_ALL2
-      }
-
-      CacheFactory^ CacheFactory::SetAuthInitialize(IAuthInitialize^ authInitialize)
-      {
-        	_GF_MG_EXCEPTION_TRY2
-
-          try
-          {
-            std::shared_ptr<ManagedAuthInitializeGeneric> nativeAuthInitialize;
-            if (authInitialize != nullptr)
-            {
-              nativeAuthInitialize.reset(new ManagedAuthInitializeGeneric(authInitialize));
-            }
-            m_nativeptr->get()->setAuthInitialize( nativeAuthInitialize);
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-          return this;
-
-			  _GF_MG_EXCEPTION_CATCH_ALL2
-      }
-
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

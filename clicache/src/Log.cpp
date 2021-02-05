@@ -15,102 +15,75 @@
  * limitations under the License.
  */
 
-
-
 #include "Log.hpp"
 #include "ExceptionTypes.hpp"
 #include "impl/ManagedString.hpp"
 #include "impl/SafeConvert.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      void Log::Init(LogLevel level, String^ logFileName)
-      {
-        _GF_MG_EXCEPTION_TRY2
+void Log::Init(LogLevel level, gc_ptr(String) logFileName) {
+  _GF_MG_EXCEPTION_TRY2
 
-          ManagedString mg_lfname(logFileName);
-        apache::geode::client::Log::init(static_cast<apache::geode::client::LogLevel>(level),
-                                         mg_lfname.CharPtr);
+    ManagedString mg_lfname(logFileName);
+    apache::geode::client::Log::init(static_cast<apache::geode::client::LogLevel>(level), mg_lfname.CharPtr);
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-      void Log::Init(LogLevel level, String^ logFileName, System::Int32 logFileLimit)
-      {
-        _GF_MG_EXCEPTION_TRY2
+void Log::Init(LogLevel level, gc_ptr(String) logFileName, System::Int32 logFileLimit) {
+  _GF_MG_EXCEPTION_TRY2
 
-          ManagedString mg_lfname(logFileName);
-        apache::geode::client::Log::init(static_cast<apache::geode::client::LogLevel>(level),
-                                         mg_lfname.CharPtr, logFileLimit);
+    ManagedString mg_lfname(logFileName);
+    apache::geode::client::Log::init(static_cast<apache::geode::client::LogLevel>(level), mg_lfname.CharPtr,
+                                     logFileLimit);
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-      void Log::Close()
-      {
-        apache::geode::client::Log::close();
-      }
+void Log::Close() { apache::geode::client::Log::close(); }
 
-      LogLevel Log::Level()
-      {
-        return static_cast<LogLevel>(apache::geode::client::Log::logLevel());
-      }
+LogLevel Log::Level() { return static_cast<LogLevel>(apache::geode::client::Log::logLevel()); }
 
-      void Log::SetLevel(LogLevel level)
-      {
-        apache::geode::client::Log::setLogLevel(
-          static_cast<apache::geode::client::LogLevel>(level));
-      }
+void Log::SetLevel(LogLevel level) {
+  apache::geode::client::Log::setLogLevel(static_cast<apache::geode::client::LogLevel>(level));
+}
 
-      bool Log::Enabled(LogLevel level)
-      {
-        return apache::geode::client::Log::enabled(
-          static_cast<apache::geode::client::LogLevel>(level));
-      }
+bool Log::Enabled(LogLevel level) {
+  return apache::geode::client::Log::enabled(static_cast<apache::geode::client::LogLevel>(level));
+}
 
-      void Log::Write(LogLevel level, String^ msg)
-      {
-        _GF_MG_EXCEPTION_TRY2
+void Log::Write(LogLevel level, gc_ptr(String) msg) {
+  _GF_MG_EXCEPTION_TRY2
 
-          ManagedString mg_msg(msg);
-        apache::geode::client::Log::log(static_cast<apache::geode::client::LogLevel>(level),
-                                        mg_msg.CharPtr);
+    ManagedString mg_msg(msg);
+    apache::geode::client::Log::log(static_cast<apache::geode::client::LogLevel>(level), mg_msg.CharPtr);
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-      void Log::LogThrow(LogLevel level, String^ msg, System::Exception^ ex)
-      {
-        if (ex != nullptr)
-        {
-          String^ logMsg = String::Format(
-            System::Globalization::CultureInfo::CurrentCulture,
-            "Geode exception {0} thrown: {1}{2}{3}", ex->GetType(),
-            ex->Message, Environment::NewLine, msg);
-          Log::Write(level, logMsg);
-        }
-      }
-
-      void Log::LogCatch(LogLevel level, String^ msg, System::Exception^ ex)
-      {
-        if (ex != nullptr)
-        {
-          String^ logMsg = String::Format(
-            System::Globalization::CultureInfo::CurrentCulture,
-            "Geode exception {0} caught: {1}{2}{3}", ex->GetType(),
-            ex->Message, Environment::NewLine, msg);
-          Log::Write(level, logMsg);
-        }  // namespace Client
-      }  // namespace Geode
-    }  // namespace Apache
-
+void Log::LogThrow(LogLevel level, gc_ptr(String) msg, gc_ptr(System::Exception) ex) {
+  if (ex != nullptr) {
+    gc_ptr(String) logMsg =
+        String::Format(System::Globalization::CultureInfo::CurrentCulture, "Geode exception {0} thrown: {1}{2}{3}",
+                       ex->GetType(), ex->Message, Environment::NewLine, msg);
+    Log::Write(level, logMsg);
   }
 }
+
+void Log::LogCatch(LogLevel level, gc_ptr(String) msg, gc_ptr(System::Exception) ex) {
+  if (ex != nullptr) {
+    gc_ptr(String) logMsg =
+        String::Format(System::Globalization::CultureInfo::CurrentCulture, "Geode exception {0} caught: {1}{2}{3}",
+                       ex->GetType(), ex->Message, Environment::NewLine, msg);
+    Log::Write(level, logMsg);
+  }  // namespace Client
+}  // namespace Geode
+}  // namespace Client
+
+}  // namespace Geode
+}  // namespace Apache

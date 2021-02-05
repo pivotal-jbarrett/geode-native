@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include <geode/internal/geode_base.hpp>
 #include "geode_defs.hpp"
 //#include "SystemProperties.hpp"
@@ -27,54 +26,47 @@
 using namespace System;
 using namespace System::Reflection;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-    /// <summary>
-    /// Some static utility methods.
-    /// </summary>
-    public ref class Utils STATICCLASS
-    {
-    public:
+/// <summary>
+/// Some static utility methods.
+/// </summary>
+PUBLIC ref class Utils STATICCLASS {
+ public:
+  /// <summary>
+  /// Load a method from the given assembly path using the default
+  /// constructor (if not a static method) of the given type.
+  /// </summary>
+  /// <param name="assemblyPath">The path of the assembly.</param>
+  /// <param name="typeName">
+  /// The name of the class containing the method.
+  /// </param>
+  /// <param name="methodName">The name of the method.</param>
+  /// <returns>
+  /// The <c>System.Reflection.MethodInfo</c> for the given method,
+  /// or null if the method is not found.
+  /// </returns>
+  static gc_ptr(MethodInfo)
+      LoadMethod(gc_ptr(String) assemblyPath, gc_ptr(String) typeName, gc_ptr(String) methodName);
 
-      /// <summary>
-      /// Load a method from the given assembly path using the default
-      /// constructor (if not a static method) of the given type.
-      /// </summary>
-      /// <param name="assemblyPath">The path of the assembly.</param>
-      /// <param name="typeName">
-      /// The name of the class containing the method.
-      /// </param>
-      /// <param name="methodName">The name of the method.</param>
-      /// <returns>
-      /// The <c>System.Reflection.MethodInfo</c> for the given method,
-      /// or null if the method is not found.
-      /// </returns>
-      static MethodInfo^ LoadMethod( String^ assemblyPath,
-	      String^ typeName, String^ methodName);
-
-      /// <summary>
-      /// Load a method from the given assembly name using the default
-      /// constructor (if not a static method) of the given type.
-      /// </summary>
-      /// <param name="assemblyName">The name of the assembly.</param>
-      /// <param name="typeName">
-      /// The name of the class containing the method.
-      /// </param>
-      /// <param name="methodName">The name of the method.</param>
-      /// <returns>
-      /// The <c>System.Reflection.MethodInfo</c> for the given method,
-      /// or null if the method is not found.
-      /// </returns>
-      static MethodInfo^ LoadMethodFrom( String^ assemblyName,
-	      String^ typeName, String^ methodName);
-
-    };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Load a method from the given assembly name using the default
+  /// constructor (if not a static method) of the given type.
+  /// </summary>
+  /// <param name="assemblyName">The name of the assembly.</param>
+  /// <param name="typeName">
+  /// The name of the class containing the method.
+  /// </param>
+  /// <param name="methodName">The name of the method.</param>
+  /// <returns>
+  /// The <c>System.Reflection.MethodInfo</c> for the given method,
+  /// or null if the method is not found.
+  /// </returns>
+  static gc_ptr(MethodInfo)
+      LoadMethodFrom(gc_ptr(String) assemblyName, gc_ptr(String) typeName, gc_ptr(String) methodName);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

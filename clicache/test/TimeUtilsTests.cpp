@@ -18,7 +18,9 @@
 #include "begin_native.hpp"
 #include <chrono>
 #include "end_native.hpp"
+
 #include "TimeUtils.hpp"
+#include "cli.hpp"
 
 using namespace System;
 using namespace System::Text;
@@ -32,23 +34,23 @@ using namespace Apache::Geode::Client;
 namespace cliunittests
 {
   [TestClass]
-  public ref class TimeUtilsTests
+  PUBLIC ref class TimeUtilsTests
   {
   private:
-    TestContext^ testContextInstance;
+    gc_ptr(TestContext) testContextInstance;
 
   public: 
     /// <summary>
     ///Gets or sets the test context which provides
     ///information about and functionality for the current test run.
     ///</summary>
-    property Microsoft::VisualStudio::TestTools::UnitTesting::TestContext^ TestContext
+    property gc_ptr(Microsoft::VisualStudio::TestTools::UnitTesting::TestContext) TestContext
     {
-      Microsoft::VisualStudio::TestTools::UnitTesting::TestContext^ get()
+      gc_ptr(Microsoft::VisualStudio::TestTools::UnitTesting::TestContext) get()
       {
         return testContextInstance;
       }
-      System::Void set(Microsoft::VisualStudio::TestTools::UnitTesting::TestContext^ value)
+      System::Void set(gc_ptr(Microsoft::VisualStudio::TestTools::UnitTesting::TestContext) value)
       {
         testContextInstance = value;
       }
@@ -60,7 +62,7 @@ namespace cliunittests
     //
     //Use ClassInitialize to run code before running the first test in the class
     //[ClassInitialize()]
-    //static void MyClassInitialize(TestContext^ testContext) {};
+    //static void MyClassInitialize(gc_ptr(TestContext) testContext) {};
     //
     //Use ClassCleanup to run code after all tests in a class have run
     //[ClassCleanup()]

@@ -23,53 +23,39 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      PoolFactory^ PoolManager::CreateFactory()
-      {
-        return PoolFactory::Create(std::unique_ptr<native::PoolFactory>(
-          new native::PoolFactory(m_nativeref.createFactory())));
-      }
+gc_ptr(PoolFactory) PoolManager::CreateFactory() {
+  return PoolFactory::Create(
+      std::unique_ptr<native::PoolFactory>(new native::PoolFactory(m_nativeref.createFactory())));
+}
 
-      const Dictionary<String^, Pool^>^ PoolManager::GetAll()
-      {
-        auto pools = m_nativeref.getAll();
-        auto result = gcnew Dictionary<String^, Pool^>();
-        for (const auto& iter : pools)
-        {
-          auto key = gcnew String(iter.first.c_str());
-          auto val = Pool::Create(iter.second);
-          result->Add(key, val);
-        }
-        return result;
-      }
+const gc_ptr(Dictionary<String ^, Pool ^>) PoolManager::GetAll() {
+  auto pools = m_nativeref.getAll();
+  auto result = gcnew Dictionary<gc_ptr(String), gc_ptr(Pool)>();
+  for (const auto& iter : pools) {
+    auto key = gcnew String(iter.first.c_str());
+    auto val = Pool::Create(iter.second);
+    result->Add(key, val);
+  }
+  return result;
+}
 
-      Pool^ PoolManager::Find(String^ name)
-      {
-        auto pool = m_nativeref.find(marshal_as<std::string>(name));
-        return Pool::Create(pool);
-      }
+gc_ptr(Pool) PoolManager::Find(gc_ptr(String) name) {
+  auto pool = m_nativeref.find(marshal_as<std::string>(name));
+  return Pool::Create(pool);
+}
 
-      Pool^ PoolManager::Find(Client::Region<Object^, Object^>^ region)
-      {
-        return Pool::Create(m_nativeref.find(region->GetNative()));
-      }
+gc_ptr(Pool) PoolManager::Find(gc_ptr(Client::Region<Object ^, Object ^>) region) {
+  return Pool::Create(m_nativeref.find(region->GetNative()));
+}
 
-      void PoolManager::Close(Boolean KeepAlive)
-      {
-        m_nativeref.close(KeepAlive);
-      }
+void PoolManager::Close(Boolean KeepAlive) { m_nativeref.close(KeepAlive); }
 
-      void PoolManager::Close()
-      {
-        m_nativeref.close();
-      }
-    }  // namespace Client
-  }  // namespace Geode
+void PoolManager::Close() { m_nativeref.close(); }
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

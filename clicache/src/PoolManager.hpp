@@ -17,83 +17,72 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/PoolManager.hpp>
 #include "end_native.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      //GENERIC(class TKey, class TValue)
-      ref class Pool;
-     // GENERIC(class TKey, class TValue)
-      ref class PoolFactory;
+// GENERIC(class TKey, class TValue)
+ref class Pool;
+// GENERIC(class TKey, class TValue)
+ref class PoolFactory;
 
-      namespace native = apache::geode::client;
+namespace native = apache::geode::client;
 
-      /// <summary>
-      /// This interface provides for the configuration and creation of instances of PoolFactory.
-      /// </summary>
-     // GENERIC(class TKey, class TValue)
-      public ref class PoolManager
-      {
-      public:
+/// <summary>
+/// This interface provides for the configuration and creation of instances of PoolFactory.
+/// </summary>
+// GENERIC(class TKey, class TValue)
+PUBLIC ref class PoolManager {
+ public:
+  /// <summary>
+  /// Creates a new PoolFactory which is used to configure and create Pools.
+  /// </summary>
+  PoolFactory /*<TKey, TValue>*/ ^ CreateFactory();
 
-        /// <summary>
-        /// Creates a new PoolFactory which is used to configure and create Pools.
-        /// </summary>
-        PoolFactory/*<TKey, TValue>*/^ CreateFactory();
+  /// <summary>
+  /// Returns a map containing all the pools in this manager.
+  /// The keys are pool names and the values are Pool instances.
+  /// </summary>
+  const Dictionary<gc_ptr(String), Pool /*<TKey, TValue>*/ ^> ^ GetAll();
 
-        /// <summary>
-        /// Returns a map containing all the pools in this manager.
-        /// The keys are pool names and the values are Pool instances.
-        /// </summary>
-        const Dictionary<String^, Pool/*<TKey, TValue>*/^>^ GetAll();
+  /// <summary>
+  /// Find by name an existing connection pool.
+  /// </summary>
+  Pool /*<TKey, TValue>*/ ^ Find(gc_ptr(String) name);
 
-        /// <summary>
-        /// Find by name an existing connection pool.
-        /// </summary>
-        Pool/*<TKey, TValue>*/^ Find(String^ name);
+  /// <summary>
+  /// Find the pool used by the given region.
+  /// </summary>
+  Pool /*<TKey, TValue>*/ ^ Find(gc_ptr(Client::Region<Object ^, Object ^>) region);
 
-        /// <summary>
-        /// Find the pool used by the given region.
-        /// </summary>
-        Pool/*<TKey, TValue>*/^ Find(Client::Region<Object^, Object^>^ region);
+  /// <summary>
+  /// Destroys all created pools.
+  /// </summary>
+  void Close(Boolean KeepAlive);
 
-        /// <summary>
-        /// Destroys all created pools.
-        /// </summary>
-        void Close(Boolean KeepAlive);
+  /// <summary>
+  /// Destroys all created pools.
+  /// </summary>
+  void Close();
 
-        /// <summary>
-        /// Destroys all created pools.
-        /// </summary>
-        void Close();
+  internal :
 
-      internal:
+      native::PoolManager&
+      GetNative() {
+    return m_nativeref;
+  }
 
-        native::PoolManager& GetNative()
-        {
-          return m_nativeref;
-        }
+  inline PoolManager(native::PoolManager& nativeref) : m_nativeref(nativeref) {}
 
-        inline PoolManager(native::PoolManager& nativeref)
-          : m_nativeref(nativeref)
-        {
-        }
-
-        native::PoolManager& m_nativeref;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  native::PoolManager& m_nativeref;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

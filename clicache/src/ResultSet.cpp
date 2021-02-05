@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "ResultSet.hpp"
 #include "SelectResultsIterator.hpp"
 #include "ExceptionTypes.hpp"
@@ -24,50 +22,37 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TResult)
-      size_t ResultSet<TResult>::Size::get( )
-      {
-        try
-        {
-          return static_cast<int>(m_nativeptr->get()->size( ));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TResult)
+size_t ResultSet<TResult>::Size::get() {
+  try {
+    return static_cast<int>(m_nativeptr->get()->size());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TResult)
-      TResult ResultSet<TResult>::default::get( size_t index )
-      {
-        try
-        {
-          return TypeRegistry::GetManagedValueGeneric<TResult>(m_nativeptr->get()->operator[](index));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TResult)
+TResult ResultSet<TResult>::default ::get(size_t index) {
+  try {
+    return TypeRegistry::GetManagedValueGeneric<TResult>(m_nativeptr->get()->operator[](index));
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TResult)
-      System::Collections::Generic::IEnumerator<TResult>^ ResultSet<TResult>::GetEnumerator( )
-      {
-        return SelectResultsIterator<TResult>::Create(this);
-      }
+GENERIC(class TResult)
+gc_ptr(System::Collections::Generic::IEnumerator<TResult>) ResultSet<TResult>::GetEnumerator() {
+  return SelectResultsIterator<TResult>::Create(this);
+}
 
-      GENERIC(class TResult)
-      System::Collections::IEnumerator^ ResultSet<TResult>::GetIEnumerator()
-      {
-        return SelectResultsIterator<TResult>::Create(this);
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TResult)
+gc_ptr(System::Collections::IEnumerator) ResultSet<TResult>::GetIEnumerator() {
+  return SelectResultsIterator<TResult>::Create(this);
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

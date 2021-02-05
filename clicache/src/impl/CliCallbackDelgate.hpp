@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include "../Serializable.hpp"
 #include "ManagedCacheableKey.hpp"
@@ -25,32 +24,25 @@
 #include "../Log.hpp"
 #include "PdxTypeRegistry.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      ref class Cache;
-      /// <summary>
-      /// to get the callback from c++ layer
-      /// </summary>
-      ref class CliCallbackDelegate
-      {
-      public:
+namespace Apache {
+namespace Geode {
+namespace Client {
+ref class Cache;
+/// <summary>
+/// to get the callback from c++ layer
+/// </summary>
+ref class CliCallbackDelegate {
+ public:
+  CliCallbackDelegate() {}
 
-        CliCallbackDelegate()
-        {}
+  void Callback(apache::geode::client::Cache& cache);
 
-        void Callback(apache::geode::client::Cache& cache);
-        
-        CliCallbackDelegate(const CliCallbackDelegate^ other){}
-      private:
+  CliCallbackDelegate(const gc_ptr(CliCallbackDelegate) other) {}
 
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

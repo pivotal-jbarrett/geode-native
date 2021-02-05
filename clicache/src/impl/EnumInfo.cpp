@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-
-
-
-
 #include "EnumInfo.hpp"
 #include "../DataOutput.hpp"
 #include "../DataInput.hpp"
@@ -27,39 +23,32 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace Internal
-      {
-        void EnumInfo::ToData( DataOutput^ output )
-        {
-					output->WriteString(_enumClassName);
-          output->WriteString(_enumName);
-          output->WriteInt32(_hashcode);
-        }
-        
-        void EnumInfo::FromData( DataInput^ input )
-        {
-          _enumClassName = input->ReadString();
-          _enumName = input->ReadString();
-          _hashcode = input->ReadInt32();
-        }
-
-       Object^ EnumInfo::GetEnum(Cache^ cache)
-       {
-         String^ tmp = cache->TypeRegistry->GetLocalTypeName(_enumClassName);
-         Type^ t = cache->TypeRegistry->GetType(tmp);
-         Object^ obj = Enum::Parse(t, _enumName);
-
-         return obj;
-    }  // namespace Client
-  }  // namespace Geode
-}  // namespace Apache
-
-  }
+namespace Internal {
+void EnumInfo::ToData(gc_ptr(DataOutput) output) {
+  output->WriteString(_enumClassName);
+  output->WriteString(_enumName);
+  output->WriteInt32(_hashcode);
 }
+
+void EnumInfo::FromData(gc_ptr(DataInput) input) {
+  _enumClassName = input->ReadString();
+  _enumName = input->ReadString();
+  _hashcode = input->ReadInt32();
+}
+
+gc_ptr(Object) EnumInfo::GetEnum(gc_ptr(Cache) cache) {
+  gc_ptr(String) tmp = cache->TypeRegistry->GetLocalTypeName(_enumClassName);
+  gc_ptr(Type) t = cache->TypeRegistry->GetType(tmp);
+  gc_ptr(Object) obj = Enum::Parse(t, _enumName);
+
+  return obj;
+}  // namespace Client
+}  // namespace Internal
+}  // namespace Client
+
+}  // namespace Geode
+}  // namespace Apache

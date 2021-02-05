@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-
-
-
-
 #include "PdxType.hpp"
 #include "PdxHelper.hpp"
 #include "PdxTypeRegistry.hpp"
@@ -28,527 +24,434 @@
 #include "../Cache.hpp"
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace Internal {
+void PdxType::AddFixedLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId,
+                                      Int32 size) {
+  int current = m_pdxFieldTypes->Count;
+  gc_ptr(PdxFieldType) pfType = gcnew PdxFieldType(fieldName, className, (Byte)typeId, current /*field index*/,
+                                                       false, size, 0 /*var len field idx*/);
+  m_pdxFieldTypes->Add(pfType);
+  // this will make sure one can't add same field name
+  m_fieldNameVsPdxType->Add(fieldName, pfType);
+}
+
+void PdxType::AddVariableLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className,
+                                         PdxFieldTypes typeId) {
+  // we don't store offset of first var len field, this is the purpose of following check
+  if (m_isVarLenFieldAdded) m_varLenFieldIdx++;  // it initial value is zero so variable length field idx start with
+                                                 // zero
+
+  m_numberOfVarLenFields++;
+
+  m_isVarLenFieldAdded = true;
+
+  int current = m_pdxFieldTypes->Count;
+  gc_ptr(PdxFieldType) pfType =
+      gcnew PdxFieldType(fieldName, className, (Byte)typeId, current, true, -1, m_varLenFieldIdx);
+  m_pdxFieldTypes->Add(pfType);
+  // this will make sure one can't add same field name
+  m_fieldNameVsPdxType->Add(fieldName, pfType);
+}
+
+void PdxType::ToData(gc_ptr(DataOutput) output) {
+  // defaulf java Dataserializable require this
+  output->WriteByte(static_cast<int8_t>(DSCode::DataSerializable));
+  output->WriteByte(static_cast<int8_t>(DSCode::Class));
+  output->WriteObject((gc_ptr(Object))m_javaPdxClass);
+
+  // pdx type
+  output->WriteString(m_className);
+  output->WriteBoolean(m_noJavaClass);
+  output->WriteInt32(m_geodeTypeId);
+  output->WriteInt32(m_varLenFieldIdx);
+
+  output->WriteArrayLen(m_pdxFieldTypes->Count);
+
+  for (int i = 0; i < m_pdxFieldTypes->Count; i++) {
+    m_pdxFieldTypes[i]->ToData(output);
+  }
+}
+
+void PdxType::FromData(gc_ptr(DataInput) input) {
+  // defaulf java Dataserializable require this
+  Byte val = input->ReadByte();   // DS
+  Byte val1 = input->ReadByte();  // class
+  input->ReadObject();            // classname
+
+  m_className = input->ReadString();
+  // gc_ptr(Object) pdxObject = Serializable::GetPdxType(m_className);
+  // m_pdxDomainType = pdxObject->GetType();
+
+  /*gc_ptr(PdxWrapper) pdxWrapper = dynamic_cast<gc_ptr(PdxWrapper)>(pdxObject);
+  if(pdxWrapper == nullptr)
+  m_pdxDomainType = pdxObject->GetType();
+  else
+  m_pdxDomainType = pdxWrapper->GetObject()->GetType();*/
+  // Log::Debug("PdxType::FromData " + m_className);
+  m_noJavaClass = input->ReadBoolean();
+  m_geodeTypeId = input->ReadInt32();
+  m_varLenFieldIdx = input->ReadInt32();
+
+  int len = input->ReadArrayLen();
+
+  bool foundVarLenType = false;
+  for (int i = 0; i < len; i++) {
+    gc_ptr(PdxFieldType) pft = gcnew PdxFieldType();
+    pft->FromData(input);
+
+    m_pdxFieldTypes->Add(pft);
+
+    if (pft->IsVariableLengthType == true) foundVarLenType = true;
+  }
+
+  // as m_varLenFieldIdx starts with 0
+  if (m_varLenFieldIdx != 0)
+    m_numberOfVarLenFields = m_varLenFieldIdx + 1;
+  else if (foundVarLenType)
+    m_numberOfVarLenFields = 1;
+
+  InitializeType(input->Cache);
+}
+
+void PdxType::InitializeType(gc_ptr(Cache) cache) {
+  initRemoteToLocal(cache);  // for writing
+  initLocalToRemote(cache);  // for reading
+
+  generatePositionMap();
+}
+
+Int32 PdxType::GetFieldPosition(gc_ptr(String) fieldName, System::Byte* offsetPosition, Int32 offsetSize,
+                                Int32 pdxStreamlen) {
+  gc_ptr(PdxFieldType) pft = nullptr;
+  m_fieldNameVsPdxType->TryGetValue(fieldName, pft);
+
+  if (pft != nullptr) {
+    if (pft->IsVariableLengthType)
+      return variableLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
+    else
+      return fixedLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
+  }
+
+  return -1;
+}
+
+Int32 PdxType::GetFieldPosition(Int32 fieldIdx, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen) {
+  gc_ptr(PdxFieldType) pft = m_pdxFieldTypes[fieldIdx];
+
+  if (pft != nullptr) {
+    if (pft->IsVariableLengthType)
+      return variableLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
+    else
+      return fixedLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
+  }
+
+  return -1;
+}
+
+Int32 PdxType::variableLengthFieldPosition(gc_ptr(PdxFieldType) varLenField, System::Byte* offsetPosition,
+                                           Int32 offsetSize, Int32 pdxStreamlen) {
+  int seqId = varLenField->SequenceId;
+
+  int offset = varLenField->VarLenOffsetIndex;
+
+  if (offset == -1)
+    return /*first var len field*/ varLenField->RelativeOffset;
+  else {
+    // we write offset from behind
+    return PdxHelper::ReadInt(offsetPosition + (m_numberOfVarLenFields - offset - 1) * offsetSize, offsetSize);
+  }
+}
+
+Int32 PdxType::fixedLengthFieldPosition(gc_ptr(PdxFieldType) fixLenField, System::Byte* offsetPosition,
+                                        Int32 offsetSize, Int32 pdxStreamlen) {
+  int seqId = fixLenField->SequenceId;
+
+  int offset = fixLenField->VarLenOffsetIndex;
+
+  if (fixLenField->RelativeOffset >= 0) {
+    // starting fields
+    return fixLenField->RelativeOffset;
+  } else if (offset == -1)  // Pdx length
   {
-    namespace Client
-    {
-      namespace Internal
-      {
-        void PdxType::AddFixedLengthTypeField(String^ fieldName, String^ className,
-                                              PdxFieldTypes typeId, Int32 size)
-        {
-          int current = m_pdxFieldTypes->Count;
-          PdxFieldType^ pfType = gcnew PdxFieldType(fieldName, className, (Byte)typeId,
-                                                    current/*field index*/,
-                                                    false, size, 0/*var len field idx*/);
-          m_pdxFieldTypes->Add(pfType);
-          //this will make sure one can't add same field name
-          m_fieldNameVsPdxType->Add(fieldName, pfType);
+    // there is no var len field so just subtracts relative offset from behind
+    return pdxStreamlen + fixLenField->RelativeOffset;
+  } else {
+    // need to read offset and then subtract relative offset
+    return PdxHelper::ReadInt(offsetPosition + (m_numberOfVarLenFields - offset - 1) * offsetSize, offsetSize) +
+           fixLenField->RelativeOffset;
+  }
+}
+
+gc_ptr(PdxType) PdxType::isLocalTypeContains(gc_ptr(PdxType) otherType) {
+  if (m_pdxFieldTypes->Count >= otherType->m_pdxFieldTypes->Count) {
+    return isContains(this, otherType);
+  }
+  return nullptr;
+}
+
+gc_ptr(PdxType) PdxType::isRemoteTypeContains(gc_ptr(PdxType) remoteType) {
+  if (m_pdxFieldTypes->Count <= remoteType->m_pdxFieldTypes->Count) {
+    return isContains(remoteType, this);
+  }
+  return nullptr;
+}
+
+gc_ptr(PdxType) PdxType::MergeVersion(gc_ptr(PdxType) otherVersion) {
+  int nTotalFields = otherVersion->m_pdxFieldTypes->Count;
+  gc_ptr(PdxType) contains = nullptr;
+
+  if (isLocalTypeContains(otherVersion) != nullptr) return this;
+
+  if (isRemoteTypeContains(otherVersion) != nullptr) return otherVersion;
+
+  // need to create new one, clone of local
+  gc_ptr(PdxType) newone = clone();
+
+  int varLenFields = newone->m_numberOfVarLenFields;
+
+  FOR_EACH (gc_ptr(PdxFieldType) tmp in otherVersion->m_pdxFieldTypes) {
+    bool found = false;
+    FOR_EACH (gc_ptr(PdxFieldType) tmpNew in newone->m_pdxFieldTypes) {
+      if (tmpNew->Equals(tmp)) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      gc_ptr(PdxFieldType) newFt =
+          gcnew PdxFieldType(tmp->FieldName, tmp->ClassName, tmp->TypeId,
+                             newone->m_pdxFieldTypes->Count,  // sequence id
+                             tmp->IsVariableLengthType, tmp->Size,
+                             (tmp->IsVariableLengthType ? varLenFields++ /*it increase after that*/ : 0));
+      newone->m_pdxFieldTypes->Add(newFt);  // fieldnameVsPFT will happen after that
+    }
+  }
+
+  newone->m_numberOfVarLenFields = varLenFields;
+  if (varLenFields > 0) newone->m_varLenFieldIdx = varLenFields;
+
+  // need to keep all versions in local version
+  // m_otherVersions->Add(newone);
+  return newone;
+}
+
+gc_ptr(PdxType) PdxType::isContains(gc_ptr(PdxType) first, gc_ptr(PdxType) second) {
+  int j = 0;
+  for (int i = 0; i < second->m_pdxFieldTypes->Count; i++) {
+    gc_ptr(PdxFieldType) secondPdt = second->m_pdxFieldTypes[i];
+    bool matched = false;
+    for (; j < first->m_pdxFieldTypes->Count; j++) {
+      gc_ptr(PdxFieldType) firstPdt = first->m_pdxFieldTypes[j];
+
+      if (firstPdt->Equals(secondPdt)) {
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) return nullptr;
+  }
+  return first;
+}
+
+gc_ptr(PdxType) PdxType::clone() {
+  gc_ptr(PdxType) newone = gcnew PdxType(m_className, false);
+  newone->m_geodeTypeId = 0;
+  newone->m_numberOfVarLenFields = m_numberOfVarLenFields;
+
+  FOR_EACH (gc_ptr(PdxFieldType) tmp in m_pdxFieldTypes) { newone->m_pdxFieldTypes->Add(tmp); }
+  return newone;
+}
+
+gc_ptr(array<int>) PdxType::GetLocalToRemoteMap(gc_ptr(Cache) cache) {
+  if (m_localToRemoteFieldMap != nullptr) return m_localToRemoteFieldMap;
+
+  msclr::lock lockInstance(m_lockObj);
+  if (m_localToRemoteFieldMap != nullptr) return m_localToRemoteFieldMap;
+  initLocalToRemote(cache);
+
+  return m_localToRemoteFieldMap;
+}
+gc_ptr(array<int>) PdxType::GetRemoteToLocalMap(gc_ptr(Cache) cache) {
+  // return m_remoteToLocalFieldMap;
+
+  if (m_remoteToLocalFieldMap != nullptr) return m_remoteToLocalFieldMap;
+
+  msclr::lock lockInstance(m_lockObj);
+  if (m_remoteToLocalFieldMap != nullptr) return m_remoteToLocalFieldMap;
+  initRemoteToLocal(cache);
+
+  return m_remoteToLocalFieldMap;
+}
+
+/*
+ * this is write data on remote type(this will always have all fields)
+ */
+void PdxType::initRemoteToLocal(gc_ptr(Cache) cache) {
+  // get local type from type Registry and then map local fields.
+  // need to generate static map
+  gc_ptr(PdxType) localPdxType = cache->GetPdxTypeRegistry()->GetLocalPdxType(m_className);
+  m_numberOfFieldsExtra = 0;
+
+  if (localPdxType != nullptr) {
+    gc_ptr(IList<PdxFieldType ^>) localPdxFields = localPdxType->m_pdxFieldTypes;
+    Int32 fieldIdx = 0;
+
+    m_remoteToLocalFieldMap = gcnew array<Int32>(m_pdxFieldTypes->Count);
+
+    FOR_EACH (gc_ptr(PdxFieldType) remotePdxField in m_pdxFieldTypes) {
+      bool found = false;
+
+      FOR_EACH (gc_ptr(PdxFieldType) localPdxfield in localPdxFields) {
+        if (localPdxfield->Equals(remotePdxField)) {
+          found = true;
+          m_remoteToLocalFieldMap[fieldIdx++] = 1;  // field there in remote type
+          break;
         }
+      }
 
-        void PdxType::AddVariableLengthTypeField(String^ fieldName, String^ className,
-                                                 PdxFieldTypes typeId)
-        {
-          //we don't store offset of first var len field, this is the purpose of following check
-          if (m_isVarLenFieldAdded)
-            m_varLenFieldIdx++;//it initial value is zero so variable length field idx start with zero
+      if (!found) {
+        // while writing take this from weakhashmap
+        // local field is not in remote type
+        if (remotePdxField->IsVariableLengthType)
+          m_remoteToLocalFieldMap[fieldIdx++] = -1;  // local type don't have this fields
+        else
+          m_remoteToLocalFieldMap[fieldIdx++] = -2;  // local type don't have this fields
+        m_numberOfFieldsExtra++;
+      }
+    }
+  }
+}
+void PdxType::initLocalToRemote(gc_ptr(Cache) cache) {
+  gc_ptr(PdxType) localPdxType = cache->GetPdxTypeRegistry()->GetLocalPdxType(m_className);
 
-          m_numberOfVarLenFields++;
+  if (localPdxType != nullptr) {
+    // Log::Debug("In initLocalToRemote: " + m_geodeTypeId);
+    gc_ptr(IList<PdxFieldType ^>) localPdxFields = localPdxType->m_pdxFieldTypes;
 
-          m_isVarLenFieldAdded = true;
+    Int32 fieldIdx = 0;
+    // type which need to read/write should control local type
+    m_localToRemoteFieldMap = gcnew array<Int32>(localPdxType->m_pdxFieldTypes->Count);
 
-          int current = m_pdxFieldTypes->Count;
-          PdxFieldType^ pfType = gcnew PdxFieldType(fieldName, className, (Byte)typeId,
-                                                    current, true, -1, m_varLenFieldIdx);
-          m_pdxFieldTypes->Add(pfType);
-          //this will make sure one can't add same field name
-          m_fieldNameVsPdxType->Add(fieldName, pfType);
+    for (int i = 0; i < m_localToRemoteFieldMap->Length && i < m_pdxFieldTypes->Count; i++) {
+      if (localPdxFields[fieldIdx]->Equals(m_pdxFieldTypes[i])) {
+        // fields are in same order, we can read as it is
+        m_localToRemoteFieldMap[fieldIdx++] = -2;
+      } else
+        break;
+    }
+
+    for (; fieldIdx < m_localToRemoteFieldMap->Length;) {
+      gc_ptr(PdxFieldType) localPdxField = localPdxType->m_pdxFieldTypes[fieldIdx];
+      bool found = false;
+
+      FOR_EACH (gc_ptr(PdxFieldType) remotePdxfield in m_pdxFieldTypes) {
+        if (localPdxField->Equals(remotePdxfield)) {
+          found = true;
+          // store pdxfield type position to get the offset quickly
+          m_localToRemoteFieldMap[fieldIdx++] = remotePdxfield->SequenceId;
+          break;
         }
-
-        void PdxType::ToData(DataOutput^ output)
-        {
-          //defaulf java Dataserializable require this
-          output->WriteByte(static_cast<int8_t>(DSCode::DataSerializable));
-          output->WriteByte(static_cast<int8_t>(DSCode::Class));
-          output->WriteObject((Object^)m_javaPdxClass);
-
-          //pdx type
-          output->WriteString(m_className);
-          output->WriteBoolean(m_noJavaClass);
-          output->WriteInt32(m_geodeTypeId);
-          output->WriteInt32(m_varLenFieldIdx);
-
-          output->WriteArrayLen(m_pdxFieldTypes->Count);
-
-          for (int i = 0; i < m_pdxFieldTypes->Count; i++)
-          {
-            m_pdxFieldTypes[i]->ToData(output);
-          }
-        }
-
-        void PdxType::FromData(DataInput^ input)
-        {
-          //defaulf java Dataserializable require this
-          Byte val = input->ReadByte();//DS
-          Byte val1 = input->ReadByte();//class
-          input->ReadObject();//classname
-
-          m_className = input->ReadString();
-          //Object^ pdxObject = Serializable::GetPdxType(m_className);
-          // m_pdxDomainType = pdxObject->GetType();
-
-          /*PdxWrapper^ pdxWrapper = dynamic_cast<PdxWrapper^>(pdxObject);
-          if(pdxWrapper == nullptr)
-          m_pdxDomainType = pdxObject->GetType();
-          else
-          m_pdxDomainType = pdxWrapper->GetObject()->GetType();*/
-          //Log::Debug("PdxType::FromData " + m_className);
-          m_noJavaClass = input->ReadBoolean();
-          m_geodeTypeId = input->ReadInt32();
-          m_varLenFieldIdx = input->ReadInt32();
-
-          int len = input->ReadArrayLen();
-
-          bool foundVarLenType = false;
-          for (int i = 0; i < len; i++)
-          {
-            PdxFieldType^ pft = gcnew PdxFieldType();
-            pft->FromData(input);
-
-            m_pdxFieldTypes->Add(pft);
-
-            if (pft->IsVariableLengthType == true)
-              foundVarLenType = true;
-          }
-
-          //as m_varLenFieldIdx starts with 0
-          if (m_varLenFieldIdx != 0)
-            m_numberOfVarLenFields = m_varLenFieldIdx + 1;
-          else if (foundVarLenType)
-            m_numberOfVarLenFields = 1;
-
-          InitializeType(input->Cache);
-        }
-
-        void PdxType::InitializeType(Cache^ cache)
-        {
-          initRemoteToLocal(cache);//for writing
-          initLocalToRemote(cache);//for reading
-
-          generatePositionMap();
-
-        }
-
-        Int32 PdxType::GetFieldPosition(String^ fieldName, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen)
-        {
-          PdxFieldType^ pft = nullptr;
-          m_fieldNameVsPdxType->TryGetValue(fieldName, pft);
-
-          if (pft != nullptr)
-          {
-            if (pft->IsVariableLengthType)
-              return variableLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
-            else
-              return fixedLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
-          }
-
-          return -1;
-        }
-
-        Int32 PdxType::GetFieldPosition(Int32 fieldIdx, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen)
-        {
-          PdxFieldType^ pft = m_pdxFieldTypes[fieldIdx];
-
-          if (pft != nullptr)
-          {
-            if (pft->IsVariableLengthType)
-              return variableLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
-            else
-              return fixedLengthFieldPosition(pft, offsetPosition, offsetSize, pdxStreamlen);
-          }
-
-          return -1;
-        }
-
-        Int32 PdxType::variableLengthFieldPosition(PdxFieldType^ varLenField, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen)
-        {
-          int seqId = varLenField->SequenceId;
-
-          int offset = varLenField->VarLenOffsetIndex;
-
-          if (offset == -1)
-            return /*first var len field*/ varLenField->RelativeOffset;
-          else
-          {
-            //we write offset from behind
-            return PdxHelper::ReadInt(offsetPosition + (m_numberOfVarLenFields - offset - 1)*offsetSize, offsetSize);
-          }
-
-        }
-
-        Int32 PdxType::fixedLengthFieldPosition(PdxFieldType^ fixLenField, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen)
-        {
-          int seqId = fixLenField->SequenceId;
-
-          int offset = fixLenField->VarLenOffsetIndex;
-
-          if (fixLenField->RelativeOffset >= 0)
-          {
-            //starting fields
-            return fixLenField->RelativeOffset;
-          }
-          else if (offset == -1) //Pdx length     
-          {
-            //there is no var len field so just subtracts relative offset from behind
-            return pdxStreamlen + fixLenField->RelativeOffset;
-          }
-          else
-          {
-            //need to read offset and then subtract relative offset
-            return PdxHelper::ReadInt(offsetPosition +
-                                      (m_numberOfVarLenFields - offset - 1)*offsetSize,
-                                      offsetSize)
-                                      + fixLenField->RelativeOffset;
-          }
-        }
-
-        PdxType^ PdxType::isLocalTypeContains(PdxType^ otherType)
-        {
-          if (m_pdxFieldTypes->Count >= otherType->m_pdxFieldTypes->Count)
-          {
-            return isContains(this, otherType);
-          }
-          return nullptr;
-        }
-
-        PdxType^ PdxType::isRemoteTypeContains(PdxType^ remoteType)
-        {
-          if (m_pdxFieldTypes->Count <= remoteType->m_pdxFieldTypes->Count)
-          {
-            return isContains(remoteType, this);
-          }
-          return nullptr;
-        }
-
-        PdxType^ PdxType::MergeVersion(PdxType^ otherVersion)
-        {
-          int nTotalFields = otherVersion->m_pdxFieldTypes->Count;
-          PdxType^ contains = nullptr;
-
-          if (isLocalTypeContains(otherVersion) != nullptr)
-            return this;
-
-          if (isRemoteTypeContains(otherVersion) != nullptr)
-            return otherVersion;
-
-          //need to create new one, clone of local
-          PdxType^ newone = clone();
-
-          int varLenFields = newone->m_numberOfVarLenFields;
-
-          FOR_EACH (PdxFieldType^ tmp in otherVersion->m_pdxFieldTypes)
-          {
-            bool found = false;
-            FOR_EACH (PdxFieldType^ tmpNew in newone->m_pdxFieldTypes)
-            {
-              if (tmpNew->Equals(tmp))
-              {
-                found = true;
-                break;
-              }
-            }
-            if (!found)
-            {
-              PdxFieldType^ newFt = gcnew PdxFieldType(tmp->FieldName,
-                                                       tmp->ClassName,
-                                                       tmp->TypeId,
-                                                       newone->m_pdxFieldTypes->Count,//sequence id
-                                                       tmp->IsVariableLengthType,
-                                                       tmp->Size,
-                                                       (tmp->IsVariableLengthType ? varLenFields++/*it increase after that*/ : 0));
-              newone->m_pdxFieldTypes->Add(newFt);//fieldnameVsPFT will happen after that							
-            }
-          }
-
-          newone->m_numberOfVarLenFields = varLenFields;
-          if (varLenFields > 0)
-            newone->m_varLenFieldIdx = varLenFields;
-
-          //need to keep all versions in local version
-          //m_otherVersions->Add(newone);
-          return newone;
-        }
-
-        PdxType^ PdxType::isContains(PdxType^ first, PdxType^ second)
-        {
-          int j = 0;
-          for (int i = 0; i < second->m_pdxFieldTypes->Count; i++)
-          {
-            PdxFieldType^ secondPdt = second->m_pdxFieldTypes[i];
-            bool matched = false;
-            for (; j < first->m_pdxFieldTypes->Count; j++)
-            {
-              PdxFieldType^ firstPdt = first->m_pdxFieldTypes[j];
-
-              if (firstPdt->Equals(secondPdt))
-              {
-                matched = true;
-                break;
-              }
-            }
-            if (!matched)
-              return nullptr;
-          }
-          return first;
-        }
-
-        PdxType^ PdxType::clone()
-        {
-          PdxType^ newone = gcnew PdxType(m_className, false);
-          newone->m_geodeTypeId = 0;
-          newone->m_numberOfVarLenFields = m_numberOfVarLenFields;
-
-          FOR_EACH (PdxFieldType^ tmp in m_pdxFieldTypes)
-          {
-            newone->m_pdxFieldTypes->Add(tmp);
-          }
-          return newone;
-        }
-
-        array<int>^ PdxType::GetLocalToRemoteMap(Cache^ cache)
-        {
-          if (m_localToRemoteFieldMap != nullptr)
-            return m_localToRemoteFieldMap;
-
-          msclr::lock lockInstance(m_lockObj);
-          if (m_localToRemoteFieldMap != nullptr)
-            return m_localToRemoteFieldMap;
-          initLocalToRemote(cache);
-
-          return m_localToRemoteFieldMap;
-
-        }
-        array<int>^ PdxType::GetRemoteToLocalMap(Cache^ cache)
-        {
-          //return m_remoteToLocalFieldMap;
-
-          if (m_remoteToLocalFieldMap != nullptr)
-            return m_remoteToLocalFieldMap;
-
-          msclr::lock lockInstance(m_lockObj);
-          if (m_remoteToLocalFieldMap != nullptr)
-            return m_remoteToLocalFieldMap;
-          initRemoteToLocal(cache);
-
-          return m_remoteToLocalFieldMap;
-        }
-
-        /*
-         * this is write data on remote type(this will always have all fields)
-         */
-        void PdxType::initRemoteToLocal(Cache^ cache)
-        {
-          //get local type from type Registry and then map local fields.
-          //need to generate static map
-          PdxType^ localPdxType = cache->GetPdxTypeRegistry()->GetLocalPdxType(m_className);
-          m_numberOfFieldsExtra = 0;
-
-          if (localPdxType != nullptr)
-          {
-            IList<PdxFieldType^>^ localPdxFields = localPdxType->m_pdxFieldTypes;
-            Int32 fieldIdx = 0;
-
-            m_remoteToLocalFieldMap = gcnew array<Int32>(m_pdxFieldTypes->Count);
-
-            FOR_EACH (PdxFieldType^ remotePdxField in m_pdxFieldTypes)
-            {
-              bool found = false;
-
-              FOR_EACH (PdxFieldType^ localPdxfield in localPdxFields)
-              {
-                if (localPdxfield->Equals(remotePdxField))
-                {
-                  found = true;
-                  m_remoteToLocalFieldMap[fieldIdx++] = 1;//field there in remote type
-                  break;
-                }
-              }
-
-              if (!found)
-              {
-                //while writing take this from weakhashmap
-                //local field is not in remote type
-                if (remotePdxField->IsVariableLengthType)
-                  m_remoteToLocalFieldMap[fieldIdx++] = -1;//local type don't have this fields
-                else
-                  m_remoteToLocalFieldMap[fieldIdx++] = -2;//local type don't have this fields
-                m_numberOfFieldsExtra++;
-              }
-            }
-          }
-        }
-        void PdxType::initLocalToRemote(Cache^ cache)
-        {
-          PdxType^ localPdxType = cache->GetPdxTypeRegistry()->GetLocalPdxType(m_className);
-
-          if (localPdxType != nullptr)
-          {
-            //Log::Debug("In initLocalToRemote: " + m_geodeTypeId);
-            IList<PdxFieldType^>^ localPdxFields = localPdxType->m_pdxFieldTypes;
-
-            Int32 fieldIdx = 0;
-            //type which need to read/write should control local type
-            m_localToRemoteFieldMap = gcnew array<Int32>(localPdxType->m_pdxFieldTypes->Count);
-
-            for (int i = 0; i < m_localToRemoteFieldMap->Length && i < m_pdxFieldTypes->Count; i++)
-            {
-              if (localPdxFields[fieldIdx]->Equals(m_pdxFieldTypes[i]))
-              {
-                //fields are in same order, we can read as it is
-                m_localToRemoteFieldMap[fieldIdx++] = -2;
-              }
-              else
-                break;
-            }
-
-            for (; fieldIdx < m_localToRemoteFieldMap->Length;)
-            {
-              PdxFieldType^ localPdxField = localPdxType->m_pdxFieldTypes[fieldIdx];
-              bool found = false;
-
-              FOR_EACH (PdxFieldType^ remotePdxfield in m_pdxFieldTypes)
-              {
-                if (localPdxField->Equals(remotePdxfield))
-                {
-                  found = true;
-                  //store pdxfield type position to get the offset quickly
-                  m_localToRemoteFieldMap[fieldIdx++] = remotePdxfield->SequenceId;
-                  break;
-                }
-              }
-
-              if (!found)
-              {
-                //local field is not in remote type
-                m_localToRemoteFieldMap[fieldIdx++] = -1;
-              }
-            }
-          }
-        }
-
-        void PdxType::generatePositionMap()
-        {
-          //1. all static fields offsets
-          //--read next var len offset and subtract offset
-          //--if no var len then take length of stream - (len of offsets)
-          //2. there is no offser for first var len field
-
-          bool foundVarLen = false;
-          int lastVarLenSeqId = 0;
-          int prevFixedSizeOffsets = 0;
-          //set offsets from back first
-          PdxFieldType^ previousField = nullptr;
-          for (int i = m_pdxFieldTypes->Count - 1; i >= 0; i--)
-          {
-            PdxFieldType^ tmpft = m_pdxFieldTypes[i];
-            m_fieldNameVsPdxType[tmpft->FieldName] = tmpft;
-
-            if (tmpft->IsVariableLengthType)
-            {
-              tmpft->VarLenOffsetIndex = tmpft->VarLenFieldIdx;
-              tmpft->RelativeOffset = 0;
-              foundVarLen = true;
-              lastVarLenSeqId = tmpft->VarLenFieldIdx;
-            }
-            else
-            {
-              if (foundVarLen)
-              {
-                tmpft->VarLenOffsetIndex = lastVarLenSeqId;
-                //relative offset is subtracted from var len offsets
-                tmpft->RelativeOffset = (-tmpft->Size + previousField->RelativeOffset);
-              }
-              else
-              {
-                tmpft->VarLenOffsetIndex = -1;//Pdx header length
-                //relative offset is subtracted from var len offsets
-                tmpft->RelativeOffset = -tmpft->Size;
-                if (previousField != nullptr)//boundary condition
-                  tmpft->RelativeOffset = (-tmpft->Size + previousField->RelativeOffset);
-              }
-            }
-
-            previousField = tmpft;
-          }
-
-          foundVarLen = false;
-          prevFixedSizeOffsets = 0;
-          //now do optimization till you don't fine var len
-          for (int i = 0; i < m_pdxFieldTypes->Count && !foundVarLen; i++)
-          {
-            PdxFieldType^ tmpft = m_pdxFieldTypes[i];
-
-            if (tmpft->IsVariableLengthType)
-            {
-              tmpft->VarLenOffsetIndex = -1;//first var len field
-              tmpft->RelativeOffset = prevFixedSizeOffsets;
-              foundVarLen = true;
-            }
-            else
-            {
-              tmpft->VarLenOffsetIndex = 0;//no need to read offset
-              tmpft->RelativeOffset = prevFixedSizeOffsets;
-              prevFixedSizeOffsets += tmpft->Size;
-            }
-          }
-        }
-
-        bool PdxType::Equals(Object^ otherObj)
-        {
-          if (otherObj == nullptr)
-            return false;
-
-          PdxType^ ot = dynamic_cast<PdxType^>(otherObj);
-
-          if (ot == nullptr)
-            return false;
-
-          if (ot == this)
-            return true;
-
-          if (ot->m_pdxFieldTypes->Count != m_pdxFieldTypes->Count)
-            return false;
-
-          for (int i = 0; i < m_pdxFieldTypes->Count; i++)
-          {
-            if (!ot->m_pdxFieldTypes[i]->Equals(m_pdxFieldTypes[i]))
-              return false;
-          }
-          return true;
-        }
-
-        Int32 PdxType::GetHashCode()
-        {
-          int hash = m_cachedHashcode;
-          if (hash == 0)
-          {
-            hash = 1;
-            hash = hash * 31 + m_className->GetHashCode();
-            for (int i = 0; i < m_pdxFieldTypes->Count; i++)
-            {
-              hash = hash * 31 + m_pdxFieldTypes[i]->GetHashCode();
-            }
-            if (hash == 0)
-            {
-              hash = 1;
-            }
-            m_cachedHashcode = hash;
-          }
-          return m_cachedHashcode;
-        }
-      }  // namespace Internal
-    }  // namespace Client
-  }  // namespace Geode
+      }
+
+      if (!found) {
+        // local field is not in remote type
+        m_localToRemoteFieldMap[fieldIdx++] = -1;
+      }
+    }
+  }
+}
+
+void PdxType::generatePositionMap() {
+  // 1. all static fields offsets
+  //--read next var len offset and subtract offset
+  //--if no var len then take length of stream - (len of offsets)
+  // 2. there is no offser for first var len field
+
+  bool foundVarLen = false;
+  int lastVarLenSeqId = 0;
+  int prevFixedSizeOffsets = 0;
+  // set offsets from back first
+  gc_ptr(PdxFieldType) previousField = nullptr;
+  for (int i = m_pdxFieldTypes->Count - 1; i >= 0; i--) {
+    gc_ptr(PdxFieldType) tmpft = m_pdxFieldTypes[i];
+    m_fieldNameVsPdxType[tmpft->FieldName] = tmpft;
+
+    if (tmpft->IsVariableLengthType) {
+      tmpft->VarLenOffsetIndex = tmpft->VarLenFieldIdx;
+      tmpft->RelativeOffset = 0;
+      foundVarLen = true;
+      lastVarLenSeqId = tmpft->VarLenFieldIdx;
+    } else {
+      if (foundVarLen) {
+        tmpft->VarLenOffsetIndex = lastVarLenSeqId;
+        // relative offset is subtracted from var len offsets
+        tmpft->RelativeOffset = (-tmpft->Size + previousField->RelativeOffset);
+      } else {
+        tmpft->VarLenOffsetIndex = -1;  // Pdx header length
+        // relative offset is subtracted from var len offsets
+        tmpft->RelativeOffset = -tmpft->Size;
+        if (previousField != nullptr)  // boundary condition
+          tmpft->RelativeOffset = (-tmpft->Size + previousField->RelativeOffset);
+      }
+    }
+
+    previousField = tmpft;
+  }
+
+  foundVarLen = false;
+  prevFixedSizeOffsets = 0;
+  // now do optimization till you don't fine var len
+  for (int i = 0; i < m_pdxFieldTypes->Count && !foundVarLen; i++) {
+    gc_ptr(PdxFieldType) tmpft = m_pdxFieldTypes[i];
+
+    if (tmpft->IsVariableLengthType) {
+      tmpft->VarLenOffsetIndex = -1;  // first var len field
+      tmpft->RelativeOffset = prevFixedSizeOffsets;
+      foundVarLen = true;
+    } else {
+      tmpft->VarLenOffsetIndex = 0;  // no need to read offset
+      tmpft->RelativeOffset = prevFixedSizeOffsets;
+      prevFixedSizeOffsets += tmpft->Size;
+    }
+  }
+}
+
+bool PdxType::Equals(gc_ptr(Object) otherObj) {
+  if (otherObj == nullptr) return false;
+
+  gc_ptr(PdxType) ot = dynamic_cast<gc_ptr(PdxType)>(otherObj);
+
+  if (ot == nullptr) return false;
+
+  if (ot == this) return true;
+
+  if (ot->m_pdxFieldTypes->Count != m_pdxFieldTypes->Count) return false;
+
+  for (int i = 0; i < m_pdxFieldTypes->Count; i++) {
+    if (!ot->m_pdxFieldTypes[i]->Equals(m_pdxFieldTypes[i])) return false;
+  }
+  return true;
+}
+
+Int32 PdxType::GetHashCode() {
+  int hash = m_cachedHashcode;
+  if (hash == 0) {
+    hash = 1;
+    hash = hash * 31 + m_className->GetHashCode();
+    for (int i = 0; i < m_pdxFieldTypes->Count; i++) {
+      hash = hash * 31 + m_pdxFieldTypes[i]->GetHashCode();
+    }
+    if (hash == 0) {
+      hash = 1;
+    }
+    m_cachedHashcode = hash;
+  }
+  return m_cachedHashcode;
+}
+}  // namespace Internal
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

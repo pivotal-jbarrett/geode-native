@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "CacheableObject.hpp"
 #include "DataInput.hpp"
 #include "DataOutput.hpp"
@@ -27,55 +26,47 @@ using namespace System;
 using namespace System::IO;
 using namespace System::Runtime::Serialization::Formatters::Binary;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      void CacheableObject::ToData(DataOutput^ output)
-      {
-        if(m_obj != nullptr)
-        {
-          output->AdvanceCursor(4); // placeholder for object size bytes needed while reading back.
+void CacheableObject::ToData(gc_ptr(DataOutput) output) {
+  if (m_obj != nullptr) {
+    output->AdvanceCursor(4);  // placeholder for object size bytes needed while reading back.
 
-          GeodeDataOutputStream dos(output);
-          BinaryFormatter bf;
-          auto checkpoint = dos.Length;
-          bf.Serialize(%dos, m_obj);
-          m_objectSize = dos.Length - checkpoint;
+    GeodeDataOutputStream dos(output);
+    BinaryFormatter bf;
+    auto checkpoint = dos.Length;
+    bf.Serialize(% dos, m_obj);
+    m_objectSize = dos.Length - checkpoint;
 
-          auto size = static_cast<uint32_t>(m_objectSize);
-          output->RewindCursor(size + 4);
-          output->WriteInt32(size);
-          output->AdvanceCursor(size);
-        }
-      }
+    auto size = static_cast<uint32_t>(m_objectSize);
+    output->RewindCursor(size + 4);
+    output->WriteInt32(size);
+    output->AdvanceCursor(size);
+  }
+}
 
-      void CacheableObject::FromData(DataInput^ input)
-      {
-        int maxSize = input->ReadInt32();
-        GeodeDataInputStream dis(input, maxSize);
-        auto checkpoint = dis.BytesRead;
-        BinaryFormatter bf;
-        m_obj = bf.Deserialize(%dis);
-        m_objectSize = dis.BytesRead - checkpoint;
-      }
+void CacheableObject::FromData(gc_ptr(DataInput) input) {
+  int maxSize = input->ReadInt32();
+  GeodeDataInputStream dis(input, maxSize);
+  auto checkpoint = dis.BytesRead;
+  BinaryFormatter bf;
+  m_obj = bf.Deserialize(% dis);
+  m_objectSize = dis.BytesRead - checkpoint;
+}
 
-      System::UInt64 CacheableObject::ObjectSize::get()
-      { 
-        if (m_objectSize == 0) {
-          GeodeNullStream ns;
-          BinaryFormatter bf;
-          bf.Serialize(%ns, m_obj);
+System::UInt64 CacheableObject::ObjectSize::get() {
+  if (m_objectSize == 0) {
+    GeodeNullStream ns;
+    BinaryFormatter bf;
+    bf.Serialize(% ns, m_obj);
 
-          m_objectSize = sizeof(CacheableObject^) + ns.Length;
-        }
-        return m_objectSize;
-    }  // namespace Client
-  }  // namespace Geode
+    m_objectSize = sizeof(gc_ptr(CacheableObject)) + ns.Length;
+  }
+  return m_objectSize;
+}  // namespace Client
+}  // namespace Client
+}  // namespace Geode
+
 }  // namespace Apache
-
- } //namespace 
-

@@ -17,60 +17,47 @@
 
 #pragma once
 
-
 #include "begin_native.hpp"
 #include <chrono>
 #include <geode/internal/chrono/duration.hpp>
 #include "end_native.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace System;
-      using namespace apache::geode::internal::chrono::duration;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace System;
+using namespace apache::geode::internal::chrono::duration;
 
-      using ticks = std::chrono::duration<long long, std::ratio<1, 10000000>>;
-      
-      class TimeUtils
-      {
-      public:
-        template <class _Duration>
-        inline static _Duration TimeSpanToDurationCeil(TimeSpan timeSpan)
-        {
-          return _ceil<_Duration>(TimeSpanToDuration(timeSpan));
-        }
-      
-        inline static ticks TimeSpanToDuration(TimeSpan timespan)
-        {
-          return ticks(timespan.Ticks);
-        }
+using ticks = std::chrono::duration<long long, std::ratio<1, 10000000>>;
 
-        inline static TimeSpan DurationToTimeSpan(ticks duration)
-        {
-          return TimeSpan::FromTicks(duration.count());
-        }    
+class TimeUtils {
+ public:
+  template <class _Duration>
+  inline static _Duration TimeSpanToDurationCeil(TimeSpan timeSpan) {
+    return _ceil<_Duration>(TimeSpanToDuration(timeSpan));
+  }
 
-        inline static DateTime TimePointToDateTime(std::chrono::system_clock::time_point timePoint) {
-          using namespace std::chrono;
-          auto t = duration_cast<ticks>(timePoint.time_since_epoch());
-          t += epochDifference;
-          return DateTime(t.count());
-        }
+  inline static ticks TimeSpanToDuration(TimeSpan timespan) { return ticks(timespan.Ticks); }
 
-        inline static std::chrono::system_clock::time_point DateTimeToTimePoint(DateTime dateTime) {
-          using namespace std::chrono;
-          auto t = ticks(dateTime.Ticks);
-          t -= epochDifference;
-          return system_clock::time_point(t);
-        }
+  inline static TimeSpan DurationToTimeSpan(ticks duration) { return TimeSpan::FromTicks(duration.count()); }
 
-      private:
-        static constexpr auto epochDifference = ticks(621355968000000000);
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  inline static DateTime TimePointToDateTime(std::chrono::system_clock::time_point timePoint) {
+    using namespace std::chrono;
+    auto t = duration_cast<ticks>(timePoint.time_since_epoch());
+    t += epochDifference;
+    return DateTime(t.count());
+  }
+
+  inline static std::chrono::system_clock::time_point DateTimeToTimePoint(DateTime dateTime) {
+    using namespace std::chrono;
+    auto t = ticks(dateTime.Ticks);
+    t -= epochDifference;
+    return system_clock::time_point(t);
+  }
+
+ private:
+  static constexpr auto epochDifference = ticks(621355968000000000);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

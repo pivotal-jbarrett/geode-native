@@ -20,13 +20,14 @@
 #include "begin_native.hpp"
 #include <memory>
 #include "end_native.hpp"
+#include "cli.hpp"
 
 namespace Apache {
 namespace Geode {
 namespace Client {
 
 template <class _T>
-public ref class native_shared_ptr sealed {
+PUBLIC ref class native_shared_ptr sealed {
  private:
   std::shared_ptr<_T>* ptr;
 
@@ -40,7 +41,6 @@ public ref class native_shared_ptr sealed {
   inline _T* get() { return ptr->get(); }
 
   inline std::shared_ptr<_T> get_shared_ptr() { return *ptr; }
-
 };
 }  // namespace Client
 }  // namespace Geode

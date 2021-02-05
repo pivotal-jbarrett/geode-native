@@ -17,90 +17,76 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "IRegionService.hpp"
 
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class SystemProperties;
+ref class SystemProperties;
 
-      ref class CacheTransactionManager;
+ref class CacheTransactionManager;
 
-      /// <summary>
-      /// GeodeCache represents the singleton cache that must be created
-      /// in order to connect to Geode server.
-      /// </summary>
-      /// <remarks>
-      /// Caches are obtained from Crest methods on the
-      /// <see cref="CacheFactory.Create"/> class.
-      /// <para>
-      /// When a cache is created a <see cref="DistributedSystem" />
-      /// must be specified.
-      /// </para><para>
-      /// When a cache will no longer be used, call <see cref="Cache.Close" />.
-      /// Once it <see cref="Cache.IsClosed" /> any attempt to use it
-      /// will cause a <c>CacheClosedException</c> to be thrown.
-      /// </para><para>
-      /// A cache can have multiple root regions, each with a different name.
-      /// </para>
-      /// </remarks>
-      public interface class IGeodeCache : IRegionService
-      {
-      public:
+/// <summary>
+/// GeodeCache represents the singleton cache that must be created
+/// in order to connect to Geode server.
+/// </summary>
+/// <remarks>
+/// Caches are obtained from Crest methods on the
+/// <see cref="CacheFactory.Create"/> class.
+/// <para>
+/// When a cache is created a <see cref="DistributedSystem" />
+/// must be specified.
+/// </para><para>
+/// When a cache will no longer be used, call <see cref="Cache.Close" />.
+/// Once it <see cref="Cache.IsClosed" /> any attempt to use it
+/// will cause a <c>CacheClosedException</c> to be thrown.
+/// </para><para>
+/// A cache can have multiple root regions, each with a different name.
+/// </para>
+/// </remarks>
+PUBLIC interface class IGeodeCache : IRegionService {
+ public:
+  /// <summary>
+  /// Returns the name of this cache.
+  /// </summary>
+  /// <remarks>
+  /// This method does not throw
+  /// <c>CacheClosedException</c> if the cache is closed.
+  /// </remarks>
+  /// <returns>the string name of this cache</returns>
+  property gc_ptr(String) Name { gc_ptr(String) get(); }
 
-        /// <summary>
-        /// Returns the name of this cache.
-        /// </summary>
-        /// <remarks>
-        /// This method does not throw
-        /// <c>CacheClosedException</c> if the cache is closed.
-        /// </remarks>
-        /// <returns>the string name of this cache</returns>
-        property String^ Name
-        {
-          String^ get();
-        }
+  /// <summary>
+  /// Initializes the cache from an XML file.
+  /// </summary>
+  /// <param name="cacheXml">pathname of a <c>cache.xml</c> file</param>
+  void InitializeDeclarativeCache(gc_ptr(String) cacheXml);
 
-        /// <summary>
-        /// Initializes the cache from an XML file.
-        /// </summary>
-        /// <param name="cacheXml">pathname of a <c>cache.xml</c> file</param>
-        void InitializeDeclarativeCache(String^ cacheXml);
+  property gc_ptr(SystemProperties) SystemProperties { gc_ptr(Apache::Geode::Client::SystemProperties) get(); }
 
-        property SystemProperties^ SystemProperties
-        {
-          Apache::Geode::Client::SystemProperties^ get();
-        }
+  /// <summary>
+  /// Returns the cache transaction manager of
+  /// <see cref="CacheFactory.Create" /> this cache.
+  /// </summary>
+  property gc_ptr(Apache::Geode::Client::CacheTransactionManager) CacheTransactionManager {
+    gc_ptr(Apache::Geode::Client::CacheTransactionManager) get();
+  }
 
-        /// <summary>
-        /// Returns the cache transaction manager of
-        /// <see cref="CacheFactory.Create" /> this cache.
-        /// </summary>
-        property Apache::Geode::Client::CacheTransactionManager^ CacheTransactionManager
-        {
-          Apache::Geode::Client::CacheTransactionManager^ get();
-        }
+  ///< summary>
+  /// Returns whether Cache saves unread fields for Pdx types.
+  ///</summary>
+  bool GetPdxIgnoreUnreadFields();
 
-        ///<summary>
-        /// Returns whether Cache saves unread fields for Pdx types.
-        ///</summary>
-        bool GetPdxIgnoreUnreadFields();
-
-        ///<summary>
-        /// Returns whether { @link PdxInstance} is preferred for PDX types instead of .NET object.
-        ///</summary>
-        bool GetPdxReadSerialized();
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  ///< summary>
+  /// Returns whether { @link PdxInstance} is preferred for PDX types instead of .NET object.
+  ///</summary>
+  bool GetPdxReadSerialized();
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

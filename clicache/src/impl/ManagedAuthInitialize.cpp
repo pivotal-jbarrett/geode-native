@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include <string>
 
 #include "ManagedAuthInitialize.hpp"
@@ -23,49 +22,39 @@
 #include "../ExceptionTypes.hpp"
 #include "../Properties.hpp"
 
-
 using namespace System;
 using namespace System::Text;
 using namespace System::Reflection;
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
-      using namespace msclr::interop;
+namespace apache {
+namespace geode {
+namespace client {
+using namespace msclr::interop;
 
-      std::shared_ptr<Properties> ManagedAuthInitializeGeneric::getCredentials(const std::shared_ptr<Properties>&
-                                                                 securityprops, const std::string& server)
-      {
-        try {
-          auto mprops = Apache::Geode::Client::Properties<String^, String^>::Create(securityprops);
+std::shared_ptr<Properties> ManagedAuthInitializeGeneric::getCredentials(
+    const std::shared_ptr<Properties>& securityprops, const std::string& server) {
+  try {
+    auto mprops = Apache::Geode::Client::Properties<gc_ptr(String), gc_ptr(String)>::Create(securityprops);
 
-          return m_getCredentials->Invoke(mprops, marshal_as<String^>(server))->GetNative();
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        return nullptr;
-      }
+    return m_getCredentials->Invoke(mprops, marshal_as<gc_ptr(String)>(server))->GetNative();
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  return nullptr;
+}
 
-      void ManagedAuthInitializeGeneric::close()
-      {
-        try {
-          m_close->Invoke();
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+void ManagedAuthInitializeGeneric::close() {
+  try {
+    m_close->Invoke();
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

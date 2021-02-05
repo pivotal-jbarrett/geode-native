@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "ResultCollector.hpp"
 #include "ExceptionTypes.hpp"
 #include "impl/SafeConvert.hpp"
@@ -24,80 +22,61 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace native = apache::geode::client;
+namespace native = apache::geode::client;
 
-      GENERIC(class TResult)
-      void ResultCollector<TResult>::AddResult( const TResult rs )
-      {
-        throw gcnew UnsupportedOperationException();
+GENERIC(class TResult)
+void ResultCollector<TResult>::AddResult(const TResult rs) { throw gcnew UnsupportedOperationException(); }
+
+GENERIC(class TResult)
+gc_ptr(System::Collections::Generic::ICollection<TResult>) ResultCollector<TResult>::GetResult() {
+  return GetResult(TimeUtils::DurationToTimeSpan(DEFAULT_QUERY_RESPONSE_TIMEOUT));
+}
+
+GENERIC(class TResult)
+gc_ptr(System::Collections::Generic::ICollection<TResult>) ResultCollector<TResult>::GetResult(TimeSpan timeout) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+    try {
+      auto results =
+          m_nativeptr->get()->getResult(TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout));
+      auto rs = gcnew array<TResult>(static_cast<int>(results->size()));
+      for (System::Int32 index = 0; index < results->size(); index++) {
+        auto nativeptr = results->operator[](index);
+        rs[index] = TypeRegistry::GetManagedValueGeneric<TResult>(nativeptr);
       }
+      auto collectionlist = (gc_ptr(ICollection<TResult>))rs;
+      return collectionlist;
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-      GENERIC(class TResult)
-      System::Collections::Generic::ICollection<TResult>^  ResultCollector<TResult>::GetResult()
-      {
-        return GetResult( TimeUtils::DurationToTimeSpan(DEFAULT_QUERY_RESPONSE_TIMEOUT) );
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-      GENERIC(class TResult)
-      System::Collections::Generic::ICollection<TResult>^  ResultCollector<TResult>::GetResult(TimeSpan timeout)
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          try
-          {
-            auto results = m_nativeptr->get()->getResult(TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout));
-            auto rs = gcnew array<TResult>(static_cast<int>(results->size()));
-            for (System::Int32 index = 0; index < results->size(); index++)
-            {
-              auto nativeptr = results->operator[](index);
-              rs[index] = TypeRegistry::GetManagedValueGeneric<TResult>(nativeptr);
-            }
-            auto collectionlist = (ICollection<TResult>^)rs;
-            return collectionlist;
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+GENERIC(class TResult)
+void ResultCollector<TResult>::EndResults() {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+    try {
+      m_nativeptr->get()->endResults();
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-
-      GENERIC(class TResult)
-      void ResultCollector<TResult>::EndResults()
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          try
-          {
-            m_nativeptr->get()->endResults();
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-
-      GENERIC(class TResult)
-      void ResultCollector<TResult>::ClearResults(/*bool*/)
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          try
-          {
-            m_nativeptr->get()->clearResults();
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TResult)
+void ResultCollector<TResult>::ClearResults(/*bool*/) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+    try {
+      m_nativeptr->get()->clearResults();
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

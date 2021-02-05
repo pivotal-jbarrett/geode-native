@@ -29,88 +29,80 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Threading;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      GENERIC(class TKey, class TResult)
-	  interface class ICqListener;
+GENERIC(class TKey, class TResult)
+interface class ICqListener;
 
-      GENERIC(class TKey, class TResult)
-      private ref class CqListenerHelper sealed{
-        public:
-        static Dictionary<Client::ICqListener<TKey, TResult>^, native_shared_ptr<native::CqListener>^>^
-          m_ManagedVsUnManagedCqLstrDict = gcnew 
-          Dictionary<Client::ICqListener<TKey, TResult>^, native_shared_ptr<native::CqListener>^>();
+GENERIC(class TKey, class TResult)
+private
+ref class CqListenerHelper sealed {
+ public:
+  static Dictionary<gc_ptr(Client::ICqListener<TKey, TResult>), gc_ptr(native_shared_ptr<native::CqListener>)> ^
+      m_ManagedVsUnManagedCqLstrDict = gcnew
+  Dictionary<gc_ptr(Client::ICqListener<TKey, TResult>), gc_ptr(native_shared_ptr<native::CqListener>)>();
 
-        static ReaderWriterLock^ g_readerWriterLock = gcnew ReaderWriterLock();
-      };
+  static gc_ptr(ReaderWriterLock) g_readerWriterLock = gcnew ReaderWriterLock();
+};
+
+/// <summary>
+/// Supports modification of certain cq attributes after the cq
+/// has been created.
+/// </summary>
+GENERIC(class TKey, class TResult)
+PUBLIC ref class CqAttributesMutator sealed {
+ public:
+  /// <summary>
+  /// Adds the CqListener for the cq.
+  /// </summary>
+  /// <param name="cqListener">
+  /// user-defined cq listener, or null for no cache listener
+  /// </param>
+  void AddCqListener(gc_ptr(Client::ICqListener<TKey, TResult>) cqListener);
+
+  /// <summary>
+  /// Remove a CqListener for the cq.
+  /// </summary>
+
+  void RemoveCqListener(gc_ptr(Client::ICqListener<TKey, TResult>) aListener);
+
+  /// <summary>
+  /// Initialize with an array of listeners
+  /// </summary>
+
+  void SetCqListeners(array<gc_ptr(Client::ICqListener<TKey, TResult>)> ^ newListeners);
+
+  internal :
 
       /// <summary>
-      /// Supports modification of certain cq attributes after the cq
-      /// has been created.
+      /// Internal factory function to wrap a native object pointer inside
+      /// this managed class.
       /// </summary>
-      GENERIC(class TKey, class TResult)
-      public ref class CqAttributesMutator sealed
-      {
-      public:
+      /// <param name="nativeptr">The native object pointer</param>
+      /// <returns>
+      /// The managed wrapper object
+      /// </returns>
+      inline static gc_ptr(Client::CqAttributesMutator<TKey, TResult>)
+          Create(native::CqAttributesMutator* nativeptr) {
+    auto instance = gcnew CqAttributesMutator(nativeptr);
+    return instance;
+  }
 
-        /// <summary>
-        /// Adds the CqListener for the cq.
-        /// </summary>
-        /// <param name="cqListener">
-        /// user-defined cq listener, or null for no cache listener
-        /// </param>
-        void AddCqListener( Client::ICqListener<TKey, TResult>^ cqListener );
+ private:
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline CqAttributesMutator<TKey, TResult>(native::CqAttributesMutator* nativeptr) {
+    m_nativeptr =
+        gcnew native_unique_ptr<native::CqAttributesMutator>(std::unique_ptr<native::CqAttributesMutator>(nativeptr));
+  }
 
-        /// <summary>
-        /// Remove a CqListener for the cq.
-        /// </summary>
-        
-        void RemoveCqListener(Client::ICqListener<TKey, TResult>^ aListener);
-
-
-        /// <summary>
-	      /// Initialize with an array of listeners
-        /// </summary>
-        
-        void SetCqListeners(array<Client::ICqListener<TKey, TResult>^>^ newListeners);
-
-
-      internal:
-
-        /// <summary>
-        /// Internal factory function to wrap a native object pointer inside
-        /// this managed class.
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        /// <returns>
-        /// The managed wrapper object
-        /// </returns>
-        inline static Client::CqAttributesMutator<TKey, TResult>^ Create(native::CqAttributesMutator* nativeptr)
-        {
-          auto instance = gcnew CqAttributesMutator(nativeptr);
-          return instance;
-        }
-
-      private:
-
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline CqAttributesMutator<TKey, TResult>(native::CqAttributesMutator* nativeptr)
-        {
-            m_nativeptr = gcnew native_unique_ptr<native::CqAttributesMutator>(std::unique_ptr<native::CqAttributesMutator>(nativeptr));
-        }
-
-        native_unique_ptr<native::CqAttributesMutator>^ m_nativeptr;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(native_unique_ptr<native::CqAttributesMutator>) m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

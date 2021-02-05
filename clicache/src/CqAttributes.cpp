@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-
-
-
 #include "CqAttributes.hpp"
 #include "impl/ManagedCqListener.hpp"
 #include "ICqListener.hpp"
@@ -28,48 +25,35 @@
 #include <geode/CqAttributes.hpp>
 #include "end_native.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace System;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace System;
 
-      namespace native = apache::geode::client;
+namespace native = apache::geode::client;
 
-      GENERIC(class TKey, class TResult)
-      array<ICqListener<TKey, TResult>^>^ CqAttributes<TKey, TResult>::getCqListeners( )
-      {
-        native::CqAttributes::listener_container_type vrr;
-        try
-        {
-          vrr = m_nativeptr->get()->getCqListeners();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-        auto listners = gcnew array<ICqListener<TKey, TResult>^>(static_cast<int>(vrr.size()));
+GENERIC(class TKey, class TResult)
+array<gc_ptr(ICqListener<TKey, TResult>)> ^ CqAttributes<TKey, TResult>::getCqListeners() {
+  native::CqAttributes::listener_container_type vrr;
+  try {
+    vrr = m_nativeptr->get()->getCqListeners();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+  auto listners = gcnew array<gc_ptr(ICqListener<TKey, TResult>)>(static_cast<int>(vrr.size()));
 
-        for (System::Int32 index = 0; index < vrr.size(); index++)
-        {
-          auto nativeptr = vrr[index];
-          if (auto mg_listener = std::dynamic_pointer_cast<native::ManagedCqListenerGeneric>(nativeptr))
-          {
-            listners[index] = (ICqListener<TKey, TResult>^) mg_listener->userptr();
-          }
-          else  if (auto mg_statuslistener = std::dynamic_pointer_cast<native::ManagedCqStatusListenerGeneric>(nativeptr))
-          {
-            listners[index] = (ICqStatusListener<TKey, TResult>^) mg_statuslistener->userptr();
-          }
-          else
-          {
-            listners[index] = nullptr;
-          }
-        }
-        return listners;
-      }
-    }  // namespace Client
-  }  // namespace Geode
+  for (System::Int32 index = 0; index < vrr.size(); index++) {
+    auto nativeptr = vrr[index];
+    if (auto mg_listener = std::dynamic_pointer_cast<native::ManagedCqListenerGeneric>(nativeptr)) {
+      listners[index] = (gc_ptr(ICqListener<TKey, TResult>))mg_listener->userptr();
+    } else if (auto mg_statuslistener = std::dynamic_pointer_cast<native::ManagedCqStatusListenerGeneric>(nativeptr)) {
+      listners[index] = (gc_ptr(ICqStatusListener<TKey, TResult>))mg_statuslistener->userptr();
+    } else {
+      listners[index] = nullptr;
+    }
+  }
+  return listners;
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

@@ -15,62 +15,50 @@
  * limitations under the License.
  */
 
-
-
 #include "MemoryPressureHandler.hpp"
 #include "windows.h"
 #include "psapi.h"
 #include "../Log.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      System::Int64 g_prevUnmanagedSize = 0;
+System::Int64 g_prevUnmanagedSize = 0;
 
-      int MemoryPressureHandler::handle_timeout( const ACE_Time_Value&
-          current_time, const void* arg )
-      {
-        HANDLE hProcess = GetCurrentProcess( );
+int MemoryPressureHandler::handle_timeout(const ACE_Time_Value& current_time, const void* arg) {
+  HANDLE hProcess = GetCurrentProcess();
 
-        PROCESS_MEMORY_COUNTERS pmc;
+  PROCESS_MEMORY_COUNTERS pmc;
 
-        if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) ) {
-          System::Int64 totalmem  = (System::Int64)pmc.WorkingSetSize;
-          System::Int64 curr_managed_size = GC::GetTotalMemory( false );
-          System::Int64 curr_unmanagedMemory = totalmem - curr_managed_size;
-          Log::Finest( "Current total memory usage: {0}, managed memory: {1}, "
-              "unmanaged memory: {2}", totalmem, curr_managed_size,
-              curr_unmanagedMemory );
-          if ( curr_unmanagedMemory > 0 ) {
-            System::Int64 increase = curr_unmanagedMemory - g_prevUnmanagedSize;
-            if ( Math::Abs( increase ) > 20*1024*1024 ) {
-              if ( increase > 0 ) {
-                Log::Fine( "Adding memory pressure information to assist .NET GC: {0} bytes", increase );
-                GC::AddMemoryPressure( increase );
-              }
-              else {
-                Log::Fine( "Removing memory pressure information to assist .NET GC: {0} bytes", -increase );
-                GC::RemoveMemoryPressure( -increase );
-              }
-              g_prevUnmanagedSize = curr_unmanagedMemory;
-            }
-          }
+  if (GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
+    System::Int64 totalmem = (System::Int64)pmc.WorkingSetSize;
+    System::Int64 curr_managed_size = GC::GetTotalMemory(false);
+    System::Int64 curr_unmanagedMemory = totalmem - curr_managed_size;
+    Log::Finest(
+        "Current total memory usage: {0}, managed memory: {1}, "
+        "unmanaged memory: {2}",
+        totalmem, curr_managed_size, curr_unmanagedMemory);
+    if (curr_unmanagedMemory > 0) {
+      System::Int64 increase = curr_unmanagedMemory - g_prevUnmanagedSize;
+      if (Math::Abs(increase) > 20 * 1024 * 1024) {
+        if (increase > 0) {
+          Log::Fine("Adding memory pressure information to assist .NET GC: {0} bytes", increase);
+          GC::AddMemoryPressure(increase);
+        } else {
+          Log::Fine("Removing memory pressure information to assist .NET GC: {0} bytes", -increase);
+          GC::RemoveMemoryPressure(-increase);
         }
-        else {
-          return -1;
-        }
-        return 0;
+        g_prevUnmanagedSize = curr_unmanagedMemory;
       }
+    }
+  } else {
+    return -1;
+  }
+  return 0;
+}
 
-      int MemoryPressureHandler::handle_close(ACE_HANDLE handle,
-        ACE_Reactor_Mask close_mask)
-      {
-        return 0;
-      }
-    }  // namespace Client
-  }  // namespace Geode
+int MemoryPressureHandler::handle_close(ACE_HANDLE handle, ACE_Reactor_Mask close_mask) { return 0; }
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

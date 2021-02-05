@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "CacheableHashMap.hpp"
 #include "DataOutput.hpp"
 #include "DataInput.hpp"
@@ -25,29 +23,21 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      // Region: ISerializable Members
+// Region: ISerializable Members
 
-      void Client::CacheableHashMap::ToData(DataOutput^ output)
-      {
-        output->WriteDictionary((System::Collections::IDictionary^)m_dictionary);        
-      }
+void Client::CacheableHashMap::ToData(gc_ptr(DataOutput) output) {
+  output->WriteDictionary((gc_ptr(System::Collections::IDictionary))m_dictionary);
+}
 
-      void Client::CacheableHashMap::FromData(DataInput^ input)
-      {
-        m_dictionary = input->ReadDictionary();
-      }
+void Client::CacheableHashMap::FromData(gc_ptr(DataInput) input) { m_dictionary = input->ReadDictionary(); }
 
-      System::UInt64 Client::CacheableHashMap::ObjectSize::get()
-      {
-        return ((System::Collections::IDictionary^)m_dictionary)->Count;
-      }
-    }  // namespace Client
-  }  // namespace Geode
+System::UInt64 Client::CacheableHashMap::ObjectSize::get() {
+  return ((gc_ptr(System::Collections::IDictionary))m_dictionary)->Count;
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

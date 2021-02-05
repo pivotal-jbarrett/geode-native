@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "../begin_native.hpp"
 #include "CacheRegionHelper.hpp"
 #include "CacheImpl.hpp"
@@ -34,102 +32,77 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      bool AuthenticatedView::IsClosed::get( )
-      {
-        try
-        {
-          return m_nativeptr->get()->isClosed( );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+bool AuthenticatedView::IsClosed::get() {
+  try {
+    return m_nativeptr->get()->isClosed();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      void AuthenticatedView::Close( )
-      {
-        _GF_MG_EXCEPTION_TRY2
+void AuthenticatedView::Close() {
+  _GF_MG_EXCEPTION_TRY2
 
-          try
-          {
-            m_nativeptr->get()->close(  );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+    try {
+      m_nativeptr->get()->close();
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
-      
-			//TODO::split
-      GENERIC(class TKey, class TValue)
-      IRegion<TKey, TValue>^ AuthenticatedView::GetRegion( String^ path )
-      {
-        _GF_MG_EXCEPTION_TRY2
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-          try
-          {
-            auto nativeptr = m_nativeptr->get()->getRegion( marshal_as<std::string>(path) );
-            return Client::Region<TKey, TValue>::Create( nativeptr );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+// TODO::split
+GENERIC(class TKey, class TValue)
+gc_ptr(IRegion<TKey, TValue>) AuthenticatedView::GetRegion(gc_ptr(String) path) {
+  _GF_MG_EXCEPTION_TRY2
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
-      
-      Client::QueryService^ AuthenticatedView::GetQueryService( )
-      {
-        _GF_MG_EXCEPTION_TRY2
+    try {
+      auto nativeptr = m_nativeptr->get()->getRegion(marshal_as<std::string>(path));
+      return Client::Region<TKey, TValue>::Create(nativeptr);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-          try
-          {
-            return Client::QueryService::Create(m_nativeptr->get()->getQueryService( ));
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+gc_ptr(Client::QueryService) AuthenticatedView::GetQueryService() {
+  _GF_MG_EXCEPTION_TRY2
 
-      GENERIC(class TKey, class TValue)
-      array<IRegion<TKey, TValue>^>^ AuthenticatedView::RootRegions( )
-      {
-        std::vector<std::shared_ptr<apache::geode::client::Region>> vrr;
-        try
-        {
-          vrr = m_nativeptr->get()->rootRegions( );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-        auto rootRegions = gcnew array<IRegion<TKey, TValue>^>( static_cast<int>(vrr.size( )) );
+    try {
+      return Client::QueryService::Create(m_nativeptr->get()->getQueryService());
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        for( System::Int32 index = 0; index < vrr.size( ); index++ )
-        {
-          auto& nativeptr( vrr[ index ] );
-          rootRegions[ index ] = Client::Region<TKey, TValue>::Create( nativeptr );
-        }
-        return rootRegions;
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-      IPdxInstanceFactory^ AuthenticatedView::CreatePdxInstanceFactory(String^ className)
-      {
-        return gcnew Internal::PdxInstanceFactoryImpl(className, nullptr);
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TKey, class TValue)
+array<gc_ptr(IRegion<TKey, TValue>)> ^ AuthenticatedView::RootRegions() {
+  std::vector<std::shared_ptr<apache::geode::client::Region>> vrr;
+  try {
+    vrr = m_nativeptr->get()->rootRegions();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+  auto rootRegions = gcnew array<gc_ptr(IRegion<TKey, TValue>)>(static_cast<int>(vrr.size()));
+
+  for (System::Int32 index = 0; index < vrr.size(); index++) {
+    auto& nativeptr(vrr[index]);
+    rootRegions[index] = Client::Region<TKey, TValue>::Create(nativeptr);
+  }
+  return rootRegions;
+}
+
+gc_ptr(IPdxInstanceFactory) AuthenticatedView::CreatePdxInstanceFactory(gc_ptr(String) className) {
+  return gcnew Internal::PdxInstanceFactoryImpl(className, nullptr);
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

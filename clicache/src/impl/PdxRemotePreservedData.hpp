@@ -21,100 +21,76 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace Internal
-      {
-        public ref class PdxRemotePreservedData : public IPdxUnreadFields
-        {
-        private:
-          array<array<Byte>^>^ m_preservedData;
-          Int32               m_typeId;
-          Int32               m_mergedTypeId;
-          Int32               m_currentIndex;
-          Object^             m_owner;
-        public:
+namespace Internal {
+PUBLIC ref class PdxRemotePreservedData : public IPdxUnreadFields {
+ private:
+  array<gc_ptr(array<Byte>)> ^ m_preservedData;
+  Int32 m_typeId;
+  Int32 m_mergedTypeId;
+  Int32 m_currentIndex;
+  gc_ptr(Object) m_owner;
 
-					PdxRemotePreservedData()
-					{
-					
-					}
+ public:
+  PdxRemotePreservedData() {}
 
-          //PdxRemotePreservedData(Int32 typeId, Int32 mergedTypeId, Int32 numberOfFields)
-          //{
-          //  m_typeId = typeId;
-          //  m_mergedTypeId = mergedTypeId;
-          //  m_preservedData = gcnew array<array<Byte>^>(numberOfFields);
-          //  m_currentIndex = 0;
-          //  //TODO:how to get merge typeid
-          //}
+  // PdxRemotePreservedData(Int32 typeId, Int32 mergedTypeId, Int32 numberOfFields)
+  //{
+  //  m_typeId = typeId;
+  //  m_mergedTypeId = mergedTypeId;
+  //  m_preservedData = gcnew array<gc_ptr(array<Byte>)>(numberOfFields);
+  //  m_currentIndex = 0;
+  //  //TODO:how to get merge typeid
+  //}
 
-          PdxRemotePreservedData(Int32 typeId, Int32 mergedTypeId, Int32 numberOfFields, Object^ owner)
-          {
-            m_typeId = typeId;
-            m_mergedTypeId = mergedTypeId;
-            m_preservedData = gcnew array<array<Byte>^>(numberOfFields);
-            m_currentIndex = 0;
-            m_owner = owner;
-            //TODO:how to get merge typeid
-          }
+  PdxRemotePreservedData(Int32 typeId, Int32 mergedTypeId, Int32 numberOfFields, gc_ptr(Object) owner) {
+    m_typeId = typeId;
+    m_mergedTypeId = mergedTypeId;
+    m_preservedData = gcnew array<gc_ptr(array<Byte>)>(numberOfFields);
+    m_currentIndex = 0;
+    m_owner = owner;
+    // TODO:how to get merge typeid
+  }
 
-					void Initialize(Int32 typeId, Int32 mergedTypeId, Int32 numberOfFields, Object^ owner)
-					{
-						m_typeId = typeId;
-            m_mergedTypeId = mergedTypeId;
-            m_preservedData = gcnew array<array<Byte>^>(numberOfFields);
-            m_currentIndex = 0;
-            m_owner = owner;
-					}
+  void Initialize(Int32 typeId, Int32 mergedTypeId, Int32 numberOfFields, gc_ptr(Object) owner) {
+    m_typeId = typeId;
+    m_mergedTypeId = mergedTypeId;
+    m_preservedData = gcnew array<gc_ptr(array<Byte>)>(numberOfFields);
+    m_currentIndex = 0;
+    m_owner = owner;
+  }
 
-          property Int32 MergedTypeId
-          {
-            Int32 get() {return m_mergedTypeId;}
-          }
+  property Int32 MergedTypeId {
+    Int32 get() { return m_mergedTypeId; }
+  }
 
-          property Object^ Owner
-          {
-            Object^ get() {return m_owner;}
-            void set(Object^ val) {m_owner = val;}
-          }
-          property array<Byte>^ default[Int32]
-          {
-            array<Byte>^ get(Int32 idx)
-            {
-              return m_preservedData[idx];
-            }
-            void set(Int32 idx, array<Byte>^ val)
-            {
-              m_preservedData[m_currentIndex++] = val;
-            }
-          }
+  property gc_ptr(Object) Owner {
+    gc_ptr(Object) get() { return m_owner; }
+    void set(gc_ptr(Object) val) { m_owner = val; }
+  }
+  property gc_ptr(array<Byte>) default [Int32] {
+    gc_ptr(array<Byte>) get(Int32 idx) { return m_preservedData[idx]; }
+    void set(Int32 idx, gc_ptr(array<Byte>) val) { m_preservedData[m_currentIndex++] = val; }
+  }
 
-          virtual bool Equals(Object^ otherObject) override
-          {
-            if(otherObject == nullptr)
-              return false;
+  virtual bool Equals(gc_ptr(Object) otherObject) override {
+    if (otherObject == nullptr) return false;
 
-            if(m_owner == nullptr)
-              return false;
+    if (m_owner == nullptr) return false;
 
-            return m_owner->Equals(otherObject);
-          }
+    return m_owner->Equals(otherObject);
+  }
 
-          virtual int GetHashCode() override
-          {
-            if(m_owner != nullptr)
-              return m_owner->GetHashCode();
-            return 0;
-          }
-        };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual int GetHashCode() override {
+    if (m_owner != nullptr) return m_owner->GetHashCode();
+    return 0;
+  }
+};
+}  // namespace Internal
+}  // namespace Client
+}  // namespace Geode
+
 }  // namespace Apache
-
-}

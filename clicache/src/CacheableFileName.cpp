@@ -15,88 +15,67 @@
  * limitations under the License.
  */
 
-
 #include "CacheableFileName.hpp"
 #include "DataOutput.hpp"
 #include "DataInput.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      void CacheableFileName::ToData(DataOutput^ output)
-      {
-        if (m_str->Length <= 0xFFFF) {
-          output->WriteByte(static_cast<int8_t>(apache::geode::client::internal::DSCode::CacheableString));
-          output->WriteUTF(m_str);
-        }
-        else {
-          output->WriteByte(static_cast<int8_t>(apache::geode::client::internal::DSCode::CacheableStringHuge));
-          output->WriteUTFHuge(m_str);
-        }
-      }
+void CacheableFileName::ToData(gc_ptr(DataOutput) output) {
+  if (m_str->Length <= 0xFFFF) {
+    output->WriteByte(static_cast<int8_t>(apache::geode::client::internal::DSCode::CacheableString));
+    output->WriteUTF(m_str);
+  } else {
+    output->WriteByte(static_cast<int8_t>(apache::geode::client::internal::DSCode::CacheableStringHuge));
+    output->WriteUTFHuge(m_str);
+  }
+}
 
-      void CacheableFileName::FromData(DataInput^ input)
-      {
-        unsigned char filetype = input->ReadByte();
-        if (filetype == static_cast<int8_t>(apache::geode::client::internal::DSCode::CacheableString)) {
-          m_str = input->ReadUTF();
-        }
-        else {
-          m_str = input->ReadUTFHuge();
-        }
-      }
+void CacheableFileName::FromData(gc_ptr(DataInput) input) {
+  unsigned char filetype = input->ReadByte();
+  if (filetype == static_cast<int8_t>(apache::geode::client::internal::DSCode::CacheableString)) {
+    m_str = input->ReadUTF();
+  } else {
+    m_str = input->ReadUTFHuge();
+  }
+}
 
-      int8_t CacheableFileName::DsCode::get()
-      {
-        return static_cast<int8_t>(native::internal::DSCode::CacheableFileName);
-      }
+int8_t CacheableFileName::DsCode::get() { return static_cast<int8_t>(native::internal::DSCode::CacheableFileName); }
 
-      System::UInt64 CacheableFileName::ObjectSize::get()
-      {
-        return m_str->Length * sizeof(char);
-      }
+System::UInt64 CacheableFileName::ObjectSize::get() { return m_str->Length * sizeof(char); }
 
-      System::Int32 CacheableFileName::GetHashCode()
-      {
-        if (m_str->IsNullOrEmpty(m_str)) {
-          return 0;
-        }
-        if (m_hashcode == 0) {
-          int localHashcode = 0;
-          System::UInt32 prime = 31;
+System::Int32 CacheableFileName::GetHashCode() {
+  if (m_str->IsNullOrEmpty(m_str)) {
+    return 0;
+  }
+  if (m_hashcode == 0) {
+    int localHashcode = 0;
+    System::UInt32 prime = 31;
 
-          pin_ptr<const wchar_t> pin_value = PtrToStringChars(m_str);
-          for (System::Int32 i = 0; i < m_str->Length; i++) {
-            localHashcode = prime*localHashcode + Char::ToLower(pin_value[i]);
-          }
-          m_hashcode = localHashcode ^ 1234321;
-        }
-        return m_hashcode;
-      }
+    pin_ptr<const wchar_t> pin_value = PtrToStringChars(m_str);
+    for (System::Int32 i = 0; i < m_str->Length; i++) {
+      localHashcode = prime * localHashcode + Char::ToLower(pin_value[i]);
+    }
+    m_hashcode = gc_ptr(localHashcode) 1234321;
+  }
+  return m_hashcode;
+}
 
-      bool CacheableFileName::Equals(ICacheableKey^ other)
-      {
-        return Equals((Object^) other);
-      }
+bool CacheableFileName::Equals(gc_ptr(ICacheableKey) other) { return Equals((gc_ptr(Object))other); }
 
-      bool CacheableFileName::Equals(Object^ obj)
-      {
-        CacheableFileName^ otherFileName =
-          dynamic_cast<CacheableFileName^>(obj);
+bool CacheableFileName::Equals(gc_ptr(Object) obj) {
+  gc_ptr(CacheableFileName) otherFileName = dynamic_cast<gc_ptr(CacheableFileName)>(obj);
 
-        if (otherFileName != nullptr) {
-          return (m_str == otherFileName->m_str);
-        }
-        return false;
-      }  // namespace Client
-    }  // namespace Geode
-  }  // namespace Apache
+  if (otherFileName != nullptr) {
+    return (m_str == otherFileName->m_str);
+  }
+  return false;
+}  // namespace Client
+}  // namespace Client
+}  // namespace Geode
 
-} //namespace 
-
+}  // namespace Apache

@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-
-
-
 #include "CacheableStack.hpp"
 #include "DataOutput.hpp"
 #include "DataInput.hpp"
@@ -28,62 +25,45 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      // Region: ISerializable Members
+// Region: ISerializable Members
 
-      void CacheableStack::ToData(DataOutput^ output)
-      {
-        if (m_stack != nullptr)
-        {
-          output->WriteArrayLen((System::Int32)m_stack->Count);
-          auto stack = safe_cast<System::Collections::Generic::Stack<Object^>^>(m_stack);
-          FOR_EACH (auto obj in Linq::Enumerable::Reverse(stack)) {
-            output->WriteObject(obj);
-          }
-        }
-        else
-        {
-          output->WriteByte(0xFF);
-        }
-      }
+void CacheableStack::ToData(gc_ptr(DataOutput) output) {
+  if (m_stack != nullptr) {
+    output->WriteArrayLen((System::Int32)m_stack->Count);
+    auto stack = safe_cast<gc_ptr(System::Collections::Generic::Stack<Object ^>)>(m_stack);
+    FOR_EACH (auto obj in Linq::Enumerable::Reverse(stack)) { output->WriteObject(obj); }
+  } else {
+    output->WriteByte(0xFF);
+  }
+}
 
-      void CacheableStack::FromData(DataInput^ input)
-      {
-        auto len = input->ReadArrayLen();
-        if (len > 0)
-        {
-          auto stack = safe_cast<System::Collections::Generic::Stack<Object^>^>(m_stack);
-          for (int i = 0; i < len; i++)
-          {
-            stack->Push(input->ReadObject());
-          }
-        }
-      }
+void CacheableStack::FromData(gc_ptr(DataInput) input) {
+  auto len = input->ReadArrayLen();
+  if (len > 0) {
+    auto stack = safe_cast<gc_ptr(System::Collections::Generic::Stack<Object ^>)>(m_stack);
+    for (int i = 0; i < len; i++) {
+      stack->Push(input->ReadObject());
+    }
+  }
+}
 
-      int8_t CacheableStack::DsCode::get()
-      {
-        return static_cast<int8_t>(native::internal::DSCode::CacheableStack);
-      }
+int8_t CacheableStack::DsCode::get() { return static_cast<int8_t>(native::internal::DSCode::CacheableStack); }
 
-      System::UInt64 CacheableStack::ObjectSize::get()
-      {
-        //TODO:
-        /*System::UInt32 size = static_cast<System::UInt32> (sizeof(CacheableStack^));
-        FOR_EACH (ISerializable^ val in this) {
-        if (val != nullptr) {
-        size += val->ObjectSize;
-        }
-        }*/
-        return m_stack->Count;
-      }  // namespace Client
-    }  // namespace Geode
-  }  // namespace Apache
+System::UInt64 CacheableStack::ObjectSize::get() {
+  // TODO:
+  /*System::UInt32 size = static_cast<System::UInt32> (sizeof(gc_ptr(CacheableStack)));
+  FOR_EACH (gc_ptr(ISerializable) val in this) {
+  if (val != nullptr) {
+  size += val->ObjectSize;
+  }
+  }*/
+  return m_stack->Count;
+}  // namespace Client
+}  // namespace Client
+}  // namespace Geode
 
-} //namespace 
-
+}  // namespace Apache

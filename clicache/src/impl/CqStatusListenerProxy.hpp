@@ -16,63 +16,43 @@
  */
 #pragma once
 
-
 #include "../ICqStatusListener.hpp"
 #include "SafeConvert.hpp"
 
 using namespace System;
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-        GENERIC(class TKey, class TResult)
-        public ref class CqStatusListenerGeneric : Apache::Geode::Client::ICqStatusListener<Object^, Object^>
-        {
-        private:
+GENERIC(class TKey, class TResult)
+PUBLIC ref class CqStatusListenerGeneric
+    : Apache::Geode::Client::ICqStatusListener<gc_ptr(Object), gc_ptr(Object)> {
+ private:
+  gc_ptr(ICqStatusListener<TKey, TResult>) m_listener;
 
-          ICqStatusListener<TKey, TResult>^ m_listener;
+ public:
+  virtual void AddCqListener(gc_ptr(ICqListener<TKey, TResult>) listener) {
+    m_listener = dynamic_cast<gc_ptr(ICqStatusListener<TKey, TResult>)>(listener);
+  }
 
-        public:
+  virtual void OnEvent(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+    // TODO:split---Done
+    CqEvent<TKey, TResult> gevent(ev->GetNative());
+    m_listener->OnEvent(% gevent);
+  }
 
-          virtual void AddCqListener(ICqListener<TKey, TResult>^ listener)
-          {
-            m_listener = dynamic_cast<ICqStatusListener<TKey, TResult>^>(listener);
-          }
+  virtual void OnError(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+    // TODO::split--Done
+    CqEvent<TKey, TResult> gevent(ev->GetNative());
+    m_listener->OnError(% gevent);
+  }
 
-          virtual void OnEvent(Apache::Geode::Client::CqEvent<Object^, Object^>^ ev)
-          {
-            //TODO:split---Done
-            CqEvent<TKey, TResult> gevent(ev->GetNative());
-            m_listener->OnEvent(%gevent);
-          }
+  virtual void Close() { m_listener->Close(); }
 
-          virtual void OnError( Apache::Geode::Client::CqEvent<Object^, Object^>^ ev) 
-          {
-            //TODO::split--Done
-            CqEvent<TKey, TResult> gevent(ev->GetNative());
-            m_listener->OnError(%gevent);
-          }
+  virtual void OnCqDisconnected() { m_listener->OnCqDisconnected(); }
 
-          virtual void Close() 
-          {
-            m_listener->Close();
-          }   
-
-          virtual void OnCqDisconnected() 
-          {          
-            m_listener->OnCqDisconnected();
-          } 
-
-          virtual void OnCqConnected() 
-          {          
-            m_listener->OnCqConnected();
-          } 
-        };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void OnCqConnected() { m_listener->OnCqConnected(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-

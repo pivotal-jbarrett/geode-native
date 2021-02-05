@@ -56,12 +56,12 @@ namespace Geode {
 namespace Client {
 namespace native = apache::geode::client;
 
-String ^ TypeRegistry::GetPdxTypeName(String ^ localTypeName) {
+gc_ptr(String) TypeRegistry::GetPdxTypeName(gc_ptr(String) localTypeName) {
   if (pdxTypeMapper == nullptr) {
     return localTypeName;
   }
 
-  String ^ pdxTypeName;
+  gc_ptr(String) pdxTypeName;
   if (localTypeNameToPdx->TryGetValue(localTypeName, pdxTypeName)) {
     return pdxTypeName;
   }
@@ -77,12 +77,12 @@ String ^ TypeRegistry::GetPdxTypeName(String ^ localTypeName) {
   return pdxTypeName;
 }
 
-String ^ TypeRegistry::GetLocalTypeName(String ^ pdxTypeName) {
+gc_ptr(String) TypeRegistry::GetLocalTypeName(gc_ptr(String) pdxTypeName) {
   if (pdxTypeMapper == nullptr) {
     return pdxTypeName;
   }
 
-  String ^ localTypeName;
+  gc_ptr(String) localTypeName;
   if (pdxTypeNameToLocal->TryGetValue(pdxTypeName, localTypeName)) {
     return localTypeName;
   }
@@ -98,17 +98,17 @@ String ^ TypeRegistry::GetLocalTypeName(String ^ pdxTypeName) {
   return localTypeName;
 }
 
-Type ^ TypeRegistry::GetType(String ^ className) {
-  Type ^ type = nullptr;
+gc_ptr(Type) TypeRegistry::GetType(gc_ptr(String) className) {
+  gc_ptr(Type) type = nullptr;
 
   if (classNameVsType->TryGetValue(className, type)) {
     return type;
   }
 
-  auto referedAssembly = gcnew Dictionary<Assembly ^, bool>();
+  auto referedAssembly = gcnew Dictionary<gc_ptr(Assembly), bool>();
   auto MyDomain = AppDomain::CurrentDomain;
-  array<Assembly ^> ^ AssembliesLoaded = MyDomain->GetAssemblies();
-  FOR_EACH (Assembly ^ assembly in AssembliesLoaded) {
+  gc_ptr(array<Assembly ^>) AssembliesLoaded = MyDomain->GetAssemblies();
+  FOR_EACH (gc_ptr(Assembly) assembly in AssembliesLoaded) {
     type = GetTypeFromRefrencedAssemblies(className, referedAssembly, assembly);
     if (type) {
       classNameVsType[className] = type;
@@ -119,32 +119,32 @@ Type ^ TypeRegistry::GetType(String ^ className) {
   return type;
 }
 
-void TypeRegistry::RegisterPdxType(PdxTypeFactoryMethod ^ creationMethod) {
+void TypeRegistry::RegisterPdxType(gc_ptr(PdxTypeFactoryMethod) creationMethod) {
   if (creationMethod == nullptr) {
     throw gcnew IllegalArgumentException(
         "Serializable.RegisterPdxType(): "
         "null PdxTypeFactoryMethod delegate passed");
   }
-  IPdxSerializable ^ obj = creationMethod();
+  gc_ptr(IPdxSerializable) obj = creationMethod();
   PdxDelegateMap[obj->GetType()->FullName] = creationMethod;
   Log::Debug("RegisterPdxType: class registered: " + obj->GetType()->FullName);
 }
 
-IPdxSerializable ^ TypeRegistry::GetPdxType(String ^ className) {
-  PdxTypeFactoryMethod ^ retVal = nullptr;
+gc_ptr(IPdxSerializable) TypeRegistry::GetPdxType(gc_ptr(String) className) {
+  gc_ptr(PdxTypeFactoryMethod) retVal = nullptr;
 
   if (!PdxDelegateMap->TryGetValue(className, retVal)) {
     if (pdxSerializer != nullptr) {
       return gcnew PdxWrapper(className);
     }
     try {
-      Object ^ retObj = CreateObject(className);
+      gc_ptr(Object) retObj = CreateObject(className);
 
-      IPdxSerializable ^ retPdx = dynamic_cast<IPdxSerializable ^>(retObj);
+      gc_ptr(IPdxSerializable) retPdx = dynamic_cast<gc_ptr(IPdxSerializable)>(retObj);
       if (retPdx != nullptr) {
         return retPdx;
       }
-    } catch (System::Exception ^ ex) {
+    } catch (gc_ptr(System::Exception) ex) {
       Log::Error("Unable to create object using reflection for class: " + className + " : " + ex->Message);
     }
     throw gcnew IllegalStateException(
@@ -156,7 +156,7 @@ IPdxSerializable ^ TypeRegistry::GetPdxType(String ^ className) {
   return retVal();
 }
 
-void TypeRegistry::RegisterType(TypeFactoryMethod ^ creationMethod, int32_t id) {
+void TypeRegistry::RegisterType(gc_ptr(TypeFactoryMethod) creationMethod, int32_t id) {
   if (creationMethod == nullptr) {
     throw gcnew IllegalArgumentException(
         "Serializable.RegisterType(): "
@@ -165,7 +165,7 @@ void TypeRegistry::RegisterType(TypeFactoryMethod ^ creationMethod, int32_t id) 
 
   // adding user type as well in global builtin hashmap
   auto obj = creationMethod();
-  auto dataSerializable = dynamic_cast<IDataSerializable ^>(obj);
+  auto dataSerializable = dynamic_cast<gc_ptr(IDataSerializable)>(obj);
   if (nullptr == dataSerializable) {
     throw gcnew IllegalArgumentException("Unknown serialization type.");
   }
@@ -185,8 +185,9 @@ void TypeRegistry::RegisterType(TypeFactoryMethod ^ creationMethod, int32_t id) 
 }
 
 void TypeRegistry::RegisterDataSerializablePrimitiveOverrideNativeDeserialization(int8_t dsCode,
-                                                                                  TypeFactoryMethod ^ creationMethod,
-                                                                                  Type ^ managedType) {
+                                                                                  gc_ptr(TypeFactoryMethod)
+                                                                                      creationMethod,
+                                                                                  gc_ptr(Type) managedType) {
   if (creationMethod == nullptr) {
     throw gcnew IllegalArgumentException("Serializable.RegisterType(): ");
   }
@@ -210,8 +211,9 @@ void TypeRegistry::RegisterDataSerializablePrimitiveOverrideNativeDeserializatio
   _GF_MG_EXCEPTION_CATCH_ALL2
 }
 
-void TypeRegistry::RegisterDataSerializableFixedIdTypeOverrideNativeDeserialization(Int32 fixedId, TypeFactoryMethod ^
-                                                                                                       creationMethod) {
+void TypeRegistry::RegisterDataSerializableFixedIdTypeOverrideNativeDeserialization(Int32 fixedId,
+                                                                                    gc_ptr(TypeFactoryMethod)
+                                                                                        creationMethod) {
   if (creationMethod == nullptr) {
     throw gcnew IllegalArgumentException("Serializable.RegisterType(): ");
   }
@@ -245,17 +247,19 @@ void TypeRegistry::UnregisterTypeGeneric(Byte typeId) {
   _GF_MG_EXCEPTION_CATCH_ALL2
 }
 
-void TypeRegistry::RegisterDataSerializablePrimitiveWrapper(DataSerializablePrimitiveWrapperDelegate ^ wrapperMethod,
-                                                            int8_t dsCode, System::Type ^ managedType) {
+void TypeRegistry::RegisterDataSerializablePrimitiveWrapper(gc_ptr(DataSerializablePrimitiveWrapperDelegate)
+                                                                wrapperMethod,
+                                                            int8_t dsCode, gc_ptr(System::Type) managedType) {
   DsCodeToDataSerializablePrimitiveWrapperDelegate[dsCode] = wrapperMethod;
 }
 
-void TypeRegistry::UnregisterNativesGeneric(Cache ^ cache) {
+void TypeRegistry::UnregisterNativesGeneric(gc_ptr(Cache) cache) {
   cache->TypeRegistry->DsCodeToDataSerializablePrimitiveNativeDelegate->Clear();
 }
 
-Type ^ TypeRegistry::GetTypeFromRefrencedAssemblies(String ^ className, Dictionary<Assembly ^, bool> ^ referedAssembly,
-                                                    Assembly ^ currentAssembly) {
+gc_ptr(Type) TypeRegistry::GetTypeFromRefrencedAssemblies(gc_ptr(String) className,
+                                                              gc_ptr(Dictionary<Assembly ^, bool>) referedAssembly,
+                                                              gc_ptr(Assembly) currentAssembly) {
   auto type = currentAssembly->GetType(className);
   if (type != nullptr) {
     return type;
@@ -265,17 +269,17 @@ Type ^ TypeRegistry::GetTypeFromRefrencedAssemblies(String ^ className, Dictiona
   referedAssembly[currentAssembly] = true;
 
   // get all refrenced assembly
-  array<AssemblyName ^> ^ ReferencedAssemblies = currentAssembly->GetReferencedAssemblies();
-  FOR_EACH (AssemblyName ^ assembly in ReferencedAssemblies) {
+  gc_ptr(array<AssemblyName ^>) ReferencedAssemblies = currentAssembly->GetReferencedAssemblies();
+  FOR_EACH (gc_ptr(AssemblyName) assembly in ReferencedAssemblies) {
     try {
-      Assembly ^ loadedAssembly = Assembly::Load(assembly);
+      gc_ptr(Assembly) loadedAssembly = Assembly::Load(assembly);
       if (loadedAssembly != nullptr && (!referedAssembly->ContainsKey(loadedAssembly))) {
         type = GetTypeFromRefrencedAssemblies(className, referedAssembly, loadedAssembly);
         if (!type) {
           return type;
         }
       }
-    } catch (System::Exception ^) {  // ignore
+    } catch (gc_ptr(System::Exception)) {  // ignore
     }
   }
   return nullptr;
@@ -285,121 +289,122 @@ GENERIC(class TValue)
 TValue wrap(std::shared_ptr<native::DataSerializablePrimitive> dataSerializablePrimitive) {
   switch (dataSerializablePrimitive->getDsCode()) {
     case native::internal::DSCode::CacheableDate: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableDate ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableDate)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableBytes: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableBytes ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableBytes)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableDoubleArray: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableDoubleArray ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableDoubleArray)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableFloatArray: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableFloatArray ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableFloatArray)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableInt16Array: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableInt16Array ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableInt16Array)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableInt32Array: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableInt32Array ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableInt32Array)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableInt64Array: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableInt64Array ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableInt64Array)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableStringArray: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableStringArray ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableStringArray)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->GetValues());
     }
     case native::internal::DSCode::CacheableArrayList:  // Ilist generic
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableArrayList ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableArrayList)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableLinkedList:  // LinkedList generic
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableLinkedList ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableLinkedList)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableHashTable:  // collection::hashtable
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableHashTable ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableHashTable)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableHashMap:  // generic dictionary
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableHashMap ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableHashMap)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableIdentityHashMap: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableIdentityHashMap ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableIdentityHashMap)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CacheableHashSet:  // no need of it, default case should work
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableHashSet ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableHashSet)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
     case native::internal::DSCode::CacheableLinkedHashSet:  // no need of it, default case should work
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableLinkedHashSet ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableLinkedHashSet)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
     case native::internal::DSCode::CacheableFileName: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableFileName ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableFileName)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
     case native::internal::DSCode::CacheableObjectArray: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableObjectArray ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableObjectArray)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
     case native::internal::DSCode::CacheableVector:  // collection::arraylist
     {
-      auto ret = SafeGenericUMSerializableConvert<CacheableVector ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableVector)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::DSFid::CacheableUndefined: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableUndefined ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableUndefined)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
     case native::DSFid::Struct: {
       return safe_cast<TValue>(Struct::Create(dataSerializablePrimitive));
     }
     case native::internal::DSCode::CacheableStack: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableStack ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableStack)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::InternalId::CacheableManagedObject: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableObject ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableObject)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
     case native::internal::InternalId::CacheableManagedObjectXml: {
-      auto ret = SafeGenericUMSerializableConvert<CacheableObjectXml ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CacheableObjectXml)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
       /*
 case native::internal::DSCode::Properties: // TODO: replace with IDictionary<K, V>
 {
-auto ret = SafeGenericUMSerializableConvert<Properties<Object^, Object^>^>(dataSerializablePrimitive);
+auto ret = SafeGenericUMSerializableConvert<gc_ptr(Properties<Object^, Object^>)>(dataSerializablePrimitive);
 return safe_cast<TValue>(ret);
 }
       */
     case native::internal::DSCode::BooleanArray: {
-      auto ret = SafeGenericUMSerializableConvert<BooleanArray ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(BooleanArray)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case native::internal::DSCode::CharArray: {
-      auto ret = SafeGenericUMSerializableConvert<CharArray ^>(dataSerializablePrimitive);
+      auto ret = SafeGenericUMSerializableConvert<gc_ptr(CharArray)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret->Value);
     }
     case 0:  // UserFunctionExecutionException unregistered
     {
-      auto ret = SafeGenericUMSerializableConvert<UserFunctionExecutionException ^>(dataSerializablePrimitive);
+      auto ret =
+          SafeGenericUMSerializableConvert<gc_ptr(UserFunctionExecutionException)>(dataSerializablePrimitive);
       return safe_cast<TValue>(ret);
     }
   }
@@ -464,7 +469,7 @@ TValue TypeRegistry::GetManagedValueGeneric(std::shared_ptr<native::Serializable
     return safe_cast<TValue>(ret);
   } else if (auto pdxSerializable = std::dynamic_pointer_cast<native::PdxSerializable>(val)) {
     auto ret = SafeUMSerializablePDXConvert(pdxSerializable);
-    if (auto pdxWrapper = dynamic_cast<PdxWrapper ^>(ret)) {
+    if (auto pdxWrapper = dynamic_cast<gc_ptr(PdxWrapper)>(ret)) {
       return safe_cast<TValue>(pdxWrapper->GetObject());
     }
 
@@ -474,7 +479,7 @@ TValue TypeRegistry::GetManagedValueGeneric(std::shared_ptr<native::Serializable
     return safe_cast<TValue>(gcnew UserFunctionExecutionException(userFunctionExecutionException));
   } else if (auto pdxManagedCacheableKey = std::dynamic_pointer_cast<native::PdxManagedCacheableKey>(val)) {
     auto pdx = pdxManagedCacheableKey->ptr();
-    if (auto pdxWrapper = dynamic_cast<PdxWrapper ^>(pdx)) {
+    if (auto pdxWrapper = dynamic_cast<gc_ptr(PdxWrapper)>(pdx)) {
       return safe_cast<TValue>(pdxWrapper->GetObject());
     }
     return safe_cast<TValue>(pdx);
@@ -485,8 +490,8 @@ TValue TypeRegistry::GetManagedValueGeneric(std::shared_ptr<native::Serializable
   throw gcnew System::Exception("not found typeid");
 }
 
-Object ^ TypeRegistry::CreateObject(String ^ className) {
-  Object ^ retVal = CreateObjectEx(className);
+gc_ptr(Object) TypeRegistry::CreateObject(gc_ptr(String) className) {
+  gc_ptr(Object) retVal = CreateObjectEx(className);
 
   if (retVal == nullptr) {
     auto type = GetType(className);
@@ -498,9 +503,9 @@ Object ^ TypeRegistry::CreateObject(String ^ className) {
   return retVal;
 }
 
-Object ^ TypeRegistry::CreateObjectEx(String ^ className) {
-  CreateNewObjectDelegate ^ del = nullptr;
-  Dictionary<String ^, CreateNewObjectDelegate ^> ^ tmp = ClassNameVsCreateNewObjectDelegate;
+gc_ptr(Object) TypeRegistry::CreateObjectEx(gc_ptr(String) className) {
+  gc_ptr(CreateNewObjectDelegate) del = nullptr;
+  gc_ptr(Dictionary<String ^, CreateNewObjectDelegate ^>) tmp = ClassNameVsCreateNewObjectDelegate;
 
   tmp->TryGetValue(className, del);
 
@@ -522,21 +527,21 @@ Object ^ TypeRegistry::CreateObjectEx(String ^ className) {
   return nullptr;
 }
 
-Object ^ TypeRegistry::GetArrayObject(String ^ className, int length) {
-  Object ^ retArr = GetArrayObjectEx(className, length);
+gc_ptr(Object) TypeRegistry::GetArrayObject(gc_ptr(String) className, int length) {
+  gc_ptr(Object) retArr = GetArrayObjectEx(className, length);
   if (retArr == nullptr) {
-    Type ^ type = GetType(className);
+    gc_ptr(Type) type = GetType(className);
     if (type) {
-      retArr = type->MakeArrayType()->GetConstructor(singleIntType)->Invoke(gcnew array<Object ^>(1){length});
+      retArr = type->MakeArrayType()->GetConstructor(singleIntType)->Invoke(gcnew array<gc_ptr(Object)>(1){length});
       return retArr;
     }
   }
   return retArr;
 }
 
-Object ^ TypeRegistry::GetArrayObjectEx(String ^ className, int length) {
-  CreateNewObjectArrayDelegate ^ del = nullptr;
-  Dictionary<String ^, CreateNewObjectArrayDelegate ^> ^ tmp = ClassNameVsCreateNewObjectArrayDelegate;
+gc_ptr(Object) TypeRegistry::GetArrayObjectEx(gc_ptr(String) className, int length) {
+  gc_ptr(CreateNewObjectArrayDelegate) del = nullptr;
+  gc_ptr(Dictionary<String ^, CreateNewObjectArrayDelegate ^>) tmp = ClassNameVsCreateNewObjectArrayDelegate;
 
   tmp->TryGetValue(className, del);
 
@@ -544,7 +549,7 @@ Object ^ TypeRegistry::GetArrayObjectEx(String ^ className, int length) {
     return del(length);
   }
 
-  Type ^ t = GetType(className);
+  gc_ptr(Type) t = GetType(className);
   if (t) {
     msclr::lock lockInstance(ClassNameVsCreateNewObjectLockObj);
     {
@@ -552,7 +557,8 @@ Object ^ TypeRegistry::GetArrayObjectEx(String ^ className, int length) {
       tmp->TryGetValue(className, del);
       if (del != nullptr) return del(length);
       del = CreateNewObjectArrayDelegateF(t);
-      tmp = gcnew Dictionary<String ^, CreateNewObjectArrayDelegate ^>(ClassNameVsCreateNewObjectArrayDelegate);
+      tmp = gcnew Dictionary<gc_ptr(String), gc_ptr(CreateNewObjectArrayDelegate)>(
+          ClassNameVsCreateNewObjectArrayDelegate);
       tmp[className] = del;
       ClassNameVsCreateNewObjectArrayDelegate = tmp;
       return del(length);
@@ -561,13 +567,14 @@ Object ^ TypeRegistry::GetArrayObjectEx(String ^ className, int length) {
   return nullptr;
 }
 
-// delegate Object^ CreateNewObject();
-// static CreateNewObjectDelegate^ CreateNewObjectDelegateF(Type^ type);
-TypeRegistry::CreateNewObjectDelegate ^ TypeRegistry::CreateNewObjectDelegateF(Type ^ type) {
-  DynamicMethod ^ dynam = gcnew DynamicMethod("", Internal::DotNetTypes::ObjectType, Type::EmptyTypes, type, true);
-  ILGenerator ^ il = dynam->GetILGenerator();
+// delegate gc_ptr(Object) CreateNewObject();
+// static gc_ptr(CreateNewObjectDelegate) CreateNewObjectDelegateF(gc_ptr(Type) type);
+gc_ptr(TypeRegistry::CreateNewObjectDelegate) TypeRegistry::CreateNewObjectDelegateF(gc_ptr(Type) type) {
+  gc_ptr(DynamicMethod) dynam =
+      gcnew DynamicMethod("", Internal::DotNetTypes::ObjectType, Type::EmptyTypes, type, true);
+  gc_ptr(ILGenerator) il = dynam->GetILGenerator();
 
-  ConstructorInfo ^ ctorInfo = type->GetConstructor(Type::EmptyTypes);
+  gc_ptr(ConstructorInfo) ctorInfo = type->GetConstructor(Type::EmptyTypes);
   if (ctorInfo == nullptr) {
     Log::Error("Can't deserialize {0} because this type has no public no arg constructor", type->Name);
     throw gcnew IllegalStateException("Object missing public no arg constructor");
@@ -576,20 +583,23 @@ TypeRegistry::CreateNewObjectDelegate ^ TypeRegistry::CreateNewObjectDelegateF(T
   il->Emit(OpCodes::Newobj, ctorInfo);
   il->Emit(OpCodes::Ret);
 
-  return (TypeRegistry::CreateNewObjectDelegate ^) dynam->CreateDelegate(createNewObjectDelegateType);
+  return (gc_ptr(TypeRegistry::CreateNewObjectDelegate))dynam->CreateDelegate(createNewObjectDelegateType);
 }
 
-// delegate Object^ CreateNewObjectArray(int len);
-TypeRegistry::CreateNewObjectArrayDelegate ^ TypeRegistry::CreateNewObjectArrayDelegateF(Type ^ type) {
-  DynamicMethod ^ dynam = gcnew DynamicMethod("", Internal::DotNetTypes::ObjectType, singleIntTypeA, type, true);
-  ILGenerator ^ il = dynam->GetILGenerator();
+// delegate gc_ptr(Object) CreateNewObjectArray(int len);
+gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate) TypeRegistry::CreateNewObjectArrayDelegateF(gc_ptr(Type)
+                                                                                                       type) {
+  gc_ptr(DynamicMethod) dynam =
+      gcnew DynamicMethod("", Internal::DotNetTypes::ObjectType, singleIntTypeA, type, true);
+  gc_ptr(ILGenerator) il = dynam->GetILGenerator();
 
   il->Emit(OpCodes::Ldarg_0);
 
   il->Emit(OpCodes::Newarr, type);
   il->Emit(OpCodes::Ret);
 
-  return (TypeRegistry::CreateNewObjectArrayDelegate ^) dynam->CreateDelegate(createNewObjectArrayDelegateType);
+  return (gc_ptr(TypeRegistry::CreateNewObjectArrayDelegate))dynam->CreateDelegate(
+      createNewObjectArrayDelegateType);
 }
 
 void TypeRegistry::RegisterDataSerializablePrimitivesWrapNativeDeserialization() {

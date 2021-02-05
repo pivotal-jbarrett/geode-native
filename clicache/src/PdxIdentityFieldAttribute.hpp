@@ -17,35 +17,26 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 using namespace System;
 using namespace System::Reflection;
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+///< summary>
+/// PdxIdentityField attribute one can specify on member fields.
+/// This attribute is used by <see cref="ReflectionBasedAutoSerializer">,
+/// When it serializes the fields in Pdx <see cref="IPdxSerializable"> format.
+/// This fields will be treated as identity fields for hashcode and equals methods.
+///< summary>
 
-        ///<summary>        
-        /// PdxIdentityField attribute one can specify on member fields.
-        /// This attribute is used by <see cref="ReflectionBasedAutoSerializer">,
-        /// When it serializes the fields in Pdx <see cref="IPdxSerializable"> format.
-        /// This fields will be treated as identity fields for hashcode and equals methods.
-        ///<summary>        
+[AttributeUsage(AttributeTargets::Field)] PUBLIC ref class PdxIdentityFieldAttribute : Attribute{
+  public :
 
-      [AttributeUsage(AttributeTargets::Field)]
-      public ref class PdxIdentityFieldAttribute : Attribute
-      {
-      public:
-
-        PdxIdentityFieldAttribute()
-        {
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+      PdxIdentityFieldAttribute(){}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

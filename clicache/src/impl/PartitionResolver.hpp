@@ -17,55 +17,42 @@
 
 #pragma once
 
-
 #include "../IPartitionResolver.hpp"
 #include "../Region.hpp"
 #include "SafeConvert.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      public interface class IPartitionResolverProxy
-      {
-      public:
-        std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(const apache::geode::client::EntryEvent& ev);
-        const std::string& getName();
-      };
+PUBLIC interface class IPartitionResolverProxy {
+ public:
+  std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(const apache::geode::client::EntryEvent& ev);
+  const std::string& getName();
+};
 
-      GENERIC(class TKey, class TValue)
-      public ref class PartitionResolverGeneric : IPartitionResolverProxy
-      {
-        private:
+GENERIC(class TKey, class TValue)
+PUBLIC ref class PartitionResolverGeneric : IPartitionResolverProxy {
+ private:
+  gc_ptr(IPartitionResolver<TKey, TValue>) m_resolver;
 
-          IPartitionResolver<TKey, TValue>^ m_resolver;
+ public:
+  void SetPartitionResolver(gc_ptr(IPartitionResolver<TKey, TValue>) resolver) { m_resolver = resolver; }
 
-        public:
+  virtual std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(
+      const apache::geode::client::EntryEvent& ev) {
+    EntryEvent<TKey, TValue> gevent(&ev);
+    gc_ptr(Object) groutingobject = m_resolver->GetRoutingObject(% gevent);
+    return Serializable::GetUnmanagedValueGeneric<gc_ptr(Object)>(groutingobject);
+  }
 
-          void SetPartitionResolver(IPartitionResolver<TKey, TValue>^ resolver)
-          {
-            m_resolver = resolver;
-          }
-
-          virtual std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(const apache::geode::client::EntryEvent& ev)
-          {
-            EntryEvent<TKey, TValue> gevent(&ev);
-						Object^ groutingobject = m_resolver->GetRoutingObject(%gevent);
-            return Serializable::GetUnmanagedValueGeneric<Object^>(groutingobject);
-          }
-
-          virtual const std::string& getName()
-          {
-            static const std::string name = marshal_as<std::string>(m_resolver->GetName());
-            return name;
-          }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual const std::string& getName() {
+    static const std::string name = marshal_as<std::string>(m_resolver->GetName());
+    return name;
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

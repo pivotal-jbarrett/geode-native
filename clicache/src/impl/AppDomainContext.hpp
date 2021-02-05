@@ -17,19 +17,17 @@
 
 #pragma once
 
-
 #include <functional>
 #include <vcclr.h>
 #include "../begin_native.hpp"
 #include <AppDomainContext.hpp>
 #include "../end_native.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+#include "../cli.hpp"
+
+namespace Apache {
+namespace Geode {
+namespace Client {
 
 using namespace System;
 
@@ -38,13 +36,11 @@ using namespace System;
  * current thread to AppDomain associatd with this instance.
  */
 ref class AppDomainContextWrapper {
-public:
+ public:
   delegate void Delegate(std::function<void()>);
-  typedef void(__stdcall *Function)(std::function<void()>);
+  typedef void(__stdcall* Function)(std::function<void()>);
 
-  void run(std::function<void()> func) {
-    func();
-  }
+  void run(std::function<void()> func) { func(); }
 };
 
 /**
@@ -52,25 +48,24 @@ public:
  * thread with this instanaces AppDomain.
  */
 class AppDomainContext : public apache::geode::client::AppDomainContext {
-public:
+ public:
   AppDomainContext() {
-    functionDelegate = gcnew AppDomainContextWrapper::Delegate(gcnew AppDomainContextWrapper(),
-                                                               &AppDomainContextWrapper::run);
-    functionPointer = (AppDomainContextWrapper::Function)
-      System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(functionDelegate).ToPointer();
-  }
-  
-  void run(runnable func) {
-    functionPointer(func);
+    functionDelegate =
+        gcnew AppDomainContextWrapper::Delegate(gcnew AppDomainContextWrapper(), &AppDomainContextWrapper::run);
+    functionPointer =
+        (AppDomainContextWrapper::Function)System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(
+            functionDelegate)
+            .ToPointer();
   }
 
-private:
-  gcroot<AppDomainContextWrapper::Delegate^> functionDelegate;
+  void run(runnable func) { functionPointer(func); }
+
+ private:
+  gcroot<gc_ptr(AppDomainContextWrapper::Delegate)> functionDelegate;
   AppDomainContextWrapper::Function functionPointer;
 };
 
 apache::geode::client::AppDomainContext* createAppDomainContext();
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

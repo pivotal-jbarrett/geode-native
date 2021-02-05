@@ -15,60 +15,44 @@
  * limitations under the License.
  */
 
-
-
 #include "UserFunctionExecutionException.hpp"
 #include "CacheableString.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-  
-      System::UInt64 UserFunctionExecutionException::ObjectSize::get()
-      {
-        throw gcnew IllegalStateException("UserFunctionExecutionException::ObjectSize is not intended for use.");
-      }
+System::UInt64 UserFunctionExecutionException::ObjectSize::get() {
+  throw gcnew IllegalStateException("UserFunctionExecutionException::ObjectSize is not intended for use.");
+}
 
-      String^ UserFunctionExecutionException::Message::get()
-      {
-        _GF_MG_EXCEPTION_TRY2
+gc_ptr(String) UserFunctionExecutionException::Message::get() {
+  _GF_MG_EXCEPTION_TRY2
 
-        try
-        {
-          auto value = m_nativeptr->get()->getMessage();
-          return marshal_as<String^>(value);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
+    try {
+      auto value = m_nativeptr->get()->getMessage();
+      return marshal_as<gc_ptr(String)>(value);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
 
-      String^ UserFunctionExecutionException::Name::get()
-      {
-        _GF_MG_EXCEPTION_TRY2
+gc_ptr(String) UserFunctionExecutionException::Name::get() {
+  _GF_MG_EXCEPTION_TRY2
 
-        try
-        {
-          auto value = m_nativeptr->get()->getName();
-          return marshal_as<String^>(value);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
+    try {
+      auto value = m_nativeptr->get()->getName();
+      return marshal_as<gc_ptr(String)>(value);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2
-      }
-    }  // namespace Client
-  }  // namespace Geode
+  _GF_MG_EXCEPTION_CATCH_ALL2
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

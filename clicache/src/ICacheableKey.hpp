@@ -17,52 +17,44 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ISerializable.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// This interface class is the superclass of all user objects 
-      /// in the cache that can be used as a key.
-      /// </summary>
-      /// <remarks>
-      /// If an implementation is required to act as a key in the cache, then
-      /// it must implement this interface and preferably override
-      /// <c>System.Object.ToString</c> to obtain proper string representation.
-      /// Note that this interface requires that the class overrides
-      /// <c>Object.GetHashCode</c>. Though this is not enforced, the default
-      /// implementation in <c>System.Object</c> is almost certainly incorrect
-      /// and will not work correctly.
-      /// </remarks>
-      public interface class ICacheableKey
-        : public ISerializable
-      {
-      public:
+/// <summary>
+/// This interface class is the superclass of all user objects
+/// in the cache that can be used as a key.
+/// </summary>
+/// <remarks>
+/// If an implementation is required to act as a key in the cache, then
+/// it must implement this interface and preferably override
+/// <c>System.Object.ToString</c> to obtain proper string representation.
+/// Note that this interface requires that the class overrides
+/// <c>Object.GetHashCode</c>. Though this is not enforced, the default
+/// implementation in <c>System.Object</c> is almost certainly incorrect
+/// and will not work correctly.
+/// </remarks>
+PUBLIC interface class ICacheableKey : public ISerializable {
+ public:
+  /// <summary>
+  /// Get the hash code for this object. This is used in the internal
+  /// hash tables and so must have a nice distribution pattern.
+  /// </summary>
+  /// <returns>
+  /// The hashcode for this object.
+  /// </returns>
+  System::Int32 GetHashCode();
 
-        /// <summary>
-        /// Get the hash code for this object. This is used in the internal
-        /// hash tables and so must have a nice distribution pattern.
-        /// </summary>
-        /// <returns>
-        /// The hashcode for this object.
-        /// </returns>
-        System::Int32 GetHashCode( );
-
-        /// <summary>
-        /// Returns true if this <c>ICacheableKey</c> matches the other.
-        /// </summary>
-        bool Equals( ICacheableKey^ other );
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Returns true if this <c>ICacheableKey</c> matches the other.
+  /// </summary>
+  bool Equals(gc_ptr(ICacheableKey) other);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

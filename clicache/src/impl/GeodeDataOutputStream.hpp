@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include "../DataOutput.hpp"
 #include "../ExceptionTypes.hpp"
@@ -25,95 +24,77 @@
 using namespace System;
 using namespace System::IO;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class GeodeDataOutputStream : public Stream
-      {
-      public:
+ref class GeodeDataOutputStream : public Stream {
+ public:
+  GeodeDataOutputStream(gc_ptr(DataOutput) output) { m_buffer = output; }
 
-        GeodeDataOutputStream(DataOutput^ output)
-        {
-          m_buffer = output;
-        }
+  virtual property bool CanSeek {
+    bool get() override { return false; }
+  }
+  virtual property bool CanRead {
+    bool get() override { return false; }
+  }
+  virtual property bool CanWrite {
+    bool get() override { return true; }
+  }
 
-        virtual property bool CanSeek { bool get() override { return false; } }
-        virtual property bool CanRead { bool get() override { return false; } }
-        virtual property bool CanWrite { bool get() override { return true; } }
+  virtual void Close() override { Stream::Close(); }
 
-        virtual void Close() override { Stream::Close(); }
+  virtual property System::Int64 Length {
+    System::Int64 get() override { return (System::Int64)m_buffer->BufferLength; }
+  }
 
-        virtual property System::Int64 Length
-        {
-          System::Int64 get() override
-          {
-            return (System::Int64) m_buffer->BufferLength;
-          }
-        }
+  virtual property System::Int64 Position {
+    System::Int64 get() override { return (System::Int64)m_position; }
 
-        virtual property System::Int64 Position
-        {
-          System::Int64 get() override
-          {
-            return (System::Int64) m_position;
-          }
+    void set(System::Int64 value) override { m_position = (int)value; }
+  }
 
-          void set(System::Int64 value) override
-          {
-            m_position = (int) value;
-          }
-        }
+  virtual System::Int64 Seek(System::Int64 offset, SeekOrigin origin) override {
+    throw gcnew System::NotSupportedException("Seek not supported by GeodeDataOutputStream");
+  }
 
-        virtual System::Int64 Seek(System::Int64 offset, SeekOrigin origin) override
-        {
-          throw gcnew System::NotSupportedException("Seek not supported by GeodeDataOutputStream");
-        }
+  virtual void SetLength(System::Int64 value) override {
+    // TODO: overflow check
+    // m_buffer->NativePtr->ensureCapacity((System::UInt32)value);
+  }
 
-        virtual void SetLength(System::Int64 value) override
-        { 
-          //TODO: overflow check
-          //m_buffer->NativePtr->ensureCapacity((System::UInt32)value);
-        }
+  virtual void Write(gc_ptr(array<Byte>) buffer, int offset, int count) override {
+    _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+      /*
+      gc_ptr(array<Byte>) chunk = gcnew array<Byte>(count);
+      array<Byte>::ConstrainedCopy(buffer, offset, chunk, 0, count);
+      m_buffer->WriteBytesOnly(chunk, count);
+      */
+      // pin_ptr<const Byte> pin_bytes = &buffer[offset];
+      // m_buffer->NativePtr->writeBytesOnly((const System::Byte*)pin_bytes, count);
+      m_buffer->WriteBytesOnly(buffer, count, offset);
+      m_position += count;
+    _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+  }
 
-        virtual void Write(array<Byte> ^ buffer, int offset, int count) override
-        {
-          _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          /*
-          array<Byte> ^ chunk = gcnew array<Byte>(count);
-          array<Byte>::ConstrainedCopy(buffer, offset, chunk, 0, count);
-          m_buffer->WriteBytesOnly(chunk, count);
-          */
-          //pin_ptr<const Byte> pin_bytes = &buffer[offset];
-          //m_buffer->NativePtr->writeBytesOnly((const System::Byte*)pin_bytes, count);
-          m_buffer->WriteBytesOnly(buffer, count, offset);
-          m_position += count;
-          _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-        }
+  virtual void WriteByte(unsigned char value) override {
+    _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+      m_buffer->WriteByte(value);
+      m_position++;
+    _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+  }
 
-        virtual void WriteByte(unsigned char value) override
-        {
-          _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          m_buffer->WriteByte(value);
-          m_position++;
-          _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-        }
+  virtual int Read(gc_ptr(array<Byte>) buffer, int offset, int count) override {
+    throw gcnew System::NotSupportedException("Read not supported by GeodeDataOutputStream");
+  }
 
-        virtual int Read(array<Byte> ^ buffer, int offset, int count) override
-        {
-          throw gcnew System::NotSupportedException("Read not supported by GeodeDataOutputStream");
-        }
+  virtual void Flush() override { /* do nothing */
+  }
 
-        virtual void Flush() override { /* do nothing */ }
-
-      private:
-        int m_position;
-        DataOutput ^ m_buffer;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  int m_position;
+  gc_ptr(DataOutput) m_buffer;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

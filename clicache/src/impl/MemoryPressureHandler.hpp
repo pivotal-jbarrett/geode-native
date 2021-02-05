@@ -17,29 +17,21 @@
 
 #pragma once
 
-
 #include "../begin_native.hpp"
 #include <geode/internal/geode_globals.hpp>
 #include <ExpiryTaskManager.hpp>
 #include "../end_native.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      class MemoryPressureHandler
-        : public ACE_Event_Handler
-      {
-        public:
-          int handle_timeout( const ACE_Time_Value& current_time,
-              const void* arg );
+class MemoryPressureHandler : public ACE_Event_Handler {
+ public:
+  int handle_timeout(const ACE_Time_Value& current_time, const void* arg);
 
-          int handle_close( ACE_HANDLE handle, ACE_Reactor_Mask close_mask );
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  int handle_close(ACE_HANDLE handle, ACE_Reactor_Mask close_mask);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

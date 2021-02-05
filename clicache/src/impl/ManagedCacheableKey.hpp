@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include <vcclr.h>
 #include "../begin_native.hpp"
@@ -35,193 +34,156 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      ref class Cache;
-    }  // namespace Client
-  }  // namespace Geode
+namespace Apache {
+namespace Geode {
+namespace Client {
+ref class Cache;
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
-      namespace native = apache::geode::client;
+namespace apache {
+namespace geode {
+namespace client {
+namespace native = apache::geode::client;
 
-      /// <summary>
-      /// Wraps the managed <see cref="Apache.Geode.Client.IDataSerializable" />
-      /// object and implements the native <c>apache::geode::client::CacheableKey</c> and 
-      /// <c>apache::geode::client::DataSerializable</c> interfaces.
-      /// </summary>
-      class ManagedCacheableKeyGeneric
-        : public apache::geode::client::CacheableKey, public native::DataSerializable
-      {
-      private:
-        int m_hashcode;
-        size_t m_objectSize;
-      public:
+/// <summary>
+/// Wraps the managed <see cref="Apache.Geode.Client.IDataSerializable" />
+/// object and implements the native <c>apache::geode::client::CacheableKey</c> and
+/// <c>apache::geode::client::DataSerializable</c> interfaces.
+/// </summary>
+class ManagedCacheableKeyGeneric : public apache::geode::client::CacheableKey, public native::DataSerializable {
+ private:
+  int m_hashcode;
+  size_t m_objectSize;
 
-        inline ManagedCacheableKeyGeneric(
-          Apache::Geode::Client::IDataSerializable^ managedptr, int hashcode)
-          : m_managedptr(managedptr) {
-          m_hashcode = hashcode;
-          m_objectSize = 0;
-          msclr::interop::marshal_context context;
-        }
-        /// <summary>
-        /// Constructor to initialize with the provided managed object.
-        /// </summary>
-        /// <param name="managedptr">
-        /// The managed object.
-        /// </param>
-        inline ManagedCacheableKeyGeneric(Apache::Geode::Client::IDataSerializable^ managedptr)
-          : m_managedptr(managedptr) {
-          m_hashcode = 0;
-          m_objectSize = 0;
-          msclr::interop::marshal_context context;
-        }
+ public:
+  inline ManagedCacheableKeyGeneric(gc_ptr(Apache::Geode::Client::IDataSerializable) managedptr, int hashcode)
+      : m_managedptr(managedptr) {
+    m_hashcode = hashcode;
+    m_objectSize = 0;
+    msclr::interop::marshal_context context;
+  }
+  /// <summary>
+  /// Constructor to initialize with the provided managed object.
+  /// </summary>
+  /// <param name="managedptr">
+  /// The managed object.
+  /// </param>
+  inline ManagedCacheableKeyGeneric(gc_ptr(Apache::Geode::Client::IDataSerializable) managedptr)
+      : m_managedptr(managedptr) {
+    m_hashcode = 0;
+    m_objectSize = 0;
+    msclr::interop::marshal_context context;
+  }
 
-        ManagedCacheableKeyGeneric(const ManagedCacheableKeyGeneric&) = delete;
-        ManagedCacheableKeyGeneric& operator = (const ManagedCacheableKeyGeneric&) = delete;
+  ManagedCacheableKeyGeneric(const ManagedCacheableKeyGeneric&) = delete;
+  ManagedCacheableKeyGeneric& operator=(const ManagedCacheableKeyGeneric&) = delete;
 
-        size_t objectSize() const override;
+  size_t objectSize() const override;
 
-        std::string toString() const override;
+  std::string toString() const override;
 
-        void toData(apache::geode::client::DataOutput& output) const override;
+  void toData(apache::geode::client::DataOutput& output) const override;
 
-        void fromData(apache::geode::client::DataInput& input) override;
+  void fromData(apache::geode::client::DataInput& input) override;
 
-        bool operator == (const CacheableKey& other) const override;
+  bool operator==(const CacheableKey& other) const override;
 
-        virtual bool operator == (const ManagedCacheableKeyGeneric& other) const;
+  virtual bool operator==(const ManagedCacheableKeyGeneric& other) const;
 
-        int32_t hashcode() const override;
+  int32_t hashcode() const override;
 
-        inline Apache::Geode::Client::IDataSerializable^ ptr() const
-        {
-          return m_managedptr;
-        }
+  inline gc_ptr(Apache::Geode::Client::IDataSerializable) ptr() const { return m_managedptr; }
 
+ private:
+  /// <summary>
+  /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
+  /// Note: not using auto_gcroot since it will result in 'Dispose' of the ISerializable
+  /// to be called which is not what is desired when this object is destroyed. Normally this
+  /// managed object may be created by the user and will be handled automatically by the GC.
+  /// </summary>
+  gcroot<gc_ptr(Apache::Geode::Client::IDataSerializable)> m_managedptr;
+};
 
+class ManagedDataSerializablePrimitive : public native::internal::DataSerializablePrimitive,
+                                         public native::CacheableKey {
+ public:
+  inline ManagedDataSerializablePrimitive(gc_ptr(Apache::Geode::Client::IDataSerializablePrimitive) managedptr)
+      : m_managedptr(managedptr) {}
 
-      private:
+  ManagedDataSerializablePrimitive(const ManagedDataSerializablePrimitive&) = delete;
+  ManagedDataSerializablePrimitive operator=(const ManagedDataSerializablePrimitive&) = delete;
 
-        /// <summary>
-        /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
-        /// Note: not using auto_gcroot since it will result in 'Dispose' of the ISerializable
-        /// to be called which is not what is desired when this object is destroyed. Normally this
-        /// managed object may be created by the user and will be handled automatically by the GC.
-        /// </summary>
-        gcroot<Apache::Geode::Client::IDataSerializable^> m_managedptr;
-      };
+  size_t objectSize() const override { return m_managedptr->ObjectSize; }
 
-      class ManagedDataSerializablePrimitive
-        : public native::internal::DataSerializablePrimitive , public native::CacheableKey
-      {
-      public:
+  std::string toString() const override;
 
-        inline ManagedDataSerializablePrimitive(
-          Apache::Geode::Client::IDataSerializablePrimitive^ managedptr)
-          : m_managedptr(managedptr) {
-        }
+  void toData(DataOutput& output) const override;
 
-        ManagedDataSerializablePrimitive(const ManagedDataSerializablePrimitive&) = delete;
-        ManagedDataSerializablePrimitive operator = (const ManagedDataSerializablePrimitive&) = delete;
+  void fromData(DataInput& input) override;
 
-        size_t objectSize() const override { return m_managedptr->ObjectSize; }
+  native::internal::DSCode getDsCode() const override {
+    return static_cast<native::internal::DSCode>(m_managedptr->DsCode);
+  }
 
-        std::string toString() const override;
+  bool operator==(const CacheableKey& other) const override;
 
-        void toData(DataOutput& output) const override;
+  int32_t hashcode() const override;
 
-        void fromData(DataInput& input) override;
+  inline gc_ptr(Apache::Geode::Client::IDataSerializablePrimitive) ptr() const { return m_managedptr; }
 
-        native::internal::DSCode getDsCode() const override { return static_cast<native::internal::DSCode>(m_managedptr->DsCode); }
+ private:
+  gcroot<gc_ptr(Apache::Geode::Client::IDataSerializablePrimitive)> m_managedptr;
+};
 
-        bool operator == (const CacheableKey& other) const override;
+class ManagedDataSerializableInternal : public native::internal::DataSerializableInternal {
+ public:
+  inline ManagedDataSerializableInternal(gc_ptr(Apache::Geode::Client::IDataSerializableInternal) managedptr)
+      : m_managedptr(managedptr) {}
 
-        int32_t hashcode() const override;
+  ManagedDataSerializableInternal(const ManagedDataSerializableInternal&) = delete;
+  ManagedDataSerializableInternal& operator=(const ManagedDataSerializableInternal&) = delete;
 
-        inline Apache::Geode::Client::IDataSerializablePrimitive^ ptr() const
-        {
-          return m_managedptr;
-        }
+  size_t objectSize() const override { return 0; }
 
+  std::string toString() const override;
 
-      private:
-        gcroot<Apache::Geode::Client::IDataSerializablePrimitive^> m_managedptr;
-      };
+  void toData(DataOutput& output) const override;
 
-      class ManagedDataSerializableInternal
-        : public native::internal::DataSerializableInternal
-      {
-      public:
+  void fromData(DataInput& input) override;
 
-        inline ManagedDataSerializableInternal(
-          Apache::Geode::Client::IDataSerializableInternal^ managedptr)
-          : m_managedptr(managedptr) {
-        }
+  inline gc_ptr(Apache::Geode::Client::IDataSerializableInternal) ptr() const { return m_managedptr; }
 
-        ManagedDataSerializableInternal(const ManagedDataSerializableInternal&) = delete;
-        ManagedDataSerializableInternal& operator = (const ManagedDataSerializableInternal&) = delete;
+ private:
+  gcroot<gc_ptr(Apache::Geode::Client::IDataSerializableInternal)> m_managedptr;
+};
 
-        size_t objectSize() const override { return 0; }
+class ManagedDataSerializableFixedId : public native::internal::DataSerializableFixedId {
+ public:
+  inline ManagedDataSerializableFixedId(gc_ptr(Apache::Geode::Client::IDataSerializableFixedId) managedptr)
+      : m_managedptr(managedptr) {}
 
-        std::string toString() const override;
+  ManagedDataSerializableFixedId(const ManagedDataSerializableFixedId&) = delete;
+  ManagedDataSerializableFixedId& operator=(const ManagedDataSerializableFixedId&) = delete;
 
-        void toData(DataOutput& output) const override;
+  size_t objectSize() const override { return 0; }
 
-        void fromData(DataInput& input) override;
+  std::string toString() const override;
 
-        inline Apache::Geode::Client::IDataSerializableInternal^ ptr() const
-        {
-          return m_managedptr;
-        }
+  void toData(DataOutput& output) const override;
 
+  void fromData(DataInput& input) override;
 
-      private:
-        gcroot<Apache::Geode::Client::IDataSerializableInternal^> m_managedptr;
-      };
+  native::internal::DSFid getDSFID() const override {
+    return static_cast<native::internal::DSFid>(m_managedptr->DSFID);
+  }
 
-      class ManagedDataSerializableFixedId
-        : public native::internal::DataSerializableFixedId
-      {
-      public:
+  inline gc_ptr(Apache::Geode::Client::IDataSerializableFixedId) ptr() const { return m_managedptr; }
 
-        inline ManagedDataSerializableFixedId(
-          Apache::Geode::Client::IDataSerializableFixedId^ managedptr)
-          : m_managedptr(managedptr) {
-        }
-
-        ManagedDataSerializableFixedId(const ManagedDataSerializableFixedId&) = delete;
-        ManagedDataSerializableFixedId& operator = (const ManagedDataSerializableFixedId&) = delete;
-
-        size_t objectSize() const override { return 0; }
-
-        std::string toString() const override;
-
-        void toData(DataOutput& output) const override;
-
-        void fromData(DataInput& input) override;
-
-        native::internal::DSFid getDSFID() const override { return static_cast<native::internal::DSFid>(m_managedptr->DSFID); }
-
-        inline Apache::Geode::Client::IDataSerializableFixedId^ ptr() const
-        {
-          return m_managedptr;
-        }
-
-
-      private:
-        gcroot<Apache::Geode::Client::IDataSerializableFixedId^> m_managedptr;
-      };
-    }  // namespace client
-  }  // namespace geode
+ private:
+  gcroot<gc_ptr(Apache::Geode::Client::IDataSerializableFixedId)> m_managedptr;
+};
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

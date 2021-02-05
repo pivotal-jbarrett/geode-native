@@ -17,101 +17,92 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+interface class CqListener;
 
-      interface class CqListener;
+/// <summary>
+/// An application plug-in that can be installed on a region.
+/// Listener change notifications are invoked <c>after</c>
+/// the change has occured.
+/// </summary>
+/// <remarks>
+/// Listeners receive notifications when entries in a region change or changes occur to the
+/// region attributes themselves.
+/// <para>
+/// A cache listener is defined in the <see cref="RegionAttributes" />.
+/// </para>
+/// The methods on a <c>ICacheListener</c>
+/// are invoked asynchronously. Multiple events can cause concurrent invocation
+/// of <c>ICacheListener</c> methods.  If event A occurs before event B,
+/// there is no guarantee that their corresponding <c>ICacheListener</c>
+/// method invocations will occur in the same order.  Any exceptions thrown by
+/// the listener are caught by Geode and logged.
+///
+/// Listeners are user callbacks that
+/// are invoked by Geode. It is important to ensure that minimal work is done in the
+/// listener before returning control back to Geode. For example, a listener
+/// implementation may choose to hand off the event to a thread pool that then processes
+/// the event on its thread rather than the listener thread
+/// </remarks>
+/// <seealso cref="RegionAttributesFactory.SetCacheListener" />
+/// <seealso cref="RegionAttributes.CacheListener" />
+/// <seealso cref="ICacheLoader" />
+/// <seealso cref="ICacheWriter" />
+PUBLIC interface class ICqListener {
+ public:
+  /// <summary>
+  /// Handles the event of a new key being added to a region.
+  /// </summary>
+  /// <remarks>
+  /// The entry did not previously exist in this region in the local cache
+  /// (even with a null value).
+  /// <para>
+  /// This function does not throw any exception.
+  /// </para>
+  /// </remarks>
+  /// <param name="ev">
+  /// Denotes the event object associated with the entry creation.
+  /// </param>
+  /// <seealso cref="Region.Create" />
+  /// <seealso cref="Region.Put" />
+  /// <seealso cref="Region.Get" />
+  void OnEvent(gc_ptr(CqEvent) ev);
 
-      /// <summary>
-      /// An application plug-in that can be installed on a region.
-      /// Listener change notifications are invoked <c>after</c>
-      /// the change has occured.
-      /// </summary>
-      /// <remarks>
-      /// Listeners receive notifications when entries in a region change or changes occur to the
-      /// region attributes themselves.
-      /// <para>
-      /// A cache listener is defined in the <see cref="RegionAttributes" />.
-      /// </para>
-      /// The methods on a <c>ICacheListener</c>
-      /// are invoked asynchronously. Multiple events can cause concurrent invocation
-      /// of <c>ICacheListener</c> methods.  If event A occurs before event B,
-      /// there is no guarantee that their corresponding <c>ICacheListener</c>
-      /// method invocations will occur in the same order.  Any exceptions thrown by
-      /// the listener are caught by Geode and logged. 
-      ///
-      /// Listeners are user callbacks that
-      /// are invoked by Geode. It is important to ensure that minimal work is done in the
-      /// listener before returning control back to Geode. For example, a listener
-      /// implementation may choose to hand off the event to a thread pool that then processes
-      /// the event on its thread rather than the listener thread
-      /// </remarks>
-      /// <seealso cref="RegionAttributesFactory.SetCacheListener" />
-      /// <seealso cref="RegionAttributes.CacheListener" />
-      /// <seealso cref="ICacheLoader" />
-      /// <seealso cref="ICacheWriter" />
-      public interface class ICqListener
-      {
-      public:
+  /// <summary>
+  /// Handles the event of an entry's value being modified in a region.
+  /// </summary>
+  /// <remarks>
+  /// This entry previously existed in this region in the local cache,
+  /// but its previous value may have been null.
+  /// </remarks>
+  /// <param name="ev">
+  /// EntryEvent denotes the event object associated with updating the entry.
+  /// </param>
+  /// <seealso cref="Region.Put" />
+  void OnError(gc_ptr(CqEvent) ev);
 
-        /// <summary>
-        /// Handles the event of a new key being added to a region.
-        /// </summary>
-        /// <remarks>
-        /// The entry did not previously exist in this region in the local cache
-        /// (even with a null value).
-        /// <para>
-        /// This function does not throw any exception.
-        /// </para>
-        /// </remarks>
-        /// <param name="ev">
-        /// Denotes the event object associated with the entry creation.
-        /// </param>
-        /// <seealso cref="Region.Create" />
-        /// <seealso cref="Region.Put" />
-        /// <seealso cref="Region.Get" />
-        void OnEvent(CqEvent^ ev);
-
-        /// <summary>
-        /// Handles the event of an entry's value being modified in a region.
-        /// </summary>
-        /// <remarks>
-        /// This entry previously existed in this region in the local cache,
-        /// but its previous value may have been null.
-        /// </remarks>
-        /// <param name="ev">
-        /// EntryEvent denotes the event object associated with updating the entry.
-        /// </param>
-        /// <seealso cref="Region.Put" />
-        void OnError(CqEvent^ ev);
-
-
-        /// <summary>
-        /// Called when the region containing this callback is destroyed, when
-        /// the cache is closed.
-        /// </summary>
-        /// <remarks>
-        /// Implementations should clean up any external resources,
-        /// such as database connections. Any runtime exceptions this method
-        /// throws will be logged.
-        /// <para>
-        /// It is possible for this method to be called multiple times on a single
-        /// callback instance, so implementations must be tolerant of this.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="Cache.Close" />
-        /// <seealso cref="Region.DestroyRegion" />
-        void Close();
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Called when the region containing this callback is destroyed, when
+  /// the cache is closed.
+  /// </summary>
+  /// <remarks>
+  /// Implementations should clean up any external resources,
+  /// such as database connections. Any runtime exceptions this method
+  /// throws will be logged.
+  /// <para>
+  /// It is possible for this method to be called multiple times on a single
+  /// callback instance, so implementations must be tolerant of this.
+  /// </para>
+  /// </remarks>
+  /// <seealso cref="Cache.Close" />
+  /// <seealso cref="Region.DestroyRegion" />
+  void Close();
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

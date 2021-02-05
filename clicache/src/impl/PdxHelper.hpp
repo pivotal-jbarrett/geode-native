@@ -26,55 +26,55 @@
 #include "../IPdxSerializable.hpp"
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
-				ref class DataOutput;
-      ref class DataInput;
-      namespace Internal
-      {
-        ref class PdxType;
-        public ref class PdxHelper
-        {
-        public:
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
+ref class DataOutput;
+ref class DataInput;
+namespace Internal {
+ref class PdxType;
+PUBLIC ref class PdxHelper {
+ public:
+  static void SerializePdx(gc_ptr(DataOutput) dataOutput, gc_ptr(IPdxSerializable) pdxObject);
 
-          static void SerializePdx(DataOutput^ dataOutput, IPdxSerializable^ pdxObject);
+  static gc_ptr(IPdxSerializable) DeserializePdx(gc_ptr(DataInput) dataOutput, bool forceDeserialize,
+                                                     const native::SerializationRegistry* serializationRegistry);
 
-          static IPdxSerializable^ DeserializePdx(DataInput^ dataOutput, bool forceDeserialize, const native::SerializationRegistry* serializationRegistry);
+  static gc_ptr(IPdxSerializable) PdxHelper::DeserializePdx(
+      gc_ptr(DataInput) dataInput, bool forceDeserialize, int typeId, int length,
+      const native::SerializationRegistry* serializationRegistry);
 
-          static IPdxSerializable^ PdxHelper::DeserializePdx(DataInput^ dataInput, bool forceDeserialize, int typeId, int length, const native::SerializationRegistry* serializationRegistry);
+  literal Byte PdxHeader = 8;
 
-          literal Byte PdxHeader = 8;
+  static Int32 ReadInt32(System::Byte* offsetPosition);
 
-          static Int32 ReadInt32(System::Byte* offsetPosition);
+  static Int32 ReadInt16(System::Byte* offsetPosition);
 
-          static Int32 ReadInt16(System::Byte* offsetPosition);
+  static Int32 PdxHelper::ReadUInt16(System::Byte* offsetPosition);
 
-					static Int32 PdxHelper::ReadUInt16(System::Byte* offsetPosition);
+  static Int32 ReadByte(System::Byte* offsetPosition);
 
-          static Int32 ReadByte(System::Byte* offsetPosition);
+  static void WriteInt32(System::Byte* offsetPosition, Int32 value);
 
-          static void WriteInt32(System::Byte* offsetPosition, Int32 value);
+  static void WriteInt16(System::Byte* offsetPosition, Int32 value);
 
-          static void WriteInt16(System::Byte* offsetPosition, Int32 value);
+  static void WriteByte(System::Byte* offsetPosition, Int32 value);
 
-          static void WriteByte(System::Byte* offsetPosition, Int32 value);
+  static Int32 ReadInt(System::Byte* offsetPosition, int size);
 
-          static Int32 ReadInt(System::Byte* offsetPosition, int size);
+  static Int32 GetEnumValue(gc_ptr(String) enumClassName, gc_ptr(String) enumName, int hashcode,
+                            gc_ptr(Cache) cache);
 
-          static Int32 GetEnumValue(String^ enumClassName, String^ enumName, int hashcode, Cache^ cache);
+  static gc_ptr(Object) GetEnum(int enumId, gc_ptr(Cache) cache);
 
-          static Object^ GetEnum(int enumId, Cache^ cache);
+ private:
+  static void CreateMergedType(gc_ptr(PdxType) localType, gc_ptr(PdxType) remoteType,
+                               gc_ptr(DataInput) dataInput,
+                               const native::SerializationRegistry* serializationRegistry);
+};
+}  // namespace Internal
+}  // namespace Client
+}  // namespace Geode
 
-        private:
-          static void CreateMergedType(PdxType^ localType, PdxType^ remoteType, DataInput^ dataInput, const native::SerializationRegistry* serializationRegistry);
-        };
-    }  // namespace Client
-  }  // namespace Geode
 }  // namespace Apache
-
-}

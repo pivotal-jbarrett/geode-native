@@ -19,25 +19,19 @@
 
 #include "geode_defs.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      public enum class CqOperation
-      {
-        OP_TYPE_INVALID = -1,
-        OP_TYPE_CREATE = 1,
-        OP_TYPE_UPDATE = 2,
-        OP_TYPE_INVALIDATE = 4,
-        OP_TYPE_REGION_CLEAR = 8,
-        OP_TYPE_DESTROY = 16,
-        OP_TYPE_MARKER = 32
-      };
+namespace Apache {
+namespace Geode {
+namespace Client {
+PUBLIC enum class CqOperation {
+  OP_TYPE_INVALID = -1,
+  OP_TYPE_CREATE = 1,
+  OP_TYPE_UPDATE = 2,
+  OP_TYPE_INVALIDATE = 4,
+  OP_TYPE_REGION_CLEAR = 8,
+  OP_TYPE_DESTROY = 16,
+  OP_TYPE_MARKER = 32
+};
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-

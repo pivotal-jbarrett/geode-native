@@ -28,88 +28,69 @@ using namespace System;
 
 using namespace Apache::Geode::Client;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TKey, class TValue)
-      public ref class CacheListenerGeneric : CacheListenerAdapter<Object^, Object^>
-      {
-        private:
+GENERIC(class TKey, class TValue)
+PUBLIC ref class CacheListenerGeneric : CacheListenerAdapter<gc_ptr(Object), gc_ptr(Object)> {
+ private:
+  gc_ptr(ICacheListener<TKey, TValue>) m_listener;
 
-          ICacheListener<TKey, TValue>^ m_listener;
+ public:
+  void SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) listener) { m_listener = listener; }
 
-        public:
+  virtual void AfterUpdate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+    EntryEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterUpdate(% gevent);
+  }
 
-          void SetCacheListener(ICacheListener<TKey, TValue>^ listener)
-          {
-            m_listener = listener;
-          }
+  virtual void AfterCreate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+    EntryEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterCreate(% gevent);
+  }
 
-          virtual void AfterUpdate(Apache::Geode::Client::EntryEvent<Object^, Object^>^ event) override
-          {
-            EntryEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterUpdate(%gevent);
-          }
+  virtual void AfterInvalidate(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+    EntryEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterInvalidate(% gevent);
+  }
 
-          virtual void AfterCreate(Apache::Geode::Client::EntryEvent<Object^, Object^>^ event) override
-          {
-            EntryEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterCreate(%gevent);
-          }
+  virtual void AfterDestroy(gc_ptr(Apache::Geode::Client::EntryEvent<Object ^, Object ^>) event) override {
+    EntryEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterDestroy(% gevent);
+  }
 
-          virtual void AfterInvalidate(Apache::Geode::Client::EntryEvent<Object^, Object^>^ event) override
-          {
-            EntryEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterInvalidate(%gevent);
-          }
+  virtual void AfterRegionLive(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+    RegionEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterRegionLive(% gevent);
+  }
 
-          virtual void AfterDestroy(Apache::Geode::Client::EntryEvent<Object^, Object^>^ event) override
-          {
-            EntryEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterDestroy(%gevent);
-          }
+  virtual void AfterRegionClear(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+    RegionEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterRegionClear(% gevent);
+  }
 
-          virtual void AfterRegionLive(Apache::Geode::Client::RegionEvent<Object^, Object^>^ event) override
-          {
-            RegionEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterRegionLive(%gevent);
-          }
+  virtual void AfterRegionDestroy(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>) event) override {
+    RegionEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterRegionDestroy(% gevent);
+  }
 
-          virtual void AfterRegionClear(Apache::Geode::Client::RegionEvent<Object^, Object^>^ event) override
-          {
-            RegionEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterRegionClear(%gevent);
-          }
+  virtual void AfterRegionInvalidate(gc_ptr(Apache::Geode::Client::RegionEvent<Object ^, Object ^>)
+                                         event) override {
+    RegionEvent<TKey, TValue> gevent(event->GetNative());
+    m_listener->AfterRegionInvalidate(% gevent);
+  }
 
-          virtual void AfterRegionDestroy(Apache::Geode::Client::RegionEvent<Object^, Object^>^ event) override
-          {
-            RegionEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterRegionDestroy(%gevent);
-          }
+  virtual void AfterRegionDisconnected(gc_ptr(Apache::Geode::Client::IRegion<Object ^, Object ^>) region) override {
+    auto gregion = Region<TKey, TValue>::Create(((gc_ptr(Region<Object ^, Object ^>)) region)->GetNative());
+    m_listener->AfterRegionDisconnected(gregion);
+  }
 
-          virtual void AfterRegionInvalidate(Apache::Geode::Client::RegionEvent<Object^, Object^>^ event) override
-          {
-            RegionEvent<TKey, TValue> gevent(event->GetNative());
-            m_listener->AfterRegionInvalidate(%gevent);
-          }
-
-          virtual void AfterRegionDisconnected(Apache::Geode::Client::IRegion<Object^, Object^>^ region) override
-          {
-            auto gregion = Region<TKey, TValue>::Create(((Region<Object^, Object^>^)region)->GetNative());
-            m_listener->AfterRegionDisconnected(gregion);
-          }
-
-          virtual void Close(Apache::Geode::Client::IRegion<Object^, Object^>^ region) override
-          {
-            auto gregion = Region<TKey, TValue>::Create(((Region<Object^, Object^>^)region)->GetNative());
-            m_listener->Close(gregion);
-          }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void Close(gc_ptr(Apache::Geode::Client::IRegion<Object ^, Object ^>) region) override {
+    auto gregion = Region<TKey, TValue>::Create(((gc_ptr(Region<Object ^, Object ^>)) region)->GetNative());
+    m_listener->Close(gregion);
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

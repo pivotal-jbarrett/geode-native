@@ -17,113 +17,86 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "CacheableHashMap.hpp"
-
 
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// A mutable <c>ICacheableKey</c> to <c>ISerializable</c> hash map
-      /// that can serve as a distributable object for caching. This class
-      /// extends .NET generic <c>Dictionary</c> class. This class is meant
-      /// as a means to interoperate with java server side
-      /// <c>IdentityHashMap</c> class objects but is intentionally not
-      /// intended to provide <c>java.util.IdentityHashMap</c> semantics.
-      /// </summary>
-      ref class CacheableIdentityHashMap
-        : public CacheableHashMap
-      {
-      public:
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableIdentityHashMap()
-          : CacheableHashMap()
-        { }
+/// <summary>
+/// A mutable <c>ICacheableKey</c> to <c>ISerializable</c> hash map
+/// that can serve as a distributable object for caching. This class
+/// extends .NET generic <c>Dictionary</c> class. This class is meant
+/// as a means to interoperate with java server side
+/// <c>IdentityHashMap</c> class objects but is intentionally not
+/// intended to provide <c>java.util.IdentityHashMap</c> semantics.
+/// </summary>
+ref class CacheableIdentityHashMap : public CacheableHashMap {
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableIdentityHashMap() : CacheableHashMap() {}
 
-        /// <summary>
-        /// Allocates a new instance copying from the given dictionary.
-        /// </summary>
-        /// <param name="dictionary">
-        /// The dictionary whose elements are copied to this HashMap.
-        /// </param>
-        inline CacheableIdentityHashMap(Object^ dictionary)
-          : CacheableHashMap(dictionary)
-        { }
+  /// <summary>
+  /// Allocates a new instance copying from the given dictionary.
+  /// </summary>
+  /// <param name="dictionary">
+  /// The dictionary whose elements are copied to this HashMap.
+  /// </param>
+  inline CacheableIdentityHashMap(gc_ptr(Object) dictionary) : CacheableHashMap(dictionary) {}
 
-        /// <summary>
-        /// Allocates a new empty instance with given initial size.
-        /// </summary>
-        /// <param name="capacity">
-        /// The initial capacity of the HashMap.
-        /// </param>
-        inline CacheableIdentityHashMap(System::Int32 capacity)
-          : CacheableHashMap(capacity)
-        { }
+  /// <summary>
+  /// Allocates a new empty instance with given initial size.
+  /// </summary>
+  /// <param name="capacity">
+  /// The initial capacity of the HashMap.
+  /// </param>
+  inline CacheableIdentityHashMap(System::Int32 capacity) : CacheableHashMap(capacity) {}
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableIdentityHashMap^ Create()
-        {
-          return gcnew CacheableIdentityHashMap();
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableIdentityHashMap) Create() { return gcnew CacheableIdentityHashMap(); }
 
-        /// <summary>
-        /// Static function to create a new instance copying from the
-        /// given dictionary.
-        /// </summary>
-        inline static CacheableIdentityHashMap^ Create(
-          Object^ dictionary)
-        {
-          return gcnew CacheableIdentityHashMap(dictionary);
-        }
+  /// <summary>
+  /// Static function to create a new instance copying from the
+  /// given dictionary.
+  /// </summary>
+  inline static gc_ptr(CacheableIdentityHashMap) Create(gc_ptr(Object) dictionary) {
+    return gcnew CacheableIdentityHashMap(dictionary);
+  }
 
-        /// <summary>
-        /// Static function to create a new instance with given initial size.
-        /// </summary>
-        inline static CacheableIdentityHashMap^ Create(System::Int32 capacity)
-        {
-          return gcnew CacheableIdentityHashMap(capacity);
-        }
+  /// <summary>
+  /// Static function to create a new instance with given initial size.
+  /// </summary>
+  inline static gc_ptr(CacheableIdentityHashMap) Create(System::Int32 capacity) {
+    return gcnew CacheableIdentityHashMap(capacity);
+  }
 
-        // Region: ISerializable Members
+  // Region: ISerializable Members
 
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          int8_t get() override
-          {
-            return static_cast<int8_t>(native::internal::DSCode::CacheableIdentityHashMap);
-          }
-        }
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode {
+    int8_t get() override { return static_cast<int8_t>(native::internal::DSCode::CacheableIdentityHashMap); }
+  }
 
-        // End Region: ISerializable Members
+  // End Region: ISerializable Members
 
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableIdentityHashMap();
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableIdentityHashMap(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

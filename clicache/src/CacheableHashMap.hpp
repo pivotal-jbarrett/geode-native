@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ISerializable.hpp"
 #include "IDataSerializablePrimitive.hpp"
@@ -29,124 +28,93 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
+/// <summary>
+/// A mutable <c>ICacheableKey</c> to <c>ISerializable</c> hash map
+/// that can serve as a distributable object for caching. This class
+/// extends .NET generic <c>Dictionary</c> class.
+/// </summary>
+ref class CacheableHashMap : public IDataSerializablePrimitive {
+ protected:
+  gc_ptr(Object) m_dictionary;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableHashMap() {}
 
-      /// <summary>
-      /// A mutable <c>ICacheableKey</c> to <c>ISerializable</c> hash map
-      /// that can serve as a distributable object for caching. This class
-      /// extends .NET generic <c>Dictionary</c> class.
-      /// </summary>
-      ref class CacheableHashMap
-        : public IDataSerializablePrimitive
-      {
-      protected:
-        Object^ m_dictionary;
-      public:
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableHashMap()
-        { }
+  /// <summary>
+  /// Allocates a new instance copying from the given dictionary.
+  /// </summary>
+  /// <param name="dictionary">
+  /// The dictionary whose elements are copied to this HashMap.
+  /// </param>
+  inline CacheableHashMap(gc_ptr(Object) dictionary) { m_dictionary = dictionary; }
 
-        /// <summary>
-        /// Allocates a new instance copying from the given dictionary.
-        /// </summary>
-        /// <param name="dictionary">
-        /// The dictionary whose elements are copied to this HashMap.
-        /// </param>
-        inline CacheableHashMap(Object^ dictionary)
-        {
-          m_dictionary = dictionary;
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableHashMap) Create() { return gcnew CacheableHashMap(); }
 
+  /// <summary>
+  /// Static function to create a new instance copying from the
+  /// given dictionary.
+  /// </summary>
+  inline static gc_ptr(CacheableHashMap) Create(gc_ptr(Object) dictionary) {
+    return gcnew CacheableHashMap(dictionary);
+  }
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableHashMap^ Create()
-        {
-          return gcnew CacheableHashMap();
-        }
+  // Region: ISerializable Members
 
-        /// <summary>
-        /// Static function to create a new instance copying from the
-        /// given dictionary.
-        /// </summary>
-        inline static CacheableHashMap^ Create(Object^ dictionary)
-        {
-          return gcnew CacheableHashMap(dictionary);
-        }
+  /// <summary>
+  /// Serializes this object.
+  /// </summary>
+  /// <param name="output">
+  /// the DataOutput object to use for serializing the object
+  /// </param>
+  virtual void ToData(gc_ptr(DataOutput) output);
 
+  /// <summary>
+  /// Deserialize this object, typical implementation should return
+  /// the 'this' pointer.
+  /// </summary>
+  /// <param name="input">
+  /// the DataInput stream to use for reading the object data
+  /// </param>
+  /// <returns>the deserialized object</returns>
+  virtual void FromData(gc_ptr(DataInput) input);
 
-        // Region: ISerializable Members
+  /// <summary>
+  /// return the size of this object in bytes
+  /// </summary>
+  virtual property System::UInt64 ObjectSize { virtual System::UInt64 get(); }
 
-        /// <summary>
-        /// Serializes this object.
-        /// </summary>
-        /// <param name="output">
-        /// the DataOutput object to use for serializing the object
-        /// </param>
-        virtual void ToData(DataOutput^ output);
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode {
+    virtual int8_t get() { return static_cast<int8_t>(native::internal::DSCode::CacheableHashMap); }
+  }
 
-        /// <summary>
-        /// Deserialize this object, typical implementation should return
-        /// the 'this' pointer.
-        /// </summary>
-        /// <param name="input">
-        /// the DataInput stream to use for reading the object data
-        /// </param>
-        /// <returns>the deserialized object</returns>
-        virtual void FromData(DataInput^ input);
+  property gc_ptr(Object) Value {
+    gc_ptr(Object) get() { return m_dictionary; }
+  }
 
-        /// <summary>
-        /// return the size of this object in bytes
-        /// </summary>
-        virtual property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get();
-        }
+  // End Region: ISerializable Members
 
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          virtual int8_t get()
-          {
-            return static_cast<int8_t>(native::internal::DSCode::CacheableHashMap);
-          }
-        }
-
-        property Object^ Value
-        {
-          Object^ get()
-          {
-            return m_dictionary;
-          }
-        }
-
-        // End Region: ISerializable Members
-
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableHashMap();
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableHashMap(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

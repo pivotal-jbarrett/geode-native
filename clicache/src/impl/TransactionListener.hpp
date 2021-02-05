@@ -17,10 +17,7 @@
 #ifdef CSTX_COMMENTED
 #pragma once
 
-#include "geode_includes.hpp" 
-
-
-
+#include "geode_includes.hpp"
 
 #include "../TransactionListenerAdapter.hpp"
 #include "../ITransactionListener.hpp"
@@ -28,58 +25,47 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// Contains the generic listener object. Inherits from non generic listener interface.
-      /// This class is used to hide the generic implementation from cpp and at the same time
-      /// forward the calls to the generic objects
-      /// </summary>
-      GENERIC(class TKey, class TValue)
-			public ref class TransactionListenerGeneric : Apache::Geode::Client::TransactionListenerAdapter
-      {
-        private:
+/// <summary>
+/// Contains the generic listener object. Inherits from non generic listener interface.
+/// This class is used to hide the generic implementation from cpp and at the same time
+/// forward the calls to the generic objects
+/// </summary>
+GENERIC(class TKey, class TValue)
+PUBLIC ref class TransactionListenerGeneric : Apache::Geode::Client::TransactionListenerAdapter {
+ private:
+  gc_ptr(Apache::Geode::Client::ITransactionListener<TKey, TValue>) m_listener;
 
-					Apache::Geode::Client::ITransactionListener<TKey, TValue>^ m_listener;
+ public:
+  void SetTransactionListener(gc_ptr(Apache::Geode::Client::ITransactionListener<TKey, TValue>) listener) {
+    m_listener = listener;
+  }
 
-        public:
+  virtual void AfterCommit(gc_ptr(Apache::Geode::Client::TransactionEvent) event) override {
+    Apache::Geode::Client::TransactionEvent<TKey, TValue> gevent(
+        GetNativePtr<apache::geode::client::TransactionEvent>(event));
+    m_listener->AfterCommit(% gevent);
+  }
 
-          void SetTransactionListener(Apache::Geode::Client::ITransactionListener<TKey, TValue>^ listener)
-          {
-            m_listener = listener;
-          }
+  virtual void AfterFailedCommit(gc_ptr(Apache::Geode::Client::TransactionEvent) event) override {
+    Apache::Geode::Client::TransactionEvent<TKey, TValue> gevent(
+        GetNativePtr<apache::geode::client::TransactionEvent>(event));
+    m_listener->AfterFailedCommit(% gevent);
+  }
 
-					virtual void AfterCommit(Apache::Geode::Client::TransactionEvent^ event) override 
-          {
-            Apache::Geode::Client::TransactionEvent<TKey, TValue> gevent(GetNativePtr<apache::geode::client::TransactionEvent>(event));
-            m_listener->AfterCommit(%gevent);
-            
-          }
+  virtual void AfterRollback(gc_ptr(Apache::Geode::Client::TransactionEvent) event) override {
+    Apache::Geode::Client::TransactionEvent<TKey, TValue> gevent(
+        GetNativePtr<apache::geode::client::TransactionEvent>(event));
+    m_listener->AfterRollback(% gevent);
+  }
 
-          virtual void AfterFailedCommit(Apache::Geode::Client::TransactionEvent^ event) override 
-          {
-            Apache::Geode::Client::TransactionEvent<TKey, TValue> gevent(GetNativePtr<apache::geode::client::TransactionEvent>(event));
-            m_listener->AfterFailedCommit(%gevent);
-          }
-
-          virtual void AfterRollback(Apache::Geode::Client::TransactionEvent^ event) override 
-          {
-            Apache::Geode::Client::TransactionEvent<TKey, TValue> gevent(GetNativePtr<apache::geode::client::TransactionEvent>(event));
-            m_listener->AfterRollback(%gevent);
-          }
-
-          virtual void Close()  override 
-          {
-            m_listener->Close();
-          }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void Close() override { m_listener->Close(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
 
 #endif

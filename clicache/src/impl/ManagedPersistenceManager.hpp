@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #pragma once
 
 #include "../geode_defs.hpp"
@@ -27,61 +26,53 @@
 #include "PersistenceManagerProxy.hpp"
 
 namespace apache {
-  namespace geode {
-    namespace client {
+namespace geode {
+namespace client {
 
-      /// <summary>
-      /// Wraps the managed <see cref="Apache.Geode.Client.IPersistenceManager" />
-      /// object and implements the native <c>apache::geode::client::PersistenceManager</c> interface.
-      /// </summary>
-      class ManagedPersistenceManagerGeneric : public apache::geode::client::PersistenceManager
-      {
-      public:
+/// <summary>
+/// Wraps the managed <see cref="Apache.Geode.Client.IPersistenceManager" />
+/// object and implements the native <c>apache::geode::client::PersistenceManager</c> interface.
+/// </summary>
+class ManagedPersistenceManagerGeneric : public apache::geode::client::PersistenceManager {
+ public:
+  inline ManagedPersistenceManagerGeneric(gc_ptr(Object) userptr) : m_userptr(userptr) {}
 
-        inline ManagedPersistenceManagerGeneric(Object^ userptr) : m_userptr(userptr) { }
+  static apache::geode::client::PersistenceManager* create(const char* assemblyPath, const char* factoryFunctionName);
 
-        static apache::geode::client::PersistenceManager* create(const char* assemblyPath,
-          const char* factoryFunctionName);
+  virtual ~ManagedPersistenceManagerGeneric() {}
 
-        virtual ~ManagedPersistenceManagerGeneric() { }
+  virtual void write(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<Cacheable>& value,
+                     std::shared_ptr<void>& PersistenceInfo);
+  virtual bool writeAll();
+  virtual void init(const std::shared_ptr<Region>& region, const std::shared_ptr<Properties>& diskProperties);
+  virtual std::shared_ptr<Cacheable> read(const std::shared_ptr<CacheableKey>& key,
+                                          const std::shared_ptr<void>& PersistenceInfo);
+  virtual bool readAll();
+  virtual void destroy(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<void>& PersistenceInfo);
+  virtual void close();
 
+  inline void setptr(gc_ptr(Apache::Geode::Client::IPersistenceManagerProxy) managedptr) {
+    m_managedptr = managedptr;
+  }
 
-        virtual void write(const std::shared_ptr<CacheableKey>&  key, const std::shared_ptr<Cacheable>&  value, std::shared_ptr<void>& PersistenceInfo);
-        virtual bool writeAll();
-        virtual void init(const std::shared_ptr<Region>& region, const std::shared_ptr<Properties>& diskProperties);
-        virtual std::shared_ptr<Cacheable> read(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<void>& PersistenceInfo);
-        virtual bool readAll();
-        virtual void destroy(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<void>& PersistenceInfo);
-        virtual void close();
+  inline gc_ptr(Object) userptr() const { return m_userptr; }
 
-        inline void setptr(Apache::Geode::Client::IPersistenceManagerProxy^ managedptr)
-        {
-          m_managedptr = managedptr;
-        }
+ private:
+  /// <summary>
+  /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
+  /// Note: not using auto_gcroot since it will result in 'Dispose' of the IPersistenceManager
+  /// to be called which is not what is desired when this object is destroyed. Normally this
+  /// managed object may be created by the user and will be handled automatically by the GC.
+  /// </summary>
+  gcroot<gc_ptr(Apache::Geode::Client::IPersistenceManagerProxy)> m_managedptr;
 
-        inline Object^ userptr() const
-        {
-          return m_userptr;
-        }
+  gcroot<gc_ptr(Object)> m_userptr;
 
-      private:
+  // Disable the copy and assignment constructors
+  ManagedPersistenceManagerGeneric(const ManagedPersistenceManagerGeneric&);
+  ManagedPersistenceManagerGeneric& operator=(const ManagedPersistenceManagerGeneric&);
+};
 
-
-        /// <summary>
-        /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
-        /// Note: not using auto_gcroot since it will result in 'Dispose' of the IPersistenceManager
-        /// to be called which is not what is desired when this object is destroyed. Normally this
-        /// managed object may be created by the user and will be handled automatically by the GC.
-        /// </summary>
-        gcroot<Apache::Geode::Client::IPersistenceManagerProxy^> m_managedptr;
-
-        gcroot<Object^> m_userptr;
-
-        // Disable the copy and assignment constructors
-        ManagedPersistenceManagerGeneric(const ManagedPersistenceManagerGeneric&);
-        ManagedPersistenceManagerGeneric& operator = (const ManagedPersistenceManagerGeneric&);
-      };
-
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/RegionEvent.hpp>
@@ -29,71 +28,54 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      //ref class Region;
+// ref class Region;
 
-      /// <summary>
-      /// This class encapsulates events that occur for a region.
-      /// </summary>
-      GENERIC(class TKey, class TValue)
-      public ref class RegionEvent sealed
-      {
-      public:
+/// <summary>
+/// This class encapsulates events that occur for a region.
+/// </summary>
+GENERIC(class TKey, class TValue)
+PUBLIC ref class RegionEvent sealed {
+ public:
+  /// <summary>
+  /// Return the region this event occurred in.
+  /// </summary>
+  property gc_ptr(IRegion<TKey, TValue>) Region { gc_ptr(IRegion<TKey, TValue>) get(); }
 
-        /// <summary>
-        /// Return the region this event occurred in.
-        /// </summary>
-        property IRegion<TKey, TValue>^ Region
-        {
-          IRegion<TKey, TValue>^ get( );
-        }
+  /// <summary>
+  /// Returns the callbackArgument passed to the method that generated
+  /// this event. See the <see cref="Region" /> interface methods
+  /// that take a callbackArgument parameter.
+  /// </summary>
+  property gc_ptr(Object) CallbackArgument { gc_ptr(Object) get(); }
 
-        /// <summary>
-        /// Returns the callbackArgument passed to the method that generated
-        /// this event. See the <see cref="Region" /> interface methods
-        /// that take a callbackArgument parameter.
-        /// </summary>
-        property Object^ CallbackArgument
-        {
-          Object^ get();
-        }
+  /// <summary>
+  /// Returns true if the event originated in a remote process.
+  /// </summary>
+  property bool RemoteOrigin { bool get(); }
 
-        /// <summary>
-        /// Returns true if the event originated in a remote process.
-        /// </summary>
-        property bool RemoteOrigin
-        {
-          bool get( );
-        }
+  internal :
 
+      const native::RegionEvent*
+      GetNative() {
+    return m_nativeptr;
+  }
 
-      internal:
+  /// <summary>
+  /// Internal constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline Apache::Geode::Client::RegionEvent<TKey, TValue>(const native::RegionEvent* nativeptr)
+      : m_nativeptr(nativeptr) {}
 
-        const native::RegionEvent* GetNative()
-        {
-          return m_nativeptr;
-        }
-
-        /// <summary>
-        /// Internal constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline Apache::Geode::Client::RegionEvent<TKey, TValue>( const native::RegionEvent* nativeptr )
-          : m_nativeptr( nativeptr )
-        {
-        }
-
-      private:
-        const native::RegionEvent* m_nativeptr;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  const native::RegionEvent* m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
- //namespace 
+   // namespace

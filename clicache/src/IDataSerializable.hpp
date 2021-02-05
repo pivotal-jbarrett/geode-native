@@ -27,42 +27,37 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class DataOutput;
-      ref class DataInput;
+ref class DataOutput;
+ref class DataInput;
 
-      /// <summary>
-      /// An interface for objects whose contents can be serialized as primitive types.
-      /// </summary>
-      public interface class IDataSerializable : public ISerializable
-      {
-      public:
-        /// <summary>
-        /// Serializes this object.
-        /// </summary>
-        /// <param name="output">
-        /// the DataOutput object to use for serializing the object
-        /// </param>
-        void ToData( DataOutput^ output );
+/// <summary>
+/// An interface for objects whose contents can be serialized as primitive types.
+/// </summary>
+PUBLIC interface class IDataSerializable : public ISerializable {
+ public:
+  /// <summary>
+  /// Serializes this object.
+  /// </summary>
+  /// <param name="output">
+  /// the DataOutput object to use for serializing the object
+  /// </param>
+  void ToData(gc_ptr(DataOutput) output);
 
-        /// <summary>
-        /// Deserialize this object, typical implementation should return
-        /// the 'this' pointer.
-        /// </summary>
-        /// <param name="input">
-        /// the DataInput stream to use for reading the object data
-        /// </param>
-        /// <returns>the deserialized object</returns>
-        void FromData( DataInput^ input );
-      };
+  /// <summary>
+  /// Deserialize this object, typical implementation should return
+  /// the 'this' pointer.
+  /// </summary>
+  /// <param name="input">
+  /// the DataInput stream to use for reading the object data
+  /// </param>
+  /// <returns>the deserialized object</returns>
+  void FromData(gc_ptr(DataInput) input);
+};
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

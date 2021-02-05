@@ -17,56 +17,40 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/TransactionId.hpp>
 #include "end_native.hpp"
 
-
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-        namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-        /// <summary>
-        /// This class encapsulates Id of a transaction.
-        /// </summary>
-        public ref class TransactionId sealed
-        {
-        internal:
+/// <summary>
+/// This class encapsulates Id of a transaction.
+/// </summary>
+PUBLIC ref class TransactionId sealed {
+  internal :
 
-          inline static TransactionId^ Create(native::TransactionId* nativeptr )
-          {
-          return __nullptr == nativeptr ? nullptr :
-            gcnew TransactionId( nativeptr );
-          }
+      inline static gc_ptr(TransactionId) Create(native::TransactionId* nativeptr) {
+    return __nullptr == nativeptr ? nullptr : gcnew TransactionId(nativeptr);
+  }
 
-          native::TransactionId& GetNative()
-          {
-            return *m_nativeptr;
-          }
+  native::TransactionId& GetNative() { return *m_nativeptr; }
 
-        private:
+ private:
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline TransactionId(native::TransactionId* nativeptr) : m_nativeptr(nativeptr) {}
 
-          /// <summary>
-          /// Private constructor to wrap a native object pointer
-          /// </summary>
-          /// <param name="nativeptr">The native object pointer</param>
-          inline TransactionId(native::TransactionId* nativeptr)
-            : m_nativeptr(nativeptr)
-          {
-          }
-
-          native::TransactionId* m_nativeptr;
-        };
-    }  // namespace Client
-  }  // namespace Geode
+  native::TransactionId* m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
- //namespace 
+   // namespace

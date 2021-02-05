@@ -28,104 +28,84 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      GENERIC(class TResult)
-      GENERIC(class TFilter)
-      Execution<TResult>^ Execution<TResult>::WithFilter(System::Collections::Generic::ICollection<TFilter>^ routingObj)
-      {
-        if (routingObj != nullptr) {
-          _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          auto rsptr = native::CacheableVector::create();
-        
-          FOR_EACH (TFilter item in routingObj)
-          {
-            auto v = Serializable::GetUnmanagedValueGeneric<TFilter>(item);
-            rsptr->push_back(v);
-          }
-          
-          try
-          {
-            return Execution<TResult>::Create(m_nativeptr->get()->withFilter(rsptr), this->m_rc);
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-          _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-        }
-        else {
-          throw gcnew IllegalArgumentException("Execution<TResult>::WithFilter: null TFilter provided");
-        }
+GENERIC(class TResult)
+GENERIC(class TFilter)
+gc_ptr(Execution<TResult>) Execution<TResult>::WithFilter(
+    gc_ptr(System::Collections::Generic::ICollection<TFilter>) routingObj) {
+  if (routingObj != nullptr) {
+    _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+      auto rsptr = native::CacheableVector::create();
+
+      FOR_EACH (TFilter item in routingObj) {
+        auto v = Serializable::GetUnmanagedValueGeneric<TFilter>(item);
+        rsptr->push_back(v);
       }
 
-      GENERIC(class TResult)
-      GENERIC(class TArgs)
-      Execution<TResult>^ Execution<TResult>::WithArgs( TArgs args )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          try
-          {
-            auto argsptr = Serializable::GetUnmanagedValueGeneric<TArgs>( args );
-            return Execution<TResult>::Create(m_nativeptr->get()->withArgs(argsptr), this->m_rc);
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
+      try {
+        return Execution<TResult>::Create(m_nativeptr->get()->withFilter(rsptr), this->m_rc);
+      } finally {
+        GC::KeepAlive(m_nativeptr);
       }
+    _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+  } else {
+    throw gcnew IllegalArgumentException("Execution<TResult>::WithFilter: null TFilter provided");
+  }
+}
 
-      GENERIC(class TResult)
-      Execution<TResult>^ Execution<TResult>::WithCollector(Client::IResultCollector<TResult>^ rc)
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          std::shared_ptr<native::ResultCollector> rcptr;
-        if ( rc != nullptr ) {
-          auto rcg = gcnew ResultCollectorGeneric<TResult>();
-          rcg->SetResultCollector(rc); 
-          rcptr = std::shared_ptr<native::ManagedResultCollectorGeneric>(new native::ManagedResultCollectorGeneric(rcg));
-        }
-        try
-        {
-          return Execution<TResult>::Create( m_nativeptr->get()->withCollector(rcptr), rc);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-      GENERIC(class TResult)
-      IResultCollector<TResult>^ Execution<TResult>::Execute(String^ func, TimeSpan timeout)
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-        try
-        {
-          auto rc = m_nativeptr->get()->execute(marshal_as<std::string>(func), TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout));
-          if (m_rc == nullptr)
-            return gcnew ResultCollector<TResult>(rc);
-          else
-            return m_rc;
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+GENERIC(class TResult)
+GENERIC(class TArgs)
+gc_ptr(Execution<TResult>) Execution<TResult>::WithArgs(TArgs args) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+    try {
+      auto argsptr = Serializable::GetUnmanagedValueGeneric<TArgs>(args);
+      return Execution<TResult>::Create(m_nativeptr->get()->withArgs(argsptr), this->m_rc);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-      GENERIC(class TResult)
-      IResultCollector<TResult>^ Execution<TResult>::Execute(String^ func)
-      {
-        return Execute(func, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TResult)
+gc_ptr(Execution<TResult>) Execution<TResult>::WithCollector(gc_ptr(Client::IResultCollector<TResult>) rc) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+    std::shared_ptr<native::ResultCollector> rcptr;
+    if (rc != nullptr) {
+      auto rcg = gcnew ResultCollectorGeneric<TResult>();
+      rcg->SetResultCollector(rc);
+      rcptr = std::shared_ptr<native::ManagedResultCollectorGeneric>(new native::ManagedResultCollectorGeneric(rcg));
+    }
+    try {
+      return Execution<TResult>::Create(m_nativeptr->get()->withCollector(rcptr), rc);
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
+GENERIC(class TResult)
+gc_ptr(IResultCollector<TResult>) Execution<TResult>::Execute(gc_ptr(String) func, TimeSpan timeout) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+    try {
+      auto rc = m_nativeptr->get()->execute(marshal_as<std::string>(func),
+                                            TimeUtils::TimeSpanToDurationCeil<std::chrono::milliseconds>(timeout));
+      if (m_rc == nullptr)
+        return gcnew ResultCollector<TResult>(rc);
+      else
+        return m_rc;
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
+
+GENERIC(class TResult)
+gc_ptr(IResultCollector<TResult>) Execution<TResult>::Execute(gc_ptr(String) func) {
+  return Execute(func, TimeUtils::DurationToTimeSpan(native::DEFAULT_QUERY_RESPONSE_TIMEOUT));
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

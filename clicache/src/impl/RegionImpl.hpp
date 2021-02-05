@@ -17,17 +17,14 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include "../../../IRegion.hpp"
 #include "../begin_native.hpp"
 #include <geode/Cache.hpp>
 #include "../end_native.hpp"
 
-
 //#include "CacheableHashMap.hpp"
 //#include "Log.hpp"
 #include "../ExceptionTypes.hpp"
 
 using namespace System::Collections::Generic;
-

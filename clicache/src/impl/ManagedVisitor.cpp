@@ -15,39 +15,31 @@
  * limitations under the License.
  */
 
-
 //#include "../../../../geode_includes.hpp"
 #include "ManagedVisitor.hpp"
 #include "SafeConvert.hpp"
 #include "../ExceptionTypes.hpp"
 
-
 using namespace System;
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
+namespace apache {
+namespace geode {
+namespace client {
 
-      void ManagedVisitorGeneric::visit(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<Cacheable>& value)
-      {
-        using namespace Apache::Geode::Client;
-        try {
-          ICacheableKey^ mg_key(SafeGenericUMKeyConvert<ICacheableKey^>(key));
-          Apache::Geode::Client::ISerializable^ mg_value(SafeUMSerializableConvertGeneric(value));
+void ManagedVisitorGeneric::visit(const std::shared_ptr<CacheableKey>& key, const std::shared_ptr<Cacheable>& value) {
+  using namespace Apache::Geode::Client;
+  try {
+    gc_ptr(ICacheableKey) mg_key(SafeGenericUMKeyConvert<gc_ptr(ICacheableKey)>(key));
+    gc_ptr(Apache::Geode::Client::ISerializable) mg_value(SafeUMSerializableConvertGeneric(value));
 
-          m_visitor->Invoke(mg_key, (Apache::Geode::Client::ISerializable^)mg_value);
-        }
-        catch (GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          GeodeException::ThrowNative(ex);
-        }
-      }
+    m_visitor->Invoke(mg_key, (gc_ptr(Apache::Geode::Client::ISerializable))mg_value);
+  } catch (gc_ptr(GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    GeodeException::ThrowNative(ex);
+  }
+}
 
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

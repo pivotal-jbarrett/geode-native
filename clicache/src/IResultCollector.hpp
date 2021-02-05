@@ -15,67 +15,58 @@
  * limitations under the License.
  */
 
-
 #pragma once
-
 
 #include "geode_defs.hpp"
 
 using namespace System;
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      interface class ISerializable;
-      /*
-      GENERIC(class TKey)
-      ref class ResultCollector;
-      */
+interface class ISerializable;
+/*
+GENERIC(class TKey)
+ref class ResultCollector;
+*/
 
-      /// <summary>
-      /// collect function execution results, can be overriden 
-      /// </summary>
-      GENERIC(class TResult)
-      public interface class IResultCollector
-      {
-      public:
+/// <summary>
+/// collect function execution results, can be overriden
+/// </summary>
+GENERIC(class TResult)
+PUBLIC interface class IResultCollector {
+ public:
+  /// <summary>
+  /// add result from a single function execution
+  /// </summary>
+  void AddResult(const TResult rs);
 
-        /// <summary>
-        /// add result from a single function execution
-        /// </summary>
-        void AddResult(const TResult rs);
+  /// <summary>
+  /// get result
+  /// </summary>
+  gc_ptr(System::Collections::Generic::ICollection<TResult>) GetResult();
 
-        /// <summary>
-        /// get result 
-        /// </summary>
-        System::Collections::Generic::ICollection<TResult>^  GetResult();
+  /// <summary>
+  /// get result
+  /// </summary>
+  gc_ptr(System::Collections::Generic::ICollection<TResult>) GetResult(TimeSpan timeout);
 
-        /// <summary>
-        /// get result 
-        /// </summary>
-        System::Collections::Generic::ICollection<TResult>^  GetResult(TimeSpan timeout);
+  /// <summary>
+  /// Call back provided to caller, which is called after function execution is
+  /// complete and caller can retrieve results using getResult()
+  /// </summary>
+  // GENERIC(class TKey)
+  void EndResults();
 
-        /// <summary>
-        ///Call back provided to caller, which is called after function execution is
-        ///complete and caller can retrieve results using getResult()
-        /// </summary>
-        //GENERIC(class TKey)
-        void EndResults();
-
-        /// <summary>
-        ///Geode will invoke this method before re-executing function (in case of
-        /// Function Execution HA) This is to clear the previous execution results from
-        /// the result collector
-        /// @since 6.5
-        /// </summary>
-        //GENERIC(class TKey)
-        void ClearResults(/*bool*/);
-
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Geode will invoke this method before re-executing function (in case of
+  /// Function Execution HA) This is to clear the previous execution results from
+  /// the result collector
+  /// @since 6.5
+  /// </summary>
+  // GENERIC(class TKey)
+  void ClearResults(/*bool*/);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

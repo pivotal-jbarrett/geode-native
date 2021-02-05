@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "CacheableDate.hpp"
 #include "DataInput.hpp"
 #include "DataOutput.hpp"
@@ -24,86 +23,60 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      CacheableDate::CacheableDate(DateTime dateTime)
-        : m_dateTime(dateTime), m_hashcode(0)
-      {
+CacheableDate::CacheableDate(DateTime dateTime) : m_dateTime(dateTime), m_hashcode(0) {
+  // Round off dateTime to the nearest millisecond.
+  System::Int64 ticksToAdd = m_dateTime.Ticks % TimeSpan::TicksPerMillisecond;
+  ticksToAdd =
+      (ticksToAdd >= (TimeSpan::TicksPerMillisecond / 2) ? (TimeSpan::TicksPerMillisecond - ticksToAdd) : -ticksToAdd);
+  m_dateTime = m_dateTime.AddTicks(ticksToAdd);
+}
 
-        // Round off dateTime to the nearest millisecond.
-        System::Int64 ticksToAdd = m_dateTime.Ticks % TimeSpan::TicksPerMillisecond;
-        ticksToAdd = (ticksToAdd >= (TimeSpan::TicksPerMillisecond / 2) ?
-                      (TimeSpan::TicksPerMillisecond - ticksToAdd) : -ticksToAdd);
-        m_dateTime = m_dateTime.AddTicks(ticksToAdd);
+void CacheableDate::ToData(gc_ptr(DataOutput) output) {
+  // put as universal time
+  TimeSpan epochSpan = m_dateTime.ToUniversalTime() - EpochTime;
+  System::Int64 millisSinceEpoch = epochSpan.Ticks / TimeSpan::TicksPerMillisecond;
+  output->WriteInt64(millisSinceEpoch);
 
-      }
+  // Log::Fine("CacheableDate::Todata time " + m_dateTime.Ticks);
+}
 
-      void CacheableDate::ToData(DataOutput^ output)
-      {
-        //put as universal time
-        TimeSpan epochSpan = m_dateTime.ToUniversalTime() - EpochTime;
-        System::Int64 millisSinceEpoch =
-          epochSpan.Ticks / TimeSpan::TicksPerMillisecond;
-        output->WriteInt64(millisSinceEpoch);
+void CacheableDate::FromData(gc_ptr(DataInput) input) {
+  DateTime epochTime = EpochTime;
+  System::Int64 millisSinceEpoch = input->ReadInt64();
+  m_dateTime = epochTime.AddTicks(millisSinceEpoch * TimeSpan::TicksPerMillisecond);
+  m_dateTime = m_dateTime.ToLocalTime();
+  // Log::Fine("CacheableDate::Fromadata time " + m_dateTime.Ticks);
+}
 
-        //Log::Fine("CacheableDate::Todata time " + m_dateTime.Ticks);
-      }
+System::UInt64 CacheableDate::ObjectSize::get() { return sizeof(DateTime); }
 
-      void CacheableDate::FromData(DataInput^ input)
-      {
-        DateTime epochTime = EpochTime;
-        System::Int64 millisSinceEpoch = input->ReadInt64();
-        m_dateTime = epochTime.AddTicks(
-          millisSinceEpoch * TimeSpan::TicksPerMillisecond);
-        m_dateTime = m_dateTime.ToLocalTime();
-        //Log::Fine("CacheableDate::Fromadata time " + m_dateTime.Ticks);
-      }
+int8_t CacheableDate::DsCode::get() { return static_cast<int8_t>(native::internal::DSCode::CacheableDate); }
 
-      System::UInt64 CacheableDate::ObjectSize::get()
-      {
-        return sizeof(DateTime);
-      }
+gc_ptr(String) CacheableDate::ToString() {
+  return m_dateTime.ToString(System::Globalization::CultureInfo::CurrentCulture);
+}
 
-      int8_t CacheableDate::DsCode::get()
-      {
-        return static_cast<int8_t>(native::internal::DSCode::CacheableDate);
-      }
+System::Int32 CacheableDate::GetHashCode() {
+  if (m_hashcode == 0) {
+    m_hashcode = Objects::GetHashCode(m_dateTime);
+  }
+  return m_hashcode;
+}
 
-      String^ CacheableDate::ToString()
-      {
-        return m_dateTime.ToString(
-          System::Globalization::CultureInfo::CurrentCulture);
-      }
+bool CacheableDate::Equals(gc_ptr(ICacheableKey) other) { return Equals((gc_ptr(Object))other); }
 
-      System::Int32 CacheableDate::GetHashCode()
-      {
-        if (m_hashcode == 0) {
-          m_hashcode = Objects::GetHashCode(m_dateTime);
-        }
-        return m_hashcode;
-      }
+bool CacheableDate::Equals(gc_ptr(Object) obj) {
+  gc_ptr(CacheableDate) otherDate = dynamic_cast<gc_ptr(CacheableDate)>(obj);
 
-      bool CacheableDate::Equals(ICacheableKey^ other)
-      {
-        return Equals((Object^) other);
-      }
-
-      bool CacheableDate::Equals(Object^ obj)
-      {
-        CacheableDate^ otherDate =
-          dynamic_cast<CacheableDate^>(obj);
-
-        if (otherDate != nullptr) {
-          return (m_dateTime == otherDate->m_dateTime);
-        }
-        return false;
-      }
-    }  // namespace Client
-  }  // namespace Geode
+  if (otherDate != nullptr) {
+    return (m_dateTime == otherDate->m_dateTime);
+  }
+  return false;
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

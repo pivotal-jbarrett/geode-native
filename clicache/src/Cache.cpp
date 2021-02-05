@@ -48,18 +48,6 @@ namespace Apache {
 namespace Geode {
 namespace Client {
 
-#define BEGIN_NATIVE \
-  do {               \
-    try
-
-#define END_NATIVE                                        \
-  catch (const apache::geode::client::Exception &ex) {    \
-    throw Apache::Geode::Client::GeodeException::Get(ex); \
-  }                                                       \
-  finally { GC::KeepAlive(this); }                        \
-  }                                                       \
-  while (false)
-
 namespace native = apache::geode::client;
 
 Cache::Cache(std::shared_ptr<native::Cache> nativeptr) {
@@ -68,8 +56,8 @@ Cache::Cache(std::shared_ptr<native::Cache> nativeptr) {
   m_typeRegistry = gcnew Apache::Geode::Client::TypeRegistry(this);
 }
 
-String ^ Cache::Name::get() {
-  BEGIN_NATIVE { return marshal_as<String ^>(m_nativeptr->get()->getName()); }
+gc_ptr(String) Cache::Name::get() {
+  BEGIN_NATIVE { return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getName()); }
   END_NATIVE;
 }
 
@@ -78,7 +66,7 @@ bool Cache::IsClosed::get() {
   END_NATIVE;
 }
 
-SystemProperties ^ Cache::SystemProperties::get() {
+gc_ptr(SystemProperties) Cache::SystemProperties::get() {
   BEGIN_NATIVE {
     auto &&systemProperties = m_nativeptr->get()->getSystemProperties();
     return Apache::Geode::Client::SystemProperties::Create(&systemProperties);
@@ -86,7 +74,7 @@ SystemProperties ^ Cache::SystemProperties::get() {
   END_NATIVE;
 }
 
-CacheTransactionManager ^ Cache::CacheTransactionManager::get() {
+gc_ptr(CacheTransactionManager) Cache::CacheTransactionManager::get() {
   // TODO shared_ptr this should be checking the return type for which tx mgr
   BEGIN_NATIVE {
     auto nativeptr = m_nativeptr->get()->getCacheTransactionManager();
@@ -117,7 +105,7 @@ void Cache::ReadyForEvents() {
 }
 
 GENERIC(class TKey, class TValue)
-Client::IRegion<TKey, TValue> ^ Cache::GetRegion(String ^ path) {
+gc_ptr(Client::IRegion<TKey, TValue>) Cache::GetRegion(gc_ptr(String) path) {
   BEGIN_NATIVE {
     return Client::Region<TKey, TValue>::Create(m_nativeptr->get()->getRegion(marshal_as<std::string>(path)));
   }
@@ -125,12 +113,12 @@ Client::IRegion<TKey, TValue> ^ Cache::GetRegion(String ^ path) {
 }
 
 GENERIC(class TKey, class TValue)
-array<Client::IRegion<TKey, TValue> ^> ^ Cache::RootRegions() {
+array<gc_ptr(Client::IRegion<TKey, TValue>)> ^ Cache::RootRegions() {
   std::vector<std::shared_ptr<apache::geode::client::Region>> vrr;
   BEGIN_NATIVE { vrr = m_nativeptr->get()->rootRegions(); }
   END_NATIVE;
 
-  auto rootRegions = gcnew array<Client::IRegion<TKey, TValue> ^>(static_cast<int>(vrr.size()));
+  auto rootRegions = gcnew array<gc_ptr(Client::IRegion<TKey, TValue>)>(static_cast<int>(vrr.size()));
 
   for (System::Int32 index = 0; index < vrr.size(); index++) {
     std::shared_ptr<apache::geode::client::Region> &nativeptr(vrr[index]);
@@ -139,17 +127,17 @@ array<Client::IRegion<TKey, TValue> ^> ^ Cache::RootRegions() {
   return rootRegions;
 }
 
-Client::QueryService ^ Cache::GetQueryService() {
+gc_ptr(Client::QueryService) Cache::GetQueryService() {
   BEGIN_NATIVE { return Client::QueryService::Create(m_nativeptr->get()->getQueryService()); }
   END_NATIVE;
 }
 
-Client::QueryService ^ Cache::GetQueryService(String ^ poolName) {
+gc_ptr(Client::QueryService) Cache::GetQueryService(gc_ptr(String) poolName) {
   BEGIN_NATIVE { return QueryService::Create(m_nativeptr->get()->getQueryService(marshal_as<std::string>(poolName))); }
   END_NATIVE;
 }
 
-RegionFactory ^ Cache::CreateRegionFactory(RegionShortcut preDefinedRegionAttributes) {
+gc_ptr(RegionFactory) Cache::CreateRegionFactory(RegionShortcut preDefinedRegionAttributes) {
   auto preDefineRegionAttr = apache::geode::client::RegionShortcut(preDefinedRegionAttributes);
 
   BEGIN_NATIVE {
@@ -159,7 +147,7 @@ RegionFactory ^ Cache::CreateRegionFactory(RegionShortcut preDefinedRegionAttrib
   END_NATIVE;
 }
 
-IRegionService ^ Cache::CreateAuthenticatedView(Properties<String ^, Object ^> ^ credentials) {
+gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<String ^, Object ^>) credentials) {
   BEGIN_NATIVE {
     return AuthenticatedView::Create(
         m_nativeptr->get()->native::Cache::createAuthenticatedView(credentials->GetNative(), ""));
@@ -177,7 +165,8 @@ bool Cache::GetPdxReadSerialized() {
   END_NATIVE;
 }
 
-IRegionService ^ Cache::CreateAuthenticatedView(Properties<String ^, Object ^> ^ credentials, String ^ poolName) {
+gc_ptr(IRegionService) Cache::CreateAuthenticatedView(gc_ptr(Properties<String ^, Object ^>) credentials,
+                                                          gc_ptr(String) poolName) {
   BEGIN_NATIVE {
     return AuthenticatedView::Create(m_nativeptr->get()->native::Cache::createAuthenticatedView(
         credentials->GetNative(), marshal_as<std::string>(poolName)));
@@ -185,24 +174,24 @@ IRegionService ^ Cache::CreateAuthenticatedView(Properties<String ^, Object ^> ^
   END_NATIVE;
 }
 
-void Cache::InitializeDeclarativeCache(String ^ cacheXml) {
+void Cache::InitializeDeclarativeCache(gc_ptr(String) cacheXml) {
   BEGIN_NATIVE { m_nativeptr->get()->native::Cache::initializeDeclarativeCache(marshal_as<std::string>(cacheXml)); }
   END_NATIVE;
 }
 
-IPdxInstanceFactory ^ Cache::CreatePdxInstanceFactory(String ^ className) {
+gc_ptr(IPdxInstanceFactory) Cache::CreatePdxInstanceFactory(gc_ptr(String) className) {
   return gcnew Internal::PdxInstanceFactoryImpl(className, this);
 }
 
-DataInput ^ Cache::CreateDataInput(array<Byte> ^ buffer, System::Int32 len) {
+gc_ptr(DataInput) Cache::CreateDataInput(gc_ptr(array<Byte>) buffer, System::Int32 len) {
   return gcnew DataInput(buffer, len, this);
 }
 
-DataInput ^ Cache::CreateDataInput(array<Byte> ^ buffer) { return gcnew DataInput(buffer, this); }
+gc_ptr(DataInput) Cache::CreateDataInput(gc_ptr(array<Byte>) buffer) { return gcnew DataInput(buffer, this); }
 
-DataOutput ^ Cache::CreateDataOutput() { return gcnew DataOutput(this); }
+gc_ptr(DataOutput) Cache::CreateDataOutput() { return gcnew DataOutput(this); }
 
-PoolFactory ^ Cache::GetPoolFactory() {
+gc_ptr(PoolFactory) Cache::GetPoolFactory() {
   BEGIN_NATIVE {
     return PoolFactory::Create(std::unique_ptr<native::PoolFactory>(
         new native::PoolFactory(m_nativeptr->get_shared_ptr()->getPoolManager().createFactory())));
@@ -210,7 +199,7 @@ PoolFactory ^ Cache::GetPoolFactory() {
   END_NATIVE;
 }
 
-PoolManager ^ Cache::GetPoolManager() {
+gc_ptr(PoolManager) Cache::GetPoolManager() {
   BEGIN_NATIVE { return gcnew PoolManager(m_nativeptr->get_shared_ptr()->getPoolManager()); }
   END_NATIVE;
 }

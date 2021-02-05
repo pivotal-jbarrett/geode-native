@@ -17,132 +17,99 @@
 
 #pragma once
 
-
-
-
 #include "geode_defs.hpp"
 #include "ICacheableKey.hpp"
 #include "IDataSerializablePrimitive.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
+/// <summary>
+/// An immutable filename wrapper that can serve as a distributable
+/// key object for caching as well as being a string value.
+/// </summary>
+PUBLIC ref class CacheableFileName : public ICacheableKey, public IDataSerializablePrimitive {
+ public:
+  /// <summary>
+  /// Static function to create a new instance from the given string.
+  /// </summary>
+  inline static gc_ptr(CacheableFileName) Create(gc_ptr(String) value) {
+    return (value != nullptr && value->Length > 0 ? gcnew CacheableFileName(value) : nullptr);
+  }
+
+  /// <summary>
+  /// Static function to create a new instance from the
+  /// given character array.
+  /// </summary>
+  inline static gc_ptr(CacheableFileName) Create(gc_ptr(array<Char>) value) {
+    return (value != nullptr && value->Length > 0 ? gcnew CacheableFileName(value) : nullptr);
+  }
+
+  // Region: ISerializable Members
+
+  virtual void ToData(gc_ptr(DataOutput) output);
+
+  virtual void FromData(gc_ptr(DataInput) input);
+
+  virtual property System::UInt64 ObjectSize { virtual System::UInt64 get(); }
+
+  virtual property int8_t DsCode { virtual int8_t get(); }
+
+  virtual gc_ptr(String) ToString() override { return m_str; }
+
+  // End Region: ISerializable Members
+
+  // Region: ICacheableKey Members
+
+  /// <summary>
+  /// Return the hashcode for this key.
+  /// </summary>
+  virtual System::Int32 GetHashCode() override;
+
+  /// <summary>
+  /// Return true if this key matches other object.
+  /// </summary>
+  virtual bool Equals(gc_ptr(ICacheableKey) other);
+
+  /// <summary>
+  /// Return true if this key matches other object.
+  /// </summary>
+  virtual bool Equals(gc_ptr(Object) obj) override;
+
+  // End Region: ICacheableKey Members
+
+  /// <summary>
+  /// Gets the string value.
+  /// </summary>
+  property gc_ptr(String) Value {
+    inline gc_ptr(String) get() { return m_str; }
+  }
+
+  internal :
       /// <summary>
-      /// An immutable filename wrapper that can serve as a distributable
-      /// key object for caching as well as being a string value.
+      /// Factory function to register this class.
       /// </summary>
-      public ref class CacheableFileName
-        : public ICacheableKey,
-          public IDataSerializablePrimitive
-      {
-      public:
-        /// <summary>
-        /// Static function to create a new instance from the given string.
-        /// </summary>
-        inline static CacheableFileName^ Create(String^ value)
-        {
-          return (value != nullptr && value->Length > 0 ?
-            gcnew CacheableFileName(value) : nullptr);
-        }
+      static gc_ptr(ISerializable) CreateDeserializable() {
+    return gcnew CacheableFileName((gc_ptr(String)) nullptr);
+  }
 
-        /// <summary>
-        /// Static function to create a new instance from the
-        /// given character array.
-        /// </summary>
-        inline static CacheableFileName^ Create(array<Char>^ value)
-        {
-          return (value != nullptr && value->Length > 0 ?
-            gcnew CacheableFileName(value) : nullptr);
-        }
+ private:
+  /// <summary>
+  /// Allocates a new instance from the given string.
+  /// </summary>
+  inline CacheableFileName(gc_ptr(String) value) : m_str(value == nullptr ? String::Empty : value), m_hashcode(0) {}
 
-        // Region: ISerializable Members
+  /// <summary>
+  /// Allocates a new instance copying from the given character array.
+  /// </summary>
+  inline CacheableFileName(gc_ptr(array<Char>) value) : m_str(gcnew String(value)), m_hashcode(0) {}
 
-         virtual void ToData(DataOutput^ output);
-
-        virtual void FromData(DataInput^ input);
-
-        virtual property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get();
-        }
-
-        virtual property int8_t DsCode
-        {
-          virtual int8_t get();
-        }
-
-        virtual String^ ToString() override
-        {
-          return m_str;
-        }
-
-        // End Region: ISerializable Members
-
-        // Region: ICacheableKey Members
-
-        /// <summary>
-        /// Return the hashcode for this key.
-        /// </summary>
-        virtual System::Int32 GetHashCode() override;
-
-        /// <summary>
-        /// Return true if this key matches other object.
-        /// </summary>
-        virtual bool Equals(ICacheableKey^ other);
-
-        /// <summary>
-        /// Return true if this key matches other object.
-        /// </summary>
-        virtual bool Equals(Object^ obj) override;
-
-        // End Region: ICacheableKey Members
-
-        /// <summary>
-        /// Gets the string value.
-        /// </summary>
-        property String^ Value
-        {
-          inline String^ get()
-          {
-            return m_str;
-          }
-        }
-
-      internal:
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableFileName((String^)nullptr);
-        }
-
-      private:
-        /// <summary>
-        /// Allocates a new instance from the given string.
-        /// </summary>
-        inline CacheableFileName(String^ value)
-          : m_str(value == nullptr ? String::Empty : value),m_hashcode(0) { }
-
-        /// <summary>
-        /// Allocates a new instance copying from the given character array.
-        /// </summary>
-        inline CacheableFileName(array<Char>^ value)
-          : m_str(gcnew String(value)),m_hashcode(0) { }
-
-        String^ m_str;
-        int m_hashcode;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(String) m_str;
+  int m_hashcode;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-
-

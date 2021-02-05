@@ -32,106 +32,87 @@
 using namespace System;
 using namespace apache::geode::client;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      interface class IPdxSerializable;
-    }  // namespace Client
-  }  // namespace Geode
+namespace Apache {
+namespace Geode {
+namespace Client {
+interface class IPdxSerializable;
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
 
+namespace apache {
+namespace geode {
+namespace client {
+/// <summary>
+/// Wraps the managed <see cref="Com.Vmware.Cache.IPdxSerializable" />
+/// object and implements the native <c>apache::geode::client::CacheableKey</c> interface.
+/// </summary>
+class PdxManagedCacheableKey : public PdxSerializable, public Delta {
+ public:
+  inline PdxManagedCacheableKey()
+      : Delta(), m_managedptr(nullptr), m_hashcode(0), m_objectSize(0), m_managedDeltaptr(nullptr) {}
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
-      /// <summary>
-      /// Wraps the managed <see cref="Com.Vmware.Cache.IPdxSerializable" />
-      /// object and implements the native <c>apache::geode::client::CacheableKey</c> interface.
-      /// </summary>
-      class PdxManagedCacheableKey
-        : public PdxSerializable,
-          public Delta
-      {
-        public:
-          inline PdxManagedCacheableKey()
-            : Delta(), m_managedptr(nullptr), m_hashcode(0), m_objectSize(0), m_managedDeltaptr(nullptr) {}
+  inline PdxManagedCacheableKey(gc_ptr(Apache::Geode::Client::IPdxSerializable) managedptr, int hashcode)
+      : Delta(), m_managedptr(managedptr), m_objectSize(0) {
+    m_className = marshal_as<std::string>(m_managedptr->GetType()->Name);
+    m_hashcode = hashcode;
+    m_managedDeltaptr = dynamic_cast<gc_ptr(Apache::Geode::Client::IDelta)>(managedptr);
+  }
 
-          inline PdxManagedCacheableKey(
-            Apache::Geode::Client::IPdxSerializable^ managedptr, int hashcode)
-            :Delta(), m_managedptr(managedptr), m_objectSize(0) 
-          {
-            m_className = marshal_as<std::string>(m_managedptr->GetType()->Name);
-            m_hashcode = hashcode;
-            m_managedDeltaptr = dynamic_cast<Apache::Geode::Client::IDelta^>(managedptr);
-          }
+  /// <summary>
+  /// Constructor to initialize with the provided managed object.
+  /// </summary>
+  /// <param name="managedptr">
+  /// The managed object.
+  /// </param>
+  inline PdxManagedCacheableKey(gc_ptr(Apache::Geode::Client::IPdxSerializable) managedptr)
+      : PdxManagedCacheableKey(managedptr, 0) {}
 
-          /// <summary>
-          /// Constructor to initialize with the provided managed object.
-          /// </summary>
-          /// <param name="managedptr">
-          /// The managed object.
-          /// </param>
-          inline PdxManagedCacheableKey(
-            Apache::Geode::Client::IPdxSerializable^ managedptr)
-            : PdxManagedCacheableKey(managedptr, 0) {}
+  void toData(PdxWriter& output) const override;
 
-          void toData(PdxWriter& output) const override;
+  void fromData(PdxReader& input) override;
 
-          void fromData(PdxReader& input) override;
+  const std::string& getClassName() const override;
 
-          const std::string& getClassName() const override;
+  void toDelta(DataOutput& output) const override;
 
-          void toDelta(DataOutput& output) const override;
+  void fromDelta(DataInput& input) override;
 
-          void fromDelta(DataInput& input) override;
+  bool hasDelta() const override;
 
-          bool hasDelta() const override;
+  std::shared_ptr<apache::geode::client::Delta> clone() const override;
 
-          std::shared_ptr<apache::geode::client::Delta> clone() const override;
+  size_t objectSize() const override;
 
-          size_t objectSize() const override;
+  std::string toString() const override;
 
-          std::string toString() const override;
+  bool operator==(const CacheableKey& other) const override;
 
-          bool operator == (const CacheableKey& other) const override;
-          
-          virtual bool operator == (const PdxManagedCacheableKey& other) const;
+  virtual bool operator==(const PdxManagedCacheableKey& other) const;
 
-          System::Int32 hashcode() const override;
+  System::Int32 hashcode() const override;
 
-          inline Apache::Geode::Client::IPdxSerializable^ ptr() const
-          {
-            return m_managedptr;
-          }
+  inline gc_ptr(Apache::Geode::Client::IPdxSerializable) ptr() const { return m_managedptr; }
 
-          static Serializable* CreateDeserializable()
-          {
-            throw "Not implemented";
-          }
+  static Serializable* CreateDeserializable() { throw "Not implemented"; }
 
-          PdxManagedCacheableKey(const PdxManagedCacheableKey&) = delete;
-          PdxManagedCacheableKey& operator = (const PdxManagedCacheableKey&) = delete;
+  PdxManagedCacheableKey(const PdxManagedCacheableKey&) = delete;
+  PdxManagedCacheableKey& operator=(const PdxManagedCacheableKey&) = delete;
 
-        private:
-          int m_hashcode;
-          size_t m_objectSize;
-          std::string m_className;
+ private:
+  int m_hashcode;
+  size_t m_objectSize;
+  std::string m_className;
 
-          /// <summary>
-          /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
-          /// Note: not using auto_gcroot since it will result in 'Dispose' of the ISerializable
-          /// to be called which is not what is desired when this object is destroyed. Normally this
-          /// managed object may be created by the user and will be handled automatically by the GC.
-          /// </summary>
-          gcroot<Apache::Geode::Client::IPdxSerializable^> m_managedptr;
-          gcroot<Apache::Geode::Client::IDelta^> m_managedDeltaptr;
-      };
-    }  // namespace client
-  }  // namespace geode
+  /// <summary>
+  /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
+  /// Note: not using auto_gcroot since it will result in 'Dispose' of the ISerializable
+  /// to be called which is not what is desired when this object is destroyed. Normally this
+  /// managed object may be created by the user and will be handled automatically by the GC.
+  /// </summary>
+  gcroot<gc_ptr(Apache::Geode::Client::IPdxSerializable)> m_managedptr;
+  gcroot<gc_ptr(Apache::Geode::Client::IDelta)> m_managedDeltaptr;
+};
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

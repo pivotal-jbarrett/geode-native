@@ -15,42 +15,26 @@
  * limitations under the License.
  */
 
-
 #include "SelectResultsIterator.hpp"
 #include "impl/SafeConvert.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace System;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace System;
 
-      GENERIC(class TResult)
-      TResult SelectResultsIterator<TResult>::Current::get( )
-      {
-        return m_results[m_index];
-      }
+GENERIC(class TResult)
+TResult SelectResultsIterator<TResult>::Current::get() { return m_results[m_index]; }
 
-      GENERIC(class TResult)
-      Object^ SelectResultsIterator<TResult>::Current2::get( )
-      {
-        return m_results[m_index];
-      }
+GENERIC(class TResult)
+gc_ptr(Object) SelectResultsIterator<TResult>::Current2::get() { return m_results[m_index]; }
 
-      GENERIC(class TResult)
-      bool SelectResultsIterator<TResult>::MoveNext( )
-      {
-         return ++m_index < m_results->Size;
-      }
+GENERIC(class TResult)
+bool SelectResultsIterator<TResult>::MoveNext() { return ++m_index < m_results->Size; }
 
-      GENERIC(class TResult)
-      void SelectResultsIterator<TResult>::Reset( )
-      {
-        m_index = -1;
-      }
+GENERIC(class TResult)
+void SelectResultsIterator<TResult>::Reset() { m_index = -1; }
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

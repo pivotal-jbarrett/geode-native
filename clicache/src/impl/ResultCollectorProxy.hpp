@@ -23,57 +23,38 @@
 #include "../IResultCollector.hpp"
 
 using namespace System;
-//using namespace System::Collections::Generic;
-//using namespace Apache::Geode::Client;
+// using namespace System::Collections::Generic;
+// using namespace Apache::Geode::Client;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      public interface class ResultCollectorG
-      {
-      public:
-        void AddResult(const Object^ result);
-        void EndResults();
-        void ClearResults();
-      };
+PUBLIC interface class ResultCollectorG {
+ public:
+  void AddResult(const gc_ptr(Object) result);
+  void EndResults();
+  void ClearResults();
+};
 
-      GENERIC(class TResult)
-      public ref class ResultCollectorGeneric : ResultCollectorG
-      {
-        private:
+GENERIC(class TResult)
+PUBLIC ref class ResultCollectorGeneric : ResultCollectorG {
+ private:
+  gc_ptr(IResultCollector<TResult>) m_rscoll;
 
-          IResultCollector<TResult>^ m_rscoll;
+ public:
+  void SetResultCollector(gc_ptr(IResultCollector<TResult>) rscoll) { m_rscoll = rscoll; }
 
-        public:
+  virtual void AddResult(const gc_ptr(Object) rs) {
+    // std::shared_ptr<apache::geode::client::Cacheable> nativeptr(rs);
+    // TResult grs =  TypeRegistry::GetManagedValueGeneric<TResult>( nativeptr);
+    m_rscoll->AddResult(safe_cast<const TResult>(rs));
+  }
 
-          void SetResultCollector(IResultCollector<TResult>^ rscoll)
-          {
-            m_rscoll = rscoll;
-          }
+  virtual void EndResults() { m_rscoll->EndResults(); }
 
-          virtual void AddResult( const Object^ rs ) 
-          {
-            //std::shared_ptr<apache::geode::client::Cacheable> nativeptr(rs);
-            //TResult grs =  TypeRegistry::GetManagedValueGeneric<TResult>( nativeptr);
-            m_rscoll->AddResult(safe_cast<const TResult>(rs));
-          }
-
-          virtual void EndResults() 
-          {
-            m_rscoll->EndResults();
-          }
-
-          virtual void ClearResults() 
-          {
-            m_rscoll->ClearResults();
-          }
-
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void ClearResults() { m_rscoll->ClearResults(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

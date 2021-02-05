@@ -17,49 +17,35 @@
 
 #pragma once
 
-
 #include "begin_native.hpp"
 #include <memory>
 #include "end_native.hpp"
+#include "cli.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      template <class _T>
-      public ref class native_conditional_unique_ptr sealed {
-      private:
-        std::unique_ptr<_T>* owned_ptr;
-        _T* unowned_ptr;
+template <class _T>
+PUBLIC ref class native_conditional_unique_ptr sealed {
+ private:
+  std::unique_ptr<_T>* owned_ptr;
+  _T* unowned_ptr;
 
-      public:
-        native_conditional_unique_ptr(std::unique_ptr<_T> ptr) :
-          owned_ptr(new std::unique_ptr<_T>(std::move(ptr))), 
-          unowned_ptr(__nullptr) {}
+ public:
+  native_conditional_unique_ptr(std::unique_ptr<_T> ptr)
+      : owned_ptr(new std::unique_ptr<_T>(std::move(ptr))), unowned_ptr(__nullptr) {}
 
-        native_conditional_unique_ptr(_T* ptr) :
-          owned_ptr(__nullptr),
-          unowned_ptr(ptr) {}
+  native_conditional_unique_ptr(_T* ptr) : owned_ptr(__nullptr), unowned_ptr(ptr) {}
 
-        ~native_conditional_unique_ptr() {
-          native_conditional_unique_ptr::!native_conditional_unique_ptr();
-        }
+  ~native_conditional_unique_ptr() { native_conditional_unique_ptr::!native_conditional_unique_ptr(); }
 
-        !native_conditional_unique_ptr() {
-          delete owned_ptr;
-        }
+  !native_conditional_unique_ptr() { delete owned_ptr; }
 
-        inline _T* get() {
-          return __nullptr == owned_ptr ? unowned_ptr : owned_ptr->get();
-        }
+  inline _T* get() { return __nullptr == owned_ptr ? unowned_ptr : owned_ptr->get(); }
 
-        static inline _T& operator*(native_conditional_unique_ptr<_T>^ t) {
-          return *(t->get());
-        }
-      };
-    }
-  }
-}
+  static inline _T& operator*(gc_ptr(native_conditional_unique_ptr<_T>) t) { return *(t->get()); }
+};
+}  // namespace Client
+}  // namespace Geode
+}  // namespace Apache

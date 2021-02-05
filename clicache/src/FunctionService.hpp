@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/FunctionService.hpp>
@@ -27,71 +26,67 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-    //  GENERIC(class TKey, class TValue)
-      ref class Pool;
-     
-      GENERIC(class TResult)
-      ref class Execution;
+//  GENERIC(class TKey, class TValue)
+ref class Pool;
 
-      /// <summary>
-      /// A factory class used to create Execute object for function execution
-      /// </summary>
-      /// <remarks>
-      GENERIC(class TResult)
-      public ref class FunctionService
-      {
-      public:
+GENERIC(class TResult)
+ref class Execution;
 
-        /// <summary>
-        /// Creates a new region Execution object
-        /// </summary>
-        /// <remarks>
-        /// If Pool is multiusersecure mode then one need to pass logical instance of Region Pool->CreateSecureUserCache(<credentials>)->getRegion(<regionPath>).
-        /// </remarks>
-        generic <class TKey, class TValue>
-        static Execution<TResult>^ OnRegion( IRegion<TKey, TValue>^ rg );
+/// <summary>
+/// A factory class used to create Execute object for function execution
+/// </summary>
+/// <remarks>
+GENERIC(class TResult)
+PUBLIC ref class FunctionService {
+ public:
+  /// <summary>
+  /// Creates a new region Execution object
+  /// </summary>
+  /// <remarks>
+  /// If Pool is multiusersecure mode then one need to pass logical instance of Region
+  /// Pool->CreateSecureUserCache(<credentials>)->getRegion(<regionPath>).
+  /// </remarks>
+  generic<class TKey, class TValue> static gc_ptr(Execution<TResult>)
+      OnRegion(gc_ptr(IRegion<TKey, TValue>) rg);
 
-        /// <summary>
-        /// Creates a new Execution object on one server
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        /// <exception cref="UnsupportedOperationException">unsupported operation exception, when Pool is in multiusersecure mode.</exception>
-        static Execution<TResult>^ OnServer( Pool^ pl );
+  /// <summary>
+  /// Creates a new Execution object on one server
+  /// </summary>
+  /// <remarks>
+  /// </remarks>
+  /// <exception cref="UnsupportedOperationException">unsupported operation exception, when Pool is in multiusersecure
+  /// mode.</exception>
+  static gc_ptr(Execution<TResult>) OnServer(gc_ptr(Pool) pl);
 
-        /// <summary>
-        /// Creates a new Execution object on all servers in the pool
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        /// <exception cref="UnsupportedOperationException">unsupported operation exception, when Pool is in multiusersecure mode.</exception>
-        static Execution<TResult>^ OnServers( Pool^ pl );
+  /// <summary>
+  /// Creates a new Execution object on all servers in the pool
+  /// </summary>
+  /// <remarks>
+  /// </remarks>
+  /// <exception cref="UnsupportedOperationException">unsupported operation exception, when Pool is in multiusersecure
+  /// mode.</exception>
+  static gc_ptr(Execution<TResult>) OnServers(gc_ptr(Pool) pl);
 
-        /// <summary>
-        /// Creates a new Execution object on one server.
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        /// <exception cref="IllegalStateException">when Pool has been closed.</exception>
-        static Execution<TResult>^ OnServer( IRegionService^ cache );
+  /// <summary>
+  /// Creates a new Execution object on one server.
+  /// </summary>
+  /// <remarks>
+  /// </remarks>
+  /// <exception cref="IllegalStateException">when Pool has been closed.</exception>
+  static gc_ptr(Execution<TResult>) OnServer(gc_ptr(IRegionService) cache);
 
-        /// <summary>
-        /// Creates a new Execution object on all servers in the pool.
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        /// <exception cref="IllegalStateException">when Pool has been closed.</exception>
-        static Execution<TResult>^ OnServers( IRegionService^ cache );
-        
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Creates a new Execution object on all servers in the pool.
+  /// </summary>
+  /// <remarks>
+  /// </remarks>
+  /// <exception cref="IllegalStateException">when Pool has been closed.</exception>
+  static gc_ptr(Execution<TResult>) OnServers(gc_ptr(IRegionService) cache);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

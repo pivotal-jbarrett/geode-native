@@ -17,25 +17,16 @@
 
 #pragma once
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-
-      /// <summary>
-      /// Serialize the data in geode Portable Data eXchange(Pdx) Format.
-      /// This format provides class versioning(forward and backward compability of types) in cache.
-      /// This provides ability to query .NET domian objects.
-      /// </summary>
-      public interface class IPdxUnreadFields
-      {
-
-      };
-    }  // namespace Client
-  }  // namespace Geode
+/// <summary>
+/// Serialize the data in geode Portable Data eXchange(Pdx) Format.
+/// This format provides class versioning(forward and backward compability of types) in cache.
+/// This provides ability to query .NET domian objects.
+/// </summary>
+PUBLIC interface class IPdxUnreadFields {};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

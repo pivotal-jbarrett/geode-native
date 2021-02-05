@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "native_shared_ptr.hpp"
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
@@ -32,75 +31,63 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-			interface class ISerializable;
-      
+interface class ISerializable;
+
+/// <summary>
+/// This class encapsulates events that occur for cq.
+/// </summary>
+GENERIC(class TKey, class TResult)
+PUBLIC ref class CqEvent sealed {
+ public:
+  /// <summary>
+  /// Return the cqquery this event occurred in.
+  /// </summary>
+  gc_ptr(CqQuery<TKey, TResult>) getCq();
+
+  /// <summary>
+  /// Get the operation on the base operation that triggered this event.
+  /// </summary>
+  CqOperation getBaseOperation();
+
+  /// <summary>
+  /// Get the operation on the query operation that triggered this event.
+  /// </summary>
+  CqOperation getQueryOperation();
+
+  /// <summary>
+  /// Get the key relating to the event.
+  /// In case of REGION_CLEAR and REGION_INVALIDATE operation, the key will be null.
+  /// </summary>
+  TKey /*gc_ptr(Generic::ICacheableKey)*/ getKey();
+
+  /// <summary>
+  /// Get the new value of the modification.
+  /// If there is no new value returns null, this will happen during delete
+  /// operation.
+  /// </summary>
+  /*gc_ptr(Object)*/ TResult getNewValue();
+
+  gc_ptr(array<Byte>) getDeltaValue();
+
+  internal :
+
       /// <summary>
-      /// This class encapsulates events that occur for cq.
+      /// Private constructor to wrap a native object pointer
       /// </summary>
-      GENERIC(class TKey, class TResult)
-      public ref class CqEvent sealed
-      {
-      public:
+      /// <param name="nativeptr">The native object pointer</param>
+      inline CqEvent(const native::CqEvent* nativeptr)
+      : m_nativeptr(nativeptr) {}
 
+  const native::CqEvent* GetNative() { return m_nativeptr; }
 
-        /// <summary>
-        /// Return the cqquery this event occurred in.
-        /// </summary>
-	      CqQuery<TKey, TResult>^ getCq();
-
-        /// <summary>
-        /// Get the operation on the base operation that triggered this event.
-        /// </summary>
-       CqOperation getBaseOperation();
-
-        /// <summary>
-        /// Get the operation on the query operation that triggered this event.
-        /// </summary>
-       CqOperation getQueryOperation();
-
-        /// <summary>
-        /// Get the key relating to the event.
-        /// In case of REGION_CLEAR and REGION_INVALIDATE operation, the key will be null.
-        /// </summary>
-        TKey /*Generic::ICacheableKey^*/ getKey( );
-
-        /// <summary>
-        /// Get the new value of the modification.
-        /// If there is no new value returns null, this will happen during delete
-        /// operation.
-        /// </summary>
-        /*Object^*/ TResult getNewValue( );
-
-        array< Byte >^ getDeltaValue( );
-
-      internal:
-
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline CqEvent( const native::CqEvent* nativeptr )
-          : m_nativeptr(nativeptr)
-        {
-        }
-
-        const native::CqEvent* GetNative()
-        {
-          return m_nativeptr;
-        }
-
-      private:
-        const native::CqEvent* m_nativeptr;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  const native::CqEvent* m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

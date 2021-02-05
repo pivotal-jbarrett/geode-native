@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "../begin_native.hpp"
 #include "../end_native.hpp"
 
@@ -29,178 +28,141 @@
 
 using namespace System;
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
-      void ManagedCacheableDeltaGeneric::toData(DataOutput& output) const
-      {
-        try {
-          System::UInt32 pos = (int)output.getBufferLength();
-          auto cache = CacheResolver::Lookup(output.getCache());
-          Apache::Geode::Client::DataOutput mg_output(&output, true, cache);
-          m_managedSerializableptr->ToData(%mg_output);
-          //this will move the cursor in c++ layer
-          mg_output.WriteBytesToUMDataOutput();
-          auto tmp = const_cast<ManagedCacheableDeltaGeneric*>(this);
-          tmp->m_objectSize = (int)(output.getBufferLength() - pos);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+namespace apache {
+namespace geode {
+namespace client {
+void ManagedCacheableDeltaGeneric::toData(DataOutput& output) const {
+  try {
+    System::UInt32 pos = (int)output.getBufferLength();
+    auto cache = CacheResolver::Lookup(output.getCache());
+    Apache::Geode::Client::DataOutput mg_output(&output, true, cache);
+    m_managedSerializableptr->ToData(% mg_output);
+    // this will move the cursor in c++ layer
+    mg_output.WriteBytesToUMDataOutput();
+    auto tmp = const_cast<ManagedCacheableDeltaGeneric*>(this);
+    tmp->m_objectSize = (int)(output.getBufferLength() - pos);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-     void ManagedCacheableDeltaGeneric::fromData(DataInput& input)
-      {
-        try {
-          auto pos = input.getBytesRead();
-          auto cache = CacheResolver::Lookup(input.getCache());
-          Apache::Geode::Client::DataInput mg_input(&input, true, cache);
-          m_managedSerializableptr->FromData(%mg_input);
+void ManagedCacheableDeltaGeneric::fromData(DataInput& input) {
+  try {
+    auto pos = input.getBytesRead();
+    auto cache = CacheResolver::Lookup(input.getCache());
+    Apache::Geode::Client::DataInput mg_input(&input, true, cache);
+    m_managedSerializableptr->FromData(% mg_input);
 
-          //this will move the cursor in c++ layer
-          input.advanceCursor(mg_input.BytesReadInternally);
+    // this will move the cursor in c++ layer
+    input.advanceCursor(mg_input.BytesReadInternally);
 
-          m_objectSize = input.getBytesRead() - pos;
+    m_objectSize = input.getBytesRead() - pos;
 
-          if (m_hashcode == 0)
-            m_hashcode = m_managedptr->GetHashCode();
+    if (m_hashcode == 0) m_hashcode = m_managedptr->GetHashCode();
 
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-     size_t ManagedCacheableDeltaGeneric::objectSize() const
-      {
-        try {
-          auto ret = m_managedSerializableptr->ObjectSize;
-          if (ret > m_objectSize)
-            return ret;
-          else
-            return m_objectSize;
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        return 0;
-      }
+size_t ManagedCacheableDeltaGeneric::objectSize() const {
+  try {
+    auto ret = m_managedSerializableptr->ObjectSize;
+    if (ret > m_objectSize)
+      return ret;
+    else
+      return m_objectSize;
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  return 0;
+}
 
-      bool ManagedCacheableDeltaGeneric::hasDelta() const
-      {
-        return m_managedptr->HasDelta();
-      }
+bool ManagedCacheableDeltaGeneric::hasDelta() const { return m_managedptr->HasDelta(); }
 
-      void ManagedCacheableDeltaGeneric::toDelta(DataOutput& output) const
-      {
-        try {
-          auto cache = CacheResolver::Lookup(output.getCache());
-          Apache::Geode::Client::DataOutput mg_output(&output, true, cache);
-          m_managedptr->ToDelta(%mg_output);
-          //this will move the cursor in c++ layer
-          mg_output.WriteBytesToUMDataOutput();
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+void ManagedCacheableDeltaGeneric::toDelta(DataOutput& output) const {
+  try {
+    auto cache = CacheResolver::Lookup(output.getCache());
+    Apache::Geode::Client::DataOutput mg_output(&output, true, cache);
+    m_managedptr->ToDelta(% mg_output);
+    // this will move the cursor in c++ layer
+    mg_output.WriteBytesToUMDataOutput();
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-      void ManagedCacheableDeltaGeneric::fromDelta(DataInput& input)
-      {
-        try {
-          auto cache = CacheResolver::Lookup(input.getCache());
-          Apache::Geode::Client::DataInput mg_input(&input, true, cache);
-          m_managedptr->FromDelta(%mg_input);
+void ManagedCacheableDeltaGeneric::fromDelta(DataInput& input) {
+  try {
+    auto cache = CacheResolver::Lookup(input.getCache());
+    Apache::Geode::Client::DataInput mg_input(&input, true, cache);
+    m_managedptr->FromDelta(% mg_input);
 
-          //this will move the cursor in c++ layer
-          input.advanceCursor(mg_input.BytesReadInternally);
+    // this will move the cursor in c++ layer
+    input.advanceCursor(mg_input.BytesReadInternally);
 
-          m_hashcode = m_managedptr->GetHashCode();
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+    m_hashcode = m_managedptr->GetHashCode();
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-      std::shared_ptr<Delta> ManagedCacheableDeltaGeneric::clone() const
-      {
-        try {
-          if (auto cloneable = dynamic_cast<ICloneable^>((
-            Apache::Geode::Client::IDelta^) m_managedptr)) {
-            auto Mclone = 
-              dynamic_cast<Apache::Geode::Client::ISerializable^>(cloneable->Clone());
-            return std::shared_ptr<Delta>(dynamic_cast<ManagedCacheableDeltaGeneric*>(
-              GetNativeWrapperForManagedObject(Mclone)));
-          }
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        return nullptr;
-      }
+std::shared_ptr<Delta> ManagedCacheableDeltaGeneric::clone() const {
+  try {
+    if (auto cloneable =
+            dynamic_cast<gc_ptr(ICloneable)>((gc_ptr(Apache::Geode::Client::IDelta))m_managedptr)) {
+      auto Mclone = dynamic_cast<gc_ptr(Apache::Geode::Client::ISerializable)>(cloneable->Clone());
+      return std::shared_ptr<Delta>(
+          dynamic_cast<ManagedCacheableDeltaGeneric*>(GetNativeWrapperForManagedObject(Mclone)));
+    }
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  return nullptr;
+}
 
-      bool ManagedCacheableDeltaGeneric::operator ==(const apache::geode::client::CacheableKey& other) const
-      {
-        try {
-          // now checking classId(), typeId(), DSFID() etc. will be much more
-          // expensive than just a dynamic_cast
-          const ManagedCacheableDeltaGeneric* p_other =
-            dynamic_cast<const ManagedCacheableDeltaGeneric*>(&other);
-          if (p_other != NULL) {
-            return m_managedptr->Equals(p_other->ptr());
-          }
-          return false;
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        return false;
-      }
+bool ManagedCacheableDeltaGeneric::operator==(const apache::geode::client::CacheableKey& other) const {
+  try {
+    // now checking classId(), typeId(), DSFID() etc. will be much more
+    // expensive than just a dynamic_cast
+    const ManagedCacheableDeltaGeneric* p_other = dynamic_cast<const ManagedCacheableDeltaGeneric*>(&other);
+    if (p_other != NULL) {
+      return m_managedptr->Equals(p_other->ptr());
+    }
+    return false;
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  return false;
+}
 
-      bool ManagedCacheableDeltaGeneric::operator == (const ManagedCacheableDeltaGeneric& other) const
-      {
-        try {
-          return m_managedptr->Equals(other.ptr());
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        return false;
+bool ManagedCacheableDeltaGeneric::operator==(const ManagedCacheableDeltaGeneric& other) const {
+  try {
+    return m_managedptr->Equals(other.ptr());
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  return false;
+}
 
-      }
+System::Int32 ManagedCacheableDeltaGeneric::hashcode() const { throw gcnew System::NotSupportedException; }
 
-      System::Int32 ManagedCacheableDeltaGeneric::hashcode() const
-      {
-        throw gcnew System::NotSupportedException;
-      }
-
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

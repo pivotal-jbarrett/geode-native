@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "ManagedCacheListener.hpp"
 #include "../ICacheListener.hpp"
 #include "../EntryEvent.hpp"
@@ -27,333 +25,275 @@
 #include "../EntryEvent.hpp"
 #include "ManagedString.hpp"
 
-
 using namespace System;
 using namespace System::Text;
 using namespace System::Reflection;
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
+namespace apache {
+namespace geode {
+namespace client {
 
-      apache::geode::client::CacheListener* ManagedCacheListenerGeneric::create(const char* assemblyPath,
-                                                                                const char* factoryFunctionName)
-      {
-        try
-        {
-          String^ mg_assemblyPath =
-            Apache::Geode::Client::ManagedString::Get(assemblyPath);
-          String^ mg_factoryFunctionName =
-            Apache::Geode::Client::ManagedString::Get(factoryFunctionName);
-          String^ mg_typeName = nullptr;
+apache::geode::client::CacheListener* ManagedCacheListenerGeneric::create(const char* assemblyPath,
+                                                                          const char* factoryFunctionName) {
+  try {
+    gc_ptr(String) mg_assemblyPath = Apache::Geode::Client::ManagedString::Get(assemblyPath);
+    gc_ptr(String) mg_factoryFunctionName = Apache::Geode::Client::ManagedString::Get(factoryFunctionName);
+    gc_ptr(String) mg_typeName = nullptr;
 
-          String^ mg_genericKey = nullptr;
-          String^ mg_genericVal = nullptr;
+    gc_ptr(String) mg_genericKey = nullptr;
+    gc_ptr(String) mg_genericVal = nullptr;
 
-          System::Int32 dotIndx = -1;
-          System::Int32 genericsOpenIndx = -1;
-          System::Int32 genericsCloseIndx = -1;
-          System::Int32 commaIndx = -1;
+    System::Int32 dotIndx = -1;
+    System::Int32 genericsOpenIndx = -1;
+    System::Int32 genericsCloseIndx = -1;
+    System::Int32 commaIndx = -1;
 
-          if (mg_factoryFunctionName == nullptr ||
-              (dotIndx = mg_factoryFunctionName->LastIndexOf('.')) < 0)
-          {
-            std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain type name";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if (mg_factoryFunctionName == nullptr || (dotIndx = mg_factoryFunctionName->LastIndexOf('.')) < 0) {
+      std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain type name";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          if ((genericsCloseIndx = mg_factoryFunctionName->LastIndexOf('>')) < 0)
-          {
-            std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain any generic type parameters";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if ((genericsCloseIndx = mg_factoryFunctionName->LastIndexOf('>')) < 0) {
+      std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain any generic type parameters";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          if ((genericsOpenIndx = mg_factoryFunctionName->LastIndexOf('<')) < 0 ||
-              genericsOpenIndx > genericsCloseIndx)
-          {
-            std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain expected generic type parameters";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if ((genericsOpenIndx = mg_factoryFunctionName->LastIndexOf('<')) < 0 || genericsOpenIndx > genericsCloseIndx) {
+      std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain expected generic type parameters";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          if ((commaIndx = mg_factoryFunctionName->LastIndexOf(',')) < 0 ||
-              (commaIndx < genericsOpenIndx || commaIndx > genericsCloseIndx))
-          {
-            std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain expected generic type parameter comma separator";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if ((commaIndx = mg_factoryFunctionName->LastIndexOf(',')) < 0 ||
+        (commaIndx < genericsOpenIndx || commaIndx > genericsCloseIndx)) {
+      std::string ex_str = "ManagedCacheListenerGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain expected generic type parameter comma separator";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          StringBuilder^ typeBuilder = gcnew StringBuilder(mg_factoryFunctionName->Substring(0, genericsOpenIndx));
-          mg_typeName = typeBuilder->ToString();
-          mg_genericKey = mg_factoryFunctionName->Substring(genericsOpenIndx + 1, commaIndx - genericsOpenIndx - 1);
-          mg_genericKey = mg_genericKey->Trim();
-          mg_genericVal = mg_factoryFunctionName->Substring(commaIndx + 1, genericsCloseIndx - commaIndx - 1);
-          mg_genericVal = mg_genericVal->Trim();
-          mg_factoryFunctionName = mg_factoryFunctionName->Substring(dotIndx + 1);
+    gc_ptr(StringBuilder) typeBuilder = gcnew StringBuilder(mg_factoryFunctionName->Substring(0, genericsOpenIndx));
+    mg_typeName = typeBuilder->ToString();
+    mg_genericKey = mg_factoryFunctionName->Substring(genericsOpenIndx + 1, commaIndx - genericsOpenIndx - 1);
+    mg_genericKey = mg_genericKey->Trim();
+    mg_genericVal = mg_factoryFunctionName->Substring(commaIndx + 1, genericsCloseIndx - commaIndx - 1);
+    mg_genericVal = mg_genericVal->Trim();
+    mg_factoryFunctionName = mg_factoryFunctionName->Substring(dotIndx + 1);
 
-          Apache::Geode::Client::Log::Fine("Attempting to instantiate a [{0}<{1}, {2}>] via the [{3}] factory method.",
-                                           mg_typeName, mg_genericKey, mg_genericVal, mg_factoryFunctionName);
+    Apache::Geode::Client::Log::Fine("Attempting to instantiate a [{0}<{1}, {2}>] via the [{3}] factory method.",
+                                     mg_typeName, mg_genericKey, mg_genericVal, mg_factoryFunctionName);
 
-          typeBuilder->Append("`2");
-          mg_typeName = typeBuilder->ToString();
+    typeBuilder->Append("`2");
+    mg_typeName = typeBuilder->ToString();
 
-          Assembly^ assmb = nullptr;
-          try
-          {
-            assmb = Assembly::Load(mg_assemblyPath);
-          }
-          catch (System::Exception^)
-          {
-            assmb = nullptr;
-          }
-          if (assmb == nullptr)
-          {
-            std::string ex_str = "ManagedCacheListenerGeneric: Could not load assembly: ";
-            ex_str += assemblyPath;
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    gc_ptr(Assembly) assmb = nullptr;
+    try {
+      assmb = Assembly::Load(mg_assemblyPath);
+    } catch (gc_ptr(System::Exception)) {
+      assmb = nullptr;
+    }
+    if (assmb == nullptr) {
+      std::string ex_str = "ManagedCacheListenerGeneric: Could not load assembly: ";
+      ex_str += assemblyPath;
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          Apache::Geode::Client::Log::Debug("Loading type: [{0}]", mg_typeName);
+    Apache::Geode::Client::Log::Debug("Loading type: [{0}]", mg_typeName);
 
-          Type^ typeInst = assmb->GetType(mg_typeName, false, true);
+    gc_ptr(Type) typeInst = assmb->GetType(mg_typeName, false, true);
 
-          if (typeInst != nullptr)
-          {
-            array<Type^>^ types = gcnew array<Type^>(2);
-            types[0] = Type::GetType(mg_genericKey, false, true);
-            types[1] = Type::GetType(mg_genericVal, false, true);
+    if (typeInst != nullptr) {
+      gc_ptr(array<Type ^>) types = gcnew array<gc_ptr(Type)>(2);
+      types[0] = Type::GetType(mg_genericKey, false, true);
+      types[1] = Type::GetType(mg_genericVal, false, true);
 
-            if (types[0] == nullptr || types[1] == nullptr)
-            {
-              std::string ex_str = "ManagedCacheListenerGeneric: Could not get both generic type argument instances";
-              throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-            }
-
-            typeInst = typeInst->MakeGenericType(types);
-            Apache::Geode::Client::Log::Info("Loading function: [{0}]", mg_factoryFunctionName);
-
-            MethodInfo^ mInfo = typeInst->GetMethod(mg_factoryFunctionName,
-                                                    BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
-
-            if (mInfo != nullptr)
-            {
-              Object^ userptr = nullptr;
-              try
-              {
-                userptr = mInfo->Invoke(typeInst, nullptr);
-              }
-              catch (System::Exception^ ex)
-              {
-                Apache::Geode::Client::Log::Debug("{0}: {1}", ex->GetType()->Name, ex->Message);
-                userptr = nullptr;
-              }
-              if (userptr == nullptr)
-              {
-                std::string ex_str = "ManagedCacheListenerGeneric: Could not create "
-                  "object on invoking factory function [";
-                ex_str += factoryFunctionName;
-                ex_str += "] in assembly: ";
-                ex_str += assemblyPath;
-                throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-              }
-
-              ManagedCacheListenerGeneric * mgcl = new ManagedCacheListenerGeneric(userptr);
-
-              Type^ clgType = Type::GetType("Apache.Geode.Client.CacheListenerGeneric`2");
-              clgType = clgType->MakeGenericType(types);
-              Object^ clg = Activator::CreateInstance(clgType);
-
-              mInfo = clgType->GetMethod("SetCacheListener");
-              array<Object^>^ params = gcnew array<Object^>(1);
-              params[0] = userptr;
-              mInfo->Invoke(clg, params);
-
-              mgcl->setptr((Apache::Geode::Client::ICacheListener<Object^, Object^>^)clg);
-
-              return mgcl;
-            }
-            else
-            {
-              std::string ex_str = "ManagedCacheListenerGeneric: Could not load "
-                "function with name [";
-              ex_str += factoryFunctionName;
-              ex_str += "] in assembly: ";
-              ex_str += assemblyPath;
-              throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-            }
-          }
-          else
-          {
-            Apache::Geode::Client::ManagedString typeName(mg_typeName);
-            std::string ex_str = "ManagedCacheListenerGeneric: Could not load type [";
-            ex_str += typeName.CharPtr;
-            ex_str += "] in assembly: ";
-            ex_str += assemblyPath;
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
-        }
-        catch (const apache::geode::client::Exception&)
-        {
-          throw;
-        }
-        catch (System::Exception^ ex)
-        {
-          std::string ex_str = "ManagedCacheListenerGeneric: Got an exception while "
-            "loading managed library: " + marshal_as<std::string>(ex->ToString());
-          throw apache::geode::client::IllegalArgumentException(ex_str);
-        }
-        return NULL;
+      if (types[0] == nullptr || types[1] == nullptr) {
+        std::string ex_str = "ManagedCacheListenerGeneric: Could not get both generic type argument instances";
+        throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
       }
 
-      void ManagedCacheListenerGeneric::afterCreate(const apache::geode::client::EntryEvent& ev)
-      {
+      typeInst = typeInst->MakeGenericType(types);
+      Apache::Geode::Client::Log::Info("Loading function: [{0}]", mg_factoryFunctionName);
+
+      gc_ptr(MethodInfo) mInfo = typeInst->GetMethod(
+          mg_factoryFunctionName, BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
+
+      if (mInfo != nullptr) {
+        gc_ptr(Object) userptr = nullptr;
         try {
-          Apache::Geode::Client::EntryEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterCreate(%mevent);
+          userptr = mInfo->Invoke(typeInst, nullptr);
+        } catch (gc_ptr(System::Exception) ex) {
+          Apache::Geode::Client::Log::Debug("{0}: {1}", ex->GetType()->Name, ex->Message);
+          userptr = nullptr;
         }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
+        if (userptr == nullptr) {
+          std::string ex_str =
+              "ManagedCacheListenerGeneric: Could not create "
+              "object on invoking factory function [";
+          ex_str += factoryFunctionName;
+          ex_str += "] in assembly: ";
+          ex_str += assemblyPath;
+          throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
         }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
 
-      void ManagedCacheListenerGeneric::afterUpdate(const apache::geode::client::EntryEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::EntryEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterUpdate(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+        ManagedCacheListenerGeneric* mgcl = new ManagedCacheListenerGeneric(userptr);
 
-      void ManagedCacheListenerGeneric::afterInvalidate(const apache::geode::client::EntryEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::EntryEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterInvalidate(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+        gc_ptr(Type) clgType = Type::GetType("Apache.Geode.Client.CacheListenerGeneric`2");
+        clgType = clgType->MakeGenericType(types);
+        gc_ptr(Object) clg = Activator::CreateInstance(clgType);
 
-      void ManagedCacheListenerGeneric::afterDestroy(const apache::geode::client::EntryEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::EntryEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterDestroy(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
-      void ManagedCacheListenerGeneric::afterRegionClear(const apache::geode::client::RegionEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::RegionEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterRegionClear(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+        mInfo = clgType->GetMethod("SetCacheListener");
+        gc_ptr(array<Object ^>) params = gcnew array<gc_ptr(Object)>(1);
+        params[0] = userptr;
+        mInfo->Invoke(clg, params);
 
-      void ManagedCacheListenerGeneric::afterRegionInvalidate(const apache::geode::client::RegionEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::RegionEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterRegionInvalidate(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+        mgcl->setptr((gc_ptr(Apache::Geode::Client::ICacheListener<Object ^, Object ^>)) clg);
 
-      void ManagedCacheListenerGeneric::afterRegionDestroy(const apache::geode::client::RegionEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::RegionEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterRegionDestroy(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
+        return mgcl;
+      } else {
+        std::string ex_str =
+            "ManagedCacheListenerGeneric: Could not load "
+            "function with name [";
+        ex_str += factoryFunctionName;
+        ex_str += "] in assembly: ";
+        ex_str += assemblyPath;
+        throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
       }
+    } else {
+      Apache::Geode::Client::ManagedString typeName(mg_typeName);
+      std::string ex_str = "ManagedCacheListenerGeneric: Could not load type [";
+      ex_str += typeName.CharPtr;
+      ex_str += "] in assembly: ";
+      ex_str += assemblyPath;
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
+  } catch (const apache::geode::client::Exception&) {
+    throw;
+  } catch (gc_ptr(System::Exception) ex) {
+    std::string ex_str =
+        "ManagedCacheListenerGeneric: Got an exception while "
+        "loading managed library: " +
+        marshal_as<std::string>(ex->ToString());
+    throw apache::geode::client::IllegalArgumentException(ex_str);
+  }
+  return NULL;
+}
 
-      void ManagedCacheListenerGeneric::afterRegionLive(const apache::geode::client::RegionEvent& ev)
-      {
-        try {
-          Apache::Geode::Client::RegionEvent<Object^, Object^> mevent(&ev);
-          m_managedptr->AfterRegionLive(%mevent);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+void ManagedCacheListenerGeneric::afterCreate(const apache::geode::client::EntryEvent& ev) {
+  try {
+    Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterCreate(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-      void ManagedCacheListenerGeneric::close(const std::shared_ptr<apache::geode::client::Region>& region)
-      {
-        try {
-          auto mregion = Apache::Geode::Client::Region<Object^, Object^>::Create(region);
+void ManagedCacheListenerGeneric::afterUpdate(const apache::geode::client::EntryEvent& ev) {
+  try {
+    Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterUpdate(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-          m_managedptr->Close(mregion);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
-      void ManagedCacheListenerGeneric::afterRegionDisconnected(const std::shared_ptr<apache::geode::client::Region>& region)
-      {
-        try {
-          auto mregion = Apache::Geode::Client::Region<Object^, Object^>::Create(region);
-          m_managedptr->AfterRegionDisconnected(mregion);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-      }
+void ManagedCacheListenerGeneric::afterInvalidate(const apache::geode::client::EntryEvent& ev) {
+  try {
+    Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterInvalidate(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
 
-    }  // namespace client
-  }  // namespace geode
+void ManagedCacheListenerGeneric::afterDestroy(const apache::geode::client::EntryEvent& ev) {
+  try {
+    Apache::Geode::Client::EntryEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterDestroy(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+void ManagedCacheListenerGeneric::afterRegionClear(const apache::geode::client::RegionEvent& ev) {
+  try {
+    Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterRegionClear(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+
+void ManagedCacheListenerGeneric::afterRegionInvalidate(const apache::geode::client::RegionEvent& ev) {
+  try {
+    Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterRegionInvalidate(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+
+void ManagedCacheListenerGeneric::afterRegionDestroy(const apache::geode::client::RegionEvent& ev) {
+  try {
+    Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterRegionDestroy(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+
+void ManagedCacheListenerGeneric::afterRegionLive(const apache::geode::client::RegionEvent& ev) {
+  try {
+    Apache::Geode::Client::RegionEvent<gc_ptr(Object), gc_ptr(Object)> mevent(&ev);
+    m_managedptr->AfterRegionLive(% mevent);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+
+void ManagedCacheListenerGeneric::close(const std::shared_ptr<apache::geode::client::Region>& region) {
+  try {
+    auto mregion = Apache::Geode::Client::Region<gc_ptr(Object), gc_ptr(Object)>::Create(region);
+
+    m_managedptr->Close(mregion);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+void ManagedCacheListenerGeneric::afterRegionDisconnected(
+    const std::shared_ptr<apache::geode::client::Region>& region) {
+  try {
+    auto mregion = Apache::Geode::Client::Region<gc_ptr(Object), gc_ptr(Object)>::Create(region);
+    m_managedptr->AfterRegionDisconnected(mregion);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+}
+
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

@@ -17,32 +17,19 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/CqState.hpp>
 #include "end_native.hpp"
 
-
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      public enum class CqState {
-        STOPPED = 0,
-        RUNNING = 1,
-        CLOSED = 2,
-        CLOSING = 3,
-        INVALID
-      };
+PUBLIC enum class CqState { STOPPED = 0, RUNNING = 1, CLOSED = 2, CLOSING = 3, INVALID };
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

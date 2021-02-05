@@ -15,12 +15,9 @@
  * limitations under the License.
  */
 
-
-
 #include "begin_native.hpp"
 #include <geode/QueryService.hpp>
 #include "end_native.hpp"
-
 
 #include "CqAttributesFactory.hpp"
 #include "impl/ManagedCqListener.hpp"
@@ -31,132 +28,114 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      GENERIC(class TKey, class TResult)
-      void CqAttributesFactory<TKey, TResult>::AddCqListener( Client::ICqListener<TKey, TResult>^ cqListener )
-      {
-        native_shared_ptr<native::CqListener>^ listenerptr;
-        if ( cqListener != nullptr ) {
-          if (auto cqStatusListener = dynamic_cast<ICqStatusListener<TKey, TResult>^>(cqListener)) {
-            auto sLstr = gcnew CqStatusListenerGeneric<TKey, TResult>();
-            sLstr->AddCqListener(cqListener);
-            listenerptr = gcnew native_shared_ptr<native::CqListener>(std::shared_ptr<native::ManagedCqStatusListenerGeneric>(new native::ManagedCqStatusListenerGeneric(cqListener)));
-            try {
-              CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
-              if ( CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey(cqListener) ) {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[cqListener] = listenerptr;
-              }
-              else {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(cqListener, listenerptr);
-              }
-            }
-            finally {
-              CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
-            }
-            ((native::ManagedCqStatusListenerGeneric*)listenerptr->get())->setptr(sLstr);
-          }
-          else {
-            //TODO::split
-            auto cqlg = gcnew CqListenerGeneric<TKey, TResult>();
-            cqlg->AddCqListener(cqListener);
-            listenerptr = gcnew native_shared_ptr<native::CqListener>(std::shared_ptr<native::ManagedCqListenerGeneric>(new native::ManagedCqListenerGeneric(cqListener)));
-            try {
-              CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
-              if ( CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey(cqListener) ) {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[cqListener] = listenerptr; 
-              }
-              else {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(cqListener, listenerptr);
-              }
-            } finally {
-                CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
-            }
-            ((native::ManagedCqListenerGeneric*)listenerptr->get())->setptr(cqlg);            
-          }
+GENERIC(class TKey, class TResult)
+void CqAttributesFactory<TKey, TResult>::AddCqListener(gc_ptr(Client::ICqListener<TKey, TResult>) cqListener) {
+  gc_ptr(native_shared_ptr<native::CqListener>) listenerptr;
+  if (cqListener != nullptr) {
+    if (auto cqStatusListener = dynamic_cast<gc_ptr(ICqStatusListener<TKey, TResult>)>(cqListener)) {
+      auto sLstr = gcnew CqStatusListenerGeneric<TKey, TResult>();
+      sLstr->AddCqListener(cqListener);
+      listenerptr = gcnew native_shared_ptr<native::CqListener>(std::shared_ptr<native::ManagedCqStatusListenerGeneric>(
+          new native::ManagedCqStatusListenerGeneric(cqListener)));
+      try {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
+        if (CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey(cqListener)) {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[cqListener] = listenerptr;
+        } else {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(cqListener, listenerptr);
         }
-        try
-        {
-          m_nativeptr->get()->addCqListener( listenerptr->get_shared_ptr() );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
+      } finally {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
       }
-
-      GENERIC(class TKey, class TResult)
-      void CqAttributesFactory<TKey, TResult>::InitCqListeners(array<Client::ICqListener<TKey, TResult>^>^ newListeners)
-      {
-        native::CqAttributes::listener_container_type vrr;
-        for( int i = 0; i < newListeners->Length; i++ )
-        {
-          if (auto lister = dynamic_cast<Client::ICqStatusListener<TKey, TResult>^>(newListeners[i])) {
-            auto cptr = gcnew native_shared_ptr<native::CqListener>(std::shared_ptr<native::ManagedCqStatusListenerGeneric>(new native::ManagedCqStatusListenerGeneric(lister)));
-            vrr.push_back(cptr->get_shared_ptr());
-            auto cqlg = gcnew CqStatusListenerGeneric<TKey, TResult>();
-            cqlg->AddCqListener(newListeners[i]);
-            try {
-              CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
-              if ( CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey( newListeners[i]) ) {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[newListeners[i]] = cptr;
-              }
-              else {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(newListeners[i], cptr);
-              }
-            } finally {
-                CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
-            }
-            ((native::ManagedCqStatusListenerGeneric*)cptr->get())->setptr(cqlg);
-          }
-          else {
-            auto cptr = gcnew native_shared_ptr<native::CqListener>(std::shared_ptr<native::ManagedCqListenerGeneric>(new native::ManagedCqListenerGeneric(newListeners[i])));
-            vrr.push_back(cptr->get_shared_ptr());
-            auto cqlg = gcnew CqListenerGeneric<TKey, TResult>();
-            cqlg->AddCqListener(newListeners[i]);
-            try {
-              CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
-              if ( CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey( newListeners[i]) ) {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[newListeners[i]] = cptr;
-              }
-              else {
-                CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(newListeners[i], cptr);
-              }
-            } finally {
-                CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
-            }
-            ((native::ManagedCqListenerGeneric*)cptr->get())->setptr(cqlg);
-          }
+      ((native::ManagedCqStatusListenerGeneric*)listenerptr->get())->setptr(sLstr);
+    } else {
+      // TODO::split
+      auto cqlg = gcnew CqListenerGeneric<TKey, TResult>();
+      cqlg->AddCqListener(cqListener);
+      listenerptr = gcnew native_shared_ptr<native::CqListener>(
+          std::shared_ptr<native::ManagedCqListenerGeneric>(new native::ManagedCqListenerGeneric(cqListener)));
+      try {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
+        if (CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey(cqListener)) {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[cqListener] = listenerptr;
+        } else {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(cqListener, listenerptr);
         }
-
-        try
-        {
-          m_nativeptr->get()->initCqListeners( vrr );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
+      } finally {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
       }
+      ((native::ManagedCqListenerGeneric*)listenerptr->get())->setptr(cqlg);
+    }
+  }
+  try {
+    m_nativeptr->get()->addCqListener(listenerptr->get_shared_ptr());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TResult)
-      Client::CqAttributes<TKey, TResult>^ CqAttributesFactory<TKey, TResult>::Create( )
-      {
-        try
-        {
-          return Client::CqAttributes<TKey, TResult>::Create(m_nativeptr->get()->create());
+GENERIC(class TKey, class TResult)
+void CqAttributesFactory<TKey, TResult>::InitCqListeners(array<gc_ptr(Client::ICqListener<TKey, TResult>)> ^
+                                                         newListeners) {
+  native::CqAttributes::listener_container_type vrr;
+  for (int i = 0; i < newListeners->Length; i++) {
+    if (auto lister = dynamic_cast<gc_ptr(Client::ICqStatusListener<TKey, TResult>)>(newListeners[i])) {
+      auto cptr = gcnew native_shared_ptr<native::CqListener>(
+          std::shared_ptr<native::ManagedCqStatusListenerGeneric>(new native::ManagedCqStatusListenerGeneric(lister)));
+      vrr.push_back(cptr->get_shared_ptr());
+      auto cqlg = gcnew CqStatusListenerGeneric<TKey, TResult>();
+      cqlg->AddCqListener(newListeners[i]);
+      try {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
+        if (CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey(newListeners[i])) {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[newListeners[i]] = cptr;
+        } else {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(newListeners[i], cptr);
         }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
+      } finally {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
       }
-    }  // namespace Client
-  }  // namespace Geode
+      ((native::ManagedCqStatusListenerGeneric*)cptr->get())->setptr(cqlg);
+    } else {
+      auto cptr = gcnew native_shared_ptr<native::CqListener>(
+          std::shared_ptr<native::ManagedCqListenerGeneric>(new native::ManagedCqListenerGeneric(newListeners[i])));
+      vrr.push_back(cptr->get_shared_ptr());
+      auto cqlg = gcnew CqListenerGeneric<TKey, TResult>();
+      cqlg->AddCqListener(newListeners[i]);
+      try {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->AcquireWriterLock(-1);
+        if (CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->ContainsKey(newListeners[i])) {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict[newListeners[i]] = cptr;
+        } else {
+          CqListenerHelper<TKey, TResult>::m_ManagedVsUnManagedCqLstrDict->Add(newListeners[i], cptr);
+        }
+      } finally {
+        CqListenerHelper<TKey, TResult>::g_readerWriterLock->ReleaseWriterLock();
+      }
+      ((native::ManagedCqListenerGeneric*)cptr->get())->setptr(cqlg);
+    }
+  }
+
+  try {
+    m_nativeptr->get()->initCqListeners(vrr);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+
+GENERIC(class TKey, class TResult)
+gc_ptr(Client::CqAttributes<TKey, TResult>) CqAttributesFactory<TKey, TResult>::Create() {
+  try {
+    return Client::CqAttributes<TKey, TResult>::Create(m_nativeptr->get()->create());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

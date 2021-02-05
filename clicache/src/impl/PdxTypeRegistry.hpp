@@ -31,77 +31,72 @@ using namespace System;
 using namespace System::Threading;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace Internal
-      {
-        private ref class PdxTypeRegistry
-        {
-        public:
+namespace Internal {
+private
+ref class PdxTypeRegistry {
+ public:
+  PdxTypeRegistry(gc_ptr(Cache) cache) : m_cache(cache) {}
 
-          PdxTypeRegistry(Cache^ cache) :m_cache(cache) {}
+  // test hook;
+  int testGetNumberOfPdxIds();
 
-          //test hook;
-          int testGetNumberOfPdxIds();
+  // test hook
+  int testNumberOfPreservedData();
 
-          //test hook
-          int testNumberOfPreservedData();
-          
-          void AddPdxType(Int32 typeId, PdxType^ pdxType);
-          
-          PdxType^ GetPdxType(Int32 typeId);
-          
-          void AddLocalPdxType(String^ localType, PdxType^ pdxType);
-          
-          PdxType^ GetLocalPdxType(String^ localType);
-          
-          void SetMergedType(Int32 remoteTypeId, PdxType^ mergedType);
-          
-          PdxType^ GetMergedType(Int32 remoteTypeId);
-          
-          void SetPreserveData(IPdxSerializable^ obj, PdxRemotePreservedData^ preserveData);
-          
-          PdxRemotePreservedData^ GetPreserveData(IPdxSerializable^ obj);      
+  void AddPdxType(Int32 typeId, gc_ptr(PdxType) pdxType);
 
-          void clear();
+  gc_ptr(PdxType) GetPdxType(Int32 typeId);
 
-          Int32 GetPDXIdForType(Type^ type, native::Pool* pool, PdxType^ nType, bool checkIfThere);
+  void AddLocalPdxType(gc_ptr(String) localType, gc_ptr(PdxType) pdxType);
 
-          Int32 GetPDXIdForType(PdxType^ type, native::Pool*);
+  gc_ptr(PdxType) GetLocalPdxType(gc_ptr(String) localType);
 
-          Int32 GetEnumValue(EnumInfo^ ei);
+  void SetMergedType(Int32 remoteTypeId, gc_ptr(PdxType) mergedType);
 
-          EnumInfo^ GetEnum(Int32 enumVal);
+  gc_ptr(PdxType) GetMergedType(Int32 remoteTypeId);
 
-        private:
-          Cache^ m_cache;
+  void SetPreserveData(gc_ptr(IPdxSerializable) obj, gc_ptr(PdxRemotePreservedData) preserveData);
 
-          Dictionary<Int32, PdxType^>^ typeIdToPdxType = gcnew Dictionary<Int32, PdxType^>();
+  gc_ptr(PdxRemotePreservedData) GetPreserveData(gc_ptr(IPdxSerializable) obj);
 
-          Dictionary<PdxType^, Int32>^ pdxTypeToTypeId = gcnew Dictionary<PdxType^, Int32>();
+  void clear();
 
-          Dictionary<Int32, PdxType^>^ remoteTypeIdToMergedPdxType = gcnew Dictionary<Int32, PdxType^>();
+  Int32 GetPDXIdForType(gc_ptr(Type) type, native::Pool* pool, gc_ptr(PdxType) nType, bool checkIfThere);
 
-          Dictionary<String^, PdxType^>^ localTypeToPdxType = gcnew Dictionary<String^, PdxType^>();
+  Int32 GetPDXIdForType(gc_ptr(PdxType) type, native::Pool*);
 
-          Dictionary<EnumInfo^, Int32>^ enumToInt = gcnew Dictionary<EnumInfo^, Int32>();
+  Int32 GetEnumValue(gc_ptr(EnumInfo) ei);
 
-          Dictionary<Int32, EnumInfo^>^ intToEnum = gcnew Dictionary<Int32, EnumInfo^>();
+  gc_ptr(EnumInfo) GetEnum(Int32 enumVal);
 
-          WeakHashMap^ preserveData = gcnew WeakHashMap();          
+ private:
+  gc_ptr(Cache) m_cache;
 
-          ReaderWriterLock^ g_readerWriterLock = gcnew ReaderWriterLock();
+  gc_ptr(Dictionary<Int32, PdxType ^>) typeIdToPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
 
-          bool pdxIgnoreUnreadFields = false;
-          bool pdxReadSerialized = false;
-        };
-      }
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(Dictionary<PdxType ^, Int32>) pdxTypeToTypeId = gcnew Dictionary<gc_ptr(PdxType), Int32>();
+
+  gc_ptr(Dictionary<Int32, PdxType ^>) remoteTypeIdToMergedPdxType = gcnew Dictionary<Int32, gc_ptr(PdxType)>();
+
+  gc_ptr(Dictionary<String ^, PdxType ^>)
+      localTypeToPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxType)>();
+
+  gc_ptr(Dictionary<EnumInfo ^, Int32>) enumToInt = gcnew Dictionary<gc_ptr(EnumInfo), Int32>();
+
+  gc_ptr(Dictionary<Int32, EnumInfo ^>) intToEnum = gcnew Dictionary<Int32, gc_ptr(EnumInfo)>();
+
+  gc_ptr(WeakHashMap) preserveData = gcnew WeakHashMap();
+
+  gc_ptr(ReaderWriterLock) g_readerWriterLock = gcnew ReaderWriterLock();
+
+  bool pdxIgnoreUnreadFields = false;
+  bool pdxReadSerialized = false;
+};
+}  // namespace Internal
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

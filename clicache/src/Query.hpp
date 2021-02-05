@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/Query.hpp>
@@ -27,193 +26,175 @@
 
 #include "ISerializable.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace System;
+namespace native = apache::geode::client;
 
-      namespace native = apache::geode::client;
+GENERIC(class TResult)
+interface class ISelectResults;
 
-      GENERIC(class TResult)
-      interface class ISelectResults;
+/// <summary>
+/// Class to encapsulate a query.
+/// </summary>
+/// <remarks>
+/// A Query is obtained from a QueryService which in turn is obtained
+/// from the Cache.
+/// This can be executed to return SelectResults which can be either
+/// a ResultSet or a StructSet.
+///
+/// This class is intentionally not thread-safe. So multiple threads
+/// should not operate on the same <c>Query</c> object concurrently
+/// rather should have their own <c>Query</c> objects.
+/// </remarks>
+GENERIC(class TResult)
+PUBLIC ref class Query sealed {
+ public:
+  /// <summary>
+  /// Executes the OQL Query on the cache server and returns
+  /// the results. The default timeout for the query is 15 secs.
+  /// </summary>
+  /// <exception cref="QueryException">
+  /// if some query error occurred at the server.
+  /// </exception>
+  /// <exception cref="IllegalStateException">
+  /// if some other error occurred.
+  /// </exception>
+  /// <exception cref="NotConnectedException">
+  /// if no java cache server is available.
+  /// For pools configured with locators, if no locators are available, innerException
+  /// of NotConnectedException is set to NoAvailableLocatorsException.
+  /// </exception>
+  /// <returns>
+  /// An <see cref="ISelectResults"/> object which can either be a
+  /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
+  /// </returns>
+  gc_ptr(ISelectResults<TResult>) Execute();
+
+  /// <summary>
+  /// Executes the OQL Query on the cache server with the specified
+  /// timeout and returns the results.
+  /// </summary>
+  /// <param name="timeout">The time to wait for query response.
+  /// </param>
+  /// <exception cref="IllegalArgumentException">
+  /// if timeout parameter is greater than gc_ptr(2)31/1000.
+  /// </exception>
+  /// <exception cref="QueryException">
+  /// if some query error occurred at the server.
+  /// </exception>
+  /// <exception cref="IllegalStateException">
+  /// if some other error occurred.
+  /// </exception>
+  /// <exception cref="NotConnectedException">
+  /// if no java cache server is available
+  /// For pools configured with locators, if no locators are available, innerException
+  /// of NotConnectedException is set to NoAvailableLocatorsException.
+  /// </exception>
+  /// <returns>
+  /// An <see cref="ISelectResults"/> object which can either be a
+  /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
+  /// </returns>
+  gc_ptr(ISelectResults<TResult>) Execute(TimeSpan timeout);
+
+  /// <summary>
+  /// Executes the OQL Parameterized Query on the cache server with the specified
+  /// paramList & timeout parameters and returns the results.
+  /// </summary>
+  /// <param name="paramList">The Parameter List for the specified Query.
+  /// </param>
+  /// <param name="timeout">The time to wait for query response.
+  /// </param>
+  /// <exception cref="IllegalArgumentException">
+  /// if timeout parameter is too long.
+  /// </exception>
+  /// <exception cref="QueryException">
+  /// if some query error occurred at the server.
+  /// </exception>
+  /// <exception cref="IllegalStateException">
+  /// if some other error occurred.
+  /// </exception>
+  /// <exception cref="NotConnectedException">
+  /// if no java cache server is available
+  /// For pools configured with locators, if no locators are available, innerException
+  /// of NotConnectedException is set to NoAvailableLocatorsException.
+  /// </exception>
+  /// <returns>
+  /// An <see cref="ISelectResults"/> object which can either be a
+  /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
+  /// </returns>
+  gc_ptr(ISelectResults<TResult>) Execute(gc_ptr(array<Object ^>) paramList, TimeSpan timeout);
+
+  /// <summary>
+  /// Executes the OQL Parameterized Query on the cache server with the specified
+  /// paramList and returns the results. The default timeout for the query is 15 secs.
+  /// </summary>
+  /// <param name="paramList">The Parameter List for the specified Query.
+  /// </param>
+  /// <exception cref="IllegalArgumentException">
+  /// if timeout parameter is greater than gc_ptr(2)31/1000.
+  /// </exception>
+  /// <exception cref="QueryException">
+  /// if some query error occurred at the server.
+  /// </exception>
+  /// <exception cref="IllegalStateException">
+  /// if some other error occurred.
+  /// </exception>
+  /// <exception cref="NotConnectedException">
+  /// if no java cache server is available
+  /// For pools configured with locators, if no locators are available, innerException
+  /// of NotConnectedException is set to NoAvailableLocatorsException.
+  /// </exception>
+  /// <returns>
+  /// An <see cref="ISelectResults"/> object which can either be a
+  /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
+  /// </returns>
+  gc_ptr(ISelectResults<TResult>) Execute(gc_ptr(array<Object ^>) paramList);
+  /// <summary>
+  /// Get the string for this query.
+  /// </summary>
+  property gc_ptr(String) QueryString { gc_ptr(String) get(); }
+
+  /// <summary>
+  /// Compile the given query -- NOT IMPLEMENTED.
+  /// </summary>
+  void Compile();
+
+  /// <summary>
+  /// Check if the query is compiled -- NOT IMPLEMENTED.
+  /// </summary>
+  property bool IsCompiled { bool get(); }
+
+  internal :
 
       /// <summary>
-      /// Class to encapsulate a query.
+      /// Internal factory function to wrap a native object pointer inside
+      /// this managed class with null pointer check.
       /// </summary>
-      /// <remarks>
-      /// A Query is obtained from a QueryService which in turn is obtained
-      /// from the Cache.
-      /// This can be executed to return SelectResults which can be either
-      /// a ResultSet or a StructSet.
-      ///
-      /// This class is intentionally not thread-safe. So multiple threads
-      /// should not operate on the same <c>Query</c> object concurrently
-      /// rather should have their own <c>Query</c> objects.
-      /// </remarks>
-      GENERIC(class TResult)
-      public ref class Query sealed
-      {
-      public:
+      /// <param name="nativeptr">The native object pointer</param>
+      /// <returns>
+      /// The managed wrapper object; null if the native pointer is null.
+      /// </returns>
+      inline static gc_ptr(Query<TResult>) Create(std::shared_ptr<apache::geode::client::Query> nativeptr) {
+    return __nullptr == nativeptr ? nullptr : gcnew Query<TResult>(nativeptr);
+  }
 
-        /// <summary>
-        /// Executes the OQL Query on the cache server and returns
-        /// the results. The default timeout for the query is 15 secs.
-        /// </summary>
-        /// <exception cref="QueryException">
-        /// if some query error occurred at the server.
-        /// </exception>
-        /// <exception cref="IllegalStateException">
-        /// if some other error occurred.
-        /// </exception>
-        /// <exception cref="NotConnectedException">
-        /// if no java cache server is available.
-        /// For pools configured with locators, if no locators are available, innerException
-        /// of NotConnectedException is set to NoAvailableLocatorsException.
-        /// </exception>
-        /// <returns>
-        /// An <see cref="ISelectResults"/> object which can either be a
-        /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
-        /// </returns>
-        ISelectResults<TResult>^ Execute( );
+ private:
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline Query(std::shared_ptr<apache::geode::client::Query> nativeptr) {
+    m_nativeptr = gcnew native_shared_ptr<native::Query>(nativeptr);
+  }
 
-        /// <summary>
-        /// Executes the OQL Query on the cache server with the specified
-        /// timeout and returns the results.
-        /// </summary>
-        /// <param name="timeout">The time to wait for query response.
-        /// </param>
-        /// <exception cref="IllegalArgumentException">
-        /// if timeout parameter is greater than 2^31/1000.
-        /// </exception>
-        /// <exception cref="QueryException">
-        /// if some query error occurred at the server.
-        /// </exception>
-        /// <exception cref="IllegalStateException">
-        /// if some other error occurred.
-        /// </exception>
-        /// <exception cref="NotConnectedException">
-        /// if no java cache server is available
-        /// For pools configured with locators, if no locators are available, innerException
-        /// of NotConnectedException is set to NoAvailableLocatorsException.
-        /// </exception>
-        /// <returns>
-        /// An <see cref="ISelectResults"/> object which can either be a
-        /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
-        /// </returns>
-        ISelectResults<TResult>^ Execute( TimeSpan timeout );
+  gc_ptr(ISelectResults<TResult>)
+      WrapResults(const std::shared_ptr<apache::geode::client::SelectResults>& selectResults);
 
-		/// <summary>
-        /// Executes the OQL Parameterized Query on the cache server with the specified
-        /// paramList & timeout parameters and returns the results.
-        /// </summary>
-		/// <param name="paramList">The Parameter List for the specified Query.
-        /// </param>
-        /// <param name="timeout">The time to wait for query response.
-        /// </param>
-        /// <exception cref="IllegalArgumentException">
-        /// if timeout parameter is too long.
-        /// </exception>
-        /// <exception cref="QueryException">
-        /// if some query error occurred at the server.
-        /// </exception>
-        /// <exception cref="IllegalStateException">
-        /// if some other error occurred.
-        /// </exception>
-        /// <exception cref="NotConnectedException">
-        /// if no java cache server is available
-        /// For pools configured with locators, if no locators are available, innerException
-        /// of NotConnectedException is set to NoAvailableLocatorsException.
-        /// </exception>
-        /// <returns>
-        /// An <see cref="ISelectResults"/> object which can either be a
-        /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
-        /// </returns>
-        ISelectResults<TResult>^ Execute( array<Object^>^ paramList, TimeSpan timeout );
-
-        /// <summary>
-        /// Executes the OQL Parameterized Query on the cache server with the specified
-        /// paramList and returns the results. The default timeout for the query is 15 secs.
-        /// </summary>
-		/// <param name="paramList">The Parameter List for the specified Query.
-        /// </param>
-        /// <exception cref="IllegalArgumentException">
-        /// if timeout parameter is greater than 2^31/1000.
-        /// </exception>
-        /// <exception cref="QueryException">
-        /// if some query error occurred at the server.
-        /// </exception>
-        /// <exception cref="IllegalStateException">
-        /// if some other error occurred.
-        /// </exception>
-        /// <exception cref="NotConnectedException">
-        /// if no java cache server is available
-        /// For pools configured with locators, if no locators are available, innerException
-        /// of NotConnectedException is set to NoAvailableLocatorsException.
-        /// </exception>
-        /// <returns>
-        /// An <see cref="ISelectResults"/> object which can either be a
-        /// <see cref="ResultSet"/> or a <see cref="StructSet"/>.
-        /// </returns>
-        ISelectResults<TResult>^ Execute( array<Object^>^ paramList);
-        /// <summary>
-        /// Get the string for this query.
-        /// </summary>
-        property String^ QueryString
-        {
-          String^ get( );
-        }
-
-        /// <summary>
-        /// Compile the given query -- NOT IMPLEMENTED.
-        /// </summary>
-        void Compile( );
-
-        /// <summary>
-        /// Check if the query is compiled -- NOT IMPLEMENTED.
-        /// </summary>
-        property bool IsCompiled
-        {
-          bool get( );
-        }
-
-
-      internal:
-
-        /// <summary>
-        /// Internal factory function to wrap a native object pointer inside
-        /// this managed class with null pointer check.
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        /// <returns>
-        /// The managed wrapper object; null if the native pointer is null.
-        /// </returns>
-        inline static Query<TResult>^ Create( std::shared_ptr<apache::geode::client::Query> nativeptr )
-        {
-          return __nullptr == nativeptr ? nullptr :
-            gcnew Query<TResult>( nativeptr );
-        }
-
-
-      private:
-
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline Query( std::shared_ptr<apache::geode::client::Query> nativeptr )
-        {
-          m_nativeptr = gcnew native_shared_ptr<native::Query>(nativeptr);
-        }
-
-        ISelectResults<TResult>^ WrapResults(const std::shared_ptr<apache::geode::client::SelectResults>& selectResults);
-
-        native_shared_ptr<native::Query>^ m_nativeptr;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(native_shared_ptr<native::Query>) m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

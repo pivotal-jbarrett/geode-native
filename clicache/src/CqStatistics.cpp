@@ -15,63 +15,42 @@
  * limitations under the License.
  */
 
-
 #include "CqStatistics.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace System;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace System;
 
-      System::UInt32 CqStatistics::numInserts()
-      {
-        try
-        {
-          return m_nativeptr->get()->numInserts();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-      System::UInt32 CqStatistics::numDeletes()
-      {
-        try
-        {
-          return m_nativeptr->get()->numDeletes();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-      System::UInt32 CqStatistics::numUpdates()
-      {
-        try
-        {
-          return m_nativeptr->get()->numUpdates();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-      System::UInt32 CqStatistics::numEvents()
-      {
-        try
-        {
-          return m_nativeptr->get()->numEvents();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+System::UInt32 CqStatistics::numInserts() {
+  try {
+    return m_nativeptr->get()->numInserts();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+System::UInt32 CqStatistics::numDeletes() {
+  try {
+    return m_nativeptr->get()->numDeletes();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+System::UInt32 CqStatistics::numUpdates() {
+  try {
+    return m_nativeptr->get()->numUpdates();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+System::UInt32 CqStatistics::numEvents() {
+  try {
+    return m_nativeptr->get()->numEvents();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

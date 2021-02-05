@@ -81,7 +81,7 @@ ref class Cache sealed : public IGeodeCache {
   /// Initializes the cache from an XML file.
   /// </summary>
   /// <param name="cacheXml">pathname of a <c>cache.xml</c> file</param>
-  virtual void InitializeDeclarativeCache(String ^ cacheXml);
+  virtual void InitializeDeclarativeCache(gc_ptr(String) cacheXml);
 
   /// <summary>
   /// Returns the name of this cache.
@@ -91,7 +91,7 @@ ref class Cache sealed : public IGeodeCache {
   /// <c>CacheClosedException</c> if the cache is closed.
   /// </remarks>
   /// <returns>the string name of this cache</returns>
-  virtual property String ^ Name { String ^ get(); };
+  virtual property gc_ptr(String) Name { gc_ptr(String) get(); };
 
   /// <summary>
   /// True if this cache has been closed.
@@ -104,14 +104,17 @@ ref class Cache sealed : public IGeodeCache {
   /// <returns>true if this cache is closed, otherwise false</returns>
   virtual property bool IsClosed { bool get(); };
 
-  virtual property SystemProperties ^ SystemProperties { Apache::Geode::Client::SystemProperties ^ get(); };
+  virtual property gc_ptr(SystemProperties) SystemProperties {
+    gc_ptr(Apache::Geode::Client::SystemProperties) get();
+  };
 
   /// <summary>
   /// Returns the cache transaction manager of
   /// <see cref="CacheFactory.Create" /> this cache.
   /// </summary>
-  virtual property Apache::Geode::Client::CacheTransactionManager ^
-      CacheTransactionManager { Apache::Geode::Client::CacheTransactionManager ^ get(); };
+  virtual property gc_ptr(Apache::Geode::Client::CacheTransactionManager) CacheTransactionManager {
+    gc_ptr(Apache::Geode::Client::CacheTransactionManager) get();
+  };
 
   /// <summary>
   /// Terminates this object cache and releases all the local resources.
@@ -164,7 +167,7 @@ ref class Cache sealed : public IGeodeCache {
   /// <param name="path">the pathname of the region</param>
   /// <returns>the region</returns>
   GENERIC(class TKey, class TValue)
-  virtual IRegion<TKey, TValue> ^ GetRegion(String ^ path);
+  virtual gc_ptr(IRegion<TKey, TValue>) GetRegion(gc_ptr(String) path);
 
   /// <summary>
   /// Returns an array of root regions in the cache. This set is a
@@ -174,7 +177,7 @@ ref class Cache sealed : public IGeodeCache {
   /// It is not supported when Cache is created from Pool.
   /// </remarks>
   /// <returns>array of regions</returns>
-  GENERIC(class TKey, class TValue) virtual array<IRegion<TKey, TValue> ^> ^ RootRegions();
+  GENERIC(class TKey, class TValue) virtual array<gc_ptr(IRegion<TKey, TValue>)> ^ RootRegions();
 
   /// <summary>
   /// Get a query service object to be able to query the cache.
@@ -185,7 +188,7 @@ ref class Cache sealed : public IGeodeCache {
   /// at least some endpoints must have been defined in some regions
   /// before actually firing a query.
   /// </remarks>
-  virtual Client::QueryService ^ GetQueryService();
+  virtual gc_ptr(Client::QueryService) GetQueryService();
 
   /// <summary>
   /// Get a query service object to be able to query the cache.
@@ -196,7 +199,7 @@ ref class Cache sealed : public IGeodeCache {
   /// at least some endpoints must have been defined in some regions
   /// before actually firing a query.
   /// </remarks>
-  virtual Client::QueryService ^ GetQueryService(String ^ poolName);
+  virtual gc_ptr(Client::QueryService) GetQueryService(gc_ptr(String) poolName);
 
   /// <summary>
   /// Returns the instance of <see cref="RegionFactory" /> to create the region
@@ -206,7 +209,7 @@ ref class Cache sealed : public IGeodeCache {
   /// </remarks>
   /// <param name="regionShortcut">the regionShortcut to set the default region attributes</param>
   /// <returns>Instance of RegionFactory</returns>
-  RegionFactory ^ CreateRegionFactory(RegionShortcut regionShortcut);
+  gc_ptr(RegionFactory) CreateRegionFactory(RegionShortcut regionShortcut);
 
   /// <summary>
   /// Returns the instance of <see cref="IRegionService" /> to do the operation on Cache with different Credential.
@@ -216,7 +219,8 @@ ref class Cache sealed : public IGeodeCache {
   /// </remarks>
   /// <param name="credentials">the user Credentials.</param>
   /// <returns>Instance of IRegionService</returns>
-  IRegionService ^ CreateAuthenticatedView(Properties<String ^, Object ^> ^ credentials);
+  gc_ptr(IRegionService)
+      CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials);
 
   /// <summary>
   /// Returns the instance of <see cref="IRegionService" /> to do the operation on Cache with different Credential.
@@ -227,7 +231,9 @@ ref class Cache sealed : public IGeodeCache {
   /// <param name="credentials">the user Credentials.</param>
   /// <param name="poolName">Pool, which is in multiuser mode.</param>
   /// <returns>Instance of IRegionService</returns>
-  IRegionService ^ CreateAuthenticatedView(Properties<String ^, Object ^> ^ credentials, String ^ poolName);
+  gc_ptr(IRegionService)
+      CreateAuthenticatedView(gc_ptr(Properties<gc_ptr(String), gc_ptr(Object)>) credentials,
+                              gc_ptr(String) poolName);
 
   ///< summary>
   /// Returns whether Cache saves unread fields for Pdx types.
@@ -245,29 +251,30 @@ ref class Cache sealed : public IGeodeCache {
   ///   when it is fully deserialized.
   /// @return the factory
   /// </summary>
-  virtual IPdxInstanceFactory ^ CreatePdxInstanceFactory(String ^ className);
+  virtual gc_ptr(IPdxInstanceFactory) CreatePdxInstanceFactory(gc_ptr(String) className);
 
-  virtual DataInput ^ CreateDataInput(array<Byte> ^ buffer, System::Int32 len);
-  virtual DataInput ^ CreateDataInput(array<Byte> ^ buffer);
+  virtual gc_ptr(DataInput) CreateDataInput(gc_ptr(array<Byte>) buffer, System::Int32 len);
+  virtual gc_ptr(DataInput) CreateDataInput(gc_ptr(array<Byte>) buffer);
 
-  virtual DataOutput ^ Cache::CreateDataOutput();
+  virtual gc_ptr(DataOutput) Cache::CreateDataOutput();
 
   /// <summary>
   /// Returns a PoolFactory that can be used to create a Pool and that provides
   /// access to all Pool attributes.
   /// @return the PoolFactory
   /// </summary>
-  virtual PoolFactory ^ GetPoolFactory();
+  virtual gc_ptr(PoolFactory) GetPoolFactory();
 
   /// <summary>
   /// Returns a PoolManager that provides for the configuration and creation
   /// of instances of PoolFactory.
   /// @return the PoolManager
   /// </summary>
-  virtual PoolManager ^ GetPoolManager();
+  virtual gc_ptr(PoolManager) GetPoolManager();
 
-  property Apache::Geode::Client::TypeRegistry ^
-      TypeRegistry { Apache::Geode::Client::TypeRegistry ^ get() { return m_typeRegistry; } };
+  property gc_ptr(Apache::Geode::Client::TypeRegistry) TypeRegistry {
+    gc_ptr(Apache::Geode::Client::TypeRegistry) get() { return m_typeRegistry; }
+  }
 
  private:
   /// <summary>
@@ -276,37 +283,30 @@ ref class Cache sealed : public IGeodeCache {
   /// <param name="nativeptr">The native object pointer</param>
   Cache(std::shared_ptr<native::Cache> nativeptr);
 
-  native_shared_ptr<native::Cache> ^ m_nativeptr;
+  gc_ptr(native_shared_ptr<native::Cache>) m_nativeptr;
 
-  Apache::Geode::Client::Internal::PdxTypeRegistry ^ m_pdxTypeRegistry;
-  Apache::Geode::Client::TypeRegistry ^ m_typeRegistry;
+  gc_ptr(Apache::Geode::Client::Internal::PdxTypeRegistry) m_pdxTypeRegistry;
+  gc_ptr(Apache::Geode::Client::TypeRegistry) m_typeRegistry;
 
-#define INTERNAL \
-  internal:
-
-  INTERNAL
+  CLI(internal:)
 
   std::shared_ptr<native::Cache> GetNative() { return m_nativeptr->get_shared_ptr(); }
 
-  Apache::Geode::Client::Internal::PdxTypeRegistry ^
-      GetPdxTypeRegistry() { return m_pdxTypeRegistry; }
+  gc_ptr(Apache::Geode::Client::Internal::PdxTypeRegistry) GetPdxTypeRegistry() { return m_pdxTypeRegistry; }
 
-      Apache::Geode::Client::TypeRegistry
-      ^
-      GetTypeRegistry() { return m_typeRegistry; }
+  gc_ptr(Apache::Geode::Client::TypeRegistry) GetTypeRegistry() { return m_typeRegistry; }
 
-      /// <summary>
-      /// Internal factory function to wrap a native object pointer inside
-      /// this managed class with null pointer check.
-      /// </summary>
-      /// <param name="nativeptr">The native object pointer</param>
-      /// <returns>
-      /// The managed wrapper object; null if the native pointer is null.
-      /// </returns>
-      static Cache
-      ^ Create(std::shared_ptr<native::Cache> nativeptr) {
-          return __nullptr == nativeptr ? nullptr : gcnew Cache(nativeptr);
-        }
+  /// <summary>
+  /// Internal factory function to wrap a native object pointer inside
+  /// this managed class with null pointer check.
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  /// <returns>
+  /// The managed wrapper object; null if the native pointer is null.
+  /// </returns>
+  static gc_ptr(Cache) Create(std::shared_ptr<native::Cache> nativeptr) {
+    return __nullptr == nativeptr ? nullptr : gcnew Cache(nativeptr);
+  }
 };
 }  // namespace Client
 }  // namespace Geode

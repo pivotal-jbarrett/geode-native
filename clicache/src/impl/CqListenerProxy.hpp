@@ -23,49 +23,34 @@
 #include "SafeConvert.hpp"
 using namespace System;
 
-//using namespace Apache::Geode::Client;
+// using namespace Apache::Geode::Client;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TKey, class TResult)
-      public ref class CqListenerGeneric : Apache::Geode::Client::ICqListener<Object^, Object^>
-      {
-        private:
+GENERIC(class TKey, class TResult)
+PUBLIC ref class CqListenerGeneric : Apache::Geode::Client::ICqListener<gc_ptr(Object), gc_ptr(Object)> {
+ private:
+  gc_ptr(ICqListener<TKey, TResult>) m_listener;
 
-          ICqListener<TKey, TResult>^ m_listener;
+ public:
+  virtual void AddCqListener(gc_ptr(ICqListener<TKey, TResult>) listener) { m_listener = listener; }
 
-        public:
+  virtual void OnEvent(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+    // TODO:split---Done
+    CqEvent<TKey, TResult> gevent(ev->GetNative());
+    m_listener->OnEvent(% gevent);
+  }
 
-          virtual void AddCqListener(ICqListener<TKey, TResult>^ listener)
-          {
-            m_listener = listener;
-          }
+  virtual void OnError(gc_ptr(Apache::Geode::Client::CqEvent<Object ^, Object ^>) ev) {
+    // TODO::split--Done
+    CqEvent<TKey, TResult> gevent(ev->GetNative());
+    m_listener->OnError(% gevent);
+  }
 
-          virtual void OnEvent( Apache::Geode::Client::CqEvent<Object^, Object^>^ ev) 
-	        {
-						//TODO:split---Done
-            CqEvent<TKey, TResult> gevent(ev->GetNative());
-            m_listener->OnEvent(%gevent);
-          }
-
-          virtual void OnError(Apache::Geode::Client::CqEvent<Object^, Object^>^ ev)
-	        {
-						//TODO::split--Done
-	          CqEvent<TKey, TResult> gevent(ev->GetNative());
-            m_listener->OnError(%gevent);
-          }
-        
-	        virtual void Close() 
-	        {
-	          m_listener->Close();
-          }   
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void Close() { m_listener->Close(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

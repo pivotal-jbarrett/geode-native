@@ -17,124 +17,95 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "CacheableVector.hpp"
-
 
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// A mutable <c>ISerializable</c> vector wrapper that can serve as
-      /// a distributable object for caching. This class extends .NET generic
-      /// <c>List</c> class.
-      /// </summary>
-      ref class CacheableLinkedList
-        : public IDataSerializablePrimitive
-      {
-        System::Collections::Generic::LinkedList<Object^>^ m_linkedList;
-      public:
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableLinkedList(System::Collections::Generic::LinkedList<Object^>^ list)
-        {
-          m_linkedList = list;
-        }
+/// <summary>
+/// A mutable <c>ISerializable</c> vector wrapper that can serve as
+/// a distributable object for caching. This class extends .NET generic
+/// <c>List</c> class.
+/// </summary>
+ref class CacheableLinkedList : public IDataSerializablePrimitive {
+  gc_ptr(System::Collections::Generic::LinkedList<Object ^>) m_linkedList;
 
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableLinkedList(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) {
+    m_linkedList = list;
+  }
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableLinkedList^ Create()
-        {
-          return gcnew CacheableLinkedList(gcnew System::Collections::Generic::LinkedList<Object^>());
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableLinkedList) Create() {
+    return gcnew CacheableLinkedList(gcnew System::Collections::Generic::LinkedList<gc_ptr(Object)>());
+  }
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableLinkedList^ Create(System::Collections::Generic::LinkedList<Object^>^ list)
-        {
-          return gcnew CacheableLinkedList(list);
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableLinkedList)
+      Create(gc_ptr(System::Collections::Generic::LinkedList<Object ^>) list) {
+    return gcnew CacheableLinkedList(list);
+  }
 
+  // Region: ISerializable Members
 
-        // Region: ISerializable Members
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode {
+    virtual int8_t get() { return static_cast<int8_t>(native::internal::DSCode::CacheableLinkedList); }
+  }
 
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          virtual int8_t get()
-          {
-            return static_cast<int8_t>(native::internal::DSCode::CacheableLinkedList);
-          }
-        }
+  // Region: ISerializable Members
 
-        // Region: ISerializable Members
+  virtual void ToData(gc_ptr(DataOutput) output) {
+    if (m_linkedList != nullptr) {
+      output->WriteArrayLen(m_linkedList->Count);
+      FOR_EACH (gc_ptr(Object) obj in m_linkedList) {
+        // TODO::split
+        output->WriteObject(obj);
+      }
+    } else
+      output->WriteByte(0xFF);
+  }
 
-        virtual void ToData(DataOutput^ output)
-        {
-          if (m_linkedList != nullptr)
-          {
-            output->WriteArrayLen(m_linkedList->Count);
-            FOR_EACH (Object^ obj in m_linkedList) {
-              //TODO::split
-              output->WriteObject(obj);
-            }
-          }
-          else
-            output->WriteByte(0xFF);
-        }
+  virtual void FromData(gc_ptr(DataInput) input) {
+    int len = input->ReadArrayLen();
+    for (int i = 0; i < len; i++) {
+      m_linkedList->AddLast(input->ReadObject());
+    }
+  }
 
-        virtual void FromData(DataInput^ input)
-        {
-          int len = input->ReadArrayLen();
-          for (int i = 0; i < len; i++)
-          {
-            m_linkedList->AddLast(input->ReadObject());
-          }
-        }
+  virtual property System::UInt64 ObjectSize {
+    virtual System::UInt64 get() { return m_linkedList->Count; }
+  }
 
-        virtual property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get()
-          {
-            return m_linkedList->Count;
-          }
-        }
+  virtual property gc_ptr(System::Collections::Generic::LinkedList<Object ^>) Value {
+    virtual gc_ptr(System::Collections::Generic::LinkedList<Object ^>) get() { return m_linkedList; }
+  }
+  // End Region: ISerializable Members
 
-        virtual property System::Collections::Generic::LinkedList<Object^>^ Value
-        {
-          virtual System::Collections::Generic::LinkedList<Object^>^ get()
-          {
-            return m_linkedList;
-          }
-        }
-        // End Region: ISerializable Members
-
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableLinkedList(gcnew System::Collections::Generic::LinkedList<Object^>());
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() {
+    return gcnew CacheableLinkedList(gcnew System::Collections::Generic::LinkedList<gc_ptr(Object)>());
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

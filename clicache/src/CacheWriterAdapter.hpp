@@ -17,58 +17,33 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ICacheWriter.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+/// <summary>
+/// Utility class that implements all methods in <c>ICacheWriter</c>
+/// with empty implementations. Applications can subclass this class
+/// and only override the methods for the events of interest.
+/// </summary>
+GENERIC(class TKey, class TValue)
+PUBLIC ref class CacheWriterAdapter : public ICacheWriter<TKey, TValue> {
+ public:
+  virtual bool BeforeUpdate(gc_ptr(EntryEvent<TKey, TValue>) ev) { return true; }
 
-      /// <summary>
-      /// Utility class that implements all methods in <c>ICacheWriter</c>
-      /// with empty implementations. Applications can subclass this class
-      /// and only override the methods for the events of interest.
-      /// </summary>
-      GENERIC(class TKey, class TValue)
-      public ref class CacheWriterAdapter
-        : public ICacheWriter<TKey, TValue>
-      {
-      public:
-        virtual bool BeforeUpdate(EntryEvent<TKey, TValue>^ ev)
-        {
-          return true;
-        }
+  virtual bool BeforeCreate(gc_ptr(EntryEvent<TKey, TValue>) ev) { return true; }
 
-        virtual bool BeforeCreate(EntryEvent<TKey, TValue>^ ev)
-        {
-          return true;
-        }
+  virtual bool BeforeDestroy(gc_ptr(EntryEvent<TKey, TValue>) ev) { return true; }
 
-        virtual bool BeforeDestroy(EntryEvent<TKey, TValue>^ ev)
-        {
-          return true;
-        }
+  virtual bool BeforeRegionDestroy(gc_ptr(RegionEvent<TKey, TValue>) ev) { return true; }
 
-        virtual bool BeforeRegionDestroy(RegionEvent<TKey, TValue>^ ev)
-        {
-          return true;
-        }
+  virtual bool BeforeRegionClear(gc_ptr(RegionEvent<TKey, TValue>) ev) { return true; }
 
-        virtual bool BeforeRegionClear(RegionEvent<TKey, TValue>^ ev)
-        {
-          return true;
-        }
-
-        virtual void Close(IRegion<TKey, TValue>^ region)
-        {
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void Close(gc_ptr(IRegion<TKey, TValue>) region) {}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

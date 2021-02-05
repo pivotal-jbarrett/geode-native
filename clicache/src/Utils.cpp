@@ -15,59 +15,45 @@
  * limitations under the License.
  */
 
-
 #include "Utils.hpp"
 #include "begin_native.hpp"
 #include <Utils.hpp>
 #include "end_native.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-    MethodInfo^ Utils::LoadMethod( String^ assemblyName,
-      String^ typeName, String^ methodName)
-    {
-      Type^ loadType;
+gc_ptr(MethodInfo) Utils::LoadMethod(gc_ptr(String) assemblyName, gc_ptr(String) typeName,
+                                         gc_ptr(String) methodName) {
+  gc_ptr(Type) loadType;
 
-      loadType = Type::GetType( typeName + ',' + assemblyName, false, true );
-      if (loadType != nullptr)
-      {
-        return loadType->GetMethod( methodName, BindingFlags::Public |
-          BindingFlags::Static | BindingFlags::IgnoreCase );
-      }
-      return nullptr;
+  loadType = Type::GetType(typeName + ',' + assemblyName, false, true);
+  if (loadType != nullptr) {
+    return loadType->GetMethod(methodName, BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
+  }
+  return nullptr;
+}
+
+gc_ptr(MethodInfo) Utils::LoadMethodFrom(gc_ptr(String) assemblyPath, gc_ptr(String) typeName,
+                                             gc_ptr(String) methodName) {
+  gc_ptr(String) assemblyName;
+  gc_ptr(Type) loadType;
+
+  assemblyName = System::IO::Path::GetFileNameWithoutExtension(assemblyPath);
+  loadType = Type::GetType(typeName + ',' + assemblyName, false, true);
+  if (loadType == nullptr) {
+    gc_ptr(Assembly) assmb = Assembly::LoadFrom(assemblyPath);
+    if (assmb != nullptr) {
+      loadType = assmb->GetType(typeName, false, true);
     }
+  }
+  if (loadType != nullptr) {
+    return loadType->GetMethod(methodName, BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
+  }
+  return nullptr;
+}
 
-    MethodInfo^ Utils::LoadMethodFrom( String^ assemblyPath,
-      String^ typeName, String^ methodName)
-    {
-      String^ assemblyName;
-      Type^ loadType;
-
-      assemblyName = System::IO::Path::GetFileNameWithoutExtension(
-        assemblyPath );
-      loadType = Type::GetType( typeName + ',' + assemblyName, false, true );
-      if (loadType == nullptr)
-      {
-        Assembly^ assmb = Assembly::LoadFrom( assemblyPath );
-        if (assmb != nullptr)
-        {
-          loadType = assmb->GetType(typeName, false, true);
-        }
-      }
-      if (loadType != nullptr)
-      {
-        return loadType->GetMethod( methodName, BindingFlags::Public |
-          BindingFlags::Static | BindingFlags::IgnoreCase );
-      }
-      return nullptr;
-    }
-
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

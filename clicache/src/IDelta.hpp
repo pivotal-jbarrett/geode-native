@@ -16,64 +16,57 @@
  */
 #pragma once
 
-
 #include "geode_defs.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+ref class DataOutput;
+ref class DataInput;
+ref class Serializable;
 
-      ref class DataOutput;
-      ref class DataInput;
-      ref class Serializable;
+/// <summary>
+/// This interface is used for delta propagation.
+/// To use delta propagation, an application class must implement interfaces <c>IDelta</c> as well as
+/// <c>IDataSerializable</c>. The <c>IDelta</c> interface methods <c>HasDelta( ), ToDelta( )</c> and <c>FromDelta( )</c>
+/// must be implemented by the class, as these methods are used by Geode to detect the presence of delta in an object,
+/// to serialize the delta, and to apply a serialized delta to an existing object of the class. If a customized cloning
+/// method is required, the class must also implement the interface <c>System.ICloneable</c>. To use cloning in delta
+/// propagation for a region, the region attribute for cloning must be enabled.
+/// </summary>
+PUBLIC interface class IDelta {
+ public:
+  /// <summary>
+  /// Writes out delta information to out in a user-defined format. This is
+  /// invoked on an application object after Geode determines the presence
+  /// of delta in it by calling <c>HasDelta()</c> on the object.
+  /// </summary>
+  /// <exception cref="GeodeIOException">
+  /// </exception>
+  void ToDelta(gc_ptr(DataOutput) out);
 
-      /// <summary>
-      /// This interface is used for delta propagation.
-      /// To use delta propagation, an application class must implement interfaces <c>IDelta</c> as well as <c>IDataSerializable</c>.
-      /// The <c>IDelta</c> interface methods <c>HasDelta( ), ToDelta( )</c> and <c>FromDelta( )</c> must be implemented by the class, as these methods are used by Geode
-      /// to detect the presence of delta in an object, to serialize the delta, and to apply a serialized delta to an existing object
-      /// of the class.
-      /// If a customized cloning method is required, the class must also implement the interface <c>System.ICloneable</c>.
-      /// To use cloning in delta propagation for a region, the region attribute for cloning must be enabled.
-      /// </summary>
-      public interface class IDelta
-      {
-      public:
+  /// <summary>
+  /// Reads in delta information to this object in a user-defined format. This is
+  /// invoked on an existing application object after Geode determines the
+  /// presence of delta in <c>DataInput</c> instance.
+  /// </summary>
+  /// <exception cref="InvalidDeltaException">
+  /// if the delta in the <c>DataInput</c> instance cannot be applied
+  /// to this instance (possible causes may include mismatch of Delta version or logic error).
+  /// </exception>
+  /// <exception cref="GeodeIOException">
+  /// </exception>
+  void FromDelta(gc_ptr(DataInput) in);
 
-        /// <summary>
-        /// Writes out delta information to out in a user-defined format. This is
-        /// invoked on an application object after Geode determines the presence
-        /// of delta in it by calling <c>HasDelta()</c> on the object.
-        /// </summary>
-        /// <exception cref="GeodeIOException">
-        /// </exception>
-        void ToDelta(DataOutput^ out);
-
-        /// <summary>
-        /// Reads in delta information to this object in a user-defined format. This is
-        /// invoked on an existing application object after Geode determines the
-        /// presence of delta in <c>DataInput</c> instance.
-        /// </summary>
-        /// <exception cref="InvalidDeltaException">
-        /// if the delta in the <c>DataInput</c> instance cannot be applied
-        /// to this instance (possible causes may include mismatch of Delta version or logic error).
-        /// </exception>
-        /// <exception cref="GeodeIOException">
-        /// </exception>
-        void FromDelta(DataInput^ in);
-
-        /// <summary>
-        /// <c>HasDelta( )</c> is invoked by Geode during <c>Region.Put( ICacheableKey, ISerializable )</c> to determine if the object contains a delta.
-        /// If <c>HasDelta( )</c> returns true, the delta in the object is serialized by invoking <c>ToDelta( DataOutput )</c>.
-        /// If <c>HasDelta( )</c> returns false, the object is serialized by invoking <c>ISerializable.ToData( DataOutput )</c>.
-        /// </summary>
-        bool HasDelta();
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// <c>HasDelta( )</c> is invoked by Geode during <c>Region.Put( ICacheableKey, ISerializable )</c> to determine if
+  /// the object contains a delta. If <c>HasDelta( )</c> returns true, the delta in the object is serialized by invoking
+  /// <c>ToDelta( DataOutput )</c>. If <c>HasDelta( )</c> returns false, the object is serialized by invoking
+  /// <c>ISerializable.ToData( DataOutput )</c>.
+  /// </summary>
+  bool HasDelta();
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

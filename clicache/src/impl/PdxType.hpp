@@ -26,171 +26,150 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class DataOutput;
-      ref class DataInput;
+ref class DataOutput;
+ref class DataInput;
 
-      namespace Internal
-      {
-        private ref class PdxType : public IDataSerializableInternal
-        {
-        private:
-          Object^                 m_lockObj;
-          static const String^    m_javaPdxClass = "org.apache.geode.pdx.internal.PdxType";
-          IList<PdxFieldType^>^   m_pdxFieldTypes;
-          IList<PdxType^>^        m_otherVersions;
-          Int32                   m_cachedHashcode;
+namespace Internal {
+private
+ref class PdxType : public IDataSerializableInternal {
+ private:
+  gc_ptr(Object) m_lockObj;
+  static const gc_ptr(String) m_javaPdxClass = "org.apache.geode.pdx.internal.PdxType";
+  gc_ptr(IList<PdxFieldType ^>) m_pdxFieldTypes;
+  gc_ptr(IList<PdxType ^>) m_otherVersions;
+  Int32 m_cachedHashcode;
 
-          //Type^                 m_pdxDomainType;
-          String^                 m_className;
-          Int32                   m_geodeTypeId;
-          bool                    m_isLocal;
-          Int32                   m_numberOfVarLenFields;
-          Int32                   m_varLenFieldIdx;
+  // gc_ptr(Type)                 m_pdxDomainType;
+  gc_ptr(String) m_className;
+  Int32 m_geodeTypeId;
+  bool m_isLocal;
+  Int32 m_numberOfVarLenFields;
+  Int32 m_varLenFieldIdx;
 
-          Int32                   m_numberOfFieldsExtra;
+  Int32 m_numberOfFieldsExtra;
 
-          array<Int32>^           m_remoteToLocalFieldMap;
-          array<Int32>^           m_localToRemoteFieldMap;
+  gc_ptr(array<Int32>) m_remoteToLocalFieldMap;
+  gc_ptr(array<Int32>) m_localToRemoteFieldMap;
 
-          array<Int32, 2>^        m_positionMap;
-          IDictionary<String^, PdxFieldType^>^ m_fieldNameVsPdxType;
+  gc_ptr(array<Int32, 2>) m_positionMap;
+  gc_ptr(IDictionary<String ^, PdxFieldType ^>) m_fieldNameVsPdxType;
 
-          bool                   m_isVarLenFieldAdded;
-          bool									 m_noJavaClass;
+  bool m_isVarLenFieldAdded;
+  bool m_noJavaClass;
 
-          void initRemoteToLocal(Cache^ cache);
-          void initLocalToRemote(Cache^ cache);
-          //first has more fields than second
-          PdxType^ isContains(PdxType^ first, PdxType^ second);
-          PdxType^ clone();
+  void initRemoteToLocal(gc_ptr(Cache) cache);
+  void initLocalToRemote(gc_ptr(Cache) cache);
+  // first has more fields than second
+  gc_ptr(PdxType) isContains(gc_ptr(PdxType) first, gc_ptr(PdxType) second);
+  gc_ptr(PdxType) clone();
 
-          void generatePositionMap();
-          Int32 variableLengthFieldPosition(PdxFieldType^ varLenField, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
-          Int32 fixedLengthFieldPosition(PdxFieldType^ fixLenField, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
+  void generatePositionMap();
+  Int32 variableLengthFieldPosition(gc_ptr(PdxFieldType) varLenField, System::Byte* offsetPosition,
+                                    Int32 offsetSize, Int32 pdxStreamlen);
+  Int32 fixedLengthFieldPosition(gc_ptr(PdxFieldType) fixLenField, System::Byte* offsetPosition, Int32 offsetSize,
+                                 Int32 pdxStreamlen);
 
-          PdxType^ isLocalTypeContains(PdxType^ otherType);
-          PdxType^ isRemoteTypeContains(PdxType^ localType);
-        public:
-          PdxType()
-          {
-            m_cachedHashcode = 0;
-            m_lockObj = gcnew Object();
-            m_pdxFieldTypes = gcnew List<PdxFieldType^>();
-            m_otherVersions = gcnew List<PdxType^>();
-            m_isLocal = false;
-            m_numberOfVarLenFields = 0;
-            m_varLenFieldIdx = 0;//start with 0
-            m_isVarLenFieldAdded = false;
-            m_fieldNameVsPdxType = gcnew Dictionary<String^, PdxFieldType^>();
-            m_noJavaClass = false;
-            m_geodeTypeId = 0;
-            // m_pdxDomainType = nullptr;
-          }
+  gc_ptr(PdxType) isLocalTypeContains(gc_ptr(PdxType) otherType);
+  gc_ptr(PdxType) isRemoteTypeContains(gc_ptr(PdxType) localType);
 
-          PdxType(String^ pdxDomainClassName,
-                  bool  isLocal)
-          {
-            m_cachedHashcode = 0;
-            m_lockObj = gcnew Object();
-            m_pdxFieldTypes = gcnew List<PdxFieldType^>();
-            m_otherVersions = gcnew List<PdxType^>();
-            //  m_className = className;
-            // m_pdxDomainType = pdxDomainType;
-            m_className = pdxDomainClassName;
-            m_isLocal = isLocal;
-            m_numberOfVarLenFields = 0;
-            m_varLenFieldIdx = 0;//start with 0
-            m_isVarLenFieldAdded = false;
-            m_fieldNameVsPdxType = gcnew Dictionary<String^, PdxFieldType^>();
-            m_noJavaClass = false;
-            m_geodeTypeId = 0;
-          }
+ public:
+  PdxType() {
+    m_cachedHashcode = 0;
+    m_lockObj = gcnew Object();
+    m_pdxFieldTypes = gcnew List<gc_ptr(PdxFieldType)>();
+    m_otherVersions = gcnew List<gc_ptr(PdxType)>();
+    m_isLocal = false;
+    m_numberOfVarLenFields = 0;
+    m_varLenFieldIdx = 0;  // start with 0
+    m_isVarLenFieldAdded = false;
+    m_fieldNameVsPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxFieldType)>();
+    m_noJavaClass = false;
+    m_geodeTypeId = 0;
+    // m_pdxDomainType = nullptr;
+  }
 
-          static ISerializable^ CreateDeserializable()
-          {
-            return gcnew PdxType();
-          }
-          property Int32 TotalVarLenFields
-          {
-            Int32 get() { return m_numberOfVarLenFields; };
-          }
-          property Int32 Totalfields
-          {
-            Int32 get() { return m_pdxFieldTypes->Count; };
-          }
-          property IList<PdxFieldType^>^ PdxFieldList
-          {
-            IList<PdxFieldType^>^ get(){ return m_pdxFieldTypes; }
-          }
-          property Int32 TypeId
-          {
-            Int32 get() { return m_geodeTypeId; }
-            void set(Int32 value) { m_geodeTypeId = value; }
-          }
+  PdxType(gc_ptr(String) pdxDomainClassName, bool isLocal) {
+    m_cachedHashcode = 0;
+    m_lockObj = gcnew Object();
+    m_pdxFieldTypes = gcnew List<gc_ptr(PdxFieldType)>();
+    m_otherVersions = gcnew List<gc_ptr(PdxType)>();
+    //  m_className = className;
+    // m_pdxDomainType = pdxDomainType;
+    m_className = pdxDomainClassName;
+    m_isLocal = isLocal;
+    m_numberOfVarLenFields = 0;
+    m_varLenFieldIdx = 0;  // start with 0
+    m_isVarLenFieldAdded = false;
+    m_fieldNameVsPdxType = gcnew Dictionary<gc_ptr(String), gc_ptr(PdxFieldType)>();
+    m_noJavaClass = false;
+    m_geodeTypeId = 0;
+  }
 
-          property String^ PdxClassName
-          {
-            String^ get() { return m_className; }
-            void set(String^ className) { m_className = className; }
-          }
-          property Int32 NumberOfFieldsExtra
-          {
-            Int32 get(){ return m_numberOfFieldsExtra; }
-          }
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew PdxType(); }
+  property Int32 TotalVarLenFields {
+    Int32 get() { return m_numberOfVarLenFields; };
+  }
+  property Int32 Totalfields {
+    Int32 get() { return m_pdxFieldTypes->Count; };
+  }
+  property gc_ptr(IList<PdxFieldType ^>) PdxFieldList {
+    gc_ptr(IList<PdxFieldType ^>) get() { return m_pdxFieldTypes; }
+  }
+  property Int32 TypeId {
+    Int32 get() { return m_geodeTypeId; }
+    void set(Int32 value) { m_geodeTypeId = value; }
+  }
 
-          PdxFieldType^ GetPdxField(String^ fieldName)
-          {
-            PdxFieldType^ retVal = nullptr;
+  property gc_ptr(String) PdxClassName {
+    gc_ptr(String) get() { return m_className; }
+    void set(gc_ptr(String) className) { m_className = className; }
+  }
+  property Int32 NumberOfFieldsExtra {
+    Int32 get() { return m_numberOfFieldsExtra; }
+  }
 
-            m_fieldNameVsPdxType->TryGetValue(fieldName, retVal);
+  gc_ptr(PdxFieldType) GetPdxField(gc_ptr(String) fieldName) {
+    gc_ptr(PdxFieldType) retVal = nullptr;
 
-            return retVal;
-          }
-          void AddOtherVersion(PdxType^ otherVersion)
-          {
-            m_otherVersions->Add(otherVersion);
-          }
+    m_fieldNameVsPdxType->TryGetValue(fieldName, retVal);
 
-          array<int>^ GetLocalToRemoteMap(Cache^ cache);
-          array<int>^ GetRemoteToLocalMap(Cache^ cache);
-          property Int32 NumberOfVarLenFields
-          {
-            Int32 get(){ return m_numberOfVarLenFields; }
-          }
-          property bool IsLocal
-          {
-            bool get() { return m_isLocal; }
-            void set(bool val) { m_isLocal = val; }
-          }
-          virtual void ToData(DataOutput^ output);
-          virtual void FromData(DataInput^ input);
-          virtual property System::UInt64 ObjectSize
-          {
-            System::UInt64 get(){ return 0; }
-          }
-          virtual String^ ToString() override
-          {
-            return "PdxType";
-          }
-          void AddFixedLengthTypeField(String^ fieldName, String^ className, PdxFieldTypes typeId, Int32 size);
-          void AddVariableLengthTypeField(String^ fieldName, String^ className, PdxFieldTypes typeId);
-          void InitializeType(Cache^ cache);
-          PdxType^ MergeVersion(PdxType^ otherVersion);
-          Int32 GetFieldPosition(String^ fieldName, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
-          Int32 GetFieldPosition(Int32 fieldIdx, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
+    return retVal;
+  }
+  void AddOtherVersion(gc_ptr(PdxType) otherVersion) { m_otherVersions->Add(otherVersion); }
 
-          virtual bool Equals(Object^ otherType) override;
-          virtual Int32 GetHashCode() override;
-        };
-      }  // namespace Client
-    }  // namespace Geode
-  }  // namespace Apache
+  gc_ptr(array<int>) GetLocalToRemoteMap(gc_ptr(Cache) cache);
+  gc_ptr(array<int>) GetRemoteToLocalMap(gc_ptr(Cache) cache);
+  property Int32 NumberOfVarLenFields {
+    Int32 get() { return m_numberOfVarLenFields; }
+  }
+  property bool IsLocal {
+    bool get() { return m_isLocal; }
+    void set(bool val) { m_isLocal = val; }
+  }
+  virtual void ToData(gc_ptr(DataOutput) output);
+  virtual void FromData(gc_ptr(DataInput) input);
+  virtual property System::UInt64 ObjectSize {
+    System::UInt64 get() { return 0; }
+  }
+  virtual gc_ptr(String) ToString() override { return "PdxType"; }
+  void AddFixedLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId,
+                               Int32 size);
+  void AddVariableLengthTypeField(gc_ptr(String) fieldName, gc_ptr(String) className, PdxFieldTypes typeId);
+  void InitializeType(gc_ptr(Cache) cache);
+  gc_ptr(PdxType) MergeVersion(gc_ptr(PdxType) otherVersion);
+  Int32 GetFieldPosition(gc_ptr(String) fieldName, System::Byte* offsetPosition, Int32 offsetSize,
+                         Int32 pdxStreamlen);
+  Int32 GetFieldPosition(Int32 fieldIdx, System::Byte* offsetPosition, Int32 offsetSize, Int32 pdxStreamlen);
 
-}
+  virtual bool Equals(gc_ptr(Object) otherType) override;
+  virtual Int32 GetHashCode() override;
+};
+}  // namespace Internal
+}  // namespace Client
+}  // namespace Geode
+
+}  // namespace Apache

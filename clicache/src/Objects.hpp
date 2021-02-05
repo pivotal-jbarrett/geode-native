@@ -17,13 +17,15 @@
 
 #pragma once
 
+#include "cli.hpp"
+
 using namespace System;
 
 namespace Apache {
 namespace Geode {
 
 /// <summary>
-/// Provides hash code functions similar to those used by Geode server in 
+/// Provides hash code functions similar to those used by Geode server in
 /// Java's java.util.Objects and java.util.Arrays classes.
 ///
 /// Example:
@@ -48,7 +50,7 @@ namespace Geode {
 /// };
 /// </pre>
 /// </summary>
- public ref class Objects {
+PUBLIC ref class Objects {
  public:
   /// <summary>
   /// Hashes consistent with java.util.Objects.hash(Object ...).
@@ -56,17 +58,15 @@ namespace Geode {
   /// <param name="values">
   /// Variable arguments to combine into hash.
   /// </param>
-  static Int32 Hash(... array<Object^>^ values);
+  static Int32 Hash(... gc_ptr(array<Object ^>) values);
 
-  
   /// <summary>
   /// Hashes consistent with java.util.Objects.hashCode(Object).
   /// </summary>
   /// <param name="value">
   /// Object to hash.
   /// </param>
-  static Int32 GetHashCode(Object^ value);
-
+  static Int32 GetHashCode(gc_ptr(Object) value);
 
   /// <summary>
   /// Hashes consistent with java.lang.String.hashCode().
@@ -74,7 +74,7 @@ namespace Geode {
   /// <param name="value">
   /// String to hash.
   /// </param>
-  static Int32 GetHashCode(String^ value);
+  static Int32 GetHashCode(gc_ptr(String) value);
 
   /// <summary>
   /// Hashes consistent with java.lang.Character.hashCode().
@@ -146,7 +146,7 @@ namespace Geode {
   /// <param name="value">
   /// Date to hash.
   /// </param>
-  static Int32 GetHashCode(DateTime^ value);
+  static Int32 GetHashCode(gc_ptr(DateTime) value);
 
   /// <summary>
   /// Hashes consistent with java.lang.Date.hashCode().
@@ -163,7 +163,7 @@ namespace Geode {
   /// <param name="value">
   /// Array or List like collection to hash.
   /// </param>
-  static Int32 GetHashCode(System::Collections::ICollection^ collection);
+  static Int32 GetHashCode(gc_ptr(System::Collections::ICollection) collection);
 
   /// <summary>
   /// Hashes consistent with java.util.Map.hashCode().
@@ -171,7 +171,7 @@ namespace Geode {
   /// <param name="dictionary">
   /// Map to hash.
   /// </param>
-  static Int32 GetHashCode(System::Collections::IDictionary^ dictionary);
+  static Int32 GetHashCode(gc_ptr(System::Collections::IDictionary) dictionary);
 };
 
 }  // namespace Geode

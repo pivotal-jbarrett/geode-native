@@ -15,42 +15,30 @@
  * limitations under the License.
  */
 
-
 #include "CacheStatistics.hpp"
 #include "TimeUtils.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      using namespace System;
+using namespace System;
 
-      System::DateTime CacheStatistics::LastModifiedTime::get( )
-      {
-        try
-        {
-          return TimeUtils::TimePointToDateTime(m_nativeptr->get()->getLastModifiedTime());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+System::DateTime CacheStatistics::LastModifiedTime::get() {
+  try {
+    return TimeUtils::TimePointToDateTime(m_nativeptr->get()->getLastModifiedTime());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      System::DateTime CacheStatistics::LastAccessedTime::get()
-      {
-        try
-        {
-          return TimeUtils::TimePointToDateTime(m_nativeptr->get()->getLastAccessedTime());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-    }  // namespace Client
-  }  // namespace Geode
+System::DateTime CacheStatistics::LastAccessedTime::get() {
+  try {
+    return TimeUtils::TimePointToDateTime(m_nativeptr->get()->getLastAccessedTime());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

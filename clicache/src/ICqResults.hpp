@@ -17,37 +17,27 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/SelectResults.hpp>
 #include "end_native.hpp"
 
-
 #include "ISelectResults.hpp"
-
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TResult)
-      ref class SelectResultsIterator;
+GENERIC(class TResult)
+ref class SelectResultsIterator;
 
-      /// <summary>
-      /// Interface to encapsulate a select query result set.
-      /// </summary>
-      GENERIC(class TResult)
-      public interface class ICqResults
-        : public ISelectResults<TResult>
-      {
-      };
-    }  // namespace Client
-  }  // namespace Geode
+/// <summary>
+/// Interface to encapsulate a select query result set.
+/// </summary>
+GENERIC(class TResult)
+PUBLIC interface class ICqResults : public ISelectResults<TResult> {};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

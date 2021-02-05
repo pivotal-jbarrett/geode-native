@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "begin_native.hpp"
 #include "end_native.hpp"
 #include "CacheableObjectArray.hpp"
@@ -28,49 +27,40 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+// Region: ISerializable Members
 
-      // Region: ISerializable Members
+void CacheableObjectArray::ToData(gc_ptr(DataOutput) output) {
+  output->WriteArrayLen((System::Int32)Count);
+  output->WriteByte((int8_t)apache::geode::client::internal::DSCode::Class);
+  output->WriteByte((int8_t)apache::geode::client::internal::DSCode::CacheableASCIIString);
+  output->WriteUTF("java.lang.Object");
 
-      void CacheableObjectArray::ToData(DataOutput^ output)
-      {
-        output->WriteArrayLen((System::Int32)Count);
-        output->WriteByte((int8_t)apache::geode::client::internal::DSCode::Class);
-        output->WriteByte((int8_t)apache::geode::client::internal::DSCode::CacheableASCIIString);
-        output->WriteUTF("java.lang.Object");
+  FOR_EACH (gc_ptr(Object) obj in this) {
+    // TODO::split
+    output->WriteObject(obj);
+  }
+}
 
-        FOR_EACH (Object^ obj in this) {
-					//TODO::split
-          output->WriteObject(obj);
-        }
-      }
+void CacheableObjectArray::FromData(gc_ptr(DataInput) input) {
+  int len = input->ReadArrayLen();
+  if (len >= 0) {
+    input->ReadByte();  // ignore CLASS typeid
+    input->ReadByte();  // ignore string typeid
+    unsigned short classLen;
+    classLen = input->ReadInt16();
+    input->AdvanceCursor(classLen);
+  }
+  for (System::Int32 index = 0; index < len; ++index) {
+    Add(input->ReadObject());
+  }
+}
 
-      void CacheableObjectArray::FromData(DataInput^ input)
-      {
-        int len = input->ReadArrayLen();
-        if (len >= 0) {
-          input->ReadByte(); // ignore CLASS typeid
-          input->ReadByte(); // ignore string typeid
-          unsigned short classLen;
-          classLen = input->ReadInt16();
-          input->AdvanceCursor(classLen);
-        }
-        for (System::Int32 index = 0; index < len; ++index) {
-          Add(input->ReadObject());
-        }
-      }
+System::UInt64 CacheableObjectArray::ObjectSize::get() { return Count; }
 
-      System::UInt64 CacheableObjectArray::ObjectSize::get()
-      { 
-        return Count;
-      }
-
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

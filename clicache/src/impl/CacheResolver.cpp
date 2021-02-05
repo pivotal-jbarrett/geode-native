@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "../begin_native.hpp"
 #include <geode/Cache.hpp>
 #include "../end_native.hpp"
@@ -24,23 +23,18 @@
 
 #include "CacheResolver.hpp"
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
+namespace apache {
+namespace geode {
+namespace client {
 
-      Apache::Geode::Client::Cache^ CacheResolver::Lookup(const Cache* nativeCache)
-      {
-        return nativeToManagedCacheMap[IntPtr((void*)nativeCache)];
-      }
+gc_ptr(Apache::Geode::Client::Cache) CacheResolver::Lookup(const Cache* nativeCache) {
+  return nativeToManagedCacheMap[IntPtr((void*)nativeCache)];
+}
 
-      void CacheResolver::Add(const Cache* nativeCache, Apache::Geode::Client::Cache^ managedCache)
-      {
-        nativeToManagedCacheMap[IntPtr((void*)nativeCache)] = managedCache;
-      }
+void CacheResolver::Add(const Cache* nativeCache, gc_ptr(Apache::Geode::Client::Cache) managedCache) {
+  nativeToManagedCacheMap[IntPtr((void*)nativeCache)] = managedCache;
+}
 
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

@@ -35,7 +35,7 @@ namespace Apache
         /// <summary>
         /// Specifies the category of a query
         /// </summary>
-        public enum class QueryCategory
+        PUBLIC enum class QueryCategory
         {
           SingleRegion = 0,
           MultiRegion,
@@ -59,17 +59,17 @@ namespace Apache
         /// <summary>
         /// Encapsulates a query string.
         /// </summary>
-        public ref class QueryStrings sealed
+        PUBLIC ref class QueryStrings sealed
         {
         public:
 
-          inline QueryStrings( QueryCategory pcategory, String^ pquery,
+          inline QueryStrings( QueryCategory pcategory, gc_ptr(String) pquery,
             Boolean pisLargeResultset )
           {
             Init( pcategory, pquery, pisLargeResultset );
           }
 
-          QueryStrings( QueryCategory pcategory, String^ pquery )
+          QueryStrings( QueryCategory pcategory, gc_ptr(String) pquery )
           {
             Init( pcategory, pquery, false );
           }
@@ -109,9 +109,9 @@ namespace Apache
             QueryCategory get( );
           }
 
-          property String^ Query
+          property gc_ptr(String) Query
           {
-            String^ get( );
+            gc_ptr(String) get( );
           }
 
           property bool IsLargeResultset
@@ -121,10 +121,10 @@ namespace Apache
 
         private:
 
-          void Init( QueryCategory pcategory, String^ pquery,
+          void Init( QueryCategory pcategory, gc_ptr(String) pquery,
             Boolean pisLargeResultset );
 
-          native_conditional_unique_ptr<testData::QueryStrings>^ m_nativeptr;
+          gc_ptr(native_conditional_unique_ptr<testData::QueryStrings>) m_nativeptr;
 
         internal:
 
@@ -141,55 +141,55 @@ namespace Apache
         /// <summary>
         /// Contains static query arrays and their expected results.
         /// </summary>
-        public ref class QueryStatics sealed
+        PUBLIC ref class QueryStatics sealed
         {
         public:
 
-          static array<QueryStrings^>^ ResultSetQueries;
+          static gc_ptr(array<QueryStrings^>) ResultSetQueries;
 
-          static array<QueryStrings^>^ ResultSetParamQueries;
+          static gc_ptr(array<QueryStrings^>) ResultSetParamQueries;
 
-          static array<array<String^>^>^ QueryParamSet;
+          static array<gc_ptr(array<String^>)>^ QueryParamSet;
 
-          static array<array<String^>^>^ QueryParamSetSS;
+          static array<gc_ptr(array<String^>)>^ QueryParamSetSS;
 
-          static array<Int32>^ NoOfQueryParam;
+          static gc_ptr(array<Int32>) NoOfQueryParam;
 
-          static array<Int32>^ NoOfQueryParamSS;
+          static gc_ptr(array<Int32>) NoOfQueryParamSS;
 
-          static array<Int32>^ ResultSetRowCounts;
+          static gc_ptr(array<Int32>) ResultSetRowCounts;
 
-          static array<Int32>^ ResultSetPQRowCounts;
+          static gc_ptr(array<Int32>) ResultSetPQRowCounts;
 
-          static array<Int32>^ ConstantExpectedRowsRS;
+          static gc_ptr(array<Int32>) ConstantExpectedRowsRS;
 
-          static array<Int32>^ ConstantExpectedRowsPQRS;
+          static gc_ptr(array<Int32>) ConstantExpectedRowsPQRS;
 
-          static array<QueryStrings^>^ StructSetQueries;
+          static gc_ptr(array<QueryStrings^>) StructSetQueries;
 
-          static array<QueryStrings^>^ StructSetParamQueries;
+          static gc_ptr(array<QueryStrings^>) StructSetParamQueries;
 
-          static array<Int32>^ StructSetRowCounts;
+          static gc_ptr(array<Int32>) StructSetRowCounts;
 
-          static array<Int32>^ StructSetPQRowCounts;
+          static gc_ptr(array<Int32>) StructSetPQRowCounts;
 
-          static array<Int32>^ StructSetFieldCounts;
+          static gc_ptr(array<Int32>) StructSetFieldCounts;
 
-          static array<Int32>^ StructSetPQFieldCounts;
+          static gc_ptr(array<Int32>) StructSetPQFieldCounts;
 
-          static array<Int32>^ ConstantExpectedRowsSS;
+          static gc_ptr(array<Int32>) ConstantExpectedRowsSS;
 
-          static array<Int32>^ ConstantExpectedRowsPQSS;
+          static gc_ptr(array<Int32>) ConstantExpectedRowsPQSS;
 
-          static array<QueryStrings^>^ RegionQueries;
+          static gc_ptr(array<QueryStrings^>) RegionQueries;
 
-          static array<Int32>^ RegionQueryRowCounts;
+          static gc_ptr(array<Int32>) RegionQueryRowCounts;
 
-          static array<QueryStrings^>^ CqResultSetQueries;
+          static gc_ptr(array<QueryStrings^>) CqResultSetQueries;
 
-          static array<Int32>^ CqResultSetRowCounts;
+          static gc_ptr(array<Int32>) CqResultSetRowCounts;
 
-          static array<Int32>^ ConstantExpectedRowsCQRS;
+          static gc_ptr(array<Int32>) ConstantExpectedRowsCQRS;
 
         private:
 

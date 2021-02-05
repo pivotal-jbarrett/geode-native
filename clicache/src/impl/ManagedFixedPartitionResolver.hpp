@@ -17,132 +17,116 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include <vcclr.h>
 #include "../begin_native.hpp"
 #include <geode/FixedPartitionResolver.hpp>
 #include "../end_native.hpp"
 
-
 #include "FixedPartitionResolver.hpp"
 
 namespace apache {
-  namespace geode {
-    namespace client {
+namespace geode {
+namespace client {
 
-      /// <summary>
-      /// Wraps the managed <see cref="Apache.Geode.Client.IFixedPartitionResolver" />
-      /// object and implements the native <c>apache::geode::client::FixedPartitionResolver</c> interface.
-      /// </summary>
-      class ManagedFixedPartitionResolverGeneric
-        : public FixedPartitionResolver
-      {
-      public:
+/// <summary>
+/// Wraps the managed <see cref="Apache.Geode.Client.IFixedPartitionResolver" />
+/// object and implements the native <c>apache::geode::client::FixedPartitionResolver</c> interface.
+/// </summary>
+class ManagedFixedPartitionResolverGeneric : public FixedPartitionResolver {
+ public:
+  /// <summary>
+  /// Constructor to initialize with the provided managed object.
+  /// </summary>
+  /// <param name="userptr">
+  /// The managed object.
+  /// </param>
+  inline ManagedFixedPartitionResolverGeneric(gc_ptr(Object) userptr) : m_userptr(userptr) {}
 
-        /// <summary>
-        /// Constructor to initialize with the provided managed object.
-        /// </summary>
-        /// <param name="userptr">
-        /// The managed object.
-        /// </param>
-        inline ManagedFixedPartitionResolverGeneric(Object^ userptr) : m_userptr(userptr) { }
+  /// <summary>
+  /// Destructor -- does nothing.
+  /// </summary>
+  virtual ~ManagedFixedPartitionResolverGeneric() {}
 
-        /// <summary>
-        /// Destructor -- does nothing.
-        /// </summary>
-        virtual ~ManagedFixedPartitionResolverGeneric() { }
+  /// <summary>
+  /// Static function to create a <c>ManagedFixedPartitionResolver</c> using given
+  /// managed assembly path and given factory function.
+  /// </summary>
+  /// <param name="assemblyPath">
+  /// The path of the managed assembly that contains the <c>IFixedPartitionResolver</c>
+  /// factory function.
+  /// </param>
+  /// <param name="factoryFunctionName">
+  /// The name of the factory function of the managed class for creating
+  /// an object that implements <c>IFixedPartitionResolver</c>.
+  /// This should be a static function of the format
+  /// {Namespace}.{Class Name}.{Method Name}.
+  /// </param>
+  /// <exception cref="IllegalArgumentException">
+  /// If the managed library cannot be loaded or the factory function fails.
+  /// </exception>
+  static PartitionResolver* create(const char* assemblyPath, const char* factoryFunctionName);
 
-        /// <summary>
-        /// Static function to create a <c>ManagedFixedPartitionResolver</c> using given
-        /// managed assembly path and given factory function.
-        /// </summary>
-        /// <param name="assemblyPath">
-        /// The path of the managed assembly that contains the <c>IFixedPartitionResolver</c>
-        /// factory function.
-        /// </param>
-        /// <param name="factoryFunctionName">
-        /// The name of the factory function of the managed class for creating
-        /// an object that implements <c>IFixedPartitionResolver</c>.
-        /// This should be a static function of the format
-        /// {Namespace}.{Class Name}.{Method Name}.
-        /// </param>
-        /// <exception cref="IllegalArgumentException">
-        /// If the managed library cannot be loaded or the factory function fails.
-        /// </exception>
-        static PartitionResolver* create(const char* assemblyPath,
-          const char* factoryFunctionName);
+  /// <summary>
+  /// return object associated with entry event which allows the Partitioned Region to store associated data together.
+  /// </summary>
+  /// <remarks>
+  /// throws RuntimeException - any exception thrown will terminate the operation and the exception will be passed to
+  /// the calling thread.
+  /// </remarks>
+  /// <param name="key">
+  /// key the detail of the entry event.
+  /// </param>
 
-        /// <summary>
-        /// return object associated with entry event which allows the Partitioned Region to store associated data together.
-        /// </summary>
-        /// <remarks>
-        /// throws RuntimeException - any exception thrown will terminate the operation and the exception will be passed to the
-        /// calling thread.
-        /// </remarks>
-        /// <param name="key">
-        /// key the detail of the entry event.
-        /// </param>
+  virtual std::shared_ptr<CacheableKey> getRoutingObject(const EntryEvent& key) override;
 
-        virtual std::shared_ptr<CacheableKey> getRoutingObject(const EntryEvent& key) override;
+  /// <summary>
+  /// Returns the name of the FixedPartitionResolver.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// This function does not throw any exception.
+  /// </para>
+  /// <returns>
+  /// the name of the FixedPartitionResolver
+  /// </returns>
+  /// </remarks>
+  virtual const std::string& getName() override;
 
-        /// <summary>
-        /// Returns the name of the FixedPartitionResolver.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This function does not throw any exception.
-        /// </para>
-        /// <returns>
-        /// the name of the FixedPartitionResolver
-        /// </returns>
-        /// </remarks>
-        virtual const std::string& getName() override;
+  /// <summary>
+  /// This method is used to get the name of the partition for the given entry
+  /// operation.
+  /// <param name="opDetails">
+  /// the details of the entry event e.g. {@link Region#get(Object)}
+  /// </param>
+  /// <returns>
+  /// partition-name associated with node which allows mapping of given data to user defined partition.
+  /// </returns>
+  virtual const std::string& getPartitionName(const EntryEvent& opDetails) override;
 
+  /// <summary>
+  /// Returns the wrapped managed object reference.
+  /// </summary>
+  inline gc_ptr(Apache::Geode::Client::IFixedPartitionResolverProxy) ptr() const { return m_managedptr; }
 
-        /// <summary>
-        /// This method is used to get the name of the partition for the given entry
-        /// operation.
-        /// <param name="opDetails">
-        /// the details of the entry event e.g. {@link Region#get(Object)}
-        /// </param>
-        /// <returns>
-        /// partition-name associated with node which allows mapping of given data to user defined partition.
-        /// </returns>
-        virtual const std::string& getPartitionName(const EntryEvent& opDetails) override;
+  inline void setptr(gc_ptr(Apache::Geode::Client::IFixedPartitionResolverProxy) managedptr) {
+    m_managedptr = managedptr;
+  }
 
+  inline gc_ptr(Object) userptr() const { return m_userptr; }
 
-        /// <summary>
-        /// Returns the wrapped managed object reference.
-        /// </summary>
-        inline Apache::Geode::Client::IFixedPartitionResolverProxy^ ptr() const
-        {
-          return m_managedptr;
-        }
+ private:
+  /// <summary>
+  /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
+  /// Note: not using auto_gcroot since it will result in 'Dispose' of the IFixedPartitionResolver
+  /// to be called which is not what is desired when this object is destroyed. Normally this
+  /// managed object may be created by the user and will be handled automatically by the GC.
+  /// </summary>
+  gcroot<gc_ptr(Apache::Geode::Client::IFixedPartitionResolverProxy)> m_managedptr;
 
-        inline void setptr(Apache::Geode::Client::IFixedPartitionResolverProxy^ managedptr)
-        {
-          m_managedptr = managedptr;
-        }
+  gcroot<gc_ptr(Object)> m_userptr;
+};
 
-        inline Object^ userptr() const
-        {
-          return m_userptr;
-        }
-
-      private:
-
-        /// <summary>
-        /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
-        /// Note: not using auto_gcroot since it will result in 'Dispose' of the IFixedPartitionResolver
-        /// to be called which is not what is desired when this object is destroyed. Normally this
-        /// managed object may be created by the user and will be handled automatically by the GC.
-        /// </summary>
-        gcroot<Apache::Geode::Client::IFixedPartitionResolverProxy^> m_managedptr;
-
-        gcroot<Object^> m_userptr;
-      };
-
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

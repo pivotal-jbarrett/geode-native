@@ -31,88 +31,76 @@
 
 using namespace System;
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
+namespace apache {
+namespace geode {
+namespace client {
 
-      /// <summary>
-      /// Wraps the managed <see cref="Apache.Geode.Client.IDelta" />
-      /// object and implements the native <c>apache::geode::client::CacheableKey</c> interface.
-      /// </summary>
-      class ManagedCacheableDeltaGeneric
-        : public apache::geode::client::CacheableKey,
-          public apache::geode::client::Delta,
-          public apache::geode::client::DataSerializable
-      {
-        public:
-          /// <summary>
-          /// Constructor to initialize with the provided managed object.
-          /// </summary>
-          /// <param name="managedptr">
-          /// The managed object.
-          /// </param>
-          inline ManagedCacheableDeltaGeneric(
-            Apache::Geode::Client::IDelta^ managedptr)
-            : Delta(), m_managedptr(managedptr)
-          {
-            m_managedSerializableptr = dynamic_cast<Apache::Geode::Client::IDataSerializable^>(managedptr);
-            m_objectSize = 0;
-          }
+/// <summary>
+/// Wraps the managed <see cref="Apache.Geode.Client.IDelta" />
+/// object and implements the native <c>apache::geode::client::CacheableKey</c> interface.
+/// </summary>
+class ManagedCacheableDeltaGeneric : public apache::geode::client::CacheableKey,
+                                     public apache::geode::client::Delta,
+                                     public apache::geode::client::DataSerializable {
+ public:
+  /// <summary>
+  /// Constructor to initialize with the provided managed object.
+  /// </summary>
+  /// <param name="managedptr">
+  /// The managed object.
+  /// </param>
+  inline ManagedCacheableDeltaGeneric(gc_ptr(Apache::Geode::Client::IDelta) managedptr)
+      : Delta(), m_managedptr(managedptr) {
+    m_managedSerializableptr = dynamic_cast<gc_ptr(Apache::Geode::Client::IDataSerializable)>(managedptr);
+    m_objectSize = 0;
+  }
 
-          inline ManagedCacheableDeltaGeneric(
-            Apache::Geode::Client::IDelta^ managedptr, int hashcode, int classId)
-            : Delta(),  m_managedptr(managedptr) 
-          {
-            m_hashcode = hashcode;
-            m_managedSerializableptr = dynamic_cast<Apache::Geode::Client::IDataSerializable^> (managedptr);
-            m_objectSize = 0;
-          }
+  inline ManagedCacheableDeltaGeneric(gc_ptr(Apache::Geode::Client::IDelta) managedptr, int hashcode, int classId)
+      : Delta(), m_managedptr(managedptr) {
+    m_hashcode = hashcode;
+    m_managedSerializableptr = dynamic_cast<gc_ptr(Apache::Geode::Client::IDataSerializable)>(managedptr);
+    m_objectSize = 0;
+  }
 
-          size_t objectSize() const override;
+  size_t objectSize() const override;
 
-          void toData(apache::geode::client::DataOutput& output) const override;
+  void toData(apache::geode::client::DataOutput& output) const override;
 
-          void fromData(apache::geode::client::DataInput& input) override;
+  void fromData(apache::geode::client::DataInput& input) override;
 
-          void toDelta(apache::geode::client::DataOutput& output) const override;
+  void toDelta(apache::geode::client::DataOutput& output) const override;
 
-          void fromDelta(apache::geode::client::DataInput& input) override;
+  void fromDelta(apache::geode::client::DataInput& input) override;
 
-          bool hasDelta() const override;
+  bool hasDelta() const override;
 
-          std::shared_ptr<apache::geode::client::Delta> clone() const override;
+  std::shared_ptr<apache::geode::client::Delta> clone() const override;
 
-          int32_t hashcode() const override;
+  int32_t hashcode() const override;
 
-          bool operator == (const CacheableKey& other) const override;
+  bool operator==(const CacheableKey& other) const override;
 
-          virtual bool operator == (const ManagedCacheableDeltaGeneric& other) const;
+  virtual bool operator==(const ManagedCacheableDeltaGeneric& other) const;
 
-          inline Apache::Geode::Client::IDelta^ ptr() const
-          {
-            return m_managedptr;
-          }
+  inline gc_ptr(Apache::Geode::Client::IDelta) ptr() const { return m_managedptr; }
 
-          ManagedCacheableDeltaGeneric(const ManagedCacheableDeltaGeneric&) = delete;
-          ManagedCacheableDeltaGeneric& operator = (const ManagedCacheableDeltaGeneric&) = delete;
+  ManagedCacheableDeltaGeneric(const ManagedCacheableDeltaGeneric&) = delete;
+  ManagedCacheableDeltaGeneric& operator=(const ManagedCacheableDeltaGeneric&) = delete;
 
-        private:
-          int m_hashcode;
-          size_t m_objectSize;
+ private:
+  int m_hashcode;
+  size_t m_objectSize;
 
-          /// <summary>
-          /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
-          /// Note: not using auto_gcroot since it will result in 'Dispose' of the IDelta
-          /// to be called which is not what is desired when this object is destroyed. Normally this
-          /// managed object may be created by the user and will be handled automatically by the GC.
-          /// </summary>
-          gcroot<Apache::Geode::Client::IDelta^> m_managedptr;
-          gcroot<Apache::Geode::Client::IDataSerializable^> m_managedSerializableptr;
-      };
+  /// <summary>
+  /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
+  /// Note: not using auto_gcroot since it will result in 'Dispose' of the IDelta
+  /// to be called which is not what is desired when this object is destroyed. Normally this
+  /// managed object may be created by the user and will be handled automatically by the GC.
+  /// </summary>
+  gcroot<gc_ptr(Apache::Geode::Client::IDelta)> m_managedptr;
+  gcroot<gc_ptr(Apache::Geode::Client::IDataSerializable)> m_managedSerializableptr;
+};
 
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache

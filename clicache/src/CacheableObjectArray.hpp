@@ -27,108 +27,80 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      using namespace apache::geode::client;
+using namespace apache::geode::client;
 
-      /// <summary>
-      /// A mutable <c>ISerializable</c> object array wrapper that can serve
-      /// as a distributable object for caching. Though this class provides
-      /// compatibility with java Object[] serialization, it provides the
-      /// semantics of .NET generic <c>List</c> class.
-      /// </summary>
-      public ref class CacheableObjectArray
-        : public List<Object^>, public IDataSerializablePrimitive
-      {
-      public:
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableObjectArray()
-          : List<Object^>()
-        { }
+/// <summary>
+/// A mutable <c>ISerializable</c> object array wrapper that can serve
+/// as a distributable object for caching. Though this class provides
+/// compatibility with java Object[] serialization, it provides the
+/// semantics of .NET generic <c>List</c> class.
+/// </summary>
+PUBLIC ref class CacheableObjectArray : public List<gc_ptr(Object)>, public IDataSerializablePrimitive {
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableObjectArray() : List<gc_ptr(Object)>() {}
 
-        /// <summary>
-        /// Allocates a new instance copying from the given collection.
-        /// </summary>
-        /// <param name="collection">
-        /// The collection whose elements are copied to this list.
-        /// </param>
-        inline CacheableObjectArray(IEnumerable<Object^>^ collection)
-          : List<Object^>(collection)
-        { }
+  /// <summary>
+  /// Allocates a new instance copying from the given collection.
+  /// </summary>
+  /// <param name="collection">
+  /// The collection whose elements are copied to this list.
+  /// </param>
+  inline CacheableObjectArray(gc_ptr(IEnumerable<Object ^>) collection) : List<gc_ptr(Object)>(collection) {}
 
-        /// <summary>
-        /// Allocates a new empty instance with given initial size.
-        /// </summary>
-        /// <param name="capacity">
-        /// The initial capacity of the vector.
-        /// </param>
-        inline CacheableObjectArray(System::Int32 capacity)
-          : List<Object^>(capacity)
-        { }
+  /// <summary>
+  /// Allocates a new empty instance with given initial size.
+  /// </summary>
+  /// <param name="capacity">
+  /// The initial capacity of the vector.
+  /// </param>
+  inline CacheableObjectArray(System::Int32 capacity) : List<gc_ptr(Object)>(capacity) {}
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableObjectArray^ Create()
-        {
-          return gcnew CacheableObjectArray();
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableObjectArray) Create() { return gcnew CacheableObjectArray(); }
 
-        /// <summary>
-        /// Static function to create a new instance copying from the
-        /// given collection.
-        /// </summary>
-        inline static CacheableObjectArray^ Create(
-          IEnumerable<Object^>^ collection)
-        {
-          return gcnew CacheableObjectArray(collection);
-        }
+  /// <summary>
+  /// Static function to create a new instance copying from the
+  /// given collection.
+  /// </summary>
+  inline static gc_ptr(CacheableObjectArray) Create(gc_ptr(IEnumerable<Object ^>) collection) {
+    return gcnew CacheableObjectArray(collection);
+  }
 
-        /// <summary>
-        /// Static function to create a new instance with given initial size.
-        /// </summary>
-        inline static CacheableObjectArray^ Create(System::Int32 capacity)
-        {
-          return gcnew CacheableObjectArray(capacity);
-        }
+  /// <summary>
+  /// Static function to create a new instance with given initial size.
+  /// </summary>
+  inline static gc_ptr(CacheableObjectArray) Create(System::Int32 capacity) {
+    return gcnew CacheableObjectArray(capacity);
+  }
 
-        // Region: ISerializable Members
+  // Region: ISerializable Members
 
-        virtual void ToData(DataOutput^ output);
+  virtual void ToData(gc_ptr(DataOutput) output);
 
-        virtual void FromData(DataInput^ input);
+  virtual void FromData(gc_ptr(DataInput) input);
 
-        property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get();
-        }
+  property System::UInt64 ObjectSize { virtual System::UInt64 get(); }
 
-        property int8_t DsCode
-        {
-          virtual int8_t get()
-          {
-            return static_cast<int8_t>(internal::DSCode::CacheableObjectArray);
-          }
-        }
+  property int8_t DsCode {
+    virtual int8_t get() { return static_cast<int8_t>(internal::DSCode::CacheableObjectArray); }
+  }
 
-        // End Region: ISerializable Members
+  // End Region: ISerializable Members
 
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableObjectArray();
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableObjectArray(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

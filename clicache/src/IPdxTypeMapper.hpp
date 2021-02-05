@@ -19,35 +19,30 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-        /// <summary>
-        /// Application can implement this interface to map pdx type name to local type name.
-        /// Need to set this using <see cref="Serializable.SetPdxTypeMapper" />
-        /// </summary>
-        public interface class IPdxTypeMapper
-        {
-          public:
-           /// <summary> 
-           /// To map the local type name to pdx type
-           /// <param name="localTypeName"> local type name </param>
-           /// @return the pdx type name.
-           /// </summary>
-           String^ ToPdxTypeName(String^ localTypeName);
+/// <summary>
+/// Application can implement this interface to map pdx type name to local type name.
+/// Need to set this using <see cref="Serializable.SetPdxTypeMapper" />
+/// </summary>
+PUBLIC interface class IPdxTypeMapper {
+ public:
+  /// <summary>
+  /// To map the local type name to pdx type
+  /// <param name="localTypeName"> local type name </param>
+  /// @return the pdx type name.
+  /// </summary>
+  gc_ptr(String) ToPdxTypeName(gc_ptr(String) localTypeName);
 
-           /// <summary>
-           /// To map the pdx type name to local type
-           /// <param name="pdxTypeName"> pdx type name </param>
-           /// @return the local type name.
-           /// </summary>          
-           String^ FromPdxTypeName(String^ pdxTypeName);
-        };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// To map the pdx type name to local type
+  /// <param name="pdxTypeName"> pdx type name </param>
+  /// @return the local type name.
+  /// </summary>
+  gc_ptr(String) FromPdxTypeName(gc_ptr(String) pdxTypeName);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

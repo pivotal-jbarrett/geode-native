@@ -17,79 +17,60 @@
 
 #pragma once
 
-
 #include "begin_native.hpp"
 #include <memory>
 #include "end_native.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+#include "cli.hpp"
 
-      template <class _T, class _D = std::default_delete<_T>>
-      public ref class native_unique_ptr sealed {
-      private:
-        std::unique_ptr<_T, _D>* ptr;
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      public:
-        native_unique_ptr(std::unique_ptr<_T, _D>&& ptr) :
-          ptr(new std::unique_ptr<_T, _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
+template <class _T, class _D = std::default_delete<_T>>
+PUBLIC ref class native_unique_ptr sealed {
+ private:
+  std::unique_ptr<_T, _D>* ptr;
 
-        ~native_unique_ptr() {
-          native_unique_ptr::!native_unique_ptr();
-        }
+ public:
+  native_unique_ptr(std::unique_ptr<_T, _D>&& ptr)
+      : ptr(new std::unique_ptr<_T, _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
 
-        !native_unique_ptr() {
-          delete ptr;
-        }
+  ~native_unique_ptr() { native_unique_ptr::!native_unique_ptr(); }
 
-        inline _T* get() {
-          return ptr->get();
-        }
+  !native_unique_ptr() { delete ptr; }
 
-      };
+  inline _T* get() { return ptr->get(); }
+};
 
-      
-      template <class _T, class _D>
-      public ref class native_unique_ptr<_T[], _D> sealed {
-      private:
-        std::unique_ptr<_T[], _D>* ptr;
+template <class _T, class _D>
+PUBLIC ref class native_unique_ptr<_T[], _D> sealed {
+ private:
+  std::unique_ptr<_T[], _D>* ptr;
 
-      public:
-        native_unique_ptr(std::unique_ptr<_T[], _D>&& ptr) :
-          ptr(new std::unique_ptr<_T[], _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
+ public:
+  native_unique_ptr(std::unique_ptr<_T[], _D>&& ptr)
+      : ptr(new std::unique_ptr<_T[], _D>(ptr.release(), std::forward<_D>(ptr.get_deleter()))) {}
 
-        native_unique_ptr(_T* ptr) :
-          ptr(new std::unique_ptr<_T[], _D>(ptr)) {}
+  native_unique_ptr(_T* ptr) : ptr(new std::unique_ptr<_T[], _D>(ptr)) {}
 
-        ~native_unique_ptr() {
-          native_unique_ptr::!native_unique_ptr();
-        }
+  ~native_unique_ptr() { native_unique_ptr::!native_unique_ptr(); }
 
-        !native_unique_ptr() {
-          delete ptr;
-        }
+  !native_unique_ptr() { delete ptr; }
 
-        inline _T* get() {
-          return ptr->get();
-        }
+  inline _T* get() { return ptr->get(); }
+};
 
-      };
-
-      template<class _T, class... _Args,
-        std::enable_if_t<!std::is_array_v<_T>, int> = 0>
-      inline native_unique_ptr<_T>^ make_unique(_Args&&... args) {
-        return gcnew native_unique_ptr<_T>(std::make_unique<_T>(std::forward<_Args>(args)...));
-      }
-
-      template <class _T, std::enable_if_t<std::is_array_v<_T> && std::extent_v<_T> == 0, int> = 0>
-      inline native_unique_ptr<_T>^ make_native_unique(std::size_t size) {
-        return gcnew native_unique_ptr<_T>(std::make_unique<_T>(size));
-      }
-      
-    }
-  }
+template <class _T, class... _Args, std::enable_if_t<!std::is_array_v<_T>, int> = 0>
+inline gc_ptr(native_unique_ptr<_T>) make_unique(_Args&&... args) {
+  return gcnew native_unique_ptr<_T>(std::make_unique<_T>(std::forward<_Args>(args)...));
 }
+
+template <class _T, std::enable_if_t<std::is_array_v<_T> && std::extent_v<_T> == 0, int> = 0>
+inline gc_ptr(native_unique_ptr<_T>) make_native_unique(std::size_t size) {
+  return gcnew native_unique_ptr<_T>(std::make_unique<_T>(size));
+}
+
+}  // namespace Client
+}  // namespace Geode
+}  // namespace Apache

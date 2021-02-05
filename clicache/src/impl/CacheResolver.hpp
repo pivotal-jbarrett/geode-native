@@ -17,43 +17,34 @@
 
 #pragma once
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+ref class Cache;
 
-      ref class Cache;
-
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
-      class Cache;
+namespace apache {
+namespace geode {
+namespace client {
+class Cache;
 
-      using namespace System;
-      using namespace System::Collections::Concurrent;
+using namespace System;
+using namespace System::Collections::Concurrent;
 
-      ref class CacheResolver
-      {
-      public:
-        static Apache::Geode::Client::Cache^ Lookup(const Cache* nativeCache);
+ref class CacheResolver {
+ public:
+  static gc_ptr(Apache::Geode::Client::Cache) Lookup(const Cache* nativeCache);
 
-        static void Add(const Cache* nativeCache, Apache::Geode::Client::Cache^ managedCache);
+  static void Add(const Cache* nativeCache, gc_ptr(Apache::Geode::Client::Cache) managedCache);
 
-      private:
-        static ConcurrentDictionary<IntPtr, Apache::Geode::Client::Cache^> nativeToManagedCacheMap;
-      };
+ private:
+  static ConcurrentDictionary<IntPtr, gc_ptr(Apache::Geode::Client::Cache)> nativeToManagedCacheMap;
+};
 
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache
-

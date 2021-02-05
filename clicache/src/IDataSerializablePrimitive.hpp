@@ -27,29 +27,22 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class DataOutput;
-      ref class DataInput;
+ref class DataOutput;
+ref class DataInput;
 
-      private interface class IDataSerializablePrimitive : public ISerializable
-      {
-        void ToData( DataOutput^ output );
+private
+interface class IDataSerializablePrimitive : public ISerializable {
+  void ToData(gc_ptr(DataOutput) output);
 
-        void FromData( DataInput^ input );
+  void FromData(gc_ptr(DataInput) input);
 
-        property int8_t DsCode
-        {
-          int8_t get( );
-        }
-      };
+  property int8_t DsCode { int8_t get(); }
+};
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

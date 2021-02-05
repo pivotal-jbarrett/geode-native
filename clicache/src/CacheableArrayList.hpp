@@ -17,82 +17,63 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "CacheableVector.hpp"
-
 
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// A mutable <c>ISerializable</c> vector wrapper that can serve as
-      /// a distributable object for caching. This class extends .NET generic
-      /// <c>List</c> class.
-      /// </summary>
-      ref class CacheableArrayList
-        : public CacheableVector
-      {
-      public:
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableArrayList(System::Collections::IList^ list)
-          : CacheableVector(list)
-        { }
+/// <summary>
+/// A mutable <c>ISerializable</c> vector wrapper that can serve as
+/// a distributable object for caching. This class extends .NET generic
+/// <c>List</c> class.
+/// </summary>
+ref class CacheableArrayList : public CacheableVector {
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableArrayList(gc_ptr(System::Collections::IList) list) : CacheableVector(list) {}
 
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableArrayList) Create() {
+    return gcnew CacheableArrayList(gcnew System::Collections::Generic::List<gc_ptr(Object)>());
+  }
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableArrayList^ Create()
-        {
-          return gcnew CacheableArrayList(gcnew System::Collections::Generic::List<Object^>());
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableArrayList) Create(gc_ptr(System::Collections::IList) list) {
+    return gcnew CacheableArrayList(list);
+  }
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableArrayList^ Create(System::Collections::IList^ list)
-        {
-          return gcnew CacheableArrayList(list);
-        }
+  // Region: ISerializable Members
 
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode {
+    int8_t get() override { return static_cast<int8_t>(native::internal::DSCode::CacheableArrayList); }
+  }
 
-        // Region: ISerializable Members
+  // End Region: ISerializable Members
 
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          int8_t get() override
-          {
-            return static_cast<int8_t>(native::internal::DSCode::CacheableArrayList);
-          }
-        }
-
-        // End Region: ISerializable Members
-
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableArrayList(gcnew System::Collections::Generic::List<Object^>());
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() {
+    return gcnew CacheableArrayList(gcnew System::Collections::Generic::List<gc_ptr(Object)>());
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

@@ -17,46 +17,31 @@
 #ifdef CSTX_COMMENTED
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ITransactionListener.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+/// <summary>
+/// Utility class that implements all methods in <c>ITransactionListener</c>
+/// with empty implementations. Applications can subclass this class
+/// and only override the methods for the events of interest.
+/// </summary>
+GENERIC(class TKey, class TValue)
+PUBLIC ref class TransactionListenerAdapter : public Apache::Geode::Client::ITransactionListener<TKey, TValue> {
+ public:
+  virtual void AfterCommit(gc_ptr(Apache::Geode::Client::TransactionEvent<TKey, TValue>) te) {}
 
-      /// <summary>
-      /// Utility class that implements all methods in <c>ITransactionListener</c>
-      /// with empty implementations. Applications can subclass this class
-      /// and only override the methods for the events of interest.
-      /// </summary>
-      GENERIC(class TKey, class TValue)
-      public ref class TransactionListenerAdapter
-        : public Apache::Geode::Client::ITransactionListener<TKey, TValue>
-      {
-      public:
-        virtual void AfterCommit(Apache::Geode::Client::TransactionEvent<TKey, TValue>^ te)
-        {
-        }
+  virtual void AfterFailedCommit(gc_ptr(Apache::Geode::Client::TransactionEvent<TKey, TValue>) te) {}
 
-	      virtual void AfterFailedCommit(Apache::Geode::Client::TransactionEvent<TKey, TValue>^ te)
-        {
-        }
+  virtual void AfterRollback(gc_ptr(Apache::Geode::Client::TransactionEvent<TKey, TValue>) te) {}
 
-	      virtual void AfterRollback(Apache::Geode::Client::TransactionEvent<TKey, TValue>^ te)
-        {
-        }
-    
-        virtual void Close()
-        {
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void Close() {}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
 
 #endif

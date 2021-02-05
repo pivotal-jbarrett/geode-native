@@ -29,49 +29,38 @@
 using namespace System;
 using namespace Apache::Geode::Client;
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+GENERIC(class TKey, class TValue)
+gc_ptr(Cache) TransactionEvent<TKey, TValue>::Cache::get() {
+  auto cache = NativePtr->getCache();
+  return CacheResolver::Lookup(cache);
+}
 
-      GENERIC(class TKey, class TValue)
-      Cache^ TransactionEvent<TKey, TValue>::Cache::get( )
-      {
-        auto cache = NativePtr->getCache();
-				return CacheResolver::Lookup(cache);
-      }
-      
-      GENERIC(class TKey, class TValue)
-			Apache::Geode::Client::TransactionId^ TransactionEvent<TKey, TValue>::TransactionId::get( )
-      {
-        std::shared_ptr<apache::geode::client::TransactionId> & nativeptr(
-          NativePtr->getTransactionId( ) );
+GENERIC(class TKey, class TValue)
+gc_ptr(Apache::Geode::Client::TransactionId) TransactionEvent<TKey, TValue>::TransactionId::get() {
+  std::shared_ptr<apache::geode::client::TransactionId>& nativeptr(NativePtr->getTransactionId());
 
-				return Apache::Geode::Client::TransactionId::Create(
-          nativeptr.get() );
-      }
-    
-      GENERIC(class TKey, class TValue)
-      array<EntryEvent<TKey, TValue>^>^ TransactionEvent<TKey, TValue>::Events::get( )
-      {
-        std::vector<std::shared_ptr<apache::geode::client::EntryEvent>> vee;
-        vee = NativePtr->getEvents();
-        array<EntryEvent<TKey, TValue>^>^ events =
-          gcnew array<EntryEvent<TKey, TValue>^>( vee.size( ) );
-        // Loop through the unmanaged event objects to convert them to the managed generic objects. 
-        for( System::Int32 index = 0; index < vee.size( ); index++ )
-        {
-          std::shared_ptr<apache::geode::client::EntryEvent>& nativeptr( vee[ index ] );
-          EntryEvent<TKey, TValue> entryEvent( nativeptr.get() );
-          events[ index ] = (%entryEvent);
-        }
-        return events;
-    }  // namespace Client
-  }  // namespace Geode
+  return Apache::Geode::Client::TransactionId::Create(nativeptr.get());
+}
+
+GENERIC(class TKey, class TValue)
+array<gc_ptr(EntryEvent<TKey, TValue>)> ^ TransactionEvent<TKey, TValue>::Events::get() {
+  std::vector<std::shared_ptr<apache::geode::client::EntryEvent>> vee;
+  vee = NativePtr->getEvents();
+  array<gc_ptr(EntryEvent<TKey, TValue>)> ^ events = gcnew array<gc_ptr(EntryEvent<TKey, TValue>)>(vee.size());
+  // Loop through the unmanaged event objects to convert them to the managed generic objects.
+  for (System::Int32 index = 0; index < vee.size(); index++) {
+    std::shared_ptr<apache::geode::client::EntryEvent>& nativeptr(vee[index]);
+    EntryEvent<TKey, TValue> entryEvent(nativeptr.get());
+    events[index] = (% entryEvent);
+  }
+  return events;
+}  // namespace Client
+}  // namespace Client
+}  // namespace Geode
+
 }  // namespace Apache
-
- } //namespace 
 #endif

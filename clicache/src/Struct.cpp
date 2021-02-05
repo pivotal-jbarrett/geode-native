@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "begin_native.hpp"
 #include <geode/Struct.hpp>
 #include "end_native.hpp"
@@ -28,65 +26,44 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      Object^ Struct::default::get(int32_t index)
-      {
-        try
-        {
-          return (TypeRegistry::GetManagedValueGeneric<Object^>(
-            dynamic_cast<native::Struct*>(m_nativeptr->get())->operator[](index)));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+gc_ptr(Object) Struct::default ::get(int32_t index) {
+  try {
+    return (TypeRegistry::GetManagedValueGeneric<gc_ptr(Object)>(
+        dynamic_cast<native::Struct*>(m_nativeptr->get())->operator[](index)));
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      Object^ Struct::default::get(String^ fieldName)
-      {
-        try
-        {
-          return (TypeRegistry::GetManagedValueGeneric<Object^>(
-            dynamic_cast<native::Struct*>(m_nativeptr->get())->operator[](marshal_as<std::string>(fieldName))));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+gc_ptr(Object) Struct::default ::get(gc_ptr(String) fieldName) {
+  try {
+    return (TypeRegistry::GetManagedValueGeneric<gc_ptr(Object)>(
+        dynamic_cast<native::Struct*>(m_nativeptr->get())->operator[](marshal_as<std::string>(fieldName))));
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      StructSet<Object^>^ Struct::Set::get()
-      {
-        try
-        {
-          return StructSet<Object^>::Create(
-            dynamic_cast<native::Struct*>(m_nativeptr->get())->getStructSet());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+gc_ptr(StructSet<Object ^>) Struct::Set::get() {
+  try {
+    return StructSet<gc_ptr(Object)>::Create(dynamic_cast<native::Struct*>(m_nativeptr->get())->getStructSet());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-
-      int32_t Struct::Count::get()
-      {
-        try
-        {
-          return dynamic_cast<native::Struct*>(m_nativeptr->get())->size();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-    }  // namespace Client
-  }  // namespace Geode
+int32_t Struct::Count::get() {
+  try {
+    return dynamic_cast<native::Struct*>(m_nativeptr->get())->size();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

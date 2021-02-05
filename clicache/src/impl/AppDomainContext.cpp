@@ -15,21 +15,14 @@
  * limitations under the License.
  */
 
-
 #include "AppDomainContext.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-apache::geode::client::AppDomainContext* createAppDomainContext() {
-  return new AppDomainContext();
-}
+apache::geode::client::AppDomainContext* createAppDomainContext() { return new AppDomainContext(); }
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

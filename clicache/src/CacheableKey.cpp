@@ -15,98 +15,74 @@
  * limitations under the License.
  */
 
-
 #include "CacheableKey.hpp"
 #include "CacheableString.hpp"
 #include "CacheableBuiltins.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace native = apache::geode::client;
+namespace native = apache::geode::client;
 
-      System::Int32 CacheableKey::GetHashCode()
-      {
-        try
-        {
-          return dynamic_cast<native::CacheableKey*>(m_nativeptr->get())->hashcode();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+System::Int32 CacheableKey::GetHashCode() {
+  try {
+    return dynamic_cast<native::CacheableKey*>(m_nativeptr->get())->hashcode();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      bool CacheableKey::Equals(Client::ICacheableKey^ other)
-      {
-        try
-        {
-          return dynamic_cast<native::CacheableKey*>(m_nativeptr->get())->operator==(
-            *dynamic_cast<native::CacheableKey*>(
-            ((Client::CacheableKey^)other)->m_nativeptr->get()));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-          GC::KeepAlive(((Client::CacheableKey^)other)->m_nativeptr);
-        }
-      }
+bool CacheableKey::Equals(gc_ptr(Client::ICacheableKey) other) {
+  try {
+    return dynamic_cast<native::CacheableKey*>(m_nativeptr->get())
+        ->
+        operator==(*dynamic_cast<native::CacheableKey*>(((gc_ptr(Client::CacheableKey))other)->m_nativeptr->get()));
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+    GC::KeepAlive(((gc_ptr(Client::CacheableKey))other)->m_nativeptr);
+  }
+}
 
-      bool CacheableKey::Equals(Object^ obj)
-      {
-        return Equals(dynamic_cast<CacheableKey^>(obj));
-      }
+bool CacheableKey::Equals(gc_ptr(Object) obj) { return Equals(dynamic_cast<gc_ptr(CacheableKey)>(obj)); }
 
-      CacheableKey::operator CacheableKey^ (Byte value)
-      {
-        return (CacheableKey^) CacheableByte::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(Byte value) {
+  return (gc_ptr(CacheableKey))CacheableByte::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (bool value)
-      {
-        return (CacheableKey^) CacheableBoolean::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(bool value) {
+  return (gc_ptr(CacheableKey))CacheableBoolean::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (Char value)
-      {
-        return (CacheableKey^) CacheableCharacter::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(Char value) {
+  return (gc_ptr(CacheableKey))CacheableCharacter::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (Double value)
-      {
-        return (CacheableKey^) CacheableDouble::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(Double value) {
+  return (gc_ptr(CacheableKey))CacheableDouble::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (Single value)
-      {
-        return (CacheableKey^) CacheableFloat::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(Single value) {
+  return (gc_ptr(CacheableKey))CacheableFloat::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (System::Int16 value)
-      {
-        return (CacheableKey^) CacheableInt16::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(System::Int16 value) {
+  return (gc_ptr(CacheableKey))CacheableInt16::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (System::Int32 value)
-      {
-        return (CacheableKey^) CacheableInt32::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(System::Int32 value) {
+  return (gc_ptr(CacheableKey))CacheableInt32::Create(value);
+}
 
-      CacheableKey::operator CacheableKey^ (System::Int64 value)
-      {
-        return (CacheableKey^) CacheableInt64::Create(value);
-      }
+CacheableKey::operator gc_ptr(CacheableKey)(System::Int64 value) {
+  return (gc_ptr(CacheableKey))CacheableInt64::Create(value);
+}
 
-      CacheableKey::operator CacheableKey ^ (String^ value)
-      {
-        return dynamic_cast<CacheableKey^>(CacheableString::Create(value));
-      }
-    }  // namespace Client
-  }  // namespace Geode
+CacheableKey::operator gc_ptr(CacheableKey)(gc_ptr(String) value) {
+  return dynamic_cast<gc_ptr(CacheableKey)>(CacheableString::Create(value));
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

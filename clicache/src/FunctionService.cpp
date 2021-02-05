@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "begin_native.hpp"
 #include <geode/RegionService.hpp>
 #include "end_native.hpp"
@@ -29,88 +28,71 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      generic <class TResult>
-      generic <class TKey, class TValue>
-      Execution<TResult>^ FunctionService<TResult>::OnRegion( IRegion<TKey, TValue>^ rg )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          
-          auto nativeRegion = ((Region<TKey, TValue>^)rg)->GetNative();
-          auto execution = native::FunctionService::onRegion(nativeRegion);
-          return Execution<TResult>::Create( std::move(execution), nullptr );
+generic<class TResult> generic<class TKey, class TValue> gc_ptr(Execution<TResult>)
+    FunctionService<TResult>::OnRegion(gc_ptr(IRegion<TKey, TValue>) rg) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+    auto nativeRegion = ((gc_ptr(Region<TKey, TValue>))rg)->GetNative();
+    auto execution = native::FunctionService::onRegion(nativeRegion);
+    return Execution<TResult>::Create(std::move(execution), nullptr);
 
-      generic <class TResult>
-      Execution<TResult>^ FunctionService<TResult>::OnServer( Pool^ pl )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-          auto nativeptr = native::FunctionService::onServer(pl->GetNative());
-          return Execution<TResult>::Create(std::move(nativeptr) , nullptr);
+generic<class TResult> gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServer(gc_ptr(Pool) pl) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-      
-      generic <class TResult>
-      Execution<TResult>^ FunctionService<TResult>::OnServers( Pool^ pl )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+    auto nativeptr = native::FunctionService::onServer(pl->GetNative());
+    return Execution<TResult>::Create(std::move(nativeptr), nullptr);
 
-          auto nativeptr = native::FunctionService::onServers(pl->GetNative());
-          return Execution<TResult>::Create(std::move(nativeptr) , nullptr);
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+generic<class TResult> gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServers(gc_ptr(Pool) pl) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-      GENERIC(class TResult)
-      Execution<TResult>^ FunctionService<TResult>::OnServer( IRegionService^ cache )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+    auto nativeptr = native::FunctionService::onServers(pl->GetNative());
+    return Execution<TResult>::Create(std::move(nativeptr), nullptr);
 
-          if(auto realCache = dynamic_cast<Cache^>(cache))
-          {
-            auto nativeptr = native::FunctionService::onServer(*realCache->GetNative());
-            return Execution<TResult>::Create(std::move(nativeptr), nullptr );
-          }
-          else
-          {
-            auto authCache = dynamic_cast<AuthenticatedView^>(cache);
-            auto nativeptr = native::FunctionService::onServer(authCache->GetNative());
-            return Execution<TResult>::Create(std::move(nativeptr), nullptr );
-          }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+GENERIC(class TResult)
+gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServer(gc_ptr(IRegionService) cache) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-      GENERIC(class TResult)
-      Execution<TResult>^ FunctionService<TResult>::OnServers( IRegionService^ cache )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+    if (auto realCache = dynamic_cast<gc_ptr(Cache)>(cache)) {
+      auto nativeptr = native::FunctionService::onServer(*realCache->GetNative());
+      return Execution<TResult>::Create(std::move(nativeptr), nullptr);
+    } else {
+      auto authCache = dynamic_cast<gc_ptr(AuthenticatedView)>(cache);
+      auto nativeptr = native::FunctionService::onServer(authCache->GetNative());
+      return Execution<TResult>::Create(std::move(nativeptr), nullptr);
+    }
 
-          if(auto realCache = dynamic_cast<Cache^>(cache))
-          {
-            auto nativeptr = native::FunctionService::onServers(*realCache->GetNative());
-            return Execution<TResult>::Create(std::move(nativeptr), nullptr );
-          }
-          else
-          {
-            auto authCache = dynamic_cast<AuthenticatedView^>(cache);
-            auto nativeptr = native::FunctionService::onServers(authCache->GetNative());
-            return Execution<TResult>::Create(std::move(nativeptr), nullptr );
-          }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TResult)
+gc_ptr(Execution<TResult>) FunctionService<TResult>::OnServers(gc_ptr(IRegionService) cache) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+
+    if (auto realCache = dynamic_cast<gc_ptr(Cache)>(cache)) {
+      auto nativeptr = native::FunctionService::onServers(*realCache->GetNative());
+      return Execution<TResult>::Create(std::move(nativeptr), nullptr);
+    } else {
+      auto authCache = dynamic_cast<gc_ptr(AuthenticatedView)>(cache);
+      auto nativeptr = native::FunctionService::onServers(authCache->GetNative());
+      return Execution<TResult>::Create(std::move(nativeptr), nullptr);
+    }
+
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

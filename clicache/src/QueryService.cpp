@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "QueryService.hpp"
 #include "Query.hpp"
 #include "Log.hpp"
@@ -29,196 +27,130 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TResult)
-      Query<TResult>^ QueryService::NewQuery(String^ query)
-      {
-        try
-        {
-          return Query<TResult>::Create(m_nativeptr->get()->newQuery(
-            marshal_as<std::string>(query)));
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TResult)
+gc_ptr(Query<TResult>) QueryService::NewQuery(gc_ptr(String) query) {
+  try {
+    return Query<TResult>::Create(m_nativeptr->get()->newQuery(marshal_as<std::string>(query)));
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TResult)
-        CqQuery<TKey, TResult>^ QueryService::NewCq(String^ query, CqAttributes<TKey, TResult>^ cqAttr, bool isDurable)
-        {
-          try
-          {
-            return CqQuery<TKey, TResult>::Create(m_nativeptr->get()->newCq(
-              marshal_as<std::string>(query), cqAttr->GetNative(), isDurable));
-          }
-          catch (const apache::geode::client::Exception& ex)
-          {
-            throw GeodeException::Get(ex);
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
-        }
+GENERIC(class TKey, class TResult)
+gc_ptr(CqQuery<TKey, TResult>) QueryService::NewCq(gc_ptr(String) query,
+                                                       gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable) {
+  try {
+    return CqQuery<TKey, TResult>::Create(
+        m_nativeptr->get()->newCq(marshal_as<std::string>(query), cqAttr->GetNative(), isDurable));
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-    
-      GENERIC(class TKey, class TResult)
-      CqQuery<TKey, TResult>^ QueryService::NewCq(String^ name, String^ query, CqAttributes<TKey, TResult>^ cqAttr, bool isDurable)
-      {
-        try
-        {
-          return CqQuery<TKey, TResult>::Create(m_nativeptr->get()->newCq(
-            marshal_as<std::string>(name), marshal_as<std::string>(query), cqAttr->GetNative(), isDurable));
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TKey, class TResult)
+gc_ptr(CqQuery<TKey, TResult>) QueryService::NewCq(gc_ptr(String) name, gc_ptr(String) query,
+                                                       gc_ptr(CqAttributes<TKey, TResult>) cqAttr, bool isDurable) {
+  try {
+    return CqQuery<TKey, TResult>::Create(m_nativeptr->get()->newCq(
+        marshal_as<std::string>(name), marshal_as<std::string>(query), cqAttr->GetNative(), isDurable));
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      void QueryService::CloseCqs()
-      {
-        try
-        {
-          m_nativeptr->get()->closeCqs();
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+void QueryService::CloseCqs() {
+  try {
+    m_nativeptr->get()->closeCqs();
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TResult)
-      array<CqQuery<TKey, TResult>^>^ QueryService::GetCqs()
-      {
-        try
-        {
-          apache::geode::client::QueryService::query_container_type vrr =
-              m_nativeptr->get()->getCqs();
-          auto cqs = gcnew array<CqQuery<TKey, TResult>^>(static_cast<int>(vrr.size()));
+GENERIC(class TKey, class TResult)
+array<gc_ptr(CqQuery<TKey, TResult>)> ^ QueryService::GetCqs() {
+  try {
+    apache::geode::client::QueryService::query_container_type vrr = m_nativeptr->get()->getCqs();
+    auto cqs = gcnew array<gc_ptr(CqQuery<TKey, TResult>)>(static_cast<int>(vrr.size()));
 
-          for (System::Int32 index = 0; index < vrr.size(); index++)
-          {
-            cqs[index] = CqQuery<TKey, TResult>::Create(vrr[index]);
-          }
-          return cqs;
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+    for (System::Int32 index = 0; index < vrr.size(); index++) {
+      cqs[index] = CqQuery<TKey, TResult>::Create(vrr[index]);
+    }
+    return cqs;
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TResult)
-      CqQuery<TKey, TResult>^ QueryService::GetCq(String^ name)
-      {
-        try
-        {
-          return CqQuery<TKey, TResult>::Create(m_nativeptr->get()->getCq(
-            marshal_as<std::string>(name)));
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TKey, class TResult)
+gc_ptr(CqQuery<TKey, TResult>) QueryService::GetCq(gc_ptr(String) name) {
+  try {
+    return CqQuery<TKey, TResult>::Create(m_nativeptr->get()->getCq(marshal_as<std::string>(name)));
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      void QueryService::ExecuteCqs()
-      {
-        try
-        {
-          m_nativeptr->get()->executeCqs();
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+void QueryService::ExecuteCqs() {
+  try {
+    m_nativeptr->get()->executeCqs();
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      void QueryService::StopCqs()
-      {
-        try
-        {
-          m_nativeptr->get()->stopCqs();
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+void QueryService::StopCqs() {
+  try {
+    m_nativeptr->get()->stopCqs();
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      CqServiceStatistics^ QueryService::GetCqStatistics()
-      {
-        try
-        {
-          return CqServiceStatistics::Create(m_nativeptr->get()->getCqServiceStatistics());
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+gc_ptr(CqServiceStatistics) QueryService::GetCqStatistics() {
+  try {
+    return CqServiceStatistics::Create(m_nativeptr->get()->getCqServiceStatistics());
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      System::Collections::Generic::List<String^>^ QueryService::GetAllDurableCqsFromServer()
-      {
-        try
-        {
-          auto durableCqsArrayListPtr = m_nativeptr->get()->getAllDurableCqsFromServer();
-          auto durableCqsList = gcnew System::Collections::Generic::List<String^>();
-          for (const auto& d : *durableCqsArrayListPtr)
-          {
-            durableCqsList->Add(marshal_as<String^>(std::dynamic_pointer_cast<apache::geode::client::CacheableString>(d)->value()));
-          }
-          return durableCqsList;
-        }
-        catch (const apache::geode::client::Exception& ex)
-        {
-          throw GeodeException::Get(ex);
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-    }  // namespace Client
-  }  // namespace Geode
+gc_ptr(System::Collections::Generic::List<String ^>) QueryService::GetAllDurableCqsFromServer() {
+  try {
+    auto durableCqsArrayListPtr = m_nativeptr->get()->getAllDurableCqsFromServer();
+    auto durableCqsList = gcnew System::Collections::Generic::List<gc_ptr(String)>();
+    for (const auto& d : *durableCqsArrayListPtr) {
+      durableCqsList->Add(marshal_as<gc_ptr(String)>(
+          std::dynamic_pointer_cast<apache::geode::client::CacheableString>(d)->value()));
+    }
+    return durableCqsList;
+  } catch (const apache::geode::client::Exception& ex) {
+    throw GeodeException::Get(ex);
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

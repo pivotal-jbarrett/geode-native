@@ -16,7 +16,6 @@
  */
 #pragma once
 
-
 #include "../IPersistenceManager.hpp"
 #include "SafeConvert.hpp"
 #include "../Region.hpp"
@@ -25,78 +24,63 @@
 #include <memory>
 #include "../end_native.hpp"
 using namespace System;
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-		namespace native = apache::geode::client;
-        public interface class IPersistenceManagerProxy
-        {
-          public:
-            void write(const std::shared_ptr<native::CacheableKey>&  key, const std::shared_ptr<native::Cacheable>&  value/*, void *& PersistenceInfo*/);
-            bool writeAll();
-            void init(const std::shared_ptr<native::Region>& region, const std::shared_ptr<native::Properties>& diskProperties);
-            std::shared_ptr<native::Cacheable> read(const std::shared_ptr<native::CacheableKey>& key/*, void *& PersistenceInfo*/);
-            bool readAll();
-            void destroy(const std::shared_ptr<native::CacheableKey>& key/*, void *& PersistenceInfo*/);
-            void close();
-        };
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
+PUBLIC interface class IPersistenceManagerProxy {
+ public:
+  void write(const std::shared_ptr<native::CacheableKey>& key,
+             const std::shared_ptr<native::Cacheable>& value /*, void *& PersistenceInfo*/);
+  bool writeAll();
+  void init(const std::shared_ptr<native::Region>& region, const std::shared_ptr<native::Properties>& diskProperties);
+  std::shared_ptr<native::Cacheable> read(
+      const std::shared_ptr<native::CacheableKey>& key /*, void *& PersistenceInfo*/);
+  bool readAll();
+  void destroy(const std::shared_ptr<native::CacheableKey>& key /*, void *& PersistenceInfo*/);
+  void close();
+};
 
-        GENERIC(class TKey, class TValue)
-        public ref class PersistenceManagerGeneric : IPersistenceManagerProxy 
-        {
-          private:
-            IPersistenceManager<TKey, TValue>^ m_persistenceManager;
-          public:
-            virtual void SetPersistenceManager(IPersistenceManager<TKey, TValue>^ persistenceManager)
-            {
-              m_persistenceManager = persistenceManager;
-            }
-            virtual void write(const std::shared_ptr<native::CacheableKey>&  key, const std::shared_ptr<native::Cacheable>&  value/*, void *& PersistenceInfo*/)
-            {
-               TKey gKey = TypeRegistry::GetManagedValueGeneric<TKey>(key);
-               TValue gValue = TypeRegistry::GetManagedValueGeneric<TValue>(value);
-               m_persistenceManager->Write(gKey, gValue);
-            }
-            
-            virtual bool writeAll()
-            {
-              throw gcnew System::NotSupportedException;
-            }
+GENERIC(class TKey, class TValue)
+PUBLIC ref class PersistenceManagerGeneric : IPersistenceManagerProxy {
+ private:
+  gc_ptr(IPersistenceManager<TKey, TValue>) m_persistenceManager;
 
-            virtual void init(const std::shared_ptr<native::Region>& region, const std::shared_ptr<native::Properties>& diskProperties)
-            {
-              auto gRegion = Region<TKey, TValue>::Create(region);
-              auto gProps = Properties<String^, String^>::Create(diskProperties);
-              m_persistenceManager->Init(gRegion, gProps);
-            }
-            
-            virtual std::shared_ptr<native::Cacheable> read(const std::shared_ptr<native::CacheableKey>& key/*, void *& PersistenceInfo*/)
-            {
-              TKey gKey = TypeRegistry::GetManagedValueGeneric<TKey>(key);
-              return Serializable::GetUnmanagedValueGeneric<TValue>(m_persistenceManager->Read(gKey));
-            }
-            
-            virtual bool readAll()
-            {
-              throw gcnew System::NotSupportedException;
-            }
-            
-            virtual void destroy(const std::shared_ptr<native::CacheableKey>& key/*, void *& PersistenceInfo*/)
-            {
-              TKey gKey = TypeRegistry::GetManagedValueGeneric<TKey>(key);
-              m_persistenceManager->Destroy(gKey);
-            }
-            
-            virtual void close()
-            {
-              m_persistenceManager->Close();
-            }
-        };
-    }  // namespace Client
-  }  // namespace Geode
+ public:
+  virtual void SetPersistenceManager(gc_ptr(IPersistenceManager<TKey, TValue>) persistenceManager) {
+    m_persistenceManager = persistenceManager;
+  }
+  virtual void write(const std::shared_ptr<native::CacheableKey>& key,
+                     const std::shared_ptr<native::Cacheable>& value /*, void *& PersistenceInfo*/) {
+    TKey gKey = TypeRegistry::GetManagedValueGeneric<TKey>(key);
+    TValue gValue = TypeRegistry::GetManagedValueGeneric<TValue>(value);
+    m_persistenceManager->Write(gKey, gValue);
+  }
+
+  virtual bool writeAll() { throw gcnew System::NotSupportedException; }
+
+  virtual void init(const std::shared_ptr<native::Region>& region,
+                    const std::shared_ptr<native::Properties>& diskProperties) {
+    auto gRegion = Region<TKey, TValue>::Create(region);
+    auto gProps = Properties<gc_ptr(String), gc_ptr(String)>::Create(diskProperties);
+    m_persistenceManager->Init(gRegion, gProps);
+  }
+
+  virtual std::shared_ptr<native::Cacheable> read(
+      const std::shared_ptr<native::CacheableKey>& key /*, void *& PersistenceInfo*/) {
+    TKey gKey = TypeRegistry::GetManagedValueGeneric<TKey>(key);
+    return Serializable::GetUnmanagedValueGeneric<TValue>(m_persistenceManager->Read(gKey));
+  }
+
+  virtual bool readAll() { throw gcnew System::NotSupportedException; }
+
+  virtual void destroy(const std::shared_ptr<native::CacheableKey>& key /*, void *& PersistenceInfo*/) {
+    TKey gKey = TypeRegistry::GetManagedValueGeneric<TKey>(key);
+    m_persistenceManager->Destroy(gKey);
+  }
+
+  virtual void close() { m_persistenceManager->Close(); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-

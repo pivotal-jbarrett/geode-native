@@ -17,9 +17,6 @@
 
 #pragma once
 
-
-
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/CacheableBuiltins.hpp>
@@ -30,121 +27,87 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class CacheableString;
+ref class CacheableString;
 
-      /// <summary>
-      /// An immutable wrapper for array of strings that can serve as
-      /// a distributable object for caching.
-      /// </summary>
-      ref class CacheableStringArray
-        :  public IDataSerializablePrimitive
-      {
-      public:
-        /// <summary>
-        /// Static function to create a new instance copying from the given
-        /// string array.
-        /// </summary>
-        /// <remarks>
-        /// If the given array of strings is null or of zero-length then
-        /// this method returns null.
-        /// </remarks>
-        /// <exception cref="IllegalArgumentException">
-        /// If the array contains a string greater than or equal 64K in length.
-        /// </exception>
-        inline static CacheableStringArray^ Create(array<String^>^ strings)
-        {
-          return (strings != nullptr && strings->Length > 0 ?
-                  gcnew CacheableStringArray(strings) : nullptr);
-        }
+/// <summary>
+/// An immutable wrapper for array of strings that can serve as
+/// a distributable object for caching.
+/// </summary>
+ref class CacheableStringArray : public IDataSerializablePrimitive {
+ public:
+  /// <summary>
+  /// Static function to create a new instance copying from the given
+  /// string array.
+  /// </summary>
+  /// <remarks>
+  /// If the given array of strings is null or of zero-length then
+  /// this method returns null.
+  /// </remarks>
+  /// <exception cref="IllegalArgumentException">
+  /// If the array contains a string greater than or equal 64K in length.
+  /// </exception>
+  inline static gc_ptr(CacheableStringArray) Create(gc_ptr(array<String ^>) strings) {
+    return (strings != nullptr && strings->Length > 0 ? gcnew CacheableStringArray(strings) : nullptr);
+  }
 
-        virtual void ToData(DataOutput^ output);
+  virtual void ToData(gc_ptr(DataOutput) output);
 
-        virtual void FromData(DataInput^ input);
+  virtual void FromData(gc_ptr(DataInput) input);
 
-        property int8_t DsCode
-        {
-          virtual int8_t get()
-          {
-            return static_cast<int8_t>(DSCode::CacheableStringArray);
-          }
-        }
+  property int8_t DsCode {
+    virtual int8_t get() { return static_cast<int8_t>(DSCode::CacheableStringArray); }
+  }
 
-        property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get()
-          {
-            auto size = sizeof(this);
-            for (int i = 0; i < m_value->Length; i++)
-            {
-              size += m_value[i]->Length;
-            }
-            return size;
-          }
+  property System::UInt64 ObjectSize {
+    virtual System::UInt64 get() {
+      auto size = sizeof(this);
+      for (int i = 0; i < m_value->Length; i++) {
+        size += m_value[i]->Length;
+      }
+      return size;
+    }
+  }
 
-        }
+  /// <summary>
+  /// Returns a copy of the underlying array of strings.
+  /// </summary>
+  gc_ptr(array<String ^>) GetValues();
 
-        /// <summary>
-        /// Returns a copy of the underlying array of strings.
-        /// </summary>
-        array<String^>^ GetValues();
+  /// <summary>
+  /// Returns a copy of the underlying string at the given index.
+  /// </summary>
+  property gc_ptr(String) GFINDEXER(System::Int32) { gc_ptr(String) get(System::Int32 index); }
 
-        /// <summary>
-        /// Returns a copy of the underlying string at the given index.
-        /// </summary>
-        property String^ GFINDEXER(System::Int32)
-        {
-          String^ get(System::Int32 index);
-        }
+  /// <summary>
+  /// Gets the length of the array.
+  /// </summary>
+  property System::Int32 Length {
+    inline System::Int32 get() { return m_value->Length; }
+  }
 
-        /// <summary>
-        /// Gets the length of the array.
-        /// </summary>
-        property System::Int32 Length
-        {
-          inline System::Int32 get()
-          {
-            return m_value->Length;
-          }
-        }
+  virtual gc_ptr(String) ToString() override { return m_value->ToString(); }
 
-        virtual String^ ToString() override
-        {
-          return m_value->ToString();
-        }
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableStringArray(); }
 
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableStringArray();
-        }
+ private:
+  gc_ptr(array<String ^>) m_value;
+  /// <summary>
+  /// Allocates a new instance copying from the given string array.
+  /// </summary>
+  /// <exception cref="IllegalArgumentException">
+  /// If the array contains a string greater than or equal 64K in length.
+  /// </exception>
+  CacheableStringArray(gc_ptr(array<String ^>) strings);
 
-
-      private:
-        array<String^>^ m_value;
-        /// <summary>
-        /// Allocates a new instance copying from the given string array.
-        /// </summary>
-        /// <exception cref="IllegalArgumentException">
-        /// If the array contains a string greater than or equal 64K in length.
-        /// </exception>
-        CacheableStringArray(array<String^>^ strings);
-
-
-        inline CacheableStringArray()
-        {
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  inline CacheableStringArray() {}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-

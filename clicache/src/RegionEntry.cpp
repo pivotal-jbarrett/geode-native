@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "RegionEntry.hpp"
 #include "Region.hpp"
 #include "CacheStatistics.hpp"
@@ -24,79 +22,56 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TKey, class TValue)
-      TKey RegionEntry<TKey, TValue>::Key::get( )
-      {        
-        try
-        {
-          return TypeRegistry::GetManagedValueGeneric<TKey>(m_nativeptr->get()->getKey());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TKey, class TValue)
+TKey RegionEntry<TKey, TValue>::Key::get() {
+  try {
+    return TypeRegistry::GetManagedValueGeneric<TKey>(m_nativeptr->get()->getKey());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TValue)
-      TValue RegionEntry<TKey, TValue>::Value::get( )
-      {
-        try
-        {
-          return TypeRegistry::GetManagedValueGeneric<TValue>(m_nativeptr->get()->getValue());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TKey, class TValue)
+TValue RegionEntry<TKey, TValue>::Value::get() {
+  try {
+    return TypeRegistry::GetManagedValueGeneric<TValue>(m_nativeptr->get()->getValue());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TValue)
-      IRegion<TKey, TValue>^ RegionEntry<TKey, TValue>::Region::get( )
-      {
-        try
-        {
-          return Apache::Geode::Client::Region<TKey, TValue>::Create(m_nativeptr->get()->getRegion());
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TKey, class TValue)
+gc_ptr(IRegion<TKey, TValue>) RegionEntry<TKey, TValue>::Region::get() {
+  try {
+    return Apache::Geode::Client::Region<TKey, TValue>::Create(m_nativeptr->get()->getRegion());
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TKey, class TValue)
-      Apache::Geode::Client::CacheStatistics^ RegionEntry<TKey, TValue>::Statistics::get( )
-      {
-        std::shared_ptr<apache::geode::client::CacheStatistics> nativeptr;
-        try
-        {
-          nativeptr = m_nativeptr->get()->getStatistics();
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-        return Apache::Geode::Client::CacheStatistics::Create( nativeptr);
-      }
+GENERIC(class TKey, class TValue)
+gc_ptr(Apache::Geode::Client::CacheStatistics) RegionEntry<TKey, TValue>::Statistics::get() {
+  std::shared_ptr<apache::geode::client::CacheStatistics> nativeptr;
+  try {
+    nativeptr = m_nativeptr->get()->getStatistics();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+  return Apache::Geode::Client::CacheStatistics::Create(nativeptr);
+}
 
-      GENERIC(class TKey, class TValue)
-      bool RegionEntry<TKey, TValue>::IsDestroyed::get( )
-      {
-        try
-        {
-          return m_nativeptr->get()->isDestroyed( );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TKey, class TValue)
+bool RegionEntry<TKey, TValue>::IsDestroyed::get() {
+  try {
+    return m_nativeptr->get()->isDestroyed();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/CqAttributesFactory.hpp>
@@ -30,64 +29,56 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-      GENERIC(class TKey, class TResult)
-      interface class ICqListener;
+GENERIC(class TKey, class TResult)
+interface class ICqListener;
 
-      /// <summary>
-      /// Creates instances of <c>CqAttributes</c>.
-      /// </summary>
-      /// <seealso cref="CqAttributes" />
-      GENERIC(class TKey, class TResult)
-      public ref class CqAttributesFactory sealed
-      {
-      public:
+/// <summary>
+/// Creates instances of <c>CqAttributes</c>.
+/// </summary>
+/// <seealso cref="CqAttributes" />
+GENERIC(class TKey, class TResult)
+PUBLIC ref class CqAttributesFactory sealed {
+ public:
+  /// <summary>
+  /// Creates a new instance of <c>CqAttributesFactory</c> ready
+  /// to create a <c>CqAttributes</c> with default settings.
+  /// </summary>
+  inline CqAttributesFactory() {
+    m_nativeptr = gcnew native_unique_ptr<native::CqAttributesFactory>(std::make_unique<native::CqAttributesFactory>());
+  }
 
-        /// <summary>
-        /// Creates a new instance of <c>CqAttributesFactory</c> ready
-        /// to create a <c>CqAttributes</c> with default settings.
-        /// </summary>
-        inline CqAttributesFactory( )
-        {
-          m_nativeptr = gcnew native_unique_ptr<native::CqAttributesFactory>(std::make_unique<native::CqAttributesFactory>());
-        }
+  inline CqAttributesFactory(gc_ptr(Client::CqAttributes<TKey, TResult>) cqAttributes) {
+    m_nativeptr = gcnew native_unique_ptr<native::CqAttributesFactory>(
+        std::make_unique<native::CqAttributesFactory>(cqAttributes->GetNative()));
+  }
 
-        inline CqAttributesFactory(Client::CqAttributes<TKey, TResult>^ cqAttributes )
-        {
-           m_nativeptr = gcnew native_unique_ptr<native::CqAttributesFactory>(std::make_unique<native::CqAttributesFactory>(cqAttributes->GetNative()));
-        }
+  // ATTRIBUTES
 
-        // ATTRIBUTES
+  /// <summary>
+  /// add a cqListener
+  /// </summary>
+  void AddCqListener(gc_ptr(Client::ICqListener<TKey, TResult>) cqListener);
 
-        /// <summary>
-        /// add a cqListener 
-        /// </summary>
-        void AddCqListener(Client::ICqListener<TKey, TResult>^ cqListener);
+  /// <summary>
+  /// Initialize with an array of listeners
+  /// </summary>
+  void InitCqListeners(array<gc_ptr(Client::ICqListener<TKey, TResult>)> ^ cqListeners);
 
-        /// <summary>
-        /// Initialize with an array of listeners
-        /// </summary>
-        void InitCqListeners( array<Client::ICqListener<TKey, TResult>^>^ cqListeners );
+  // FACTORY METHOD
 
-        // FACTORY METHOD
+  /// <summary>
+  /// Creates a <c>CqAttributes</c> with the current settings.
+  /// </summary>
+  gc_ptr(Client::CqAttributes<TKey, TResult>) Create();
 
-        /// <summary>
-        /// Creates a <c>CqAttributes</c> with the current settings.
-        /// </summary>
-        Client::CqAttributes<TKey, TResult>^ Create( );
-
-      private:
-
-        native_unique_ptr<native::CqAttributesFactory>^ m_nativeptr;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  gc_ptr(native_unique_ptr<native::CqAttributesFactory>) m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

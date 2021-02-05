@@ -17,54 +17,38 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/SelectResults.hpp>
 #include "end_native.hpp"
 
-
 #include "ISerializable.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TResult)
-      ref class SelectResultsIterator;
+GENERIC(class TResult)
+ref class SelectResultsIterator;
 
-      /// <summary>
-      /// Interface to encapsulate a select query result set.
-      /// </summary>
-      GENERIC(class TResult)
-      public interface class ISelectResults
-        : public System::Collections::Generic::IEnumerable<TResult>
-      {
-      public:
+/// <summary>
+/// Interface to encapsulate a select query result set.
+/// </summary>
+GENERIC(class TResult)
+PUBLIC interface class ISelectResults : public System::Collections::Generic::IEnumerable<TResult> {
+ public:
+  /// <summary>
+  /// The size of the <c>ISelectResults</c>.
+  /// </summary>
+  property size_t Size { size_t get(); }
 
-        /// <summary>
-        /// The size of the <c>ISelectResults</c>.
-        /// </summary>
-        property size_t Size
-        {
-          size_t get( );
-        }
-
-        /// <summary>
-        /// Get an object at the given index.
-        /// </summary>
-        property TResult GFINDEXER( size_t )
-        {
-          TResult get( size_t index );
-        }
-
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Get an object at the given index.
+  /// </summary>
+  property TResult GFINDEXER(size_t) { TResult get(size_t index); }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

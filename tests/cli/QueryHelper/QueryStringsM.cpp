@@ -33,7 +33,7 @@ namespace Apache
 
         // Region: QueryStrings method definitions
 
-        void QueryStrings::Init( QueryCategory pcategory, String^ pquery,
+        void QueryStrings::Init( QueryCategory pcategory, gc_ptr(String) pquery,
           Boolean pisLargeResultset )
         {
            auto nativeptr = std::unique_ptr<testData::QueryStrings>(new testData::QueryStrings(
@@ -84,11 +84,11 @@ namespace Apache
           }
         }
 
-        String^ QueryStrings::Query::get( )
+        gc_ptr(String) QueryStrings::Query::get( )
         {
           try
           {
-            return marshal_as<String^>( m_nativeptr->get()->query( ) );
+            return marshal_as<gc_ptr(String)>( m_nativeptr->get()->query( ) );
           }
           finally
           {
@@ -115,7 +115,7 @@ namespace Apache
 
         static QueryStatics::QueryStatics( )
         {
-          ResultSetQueries = gcnew array<QueryStrings^>(
+          ResultSetQueries = gcnew array<gc_ptr(QueryStrings)>(
             testData::RS_ARRAY_SIZE );
           for (Int32 index = 0; index < testData::RS_ARRAY_SIZE; ++index) {
             ResultSetQueries[ index ] =
@@ -123,7 +123,7 @@ namespace Apache
               &testData::resultsetQueries[ index ] ) );
           }
 
-          ResultSetParamQueries = gcnew array<QueryStrings^>(
+          ResultSetParamQueries = gcnew array<gc_ptr(QueryStrings)>(
             testData::RSP_ARRAY_SIZE );
           for (Int32 index = 0; index < testData::RSP_ARRAY_SIZE; ++index) {
             ResultSetParamQueries[ index ] =
@@ -155,10 +155,10 @@ namespace Apache
               testData::numSSQueryParam[ index ];
           }	
 
-          QueryParamSet = gcnew array<array <String^>^>(testData::RSP_ARRAY_SIZE);
+          QueryParamSet = gcnew array<array <gc_ptr(String)>^>(testData::RSP_ARRAY_SIZE);
           for (Int32 index=0; index<testData::RSP_ARRAY_SIZE; index++)
           {
-            QueryParamSet[index] = gcnew array<String^>(NoOfQueryParam[index]);
+            QueryParamSet[index] = gcnew array<gc_ptr(String)>(NoOfQueryParam[index]);
             for (Int32 index2=0; index2<NoOfQueryParam[index]; index2++)
             {
               QueryParamSet[index][index2] = gcnew String(testData::queryparamSet[index][index2]);
@@ -166,11 +166,11 @@ namespace Apache
             }            
           }
 
-          QueryParamSetSS = gcnew array<array <String^>^>(testData::SSP_ARRAY_SIZE);
+          QueryParamSetSS = gcnew array<array <gc_ptr(String)>^>(testData::SSP_ARRAY_SIZE);
 
           for (Int32 index=0; index<testData::SSP_ARRAY_SIZE; index++)
           {
-            QueryParamSetSS[index] = gcnew array<String^>(NoOfQueryParamSS[index]);
+            QueryParamSetSS[index] = gcnew array<gc_ptr(String)>(NoOfQueryParamSS[index]);
             for (Int32 index2=0; index2 < NoOfQueryParamSS[index]; index2++)
             {
               QueryParamSetSS[index][index2] = gcnew String(testData::queryparamSetSS[index][index2]);
@@ -194,7 +194,7 @@ namespace Apache
               testData::constantExpectedRowsPQRS[ index ];
           }
 
-          StructSetQueries = gcnew array<QueryStrings^>(
+          StructSetQueries = gcnew array<gc_ptr(QueryStrings)>(
             testData::SS_ARRAY_SIZE );
           for (Int32 index = 0; index < testData::SS_ARRAY_SIZE; ++index) {
             StructSetQueries[ index ] =
@@ -202,7 +202,7 @@ namespace Apache
               &testData::structsetQueries[ index ] ) );
           }
 
-          StructSetParamQueries = gcnew array<QueryStrings^>(
+          StructSetParamQueries = gcnew array<gc_ptr(QueryStrings)>(
             testData::SSP_ARRAY_SIZE );
           for (Int32 index = 0; index < testData::SSP_ARRAY_SIZE; ++index) {
             StructSetParamQueries[ index ] =
@@ -250,7 +250,7 @@ namespace Apache
               testData::constantExpectedRowsSSPQ[ index ];
           }
 
-          RegionQueries = gcnew array<QueryStrings^>(
+          RegionQueries = gcnew array<gc_ptr(QueryStrings)>(
             testData::RQ_ARRAY_SIZE );
           for (Int32 index = 0; index < testData::RQ_ARRAY_SIZE; ++index) {
             RegionQueries[ index ] =
@@ -264,7 +264,7 @@ namespace Apache
               testData::regionQueryRowCounts[ index ]);
           }
 
-          CqResultSetQueries = gcnew array<QueryStrings^>(
+          CqResultSetQueries = gcnew array<gc_ptr(QueryStrings)>(
             testData::CQRS_ARRAY_SIZE );
           for (Int32 index = 0; index < testData::CQRS_ARRAY_SIZE; ++index) {
             CqResultSetQueries[ index ] =

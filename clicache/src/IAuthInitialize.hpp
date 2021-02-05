@@ -17,73 +17,68 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 
 //#include "Properties.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TPropKey, class TPropValue)
-      ref class Properties;
+GENERIC(class TPropKey, class TPropValue)
+ref class Properties;
 
-      /// <summary>
-      /// Specifies the mechanism to obtain credentials for a client.
-      /// It is mandantory for clients when the server is running in secure
-      /// mode having a <c>security-client-authenticator</c> module specified.
-      /// Implementations should register the library path as
-      /// <c>security-client-auth-library</c> system property and factory
-      /// function (a zero argument function returning pointer to an
-      /// AuthInitialize object) as the <c>security-client-auth-factory</c>
-      /// system property.
-      ///
-      /// For a managed class implementing <c>IAuthInitialize</c> the fully
-      /// qualified name of the factory function should be provided in the
-      /// form {Namespace}.{Class Name}.{Method Name} as the
-      /// <c>security-client-auth-factory</c> property.
-      /// </summary>
-      public interface class IAuthInitialize
-      {
-      public:
+/// <summary>
+/// Specifies the mechanism to obtain credentials for a client.
+/// It is mandantory for clients when the server is running in secure
+/// mode having a <c>security-client-authenticator</c> module specified.
+/// Implementations should register the library path as
+/// <c>security-client-auth-library</c> system property and factory
+/// function (a zero argument function returning pointer to an
+/// AuthInitialize object) as the <c>security-client-auth-factory</c>
+/// system property.
+///
+/// For a managed class implementing <c>IAuthInitialize</c> the fully
+/// qualified name of the factory function should be provided in the
+/// form {Namespace}.{Class Name}.{Method Name} as the
+/// <c>security-client-auth-factory</c> property.
+/// </summary>
+PUBLIC interface class IAuthInitialize {
+ public:
+  /// <summary>
+  /// Initialize with the given set of security properties
+  /// return the credentials for the client as properties.
+  /// </summary>
+  /// <param name="props">
+  /// the set of <c>security-*</c> properties provided to the
+  /// <see cref="DistributedSystem.connect"/> method
+  /// </param>
+  /// <param name="server">
+  /// the ID of the current endpoint in the format "host:port"
+  /// </param>
+  /// <returns>
+  /// the credentials to be used for the given server
+  /// </returns>
+  /// <remarks>
+  /// This method can modify the given set of properties. For
+  /// example it may invoke external agents or even interact with
+  /// the user.
+  /// </remarks>
+  // generic <class TPropKey, class TPropValue>
+  gc_ptr(Properties<String ^, Object ^>)
+      GetCredentials(gc_ptr(Properties<String ^, String ^>) props, gc_ptr(String) server);
 
-        /// <summary>
-        /// Initialize with the given set of security properties
-        /// return the credentials for the client as properties.
-        /// </summary>
-        /// <param name="props">
-        /// the set of <c>security-*</c> properties provided to the
-        /// <see cref="DistributedSystem.connect"/> method
-        /// </param>
-        /// <param name="server">
-        /// the ID of the current endpoint in the format "host:port"
-        /// </param>
-        /// <returns>
-        /// the credentials to be used for the given server
-        /// </returns>
-        /// <remarks>
-        /// This method can modify the given set of properties. For
-        /// example it may invoke external agents or even interact with
-        /// the user.
-        /// </remarks>
-        //generic <class TPropKey, class TPropValue>
-        Properties<String^, Object^>^ GetCredentials(Properties<String^, String^>^ props, String^ server);
+  /// <summary>
+  /// Invoked before the cache goes down.
+  /// </summary>
+  void Close();
 
-        /// <summary>
-        /// Invoked before the cache goes down.
-        /// </summary>
-        void Close();
-
-        delegate Properties<String^, Object^>^ GetCredentialsDelegate(Properties<String^, String^>^ props, String^ server);
-        delegate void CloseDelegate();
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  delegate gc_ptr(Properties<String ^, Object ^>)
+      GetCredentialsDelegate(gc_ptr(Properties<String ^, String ^>) props, gc_ptr(String) server);
+  delegate void CloseDelegate();
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

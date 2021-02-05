@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "IDataSerializablePrimitive.hpp"
 
@@ -27,110 +26,85 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
+/// <summary>
+/// An mutable generic <see cref="System.Object" /> wrapper that can
+/// serve as a distributable value for caching.
+/// </summary>
+/// <remarks>
+/// <para>
+/// This class can serialize any class which has either the
+/// [Serializable] attribute set or implements
+/// <see cref="System.Runtime.Serialization.ISerializable" /> interface.
+/// However, for better efficiency the latter should be avoided and the
+/// user should implement <see cref="../../ISerializable" /> instead.
+/// </para><para>
+/// The user must keep in mind that the rules that apply to runtime
+/// serialization would be the rules that apply to this class. For
+/// the serialization will be carried out by serializing all the
+/// members (public/private/protected) of the class. Each of the
+/// contained classes should also have either the [Serializable]
+/// attribute set or implement <c>ISerializable</c> interface.
+/// </para>
+/// </remarks>
+PUBLIC ref class CacheableObject : public IDataSerializablePrimitive {
+ public:
+  /// <summary>
+  /// Static function to create a new instance from the given object.
+  /// </summary>
+  /// <remarks>
+  /// If the given object is null then this method returns null.
+  /// </remarks>
+  inline static gc_ptr(CacheableObject) Create(gc_ptr(Object) value) {
+    return (value != nullptr ? gcnew CacheableObject(value) : nullptr);
+  }
+
+  virtual void ToData(gc_ptr(DataOutput) output);
+
+  virtual void FromData(gc_ptr(DataInput) input);
+
+  virtual property System::UInt64 ObjectSize { virtual System::UInt64 get(); }
+
+  property int8_t DsCode {
+    virtual int8_t get() {
+      return static_cast<int8_t>(apache::geode::client::internal::InternalId::CacheableManagedObject);
+    }
+  }
+
+  /// <summary>
+  /// Gets the object value.
+  /// </summary>
+  /// <remarks>
+  /// The user can modify the object and the changes shall be reflected
+  /// immediately in the local cache. For this change to be propagate to
+  /// other members of the distributed system, the object needs to be
+  /// put into the cache.
+  /// </remarks>
+  property gc_ptr(Object) Value {
+    inline gc_ptr(Object) get() { return m_obj; }
+  }
+
+  virtual gc_ptr(String) ToString() override { return (m_obj == nullptr ? nullptr : m_obj->ToString()); }
+
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableObject(nullptr); }
+
+  internal :
       /// <summary>
-      /// An mutable generic <see cref="System.Object" /> wrapper that can
-      /// serve as a distributable value for caching.
+      /// Allocates a new instance from the given object.
       /// </summary>
-      /// <remarks>
-      /// <para>
-      /// This class can serialize any class which has either the
-      /// [Serializable] attribute set or implements
-      /// <see cref="System.Runtime.Serialization.ISerializable" /> interface.
-      /// However, for better efficiency the latter should be avoided and the
-      /// user should implement <see cref="../../ISerializable" /> instead.
-      /// </para><para>
-      /// The user must keep in mind that the rules that apply to runtime
-      /// serialization would be the rules that apply to this class. For
-      /// the serialization will be carried out by serializing all the
-      /// members (public/private/protected) of the class. Each of the
-      /// contained classes should also have either the [Serializable]
-      /// attribute set or implement <c>ISerializable</c> interface.
-      /// </para>
-      /// </remarks>
-      public ref class CacheableObject
-        : public IDataSerializablePrimitive
-      {
-      public:
-        /// <summary>
-        /// Static function to create a new instance from the given object.
-        /// </summary>
-        /// <remarks>
-        /// If the given object is null then this method returns null.
-        /// </remarks>
-        inline static CacheableObject^ Create(Object^ value)
-        {
-          return (value != nullptr ? gcnew CacheableObject(value) :
-                  nullptr);
-        }
+      inline CacheableObject(gc_ptr(Object) value)
+      : m_obj(value), m_objectSize(0) {}
 
-        virtual void ToData(DataOutput^ output);
-
-        virtual void FromData(DataInput^ input);
-
-        virtual property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get();
-        }
-
-        property int8_t DsCode
-        {
-          virtual int8_t get()
-          {
-            return static_cast<int8_t>(apache::geode::client::internal::InternalId::CacheableManagedObject);
-          }
-        }
-
-        /// <summary>
-        /// Gets the object value.
-        /// </summary>
-        /// <remarks>
-        /// The user can modify the object and the changes shall be reflected
-        /// immediately in the local cache. For this change to be propagate to
-        /// other members of the distributed system, the object needs to be
-        /// put into the cache.
-        /// </remarks>
-        property Object^ Value
-        {
-          inline Object^ get()
-          {
-            return m_obj;
-          }
-        }
-
-        virtual String^ ToString() override
-        {
-          return (m_obj == nullptr ? nullptr : m_obj->ToString());
-        }
-
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableObject(nullptr);
-        }
-
-      internal:
-        /// <summary>
-        /// Allocates a new instance from the given object.
-        /// </summary>
-        inline CacheableObject(Object^ value)
-          : m_obj(value), m_objectSize(0) { }
-
-
-
-      private:
-        Object^ m_obj;
-        System::UInt64 m_objectSize;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  gc_ptr(Object) m_obj;
+  System::UInt64 m_objectSize;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

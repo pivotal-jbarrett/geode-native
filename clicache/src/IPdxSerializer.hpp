@@ -17,53 +17,45 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "IPdxWriter.hpp"
 #include "IPdxReader.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// The IPdxSerializer interface allows domain classes to be 
-      /// serialized and deserialized as PDXs without modification 
-      /// of the domain class.
-      /// A domain class should register delgate <see cref="Serializable.RegisterPdxType" /> to create new 
-      /// instance of type for de-serilization.
-      /// </summary>
-      public interface class IPdxSerializer
-      {
-      public:
+/// <summary>
+/// The IPdxSerializer interface allows domain classes to be
+/// serialized and deserialized as PDXs without modification
+/// of the domain class.
+/// A domain class should register delgate <see cref="Serializable.RegisterPdxType" /> to create new
+/// instance of type for de-serilization.
+/// </summary>
+PUBLIC interface class IPdxSerializer {
+ public:
+  /// <summary>
+  /// Serializes this object in geode PDX format.
+  /// </summary>
+  /// <param name="o">
+  /// the object which need to serialize
+  /// </param>
+  /// <param name="writer">
+  /// the IPdxWriter object to use for serializing the object
+  /// </param>
+  bool ToData(gc_ptr(Object) o, gc_ptr(IPdxWriter) writer);
 
-        /// <summary>
-        /// Serializes this object in geode PDX format.
-        /// </summary>
-        /// <param name="o">
-        /// the object which need to serialize
-        /// </param>
-        /// <param name="writer">
-        /// the IPdxWriter object to use for serializing the object
-        /// </param>
-        bool ToData(Object^ o, IPdxWriter^ writer);
-
-        /// <summary>
-        /// Deserialize this object.
-        /// </summary>
-        /// <param name="classname">
-        /// the classname whose object need to de-serialize
-        /// </param>
-        /// <param name="reader">
-        /// the IPdxReader stream to use for reading the object data
-        /// </param>
-        Object^ FromData(String^ classname, IPdxReader^ reader);
-
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Deserialize this object.
+  /// </summary>
+  /// <param name="classname">
+  /// the classname whose object need to de-serialize
+  /// </param>
+  /// <param name="reader">
+  /// the IPdxReader stream to use for reading the object data
+  /// </param>
+  gc_ptr(Object) FromData(gc_ptr(String) classname, gc_ptr(IPdxReader) reader);
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

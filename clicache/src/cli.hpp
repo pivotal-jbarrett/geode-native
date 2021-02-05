@@ -30,9 +30,27 @@
 // C++/CLI safe statement
 #define CLI(X) X
 
-// clang-format off
+// public
+#define PUBLIC public
 
-// public ref class
-#define PUBLIC_REF_CLASS public ref class
+// Object ^
+#define gc_ptr(...) __VA_ARGS__ ^
 
-// clang-format on
+#define BEGIN_NATIVE \
+  do {               \
+  try
+
+#define END_NATIVE                                        \
+  catch (const apache::geode::client::Exception &ex) {    \
+    throw Apache::Geode::Client::GeodeException::Get(ex); \
+  }                                                       \
+  finally { GC::KeepAlive(this); }                        \
+  }                                                       \
+  while (false)
+
+/*
+ * Type<X ^, Y ^> ^ -> gc_ptr(Type<X ^, Y ^>) : \w+<.*\^, .*\^> \^
+ *
+ * ([\w:]+)\s*\^ -> gc_ptr($1)
+ * ([\w:]+(?:<[^<>]+>))\s*\^ -> gc_ptr($1)
+ */

@@ -17,115 +17,89 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "IDataSerializablePrimitive.hpp"
-
 
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// A mutable <c>ISerializable</c> vector wrapper that can serve as
-      /// a distributable object for caching.
-      /// </summary>
-      ref class CacheableStack
-        : public IDataSerializablePrimitive
-      {
-      public:
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableStack(System::Collections::ICollection^ stack)
-        { 
-          m_stack = stack;
-        }
-                
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableStack^ Create()
-        {
-          return gcnew CacheableStack(gcnew System::Collections::Generic::Stack<Object^>());
-        }
+/// <summary>
+/// A mutable <c>ISerializable</c> vector wrapper that can serve as
+/// a distributable object for caching.
+/// </summary>
+ref class CacheableStack : public IDataSerializablePrimitive {
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableStack(gc_ptr(System::Collections::ICollection) stack) { m_stack = stack; }
 
-        /// <summary>
-        /// Static function to create a new empty instance.
-        /// </summary>
-        inline static CacheableStack^ Create(System::Collections::ICollection^ stack)
-        {
-          return gcnew CacheableStack(stack);
-        }
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableStack) Create() {
+    return gcnew CacheableStack(gcnew System::Collections::Generic::Stack<gc_ptr(Object)>());
+  }
 
-        
-        
-        // Region: ISerializable Members
+  /// <summary>
+  /// Static function to create a new empty instance.
+  /// </summary>
+  inline static gc_ptr(CacheableStack) Create(gc_ptr(System::Collections::ICollection) stack) {
+    return gcnew CacheableStack(stack);
+  }
 
-        /// <summary>
-        /// Serializes this object.
-        /// </summary>
-        /// <param name="output">
-        /// the DataOutput object to use for serializing the object
-        /// </param>
-        virtual void ToData(DataOutput^ output);
+  // Region: ISerializable Members
 
-        /// <summary>
-        /// Deserialize this object, typical implementation should return
-        /// the 'this' pointer.
-        /// </summary>
-        /// <param name="input">
-        /// the DataInput stream to use for reading the object data
-        /// </param>
-        /// <returns>the deserialized object</returns>
-        virtual void FromData(DataInput^ input);
+  /// <summary>
+  /// Serializes this object.
+  /// </summary>
+  /// <param name="output">
+  /// the DataOutput object to use for serializing the object
+  /// </param>
+  virtual void ToData(gc_ptr(DataOutput) output);
 
-        /// <summary>
-        /// return the size of this object in bytes
-        /// </summary>
-        virtual property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get();
-        }
+  /// <summary>
+  /// Deserialize this object, typical implementation should return
+  /// the 'this' pointer.
+  /// </summary>
+  /// <param name="input">
+  /// the DataInput stream to use for reading the object data
+  /// </param>
+  /// <returns>the deserialized object</returns>
+  virtual void FromData(gc_ptr(DataInput) input);
 
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          virtual int8_t get();
-        }
+  /// <summary>
+  /// return the size of this object in bytes
+  /// </summary>
+  virtual property System::UInt64 ObjectSize { virtual System::UInt64 get(); }
 
-        virtual property System::Collections::ICollection^ Value
-        {
-          virtual System::Collections::ICollection^ get()
-          {
-            return m_stack;
-          }
-        }
-        // End Region: ISerializable Members
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode { virtual int8_t get(); }
 
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableStack(gcnew System::Collections::Generic::Stack<Object^>());
-        }
+  virtual property gc_ptr(System::Collections::ICollection) Value {
+    virtual gc_ptr(System::Collections::ICollection) get() { return m_stack; }
+  }
+  // End Region: ISerializable Members
 
-        private:
-          System::Collections::ICollection^ m_stack;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() {
+    return gcnew CacheableStack(gcnew System::Collections::Generic::Stack<gc_ptr(Object)>());
+  }
+
+ private:
+  gc_ptr(System::Collections::ICollection) m_stack;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

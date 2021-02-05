@@ -21,91 +21,73 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      interface class ISerializable;
+namespace Apache {
+namespace Geode {
+namespace Client {
+interface class ISerializable;
+
+/// <summary>
+/// Iterator for a query result.
+/// </summary>
+GENERIC(class TResult)
+PUBLIC ref class SelectResultsIterator sealed : public System::Collections::Generic::IEnumerator<TResult> {
+ public:
+  /// <summary>
+  /// Gets the element in the collection at the current
+  /// position of the enumerator.
+  /// </summary>
+  /// <returns>
+  /// The element in the collection at the current position
+  /// of the enumerator.
+  /// </returns>
+  property TResult Current { virtual TResult get(); }
+
+  property gc_ptr(Object) Current2 {
+    virtual gc_ptr(Object) get() = System::Collections::IEnumerator::Current::get;
+  }
+
+  /// <summary>
+  /// Advances the enumerator to the next element of the collection.
+  /// </summary>
+  /// <returns>
+  /// true if the enumerator was successfully advanced to the next
+  /// element; false if the enumerator has passed the end of
+  /// the collection.
+  /// </returns>
+  virtual bool MoveNext();
+
+  /// <summary>
+  /// Sets the enumerator to its initial position, which is before
+  /// the first element in the collection.
+  /// </summary>
+  virtual void Reset();
+
+  ~SelectResultsIterator(){};
+
+  internal :
 
       /// <summary>
-      /// Iterator for a query result.
+      /// Internal factory function to wrap a native object pointer inside
+      /// this managed class with null pointer check.
       /// </summary>
-      GENERIC(class TResult)
-      public ref class SelectResultsIterator sealed
-        : public System::Collections::Generic::IEnumerator<TResult>
-      {
-      public:
+      /// <param name="nativeptr">The native object pointer</param>
+      /// <returns>
+      /// The managed wrapper object; null if the native pointer is null.
+      /// </returns>
+      inline static gc_ptr(SelectResultsIterator<TResult>) Create(gc_ptr(ISelectResults<TResult>) results) {
+    return results == nullptr ? nullptr : gcnew SelectResultsIterator<TResult>(results);
+  }
 
-        /// <summary>
-        /// Gets the element in the collection at the current
-        /// position of the enumerator.
-        /// </summary>
-        /// <returns>
-        /// The element in the collection at the current position
-        /// of the enumerator.
-        /// </returns>
-        property TResult Current
-        {
-          virtual TResult get( );
-        }
+ private:
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline SelectResultsIterator(gc_ptr(ISelectResults<TResult>) results) : m_results(results) {}
 
-        property Object^ Current2
-        {
-          virtual Object^ get( ) = System::Collections::IEnumerator::Current::get;
-        }
-
-        /// <summary>
-        /// Advances the enumerator to the next element of the collection.
-        /// </summary>
-        /// <returns>
-        /// true if the enumerator was successfully advanced to the next
-        /// element; false if the enumerator has passed the end of
-        /// the collection.
-        /// </returns>
-        virtual bool MoveNext( );
-
-        /// <summary>
-        /// Sets the enumerator to its initial position, which is before
-        /// the first element in the collection.
-        /// </summary>
-        virtual void Reset( );
-
-        ~SelectResultsIterator() {};
-
-      internal:
-
-        /// <summary>
-        /// Internal factory function to wrap a native object pointer inside
-        /// this managed class with null pointer check.
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        /// <returns>
-        /// The managed wrapper object; null if the native pointer is null.
-        /// </returns>
-        inline static SelectResultsIterator<TResult>^ Create(
-          ISelectResults<TResult>^ results )
-        {
-          return results == nullptr ? nullptr :
-            gcnew SelectResultsIterator<TResult>(results);
-        }
-
-
-      private:
-
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline SelectResultsIterator(ISelectResults<TResult>^ results) : m_results(results)
-        {
-        }
-
-        ISelectResults<TResult>^ m_results;
-        int m_index = -1;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(ISelectResults<TResult>) m_results;
+  int m_index = -1;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

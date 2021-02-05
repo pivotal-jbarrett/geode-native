@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include "ManagedFixedPartitionResolver.hpp"
 #include "../IFixedPartitionResolver.hpp"
 #include "../Region.hpp"
@@ -30,232 +29,193 @@ using namespace System;
 using namespace System::Text;
 using namespace System::Reflection;
 
-namespace apache
-{
-  namespace geode
-  {
-    namespace client
-    {
-      PartitionResolver* ManagedFixedPartitionResolverGeneric::create(const char* assemblyPath,
-                                                                      const char* factoryFunctionName)
-      {
-        try
-        {
-          String^ mg_assemblyPath =
-            Apache::Geode::Client::ManagedString::Get(assemblyPath);
-          String^ mg_factoryFunctionName =
-            Apache::Geode::Client::ManagedString::Get(factoryFunctionName);
-          String^ mg_typeName = nullptr;
+namespace apache {
+namespace geode {
+namespace client {
+PartitionResolver* ManagedFixedPartitionResolverGeneric::create(const char* assemblyPath,
+                                                                const char* factoryFunctionName) {
+  try {
+    gc_ptr(String) mg_assemblyPath = Apache::Geode::Client::ManagedString::Get(assemblyPath);
+    gc_ptr(String) mg_factoryFunctionName = Apache::Geode::Client::ManagedString::Get(factoryFunctionName);
+    gc_ptr(String) mg_typeName = nullptr;
 
-          String^ mg_genericKey = nullptr;
-          String^ mg_genericVal = nullptr;
+    gc_ptr(String) mg_genericKey = nullptr;
+    gc_ptr(String) mg_genericVal = nullptr;
 
-          System::Int32 dotIndx = -1;
-          System::Int32 genericsOpenIndx = -1;
-          System::Int32 genericsCloseIndx = -1;
-          System::Int32 commaIndx = -1;
+    System::Int32 dotIndx = -1;
+    System::Int32 genericsOpenIndx = -1;
+    System::Int32 genericsCloseIndx = -1;
+    System::Int32 commaIndx = -1;
 
-          if (mg_factoryFunctionName == nullptr ||
-              (dotIndx = mg_factoryFunctionName->LastIndexOf('.')) < 0)
-          {
-            std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain type name";
-            throw IllegalArgumentException(ex_str.c_str());
-          }
+    if (mg_factoryFunctionName == nullptr || (dotIndx = mg_factoryFunctionName->LastIndexOf('.')) < 0) {
+      std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain type name";
+      throw IllegalArgumentException(ex_str.c_str());
+    }
 
-          if ((genericsCloseIndx = mg_factoryFunctionName->LastIndexOf('>')) < 0)
-          {
-            std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain any generic type parameters";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if ((genericsCloseIndx = mg_factoryFunctionName->LastIndexOf('>')) < 0) {
+      std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain any generic type parameters";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          if ((genericsOpenIndx = mg_factoryFunctionName->LastIndexOf('<')) < 0 ||
-              genericsOpenIndx > genericsCloseIndx)
-          {
-            std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain expected generic type parameters";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if ((genericsOpenIndx = mg_factoryFunctionName->LastIndexOf('<')) < 0 || genericsOpenIndx > genericsCloseIndx) {
+      std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain expected generic type parameters";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          if ((commaIndx = mg_factoryFunctionName->LastIndexOf(',')) < 0 ||
-              (commaIndx < genericsOpenIndx || commaIndx > genericsCloseIndx))
-          {
-            std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
-            ex_str += factoryFunctionName;
-            ex_str += "' does not contain expected generic type parameter comma separator";
-            throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-          }
+    if ((commaIndx = mg_factoryFunctionName->LastIndexOf(',')) < 0 ||
+        (commaIndx < genericsOpenIndx || commaIndx > genericsCloseIndx)) {
+      std::string ex_str = "ManagedFixedPartitionResolverGeneric: Factory function name '";
+      ex_str += factoryFunctionName;
+      ex_str += "' does not contain expected generic type parameter comma separator";
+      throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
+    }
 
-          StringBuilder^ typeBuilder = gcnew StringBuilder(mg_factoryFunctionName->Substring(0, genericsOpenIndx));
-          mg_typeName = typeBuilder->ToString();
-          mg_genericKey = mg_factoryFunctionName->Substring(genericsOpenIndx + 1, commaIndx - genericsOpenIndx - 1);
-          mg_genericKey = mg_genericKey->Trim();
-          mg_genericVal = mg_factoryFunctionName->Substring(commaIndx + 1, genericsCloseIndx - commaIndx - 1);
-          mg_genericVal = mg_genericVal->Trim();
-          mg_factoryFunctionName = mg_factoryFunctionName->Substring(dotIndx + 1);
+    gc_ptr(StringBuilder) typeBuilder = gcnew StringBuilder(mg_factoryFunctionName->Substring(0, genericsOpenIndx));
+    mg_typeName = typeBuilder->ToString();
+    mg_genericKey = mg_factoryFunctionName->Substring(genericsOpenIndx + 1, commaIndx - genericsOpenIndx - 1);
+    mg_genericKey = mg_genericKey->Trim();
+    mg_genericVal = mg_factoryFunctionName->Substring(commaIndx + 1, genericsCloseIndx - commaIndx - 1);
+    mg_genericVal = mg_genericVal->Trim();
+    mg_factoryFunctionName = mg_factoryFunctionName->Substring(dotIndx + 1);
 
-          Apache::Geode::Client::Log::Fine(
-            "Attempting to instantiate a [{0}<{1}, {2}>] via the [{3}] factory method.",
-            mg_typeName, mg_genericKey, mg_genericVal, mg_factoryFunctionName);
+    Apache::Geode::Client::Log::Fine("Attempting to instantiate a [{0}<{1}, {2}>] via the [{3}] factory method.",
+                                     mg_typeName, mg_genericKey, mg_genericVal, mg_factoryFunctionName);
 
-          typeBuilder->Append("`2");
-          mg_typeName = typeBuilder->ToString();
+    typeBuilder->Append("`2");
+    mg_typeName = typeBuilder->ToString();
 
-          Assembly^ assmb = nullptr;
-          try
-          {
-            assmb = Assembly::Load(mg_assemblyPath);
-          }
-          catch (System::Exception^)
-          {
-            assmb = nullptr;
-          }
-          if (assmb == nullptr)
-          {
-            std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not load assembly: ";
-            ex_str += assemblyPath;
-            throw IllegalArgumentException(ex_str.c_str());
-          }
+    gc_ptr(Assembly) assmb = nullptr;
+    try {
+      assmb = Assembly::Load(mg_assemblyPath);
+    } catch (gc_ptr(System::Exception)) {
+      assmb = nullptr;
+    }
+    if (assmb == nullptr) {
+      std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not load assembly: ";
+      ex_str += assemblyPath;
+      throw IllegalArgumentException(ex_str.c_str());
+    }
 
-          Apache::Geode::Client::Log::Debug("Loading type: [{0}]", mg_typeName);
+    Apache::Geode::Client::Log::Debug("Loading type: [{0}]", mg_typeName);
 
-          Type^ typeInst = assmb->GetType(mg_typeName, false, true);
+    gc_ptr(Type) typeInst = assmb->GetType(mg_typeName, false, true);
 
-          if (typeInst != nullptr)
-          {
-            array<Type^>^ types = gcnew array<Type^>(2);
-            types[0] = Type::GetType(mg_genericKey, false, true);
-            types[1] = Type::GetType(mg_genericVal, false, true);
+    if (typeInst != nullptr) {
+      gc_ptr(array<Type ^>) types = gcnew array<gc_ptr(Type)>(2);
+      types[0] = Type::GetType(mg_genericKey, false, true);
+      types[1] = Type::GetType(mg_genericVal, false, true);
 
-            if (types[0] == nullptr || types[1] == nullptr)
-            {
-              std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not get both generic type argument instances";
-              throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
-            }
-
-            typeInst = typeInst->MakeGenericType(types);
-            Apache::Geode::Client::Log::Info("Loading function: [{0}]", mg_factoryFunctionName);
-
-            MethodInfo^ mInfo = typeInst->GetMethod(mg_factoryFunctionName,
-                                                    BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
-
-            if (mInfo != nullptr)
-            {
-              Object^ managedptr = nullptr;
-              try
-              {
-                managedptr = mInfo->Invoke(typeInst, nullptr);
-              }
-              catch (System::Exception^ ex)
-              {
-                Apache::Geode::Client::Log::Debug("{0}: {1}", ex->GetType()->Name, ex->Message);
-                managedptr = nullptr;
-              }
-              if (managedptr == nullptr)
-              {
-                std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not create "
-                  "object on invoking factory function [";
-                ex_str += factoryFunctionName;
-                ex_str += "] in assembly: ";
-                ex_str += assemblyPath;
-                throw IllegalArgumentException(ex_str.c_str());
-              }
-
-              ManagedFixedPartitionResolverGeneric * mgpr = new ManagedFixedPartitionResolverGeneric(managedptr);
-
-              Type^ prgType = Type::GetType("Apache.Geode.Client.FixedPartitionResolverGeneric`2");
-              prgType = prgType->MakeGenericType(types);
-              Object^ prg = Activator::CreateInstance(prgType);
-
-              mInfo = prgType->GetMethod("SetPartitionResolver");
-              array<Object^>^ params = gcnew array<Object^>(1);
-              params[0] = managedptr;
-              mInfo->Invoke(prg, params);
-
-              mgpr->setptr((Apache::Geode::Client::IFixedPartitionResolverProxy^)prg);
-
-              return mgpr;
-            }
-            else
-            {
-              std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not load "
-                "function with name [";
-              ex_str += factoryFunctionName;
-              ex_str += "] in assembly: ";
-              ex_str += assemblyPath;
-              throw IllegalArgumentException(ex_str.c_str());
-            }
-          }
-          else
-          {
-            Apache::Geode::Client::ManagedString typeName(mg_typeName);
-            std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not load type [";
-            ex_str += typeName.CharPtr;
-            ex_str += "] in assembly: ";
-            ex_str += assemblyPath;
-            throw IllegalArgumentException(ex_str);
-          }
-        }
-        catch (const apache::geode::client::Exception&)
-        {
-          throw;
-        }
-        catch (System::Exception^ ex)
-        {
-          std::string ex_str = "ManagedFixedPartitionResolverGeneric: Got an exception while "
-            "loading managed library: "+ marshal_as<std::string>(ex->ToString());
-          throw IllegalArgumentException(ex_str);
-        }
-        throw IllegalStateException("Unexpected exception.");
+      if (types[0] == nullptr || types[1] == nullptr) {
+        std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not get both generic type argument instances";
+        throw apache::geode::client::IllegalArgumentException(ex_str.c_str());
       }
 
-      std::shared_ptr<CacheableKey> ManagedFixedPartitionResolverGeneric::getRoutingObject(const EntryEvent& key)
-      {
+      typeInst = typeInst->MakeGenericType(types);
+      Apache::Geode::Client::Log::Info("Loading function: [{0}]", mg_factoryFunctionName);
+
+      gc_ptr(MethodInfo) mInfo = typeInst->GetMethod(
+          mg_factoryFunctionName, BindingFlags::Public | BindingFlags::Static | BindingFlags::IgnoreCase);
+
+      if (mInfo != nullptr) {
+        gc_ptr(Object) managedptr = nullptr;
         try {
-          return m_managedptr->getRoutingObject(key);
+          managedptr = mInfo->Invoke(typeInst, nullptr);
+        } catch (gc_ptr(System::Exception) ex) {
+          Apache::Geode::Client::Log::Debug("{0}: {1}", ex->GetType()->Name, ex->Message);
+          managedptr = nullptr;
         }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
+        if (managedptr == nullptr) {
+          std::string ex_str =
+              "ManagedFixedPartitionResolverGeneric: Could not create "
+              "object on invoking factory function [";
+          ex_str += factoryFunctionName;
+          ex_str += "] in assembly: ";
+          ex_str += assemblyPath;
+          throw IllegalArgumentException(ex_str.c_str());
         }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        throw IllegalStateException("Unexpected exception.");
-      }
 
-      const std::string& ManagedFixedPartitionResolverGeneric::getName()
-      {
-        try {
-          return m_managedptr->getName();
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        throw IllegalStateException("Unexpected exception.");
-      }
+        ManagedFixedPartitionResolverGeneric* mgpr = new ManagedFixedPartitionResolverGeneric(managedptr);
 
-      const std::string& ManagedFixedPartitionResolverGeneric::getPartitionName(const EntryEvent& opDetails)
-      {
-        try {
-          return m_managedptr->getPartitionName(opDetails);
-        }
-        catch (Apache::Geode::Client::GeodeException^ ex) {
-          ex->ThrowNative();
-        }
-        catch (System::Exception^ ex) {
-          Apache::Geode::Client::GeodeException::ThrowNative(ex);
-        }
-        throw IllegalStateException("Unexpected exception.");
-      }
+        gc_ptr(Type) prgType = Type::GetType("Apache.Geode.Client.FixedPartitionResolverGeneric`2");
+        prgType = prgType->MakeGenericType(types);
+        gc_ptr(Object) prg = Activator::CreateInstance(prgType);
 
-    }  // namespace client
-  }  // namespace geode
+        mInfo = prgType->GetMethod("SetPartitionResolver");
+        gc_ptr(array<Object ^>) params = gcnew array<gc_ptr(Object)>(1);
+        params[0] = managedptr;
+        mInfo->Invoke(prg, params);
+
+        mgpr->setptr((gc_ptr(Apache::Geode::Client::IFixedPartitionResolverProxy))prg);
+
+        return mgpr;
+      } else {
+        std::string ex_str =
+            "ManagedFixedPartitionResolverGeneric: Could not load "
+            "function with name [";
+        ex_str += factoryFunctionName;
+        ex_str += "] in assembly: ";
+        ex_str += assemblyPath;
+        throw IllegalArgumentException(ex_str.c_str());
+      }
+    } else {
+      Apache::Geode::Client::ManagedString typeName(mg_typeName);
+      std::string ex_str = "ManagedFixedPartitionResolverGeneric: Could not load type [";
+      ex_str += typeName.CharPtr;
+      ex_str += "] in assembly: ";
+      ex_str += assemblyPath;
+      throw IllegalArgumentException(ex_str);
+    }
+  } catch (const apache::geode::client::Exception&) {
+    throw;
+  } catch (gc_ptr(System::Exception) ex) {
+    std::string ex_str =
+        "ManagedFixedPartitionResolverGeneric: Got an exception while "
+        "loading managed library: " +
+        marshal_as<std::string>(ex->ToString());
+    throw IllegalArgumentException(ex_str);
+  }
+  throw IllegalStateException("Unexpected exception.");
+}
+
+std::shared_ptr<CacheableKey> ManagedFixedPartitionResolverGeneric::getRoutingObject(const EntryEvent& key) {
+  try {
+    return m_managedptr->getRoutingObject(key);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  throw IllegalStateException("Unexpected exception.");
+}
+
+const std::string& ManagedFixedPartitionResolverGeneric::getName() {
+  try {
+    return m_managedptr->getName();
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  throw IllegalStateException("Unexpected exception.");
+}
+
+const std::string& ManagedFixedPartitionResolverGeneric::getPartitionName(const EntryEvent& opDetails) {
+  try {
+    return m_managedptr->getPartitionName(opDetails);
+  } catch (gc_ptr(Apache::Geode::Client::GeodeException) ex) {
+    ex->ThrowNative();
+  } catch (gc_ptr(System::Exception) ex) {
+    Apache::Geode::Client::GeodeException::ThrowNative(ex);
+  }
+  throw IllegalStateException("Unexpected exception.");
+}
+
+}  // namespace client
+}  // namespace geode
 }  // namespace apache
-

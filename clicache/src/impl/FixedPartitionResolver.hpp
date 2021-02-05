@@ -27,74 +27,62 @@ using namespace System;
 using namespace System::Collections::Concurrent;
 using namespace System::Threading;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace msclr::interop;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace msclr::interop;
 
-      public interface class IFixedPartitionResolverProxy
-      {
-      public:
-        std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(const apache::geode::client::EntryEvent& ev);
-        const std::string& getName();
-        const std::string& getPartitionName(const apache::geode::client::EntryEvent& opDetails);       
-      };
+PUBLIC interface class IFixedPartitionResolverProxy {
+ public:
+  std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(const apache::geode::client::EntryEvent& ev);
+  const std::string& getName();
+  const std::string& getPartitionName(const apache::geode::client::EntryEvent& opDetails);
+};
 
-      GENERIC(class TKey, class TValue)
-      public ref class FixedPartitionResolverGeneric : IFixedPartitionResolverProxy
-      {
-        private:
+GENERIC(class TKey, class TValue)
+PUBLIC ref class FixedPartitionResolverGeneric : IFixedPartitionResolverProxy {
+ private:
+  gc_ptr(IPartitionResolver<TKey, TValue>) m_resolver;
+  gc_ptr(IFixedPartitionResolver<TKey, TValue>) m_fixedResolver;
+  ConcurrentDictionary<gc_ptr(String), gc_ptr(native_shared_ptr<std::string>)> ^ m_partitionNames;
 
-          IPartitionResolver<TKey, TValue>^ m_resolver;
-          IFixedPartitionResolver<TKey, TValue>^ m_fixedResolver;
-          ConcurrentDictionary<String^, native_shared_ptr<std::string>^>^ m_partitionNames;
-        public:
+ public:
+  void SetPartitionResolver(gc_ptr(IPartitionResolver<TKey, TValue>) resolver) {
+    m_resolver = resolver;
+    m_fixedResolver = dynamic_cast<gc_ptr(IFixedPartitionResolver<TKey, TValue>)>(resolver);
+    m_partitionNames = gcnew ConcurrentDictionary<gc_ptr(String), gc_ptr(native_shared_ptr<std::string>)>();
+  }
 
-          void SetPartitionResolver(IPartitionResolver<TKey, TValue>^ resolver)
-          {            
-            m_resolver = resolver;
-            m_fixedResolver = dynamic_cast<IFixedPartitionResolver<TKey, TValue>^>(resolver);
-            m_partitionNames = gcnew ConcurrentDictionary<String^, native_shared_ptr<std::string>^>();
-          }
+  virtual std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(
+      const apache::geode::client::EntryEvent& ev) {
+    EntryEvent<TKey, TValue> gevent(&ev);
+    gc_ptr(Object) groutingobject = m_resolver->GetRoutingObject(% gevent);
+    return Serializable::GetUnmanagedValueGeneric<gc_ptr(Object)>(groutingobject);
+  }
 
-          virtual std::shared_ptr<apache::geode::client::CacheableKey> getRoutingObject(const apache::geode::client::EntryEvent& ev)
-          {
-            EntryEvent<TKey, TValue> gevent(&ev);
-			      Object^ groutingobject = m_resolver->GetRoutingObject(%gevent);
-            return Serializable::GetUnmanagedValueGeneric<Object^>(groutingobject);
-          }
+  virtual const std::string& getName() {
+    static const std::string name = marshal_as<std::string>(m_resolver->GetName());
+    return name;
+  }
 
-          virtual const std::string& getName()
-          {
-            static const std::string name = marshal_as<std::string>(m_resolver->GetName());
-            return name;
-          }
+  virtual const std::string& getPartitionName(const apache::geode::client::EntryEvent& opDetails) {
+    if (m_fixedResolver == nullptr) {
+      throw apache::geode::client::IllegalStateException("GetPartitionName() called on non fixed partition resolver.");
+    }
 
-          virtual const std::string& getPartitionName(const apache::geode::client::EntryEvent& opDetails)
-          {
-            if (m_fixedResolver == nullptr)
-            {
-              throw apache::geode::client::IllegalStateException("GetPartitionName() called on non fixed partition resolver.");
-            }
+    EntryEvent<TKey, TValue> gevent(&opDetails);
+    gc_ptr(String) managedString = m_fixedResolver->GetPartitionName(% gevent);
 
-            EntryEvent<TKey, TValue> gevent(&opDetails);                        
-            String^ managedString = m_fixedResolver->GetPartitionName(%gevent);
+    gc_ptr(native_shared_ptr<std::string>) unmanagedString = nullptr;
+    if (!m_partitionNames->TryGetValue(managedString, unmanagedString)) {
+      unmanagedString = gcnew native_shared_ptr<std::string>(
+          std::shared_ptr<std::string>(new std::string(marshal_as<std::string>(managedString))));
+      m_partitionNames->TryAdd(managedString, unmanagedString);
+    }
 
-            native_shared_ptr<std::string>^ unmanagedString = nullptr;
-            if(!m_partitionNames->TryGetValue(managedString, unmanagedString))
-            {
-              unmanagedString = gcnew native_shared_ptr<std::string>(std::shared_ptr<std::string>(
-                new std::string(marshal_as<std::string>(managedString))));
-              m_partitionNames->TryAdd(managedString, unmanagedString);
-            }
-            
-            return *(unmanagedString->get());
-          }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+    return *(unmanagedString->get());
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

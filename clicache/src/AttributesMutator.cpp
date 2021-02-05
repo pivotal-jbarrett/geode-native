@@ -124,7 +124,7 @@ System::UInt32 AttributesMutator<TKey, TValue>::SetLruEntriesLimit(System::UInt3
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheListener(ICacheListener<TKey, TValue> ^ cacheListener) {
+void AttributesMutator<TKey, TValue>::SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) cacheListener) {
   std::shared_ptr<native::CacheListener> listenerptr;
   if (cacheListener != nullptr) {
     auto clg = gcnew CacheListenerGeneric<TKey, TValue>();
@@ -141,12 +141,13 @@ void AttributesMutator<TKey, TValue>::SetCacheListener(ICacheListener<TKey, TVal
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheListener(String ^ libPath, String ^ factoryFunctionName) {
+void AttributesMutator<TKey, TValue>::SetCacheListener(gc_ptr(String) libPath,
+                                                       gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheLoader(ICacheLoader<TKey, TValue> ^ cacheLoader) {
+void AttributesMutator<TKey, TValue>::SetCacheLoader(gc_ptr(ICacheLoader<TKey, TValue>) cacheLoader) {
   std::shared_ptr<native::CacheLoader> loaderptr;
   if (cacheLoader != nullptr) {
     auto clg = gcnew CacheLoaderGeneric<TKey, TValue>();
@@ -162,12 +163,13 @@ void AttributesMutator<TKey, TValue>::SetCacheLoader(ICacheLoader<TKey, TValue> 
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheLoader(String ^ libPath, String ^ factoryFunctionName) {
+void AttributesMutator<TKey, TValue>::SetCacheLoader(gc_ptr(String) libPath,
+                                                     gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheWriter(ICacheWriter<TKey, TValue> ^ cacheWriter) {
+void AttributesMutator<TKey, TValue>::SetCacheWriter(gc_ptr(ICacheWriter<TKey, TValue>) cacheWriter) {
   std::shared_ptr<native::CacheWriter> writerptr;
   if (cacheWriter != nullptr) {
     auto cwg = gcnew CacheWriterGeneric<TKey, TValue>();
@@ -183,7 +185,8 @@ void AttributesMutator<TKey, TValue>::SetCacheWriter(ICacheWriter<TKey, TValue> 
 }
 
 GENERIC(class TKey, class TValue)
-void AttributesMutator<TKey, TValue>::SetCacheWriter(String ^ libPath, String ^ factoryFunctionName) {
+void AttributesMutator<TKey, TValue>::SetCacheWriter(gc_ptr(String) libPath,
+                                                     gc_ptr(String) factoryFunctionName) {
   throw gcnew System::NotSupportedException;
 }
 

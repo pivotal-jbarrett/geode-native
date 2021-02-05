@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/Cache.hpp>
@@ -32,236 +31,203 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace native = apache::geode::client;
+namespace native = apache::geode::client;
 
-      GENERIC(class TKey, class TValue)
-      ref class RegionEntry;
+GENERIC(class TKey, class TValue)
+ref class RegionEntry;
 
-      GENERIC(class TKey, class TValue)
-      ref class AttributesMutator;
+GENERIC(class TKey, class TValue)
+ref class AttributesMutator;
 
-      GENERIC(class TKey, class TValue)
-			public ref class LocalRegion : public IRegion<TKey, TValue>  
-      {
-      public:
+GENERIC(class TKey, class TValue)
+PUBLIC ref class LocalRegion : public IRegion<TKey, TValue> {
+ public:
+  virtual property TValue default [TKey] {
+    TValue get(TKey key);
+    void set(TKey key, TValue value);
+  }
 
-          virtual property TValue default[TKey]
-          {
-            TValue get(TKey key);
-            void set(TKey key, TValue value);
-          }         
-                    
-          virtual System::Collections::Generic::IEnumerator<KeyValuePair<TKey,TValue>>^ GetEnumerator();
-          
-          virtual System::Collections::IEnumerator^ GetEnumeratorOld() = 
-            System::Collections::IEnumerable::GetEnumerator;
+      virtual System::Collections::Generic::IEnumerator<KeyValuePair<TKey, TValue>> ^
+      GetEnumerator();
 
-          virtual bool ContainsKey(TKey key);
-          
-          virtual void Add(TKey key, TValue val);
-          
-          virtual void Add(KeyValuePair<TKey, TValue> keyValuePair);
-          
-          virtual void Add(TKey key, TValue value, Object^ callbackArg);
+  virtual gc_ptr(System::Collections::IEnumerator)
+      GetEnumeratorOld() = System::Collections::IEnumerable::GetEnumerator;
 
-          virtual bool Remove(TKey key);        
+  virtual bool ContainsKey(TKey key);
 
-          virtual bool Remove( TKey key, Object^ callbackArg );      
+  virtual void Add(TKey key, TValue val);
 
-          virtual bool Remove(KeyValuePair<TKey,TValue> keyValuePair);          
+  virtual void Add(KeyValuePair<TKey, TValue> keyValuePair);
 
-          virtual bool Remove(TKey key, TValue value, Object^ callbackArg );          
+  virtual void Add(TKey key, TValue value, gc_ptr(Object) callbackArg);
 
-          virtual bool Contains(KeyValuePair<TKey,TValue> keyValuePair);          
+  virtual bool Remove(TKey key);
 
-          virtual void Clear();  
+  virtual bool Remove(TKey key, gc_ptr(Object) callbackArg);
 
-          virtual void Clear(Object^ callbackArg);
+  virtual bool Remove(KeyValuePair<TKey, TValue> keyValuePair);
 
-          virtual void CopyTo(array<KeyValuePair<TKey,TValue>>^ toArray, int startIdx);                   
+  virtual bool Remove(TKey key, TValue value, gc_ptr(Object) callbackArg);
 
-          virtual bool TryGetValue(TKey key, TValue %val);
-          
-          virtual property int Count
-          {
-            int get();
-          }
+  virtual bool Contains(KeyValuePair<TKey, TValue> keyValuePair);
 
-          virtual property bool IsReadOnly
-          {
-            bool get() {throw gcnew System::NotImplementedException;/*return false;*/}
-          }
-          
-          virtual property System::Collections::Generic::ICollection<TKey>^ Keys
-          {
-            System::Collections::Generic::ICollection<TKey>^ get();
-          }
+  virtual void Clear();
 
-          virtual property System::Collections::Generic::ICollection<TValue>^ Values
-          {
-            System::Collections::Generic::ICollection<TValue>^ get();
-          }
+  virtual void Clear(gc_ptr(Object) callbackArg);
 
-          virtual void Put(TKey key, TValue value, Object^ callbackArg);
+  virtual void CopyTo(array<KeyValuePair<TKey, TValue>> ^ toArray, int startIdx);
 
-          virtual void Put(TKey key, TValue value);
+  virtual bool TryGetValue(TKey key, TValue % val);
 
-          virtual TValue Get(TKey key, Object^ callbackArg);
+  virtual property int Count { int get(); }
 
-          virtual TValue Get(TKey key);
+  virtual property bool IsReadOnly {
+    bool get() { throw gcnew System::NotImplementedException; /*return false;*/ }
+  }
 
-          virtual void InvalidateRegion();
+  virtual property gc_ptr(System::Collections::Generic::ICollection<TKey>) Keys {
+    gc_ptr(System::Collections::Generic::ICollection<TKey>) get();
+  }
 
-          virtual void InvalidateRegion(Object^ callbackArg);
+  virtual property gc_ptr(System::Collections::Generic::ICollection<TValue>) Values {
+    gc_ptr(System::Collections::Generic::ICollection<TValue>) get();
+  }
 
-          virtual void DestroyRegion();
+  virtual void Put(TKey key, TValue value, gc_ptr(Object) callbackArg);
 
-          virtual void DestroyRegion(Object^ callbackArg);
+  virtual void Put(TKey key, TValue value);
 
-          virtual void Invalidate(TKey key);
+  virtual TValue Get(TKey key, gc_ptr(Object) callbackArg);
 
-          virtual void Invalidate(TKey key, Object^ callbackArg);
+  virtual TValue Get(TKey key);
 
-          virtual void PutAll(System::Collections::Generic::IDictionary<TKey, TValue>^ map);
+  virtual void InvalidateRegion();
 
-          virtual void PutAll(System::Collections::Generic::IDictionary<TKey, TValue>^ map, TimeSpan timeout);
+  virtual void InvalidateRegion(gc_ptr(Object) callbackArg);
 
-          virtual void PutAll(System::Collections::Generic::IDictionary<TKey, TValue>^ map, TimeSpan timeout, Object^ callbackArg);
+  virtual void DestroyRegion();
 
-          virtual void GetAll(System::Collections::Generic::ICollection<TKey>^ keys, 
-            System::Collections::Generic::IDictionary<TKey, TValue>^ values, 
-            System::Collections::Generic::IDictionary<TKey, System::Exception^>^ exceptions);
+  virtual void DestroyRegion(gc_ptr(Object) callbackArg);
 
-          virtual void GetAll(System::Collections::Generic::ICollection<TKey>^ keys, 
-            System::Collections::Generic::IDictionary<TKey, TValue>^ values, 
-            System::Collections::Generic::IDictionary<TKey, System::Exception^>^ exceptions,
-            bool addToLocalCache);
+  virtual void Invalidate(TKey key);
 
-          virtual void GetAll(System::Collections::Generic::ICollection<TKey>^ keys, 
-            System::Collections::Generic::IDictionary<TKey, TValue>^ values, 
-            System::Collections::Generic::IDictionary<TKey, System::Exception^>^ exceptions,
-            bool addToLocalCache, Object^ callbackArg);
-          
-          virtual void RemoveAll(System::Collections::Generic::ICollection<TKey>^ keys);
-          virtual void RemoveAll(System::Collections::Generic::ICollection<TKey>^ keys,
-            Object^ callbackArg);
+  virtual void Invalidate(TKey key, gc_ptr(Object) callbackArg);
 
-          virtual property String^ Name
-          { 
-            String^ get();
-          } 
+  virtual void PutAll(gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) map);
 
-          virtual property String^ FullPath
-          {
-            String^ get();
-          }
+  virtual void PutAll(gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) map, TimeSpan timeout);
 
-          virtual property IRegion<TKey, TValue>^ ParentRegion
-          {
-            IRegion<TKey, TValue>^ get( );
-          }
+  virtual void PutAll(gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) map, TimeSpan timeout,
+                      gc_ptr(Object) callbackArg);
 
-          virtual property RegionAttributes<TKey, TValue>^ Attributes 
-          {
-            RegionAttributes<TKey, TValue>^ get();
-          }
+  virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions);
 
-          virtual property AttributesMutator<TKey, TValue>^ AttributesMutator
-          {
-            Apache::Geode::Client::AttributesMutator<TKey, TValue>^ get();
-          }
+  virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+                      bool addToLocalCache);
 
-          virtual property Apache::Geode::Client::CacheStatistics^ Statistics 
-          {
-            Apache::Geode::Client::CacheStatistics^ get();
-          }
+  virtual void GetAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, TValue>) values,
+                      gc_ptr(System::Collections::Generic::IDictionary<TKey, System::Exception ^>) exceptions,
+                      bool addToLocalCache, gc_ptr(Object) callbackArg);
 
-          virtual IRegion<TKey, TValue>^ GetSubRegion( String^ path );
-          
-          virtual IRegion<TKey, TValue>^ CreateSubRegion( String^ subRegionName,
-            RegionAttributes<TKey,TValue>^ attributes );
+  virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys);
+  virtual void RemoveAll(gc_ptr(System::Collections::Generic::ICollection<TKey>) keys,
+                         gc_ptr(Object) callbackArg);
 
-          virtual System::Collections::Generic::ICollection<IRegion<TKey, TValue>^>^ SubRegions( bool recursive );
+  virtual property gc_ptr(String) Name { gc_ptr(String) get(); }
 
-          virtual RegionEntry<TKey, TValue>^ GetEntry( TKey key );
+  virtual property gc_ptr(String) FullPath { gc_ptr(String) get(); }
 
-          virtual System::Collections::Generic::ICollection<RegionEntry<TKey,TValue>^>^ GetEntries(bool recursive);
+  virtual property gc_ptr(IRegion<TKey, TValue>) ParentRegion { gc_ptr(IRegion<TKey, TValue>) get(); }
 
-          virtual property Apache::Geode::Client::IRegionService^ RegionService
-          {
-            Apache::Geode::Client::IRegionService^ get( );
-          }
+  virtual property gc_ptr(RegionAttributes<TKey, TValue>) Attributes {
+    gc_ptr(RegionAttributes<TKey, TValue>) get();
+  }
 
-          virtual bool ContainsValueForKey( TKey key );
+  virtual property gc_ptr(AttributesMutator<TKey, TValue>) AttributesMutator {
+    gc_ptr(Apache::Geode::Client::AttributesMutator<TKey, TValue>) get();
+  }
 
-          //Additional Region properties and methods
-          virtual property bool IsDestroyed
-          {
-            bool get();
-          }
-          
-          GENERIC(class TResult)
-          virtual ISelectResults<TResult>^ Query( String^ predicate );
+  virtual property gc_ptr(Apache::Geode::Client::CacheStatistics) Statistics {
+    gc_ptr(Apache::Geode::Client::CacheStatistics) get();
+  }
 
-          GENERIC(class TResult)
-          virtual ISelectResults<TResult>^ Query( String^ predicate, TimeSpan timeout );
+  virtual gc_ptr(IRegion<TKey, TValue>) GetSubRegion(gc_ptr(String) path);
 
-          virtual bool ExistsValue( String^ predicate );
+  virtual gc_ptr(IRegion<TKey, TValue>)
+      CreateSubRegion(gc_ptr(String) subRegionName, gc_ptr(RegionAttributes<TKey, TValue>) attributes);
 
-          virtual bool ExistsValue( String^ predicate, TimeSpan timeout );
+  virtual System::Collections::Generic::ICollection<gc_ptr(IRegion<TKey, TValue>)> ^ SubRegions(bool recursive);
 
-          virtual Object^ SelectValue( String^ predicate );
+  virtual gc_ptr(RegionEntry<TKey, TValue>) GetEntry(TKey key);
 
-          virtual Object^ SelectValue( String^ predicate, TimeSpan timeout );
+  virtual System::Collections::Generic::ICollection<gc_ptr(RegionEntry<TKey, TValue>)> ^ GetEntries(bool recursive);
 
-          virtual ISubscriptionService<TKey>^ GetSubscriptionService();
+  virtual property gc_ptr(Apache::Geode::Client::IRegionService) RegionService {
+    gc_ptr(Apache::Geode::Client::IRegionService) get();
+  }
 
-          virtual IRegion<TKey, TValue>^ GetLocalView();
+  virtual bool ContainsValueForKey(TKey key);
 
+  // Additional Region properties and methods
+  virtual property bool IsDestroyed { bool get(); }
 
-      internal:
-        /// <summary>
-        /// Internal factory function to wrap a native object pointer inside
-        /// this managed class with null pointer check.
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        /// <returns>
-        /// The managed wrapper object; null if the native pointer is null.
-        /// </returns>
-        //GENERIC(class TKey, class TValue)
-        inline static IRegion<TKey, TValue>^ Create( std::shared_ptr<native::Region> nativeptr )
-        {
-          return __nullptr == nativeptr ? nullptr :
-            gcnew LocalRegion<TKey, TValue>( nativeptr );
-        }
+  GENERIC(class TResult)
+  virtual gc_ptr(ISelectResults<TResult>) Query(gc_ptr(String) predicate);
 
-        std::shared_ptr<native::Region> GetNative()
-        {
-          return m_nativeptr->get_shared_ptr();
-        }
+  GENERIC(class TResult)
+  virtual gc_ptr(ISelectResults<TResult>) Query(gc_ptr(String) predicate, TimeSpan timeout);
 
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline LocalRegion( std::shared_ptr<native::Region> nativeptr )
-				{
-          m_nativeptr = gcnew native_shared_ptr<native::Region>(nativeptr);
-        }
+  virtual bool ExistsValue(gc_ptr(String) predicate);
 
-        private:        
-        inline std::shared_ptr<apache::geode::client::Serializable> getRegionEntryValue(std::shared_ptr<apache::geode::client::CacheableKey>& key);
+  virtual bool ExistsValue(gc_ptr(String) predicate, TimeSpan timeout);
 
-        native_shared_ptr<native::Region>^ m_nativeptr;   
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual gc_ptr(Object) SelectValue(gc_ptr(String) predicate);
+
+  virtual gc_ptr(Object) SelectValue(gc_ptr(String) predicate, TimeSpan timeout);
+
+  virtual gc_ptr(ISubscriptionService<TKey>) GetSubscriptionService();
+
+  virtual gc_ptr(IRegion<TKey, TValue>) GetLocalView();
+
+  internal :
+      /// <summary>
+      /// Internal factory function to wrap a native object pointer inside
+      /// this managed class with null pointer check.
+      /// </summary>
+      /// <param name="nativeptr">The native object pointer</param>
+      /// <returns>
+      /// The managed wrapper object; null if the native pointer is null.
+      /// </returns>
+      // GENERIC(class TKey, class TValue)
+      inline static gc_ptr(IRegion<TKey, TValue>) Create(std::shared_ptr<native::Region> nativeptr) {
+    return __nullptr == nativeptr ? nullptr : gcnew LocalRegion<TKey, TValue>(nativeptr);
+  }
+
+  std::shared_ptr<native::Region> GetNative() { return m_nativeptr->get_shared_ptr(); }
+
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline LocalRegion(std::shared_ptr<native::Region> nativeptr) {
+    m_nativeptr = gcnew native_shared_ptr<native::Region>(nativeptr);
+  }
+
+ private:
+  inline std::shared_ptr<apache::geode::client::Serializable> getRegionEntryValue(
+      std::shared_ptr<apache::geode::client::CacheableKey>& key);
+
+  gc_ptr(native_shared_ptr<native::Region>) m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

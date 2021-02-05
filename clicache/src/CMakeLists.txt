@@ -375,3 +375,5 @@ add_subdirectory(templates)
 # For Visual Studio organization
 source_group("Configure In Files" FILES ${CONFIGURE_IN_FILES})
 source_group("Configure Out Files" FILES ${CONFIGURE_OUT_FILES})
+
+add_clangformat(Apache.Geode)

@@ -17,101 +17,74 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "CacheableHashMap.hpp"
 #include "DataInput.hpp"
 
-
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
+
+/// <summary>
+/// A mutable <c>ICacheableKey</c> to <c>ISerializable</c> hash table
+/// that can serve as a distributable object for caching. This class
+/// extends .NET generic <c>Dictionary</c> class.
+/// </summary>
+ref class CacheableHashTable : public CacheableHashMap {
+ public:
+  /// <summary>
+  /// Allocates a new empty instance.
+  /// </summary>
+  inline CacheableHashTable() : CacheableHashMap() {}
+
+  /// <summary>
+  /// Allocates a new instance copying from the given dictionary.
+  /// </summary>
+  /// <param name="dictionary">
+  /// The dictionary whose elements are copied to this HashTable.
+  /// </param>
+  inline CacheableHashTable(gc_ptr(Object) dictionary) : CacheableHashMap(dictionary) {}
+
+  /// <summary>
+  /// Allocates a new empty instance with given initial size.
+  /// </summary>
+  /// <param name="capacity">
+  /// The initial capacity of the HashTable.
+  /// </param>
+  inline CacheableHashTable(System::Int32 capacity) : CacheableHashMap(capacity) {}
+
+  // Region: ISerializable Members
+
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode {
+    int8_t get() override { return static_cast<int8_t>(native::internal::DSCode::CacheableHashTable); }
+  }
+
+  // End Region: ISerializable Members
+
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableHashTable(); }
+
+  virtual void FromData(gc_ptr(DataInput) input) override { m_dictionary = input->ReadHashtable(); }
+  internal :
 
       /// <summary>
-      /// A mutable <c>ICacheableKey</c> to <c>ISerializable</c> hash table
-      /// that can serve as a distributable object for caching. This class
-      /// extends .NET generic <c>Dictionary</c> class.
+      /// Factory function to register this class.
       /// </summary>
-      ref class CacheableHashTable
-        : public CacheableHashMap
-      {
-      public:
-
-        /// <summary>
-        /// Allocates a new empty instance.
-        /// </summary>
-        inline CacheableHashTable()
-          : CacheableHashMap()
-        { }
-
-        /// <summary>
-        /// Allocates a new instance copying from the given dictionary.
-        /// </summary>
-        /// <param name="dictionary">
-        /// The dictionary whose elements are copied to this HashTable.
-        /// </param>
-        inline CacheableHashTable(Object^ dictionary)
-          : CacheableHashMap(dictionary)
-        { }
-
-        /// <summary>
-        /// Allocates a new empty instance with given initial size.
-        /// </summary>
-        /// <param name="capacity">
-        /// The initial capacity of the HashTable.
-        /// </param>
-        inline CacheableHashTable(System::Int32 capacity)
-          : CacheableHashMap(capacity)
-        { }
-
-
-        // Region: ISerializable Members
-
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          int8_t get() override
-          {
-            return static_cast<int8_t>(native::internal::DSCode::CacheableHashTable);
-          }
-        }
-
-        // End Region: ISerializable Members
-
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableHashTable();
-        }
-
-        virtual void FromData(DataInput^ input) override
-        {
-          m_dictionary = input->ReadHashtable();
-        }
-      internal:
-
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ Create(Object^ hashtable)
-        {
-          return gcnew CacheableHashTable(hashtable);
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+      static gc_ptr(ISerializable) Create(gc_ptr(Object) hashtable) {
+    return gcnew CacheableHashTable(hashtable);
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

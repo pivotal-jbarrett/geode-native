@@ -27,90 +27,67 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      ref class Cache;
+namespace Apache {
+namespace Geode {
+namespace Client {
+ref class Cache;
 
-      namespace Internal
-      {
-        private ref class EnumInfo : public IDataSerializableFixedId
-        {
-        private:
-          String^ _enumClassName;
-          String^ _enumName;
-          Int32   _hashcode;
-        public:
+namespace Internal {
+private
+ref class EnumInfo : public IDataSerializableFixedId {
+ private:
+  gc_ptr(String) _enumClassName;
+  gc_ptr(String) _enumName;
+  Int32 _hashcode;
 
-          EnumInfo()
-          {
-            _hashcode = -1;
-          }
+ public:
+  EnumInfo() { _hashcode = -1; }
 
-          EnumInfo(String^  enumClassName, String^  enumName, int hashcode)
-          {
-            _enumClassName = enumClassName;
-            _enumName = enumName;
-            _hashcode = hashcode;
-          }
+  EnumInfo(gc_ptr(String) enumClassName, gc_ptr(String) enumName, int hashcode) {
+    _enumClassName = enumClassName;
+    _enumName = enumName;
+    _hashcode = hashcode;
+  }
 
-          static ISerializable^ CreateDeserializable()
-          {
-            return gcnew EnumInfo();
-          }
-          
-          virtual void ToData(DataOutput^ output);
-          
-          virtual void FromData(DataInput^ input);
-          
-          property UInt64 ObjectSize
-          {
-            virtual UInt64 get() { return 0; }
-          }
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew EnumInfo(); }
 
-          property Int32 DSFID
-          {
-            virtual Int32 get() { return static_cast<Int32>(apache::geode::client::internal::DSFid::EnumInfo); }
-          }
+  virtual void ToData(gc_ptr(DataOutput) output);
 
-          virtual String^ ToString() override
-          {
-            return "EnumInfo";
-          }
+  virtual void FromData(gc_ptr(DataInput) input);
 
-          virtual int GetHashCode()override
-          {
-            if (_hashcode != -1)
-              return _hashcode;
+  property UInt64 ObjectSize {
+    virtual UInt64 get() { return 0; }
+  }
 
-            return ((_enumClassName != nullptr ? _enumClassName->GetHashCode() : 0)
-                    + (_enumName != nullptr ? _enumName->GetHashCode() : 0));
-          }
+  property Int32 DSFID {
+    virtual Int32 get() { return static_cast<Int32>(apache::geode::client::internal::DSFid::EnumInfo); }
+  }
 
-          virtual  bool Equals(Object^ obj)override
-          {
-            if (obj != nullptr)
-            {
-              EnumInfo^ other = dynamic_cast<EnumInfo^>(obj);
-              if (other != nullptr)
-              {
-                return _enumClassName == other->_enumClassName
-                  && _enumName == other->_enumName
-                  && _hashcode == other->_hashcode;
-              }
-              return false;
-            }
-            return false;
-          }
+  virtual gc_ptr(String) ToString() override { return "EnumInfo"; }
 
-          Object^ GetEnum(Cache^ cache);
+  virtual int GetHashCode() override {
+    if (_hashcode != -1) return _hashcode;
 
-        };
-      }  // namespace Client
-    }  // namespace Geode
-  }  // namespace Apache
+    return ((_enumClassName != nullptr ? _enumClassName->GetHashCode() : 0) +
+            (_enumName != nullptr ? _enumName->GetHashCode() : 0));
+  }
 
-}
+  virtual bool Equals(gc_ptr(Object) obj) override {
+    if (obj != nullptr) {
+      gc_ptr(EnumInfo) other = dynamic_cast<gc_ptr(EnumInfo)>(obj);
+      if (other != nullptr) {
+        return _enumClassName == other->_enumClassName && _enumName == other->_enumName &&
+               _hashcode == other->_hashcode;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  gc_ptr(Object) GetEnum(gc_ptr(Cache) cache);
+};
+}  // namespace Internal
+}  // namespace Client
+}  // namespace Geode
+
+}  // namespace Apache

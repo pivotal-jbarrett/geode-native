@@ -15,40 +15,31 @@
  * limitations under the License.
  */
 
-
 #include "RegionEvent.hpp"
 #include "Region.hpp"
 #include "ISerializable.hpp"
 #include "impl/SafeConvert.hpp"
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TKey, class TValue)
-      IRegion<TKey, TValue>^ RegionEvent<TKey, TValue>::Region::get( )
-      {
-        auto regionptr = m_nativeptr->getRegion( );
-        return Client::Region<TKey, TValue>::Create( regionptr );
-      }
+GENERIC(class TKey, class TValue)
+gc_ptr(IRegion<TKey, TValue>) RegionEvent<TKey, TValue>::Region::get() {
+  auto regionptr = m_nativeptr->getRegion();
+  return Client::Region<TKey, TValue>::Create(regionptr);
+}
 
-      GENERIC(class TKey, class TValue)
-      Object^ RegionEvent<TKey, TValue>::CallbackArgument::get()
-      {
-        std::shared_ptr<apache::geode::client::Serializable>& valptr(m_nativeptr->getCallbackArgument());
-        return TypeRegistry::GetManagedValueGeneric<Object^>( valptr );
-      }
+GENERIC(class TKey, class TValue)
+gc_ptr(Object) RegionEvent<TKey, TValue>::CallbackArgument::get() {
+  std::shared_ptr<apache::geode::client::Serializable>& valptr(m_nativeptr->getCallbackArgument());
+  return TypeRegistry::GetManagedValueGeneric<gc_ptr(Object)>(valptr);
+}
 
-      GENERIC(class TKey, class TValue)
-      bool RegionEvent<TKey, TValue>::RemoteOrigin::get( )
-      {
-        return m_nativeptr->remoteOrigin( );
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TKey, class TValue)
+bool RegionEvent<TKey, TValue>::RemoteOrigin::get() { return m_nativeptr->remoteOrigin(); }  // namespace Client
+}  // namespace Client
+}  // namespace Geode
+
 }  // namespace Apache
-
- } //namespace 

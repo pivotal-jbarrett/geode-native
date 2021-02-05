@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/CacheableKey.hpp>
@@ -26,117 +25,110 @@
 #include "Serializable.hpp"
 #include "ICacheableKey.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
+/// <summary>
+/// This class wraps the native C++ <c>apache::geode::client::Serializable</c> objects
+/// as managed <see cref="../../ISerializable" /> objects.
+/// </summary>
+PUBLIC ref class CacheableKey : public Serializable, public ICacheableKey {
+ public:
+  /// <summary>
+  /// Return the hashcode for this key.
+  /// It gets the hash code by calling the <c>hashcode()</c> function
+  /// of the underlying <c>apache::geode::client::CacheableKey</c> object.
+  /// </summary>
+  virtual System::Int32 GetHashCode() override;
+
+  /// <summary>
+  /// Return true if this key matches other object. It invokes the '=='
+  /// operator of the underlying <c>apache::geode::client::CacheableKey</c> object.
+  /// </summary>
+  virtual bool Equals(gc_ptr(ICacheableKey) other);
+
+  /// <summary>
+  /// Return true if this key matches other object.
+  /// It invokes the '==' operator if the underlying object is a
+  /// <c>apache::geode::client::CacheableKey</c>, else returns
+  /// <c>System.Object.Equals()</c>
+  /// </summary>
+  virtual bool Equals(gc_ptr(Object) obj) override;
+
+  // Static conversion functions from primitive types.
+
+  /// <summary>
+  /// Implicit conversion operator from a boolean
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(bool value);
+
+  /// <summary>
+  /// Implicit conversion operator from a byte
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(Byte value);
+
+  /// <summary>
+  /// Implicit conversion operator from a double
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(Double value);
+
+  /// <summary>
+  /// Implicit conversion operator from a float
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(Single value);
+
+  /// <summary>
+  /// Implicit conversion operator from a 16-bit integer
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(System::Int16 value);
+
+  /// <summary>
+  /// Implicit conversion operator from a character
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(Char value);
+
+  /// <summary>
+  /// Implicit conversion operator from a 32-bit integer
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(System::Int32 value);
+
+  /// <summary>
+  /// Implicit conversion operator from a 64-bit integer
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(System::Int64 value);
+
+  /// <summary>
+  /// Implicit conversion operator from a string
+  /// to a <c>CacheableKey</c>.
+  /// </summary>
+  static operator gc_ptr(CacheableKey)(gc_ptr(String) value);
+
+  internal :
       /// <summary>
-      /// This class wraps the native C++ <c>apache::geode::client::Serializable</c> objects
-      /// as managed <see cref="../../ISerializable" /> objects.
+      /// Default constructor.
       /// </summary>
-      public ref class CacheableKey
-        : public Serializable, public ICacheableKey
-      {
-      public:
-        /// <summary>
-        /// Return the hashcode for this key.
-        /// It gets the hash code by calling the <c>hashcode()</c> function
-        /// of the underlying <c>apache::geode::client::CacheableKey</c> object.
-        /// </summary>
-        virtual System::Int32 GetHashCode() override;
+      inline CacheableKey()
+      : Client::Serializable() {}
 
-        /// <summary>
-        /// Return true if this key matches other object. It invokes the '=='
-        /// operator of the underlying <c>apache::geode::client::CacheableKey</c> object.
-        /// </summary>
-        virtual bool Equals(ICacheableKey^ other);
-
-        /// <summary>
-        /// Return true if this key matches other object.
-        /// It invokes the '==' operator if the underlying object is a
-        /// <c>apache::geode::client::CacheableKey</c>, else returns
-        /// <c>System.Object.Equals()</c>
-        /// </summary>
-        virtual bool Equals(Object^ obj) override;
-
-        // Static conversion functions from primitive types.
-
-        /// <summary>
-        /// Implicit conversion operator from a boolean
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (bool value);
-
-        /// <summary>
-        /// Implicit conversion operator from a byte
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (Byte value);
-
-        /// <summary>
-        /// Implicit conversion operator from a double
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (Double value);
-
-        /// <summary>
-        /// Implicit conversion operator from a float
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (Single value);
-
-        /// <summary>
-        /// Implicit conversion operator from a 16-bit integer
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (System::Int16 value);
-
-        /// <summary>
-        /// Implicit conversion operator from a character
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (Char value);
-
-        /// <summary>
-        /// Implicit conversion operator from a 32-bit integer
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (System::Int32 value);
-
-        /// <summary>
-        /// Implicit conversion operator from a 64-bit integer
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (System::Int64 value);
-
-        /// <summary>
-        /// Implicit conversion operator from a string
-        /// to a <c>CacheableKey</c>.
-        /// </summary>
-        static operator CacheableKey^ (String^ value);
-
-      internal:
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        inline CacheableKey()
-          : Client::Serializable() { }
-
-        /// <summary>
-        /// Internal constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline CacheableKey(std::shared_ptr<apache::geode::client::Serializable> nativeptr)
-          : Client::Serializable(nativeptr) { }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Internal constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline CacheableKey(std::shared_ptr<apache::geode::client::Serializable> nativeptr)
+      : Client::Serializable(nativeptr) {}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
- //namespace 
-
+   // namespace

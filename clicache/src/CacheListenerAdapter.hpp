@@ -17,68 +17,40 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ICacheListener.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+/// <summary>
+/// Utility class that implements all methods in <c>ICacheListener</c>
+/// with empty implementations. Applications can subclass this class
+/// and only override the methods for the events of interest.
+/// </summary>
+GENERIC(class TKey, class TValue)
+PUBLIC ref class CacheListenerAdapter : public ICacheListener<TKey, TValue> {
+ public:
+  virtual void AfterCreate(gc_ptr(EntryEvent<TKey, TValue>) ev) {}
 
-      /// <summary>
-      /// Utility class that implements all methods in <c>ICacheListener</c>
-      /// with empty implementations. Applications can subclass this class
-      /// and only override the methods for the events of interest.
-      /// </summary>
-      GENERIC(class TKey, class TValue)
-      public ref class CacheListenerAdapter
-        : public ICacheListener<TKey, TValue>
-      {
-      public:
-        virtual void AfterCreate(EntryEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterUpdate(gc_ptr(EntryEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterUpdate(EntryEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterInvalidate(gc_ptr(EntryEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterInvalidate(EntryEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterDestroy(gc_ptr(EntryEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterDestroy(EntryEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterRegionInvalidate(gc_ptr(RegionEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterRegionInvalidate(RegionEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterRegionDestroy(gc_ptr(RegionEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterRegionDestroy(RegionEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterRegionLive(gc_ptr(RegionEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterRegionLive(RegionEvent<TKey, TValue>^ ev)
-        {
-        }
+  virtual void AfterRegionClear(gc_ptr(RegionEvent<TKey, TValue>) ev) {}
 
-        virtual void AfterRegionClear(RegionEvent<TKey, TValue>^ ev)
-        {
-        }
-
-        virtual void Close(Apache::Geode::Client::IRegion<TKey, TValue>^ region)
-        {
-        }
-		    virtual void AfterRegionDisconnected(Apache::Geode::Client::IRegion<TKey, TValue>^ region)
-        {
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  virtual void Close(gc_ptr(Apache::Geode::Client::IRegion<TKey, TValue>) region) {}
+  virtual void AfterRegionDisconnected(gc_ptr(Apache::Geode::Client::IRegion<TKey, TValue>) region) {}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

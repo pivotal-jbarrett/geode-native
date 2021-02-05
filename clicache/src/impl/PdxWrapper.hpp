@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "../IPdxWriter.hpp"
 #include "../IPdxReader.hpp"
 #include "../IPdxSerializer.hpp"
@@ -25,74 +24,52 @@
 #include "../Cache.hpp"
 #include "../TypeRegistry.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class PdxWrapper : IPdxSerializable
-      {
-      private:
-        Object^ m_object;
-      public:
-        PdxWrapper(Object^ object)
-        {
-          m_object = object;
-        }
-          
-        Object^ GetObject()
-        {
-          return m_object;
-        }
+ref class PdxWrapper : IPdxSerializable {
+ private:
+  gc_ptr(Object) m_object;
 
-        virtual void ToData( IPdxWriter^ writer )
-        {
-          auto pdxSerializer = writer->Cache->TypeRegistry->PdxSerializer;
-          if (!pdxSerializer->ToData(m_object, writer))
-          {
-            throw gcnew IllegalStateException("PdxSerilizer unable serialize data for type " + m_object->GetType());
-          }
-        }
-          
-        virtual void FromData( IPdxReader^ reader )
-        {
-          auto pdxSerializer = reader->Cache->TypeRegistry->PdxSerializer;
-          if (auto className = dynamic_cast<String^>(m_object))
-          {
-            m_object = pdxSerializer->FromData(className, reader);
-          }
-          else
-          {
-            m_object = pdxSerializer->FromData(m_object->GetType()->FullName, reader);
-          }
+ public:
+  PdxWrapper(gc_ptr(Object) object) { m_object = object; }
 
-          if (m_object == nullptr)
-          {
-            throw gcnew IllegalStateException("PdxSerilizer unable de-serialize data for type " + m_object->GetType());
-          }
-        }
+  gc_ptr(Object) GetObject() { return m_object; }
 
-        virtual int GetHashCode()override 
-        {
-          return m_object->GetHashCode();
-        }
+  virtual void ToData(gc_ptr(IPdxWriter) writer) {
+    auto pdxSerializer = writer->Cache->TypeRegistry->PdxSerializer;
+    if (!pdxSerializer->ToData(m_object, writer)) {
+      throw gcnew IllegalStateException("PdxSerilizer unable serialize data for type " + m_object->GetType());
+    }
+  }
 
-        virtual  bool Equals(Object^ obj)override
-        {
-          if(obj != nullptr)
-          {
-            if (auto pdxWrapper = dynamic_cast<PdxWrapper^>(obj))
-            {
-              return m_object->Equals(pdxWrapper->m_object);
-            }
+  virtual void FromData(gc_ptr(IPdxReader) reader) {
+    auto pdxSerializer = reader->Cache->TypeRegistry->PdxSerializer;
+    if (auto className = dynamic_cast<gc_ptr(String)>(m_object)) {
+      m_object = pdxSerializer->FromData(className, reader);
+    } else {
+      m_object = pdxSerializer->FromData(m_object->GetType()->FullName, reader);
+    }
 
-            return m_object->Equals(obj);
-          }
-          return false;
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+    if (m_object == nullptr) {
+      throw gcnew IllegalStateException("PdxSerilizer unable de-serialize data for type " + m_object->GetType());
+    }
+  }
+
+  virtual int GetHashCode() override { return m_object->GetHashCode(); }
+
+  virtual bool Equals(gc_ptr(Object) obj) override {
+    if (obj != nullptr) {
+      if (auto pdxWrapper = dynamic_cast<gc_ptr(PdxWrapper)>(obj)) {
+        return m_object->Equals(pdxWrapper->m_object);
+      }
+
+      return m_object->Equals(obj);
+    }
+    return false;
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

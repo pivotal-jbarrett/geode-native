@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-
-
-
-
 #include "CacheableObjectXml.hpp"
 #include "DataInput.hpp"
 #include "DataOutput.hpp"
@@ -31,83 +27,70 @@ using namespace System;
 using namespace System::IO;
 using namespace System::Xml::Serialization;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      void CacheableObjectXml::ToData(DataOutput^ output)
-      {
-        if (m_obj == nullptr) {
-          output->WriteByte((Byte)1);
-        }
-        else
-        {
-          output->WriteByte((Byte)0);
-          Type^ objType = m_obj->GetType();
+void CacheableObjectXml::ToData(gc_ptr(DataOutput) output) {
+  if (m_obj == nullptr) {
+    output->WriteByte((Byte)1);
+  } else {
+    output->WriteByte((Byte)0);
+    gc_ptr(Type) objType = m_obj->GetType();
 
-          output->WriteUTF(objType->AssemblyQualifiedName);
+    output->WriteUTF(objType->AssemblyQualifiedName);
 
-          output->AdvanceCursor(4); // placeholder for object size bytes needed while reading back.
+    output->AdvanceCursor(4);  // placeholder for object size bytes needed while reading back.
 
-          XmlSerializer xs(objType);
-          GeodeDataOutputStream dos(output);
-          auto checkpoint = dos.Length;
-          xs.Serialize(%dos, m_obj);
-          m_objectSize = dos.Length - checkpoint;
+    XmlSerializer xs(objType);
+    GeodeDataOutputStream dos(output);
+    auto checkpoint = dos.Length;
+    xs.Serialize(% dos, m_obj);
+    m_objectSize = dos.Length - checkpoint;
 
-          auto size = static_cast<uint32_t>(m_objectSize);
+    auto size = static_cast<uint32_t>(m_objectSize);
 
-          output->RewindCursor(size + 4);
-          output->WriteInt32(size);
-          output->AdvanceCursor(size);
-        }
-      }
+    output->RewindCursor(size + 4);
+    output->WriteInt32(size);
+    output->AdvanceCursor(size);
+  }
+}
 
-      void CacheableObjectXml::FromData(DataInput^ input)
-      {
-        Byte isNull = input->ReadByte();
-        if (isNull) {
-          m_obj = nullptr;
-        }
-        else {
-          String^ typeName = input->ReadUTF();
-          Type^ objType = Type::GetType(typeName);
-          if (objType == nullptr)
-          {
-            Log::Error("CacheableObjectXml.FromData(): Cannot find type '" +
-              typeName + "'.");
-            m_obj = nullptr;
-          }
-          else {
-            int maxSize = input->ReadInt32();
-            GeodeDataInputStream dis(input, maxSize);
-            XmlSerializer xs(objType);
-            auto checkpoint = dis.BytesRead;
-            m_obj = xs.Deserialize(%dis);
-            m_objectSize = dis.BytesRead - checkpoint;
-          }
-        }
-      }
+void CacheableObjectXml::FromData(gc_ptr(DataInput) input) {
+  Byte isNull = input->ReadByte();
+  if (isNull) {
+    m_obj = nullptr;
+  } else {
+    gc_ptr(String) typeName = input->ReadUTF();
+    gc_ptr(Type) objType = Type::GetType(typeName);
+    if (objType == nullptr) {
+      Log::Error("CacheableObjectXml.FromData(): Cannot find type '" + typeName + "'.");
+      m_obj = nullptr;
+    } else {
+      int maxSize = input->ReadInt32();
+      GeodeDataInputStream dis(input, maxSize);
+      XmlSerializer xs(objType);
+      auto checkpoint = dis.BytesRead;
+      m_obj = xs.Deserialize(% dis);
+      m_objectSize = dis.BytesRead - checkpoint;
+    }
+  }
+}
 
-      System::UInt64 CacheableObjectXml::ObjectSize::get()
-      { 
-        if (m_objectSize == 0) {
-          if (m_obj != nullptr) {
-            Type^ objType = m_obj->GetType();
-            XmlSerializer xs(objType);
-            GeodeNullStream ns;
-            xs.Serialize(%ns, m_obj);
+System::UInt64 CacheableObjectXml::ObjectSize::get() {
+  if (m_objectSize == 0) {
+    if (m_obj != nullptr) {
+      gc_ptr(Type) objType = m_obj->GetType();
+      XmlSerializer xs(objType);
+      GeodeNullStream ns;
+      xs.Serialize(% ns, m_obj);
 
-            m_objectSize = sizeof(CacheableObjectXml^) + ns.Length;
-          }
-        }
-        return m_objectSize;
-    }  // namespace Client
-  }  // namespace Geode
+      m_objectSize = sizeof(gc_ptr(CacheableObjectXml)) + ns.Length;
+    }
+  }
+  return m_objectSize;
+}  // namespace Client
+}  // namespace Client
+}  // namespace Geode
+
 }  // namespace Apache
-
- } //namespace 
-

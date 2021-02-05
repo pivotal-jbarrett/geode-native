@@ -15,44 +15,35 @@
  * limitations under the License.
  */
 
-
 #pragma once
-
 
 #include "geode_defs.hpp"
 #include "ICqListener.hpp"
 
 using namespace System;
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-        /// <summary>
-        /// Extension of CqListener. Adds two new methods to CqListener, one that
-        /// is called when the cq is connected and one that is called when
-        /// the cq is disconnected.
-        /// </summary>
+/// <summary>
+/// Extension of CqListener. Adds two new methods to CqListener, one that
+/// is called when the cq is connected and one that is called when
+/// the cq is disconnected.
+/// </summary>
 
-        GENERIC(class TKey, class TResult)
-        public interface class ICqStatusListener : public ICqListener<TKey, TResult>
-        {
-        public:
+GENERIC(class TKey, class TResult)
+PUBLIC interface class ICqStatusListener : public ICqListener<TKey, TResult> {
+ public:
+  /// <summary>
+  /// Called when the cq loses connection with all servers.
+  /// </summary>
+  virtual void OnCqDisconnected();
 
-          /// <summary>
-          /// Called when the cq loses connection with all servers.
-          /// </summary>
-          virtual void OnCqDisconnected();
-
-          /// <summary>
-          /// Called when the cq establishes a connection with a server
-          /// </summary>
-          virtual void OnCqConnected(); 
-
-        };
-    }  // namespace Client
-  }  // namespace Geode
+  /// <summary>
+  /// Called when the cq establishes a connection with a server
+  /// </summary>
+  virtual void OnCqConnected();
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

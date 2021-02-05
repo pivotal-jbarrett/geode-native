@@ -17,104 +17,87 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 
 using namespace System;
 using namespace System::IO;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
+namespace Apache {
+namespace Geode {
+namespace Client {
+
+ref class GeodeNullStream : public Stream {
+ public:
+  virtual property bool CanSeek {
+    bool get() override { return false; }
+  }
+  virtual property bool CanRead {
+    bool get() override { return false; }
+  }
+  virtual property bool CanWrite {
+    bool get() override { return true; }
+  }
+
+  virtual void Close() override { Stream::Close(); }
+
+  virtual property System::Int64 Length {
+    System::Int64 get() override { return (System::Int64)m_position; }
+  }
+
+  virtual property System::Int64 Position {
+    System::Int64 get() override { return (System::Int64)m_position; }
+
+    void set(System::Int64 value) override { m_position = (int)value; }
+  }
+
+  virtual System::Int64 Seek(System::Int64 offset, SeekOrigin origin) override {
+    throw gcnew System::NotSupportedException("Seek not supported by GeodeNullStream");
+    /*
+    int actual = 0;
+    switch (origin)
     {
+    case SeekOrigin::Begin:
+      actual = (int) offset;
+      m_position = (int) actual;
+      break;
 
-      ref class GeodeNullStream : public Stream
-      {
-      public:
+    case SeekOrigin::Current:
+      actual = (int) offset;
+      m_position += (int) actual;
+      break;
 
-        virtual property bool CanSeek { bool get() override { return false; } }
-        virtual property bool CanRead { bool get() override { return false; } }
-        virtual property bool CanWrite { bool get() override { return true; } }
+    case SeekOrigin::End:
+      actual = (int) offset;
+      m_position += (int) actual;
+      break;
+    }
+    // Seek is meaningless here?
+    return m_position;
+    */
+  }
 
-        virtual void Close() override { Stream::Close(); }
+  virtual void SetLength(System::Int64 value) override { /* do nothing */
+  }
 
-        virtual property System::Int64 Length
-        {
-          System::Int64 get() override
-          {
-            return (System::Int64) m_position;
-          }
-        }
+  virtual void Write(gc_ptr(array<Byte>) buffer, int offset, int count) override { m_position += count; }
 
-        virtual property System::Int64 Position
-        {
-          System::Int64 get() override
-          {
-            return (System::Int64) m_position;
-          }
+  virtual void WriteByte(unsigned char value) override { m_position++; }
 
-          void set(System::Int64 value) override
-          {
-            m_position = (int) value;
-          }
-        }
+  virtual int Read(gc_ptr(array<Byte>) buffer, int offset, int count) override {
+    throw gcnew System::NotSupportedException("Seek not supported by GeodeNullStream");
+    /*
+    int actual = count;
+    m_position += actual;
+    return actual;
+    */
+  }
 
-        virtual System::Int64 Seek(System::Int64 offset, SeekOrigin origin) override
-        {
-          throw gcnew System::NotSupportedException("Seek not supported by GeodeNullStream");
-          /*
-          int actual = 0;
-          switch (origin)
-          {
-          case SeekOrigin::Begin:
-            actual = (int) offset;
-            m_position = (int) actual;
-            break;
+  virtual void Flush() override { /* do nothing */
+  }
 
-          case SeekOrigin::Current:
-            actual = (int) offset;
-            m_position += (int) actual;
-            break;
-
-          case SeekOrigin::End:
-            actual = (int) offset;
-            m_position += (int) actual;
-            break;
-          }
-          // Seek is meaningless here?
-          return m_position;
-          */
-        }
-
-        virtual void SetLength(System::Int64 value) override { /* do nothing */ }
-
-        virtual void Write(array<Byte> ^ buffer, int offset, int count) override
-        {
-          m_position += count;
-        }
-
-        virtual void WriteByte(unsigned char value) override
-        {
-          m_position++;
-        }
-
-        virtual int Read(array<Byte> ^ buffer, int offset, int count) override
-        {
-          throw gcnew System::NotSupportedException("Seek not supported by GeodeNullStream");
-          /*
-          int actual = count;
-          m_position += actual;
-          return actual;
-          */
-        }
-
-        virtual void Flush() override { /* do nothing */ }
-
-      private:
-        int m_position;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  int m_position;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

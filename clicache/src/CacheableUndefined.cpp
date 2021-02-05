@@ -15,39 +15,24 @@
  * limitations under the License.
  */
 
-
-
-
-
 #include "CacheableUndefined.hpp"
 #include "DataOutput.hpp"
 #include "DataInput.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      // Region: ISerializable Members
+// Region: ISerializable Members
 
-      void CacheableUndefined::ToData(DataOutput^ output)
-      {
-      }
+void CacheableUndefined::ToData(gc_ptr(DataOutput) output) {}
 
-      void CacheableUndefined::FromData(DataInput^ input)
-      {
-      }
+void CacheableUndefined::FromData(gc_ptr(DataInput) input) {}
 
-      System::UInt64 CacheableUndefined::ObjectSize::get()
-      {
-        return sizeof(CacheableUndefined^);
-      }
+System::UInt64 CacheableUndefined::ObjectSize::get() { return sizeof(gc_ptr(CacheableUndefined)); }
 
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

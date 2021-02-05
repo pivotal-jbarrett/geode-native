@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-
 #pragma once
-
 
 #include "geode_defs.hpp"
 #include "IResultCollector.hpp"
@@ -27,69 +25,60 @@
 
 #include "native_shared_ptr.hpp"
 
-
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-     namespace native = apache::geode::client;
+namespace Apache {
+namespace Geode {
+namespace Client {
+namespace native = apache::geode::client;
 
-     GENERIC(class TResult)
-	   interface class IResultCollector;
+GENERIC(class TResult)
+interface class IResultCollector;
+
+/// <summary>
+/// collect function execution results, default collector
+/// </summary>
+GENERIC(class TResult)
+PUBLIC ref class ResultCollector : public IResultCollector<TResult> {
+ public:
+  /// <summary>
+  /// add result from a single function execution
+  /// </summary>
+  virtual void AddResult(const TResult rs);
+
+  /// <summary>
+  /// get result
+  /// </summary>
+  virtual gc_ptr(System::Collections::Generic::ICollection<TResult>) GetResult();
+
+  /// <summary>
+  /// get result
+  /// </summary>
+  virtual gc_ptr(System::Collections::Generic::ICollection<TResult>) GetResult(TimeSpan timeout);
+
+  /// <summary>
+  /// Call back provided to caller, which is called after function execution is
+  /// complete and caller can retrieve results using getResult()
+  /// </summary>
+  // GENERIC(class TKey)
+  virtual void EndResults();
+
+  // GENERIC(class TKey)
+  virtual void ClearResults();
+
+  internal :
 
       /// <summary>
-      /// collect function execution results, default collector
+      /// Internal constructor to wrap a native object pointer
       /// </summary>
-     GENERIC(class TResult)
-     public ref class ResultCollector
-       : public IResultCollector<TResult>
-     {
-     public:
+      /// <param name="nativeptr">The native object pointer</param>
+      inline ResultCollector(std::shared_ptr<native::ResultCollector> nativeptr) {
+    m_nativeptr = gcnew native_shared_ptr<native::ResultCollector>(nativeptr);
+  }
 
-        /// <summary>
-        /// add result from a single function execution
-        /// </summary>
-        virtual void AddResult( const TResult rs );
-
-        /// <summary>
-        /// get result 
-        /// </summary>
-        virtual System::Collections::Generic::ICollection<TResult>^  GetResult(); 
-
-        /// <summary>
-        /// get result 
-        /// </summary>
-        virtual System::Collections::Generic::ICollection<TResult>^  GetResult(TimeSpan timeout); 
-
-        /// <summary>
-        ///Call back provided to caller, which is called after function execution is
-        ///complete and caller can retrieve results using getResult()
-        /// </summary>
-        //GENERIC(class TKey)
-	      virtual void EndResults(); 
-
-        //GENERIC(class TKey)
-        virtual void ClearResults();
-
-      internal:
-
-        /// <summary>
-        /// Internal constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline ResultCollector( std::shared_ptr<native::ResultCollector> nativeptr )
-        {
-           m_nativeptr = gcnew native_shared_ptr<native::ResultCollector>(nativeptr);
-        }
-
-        native_shared_ptr<native::ResultCollector>^ m_nativeptr;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(native_shared_ptr<native::ResultCollector>) m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

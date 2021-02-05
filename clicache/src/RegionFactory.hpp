@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "begin_native.hpp"
 #include <geode/RegionAttributesFactory.hpp>
@@ -37,388 +36,382 @@
 #include "Properties.hpp"
 #include "Region.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-      using namespace System;
-      using namespace System::Collections::Generic;
+namespace Apache {
+namespace Geode {
+namespace Client {
+using namespace System;
+using namespace System::Collections::Generic;
 
-      namespace native = apache::geode::client;
+namespace native = apache::geode::client;
 
-			/// <summary>
-      /// This interface provides for the configuration and creation of instances of Region.
-      /// </summary>
-      public ref class RegionFactory sealed
-      {
-      public:
-        /// <summary>
-        /// Sets the library path for the library that will be invoked for the loader of the region.
-        /// </summary>
-        /// <param name="libPath">
-        /// library pathname containing the factory function.
-        /// </param>
-        /// <param name="factoryFunctionName">
-        /// Name of factory function that creates a <c>CacheLoader</c>
-        /// for a native library, or the name of the method in the form
-        /// {Namespace}.{Class Name}.{Method Name} that creates an
-        /// <c>ICacheLoader</c> for a managed library.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetCacheLoader( String^ libPath, String^ factoryFunctionName );
+/// <summary>
+/// This interface provides for the configuration and creation of instances of Region.
+/// </summary>
+PUBLIC ref class RegionFactory sealed {
+ public:
+  /// <summary>
+  /// Sets the library path for the library that will be invoked for the loader of the region.
+  /// </summary>
+  /// <param name="libPath">
+  /// library pathname containing the factory function.
+  /// </param>
+  /// <param name="factoryFunctionName">
+  /// Name of factory function that creates a <c>CacheLoader</c>
+  /// for a native library, or the name of the method in the form
+  /// {Namespace}.{Class Name}.{Method Name} that creates an
+  /// <c>ICacheLoader</c> for a managed library.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetCacheLoader(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName);
 
-        /// <summary>
-        /// Sets the library path for the library that will be invoked for the writer of the region.
-        /// </summary>
-        /// <param name="libPath">
-        /// library pathname containing the factory function.
-        /// </param>
-        /// <param name="factoryFunctionName">
-        /// Name of factory function that creates a <c>CacheWriter</c>
-        /// for a native library, or the name of the method in the form
-        /// {Namespace}.{Class Name}.{Method Name} that creates an
-        /// <c>ICacheWriter</c> for a managed library.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetCacheWriter( String^ libPath, String^ factoryFunctionName );
+  /// <summary>
+  /// Sets the library path for the library that will be invoked for the writer of the region.
+  /// </summary>
+  /// <param name="libPath">
+  /// library pathname containing the factory function.
+  /// </param>
+  /// <param name="factoryFunctionName">
+  /// Name of factory function that creates a <c>CacheWriter</c>
+  /// for a native library, or the name of the method in the form
+  /// {Namespace}.{Class Name}.{Method Name} that creates an
+  /// <c>ICacheWriter</c> for a managed library.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetCacheWriter(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName);
 
-        /// <summary>
-        /// Sets the library path for the library that will be invoked for the listener of the region.
-        /// </summary>
-        /// <param name="libPath">
-        /// library pathname containing the factory function.
-        /// </param>
-        /// <param name="factoryFunctionName">
-        /// Name of factory function that creates a <c>CacheListener</c>
-        /// for a native library, or the name of the method in the form
-        /// {Namespace}.{Class Name}.{Method Name} that creates an
-        /// <c>ICacheListener</c> for a managed library.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetCacheListener( String^ libPath, String^ factoryFunctionName );
+  /// <summary>
+  /// Sets the library path for the library that will be invoked for the listener of the region.
+  /// </summary>
+  /// <param name="libPath">
+  /// library pathname containing the factory function.
+  /// </param>
+  /// <param name="factoryFunctionName">
+  /// Name of factory function that creates a <c>CacheListener</c>
+  /// for a native library, or the name of the method in the form
+  /// {Namespace}.{Class Name}.{Method Name} that creates an
+  /// <c>ICacheListener</c> for a managed library.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetCacheListener(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName);
 
+  /// <summary>
+  /// Sets the library path for the library that will be invoked for the partition resolver of the region.
+  /// </summary>
+  /// <param name="libPath">
+  /// library pathname containing the factory function.
+  /// </param>
+  /// <param name="factoryFunctionName">
+  /// Name of factory function that creates a <c>PartitionResolver</c>
+  /// for a native library, or the name of the method in the form
+  /// {Namespace}.{Class Name}.{Method Name} that creates an
+  /// <c>IPartitionResolver</c> for a managed library.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetPartitionResolver(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName);
 
-        /// <summary>
-        /// Sets the library path for the library that will be invoked for the partition resolver of the region.
-        /// </summary>
-        /// <param name="libPath">
-        /// library pathname containing the factory function.
-        /// </param>
-        /// <param name="factoryFunctionName">
-        /// Name of factory function that creates a <c>PartitionResolver</c>
-        /// for a native library, or the name of the method in the form
-        /// {Namespace}.{Class Name}.{Method Name} that creates an
-        /// <c>IPartitionResolver</c> for a managed library.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetPartitionResolver( String^ libPath, String^ factoryFunctionName );
-        
-        /// <summary>
-        /// Sets the idleTimeout expiration attributes for region entries for the next
-        /// <c>RegionAttributes</c> created.
-        /// </summary>
-        /// <param name="action">
-        /// The expiration action for which to set the timeout.
-        /// </param>
-        /// <param name="idleTimeout">
-        /// the idleTimeout in seconds for entries in this region.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetEntryIdleTimeout( ExpirationAction action, TimeSpan idleTimeout );
+  /// <summary>
+  /// Sets the idleTimeout expiration attributes for region entries for the next
+  /// <c>RegionAttributes</c> created.
+  /// </summary>
+  /// <param name="action">
+  /// The expiration action for which to set the timeout.
+  /// </param>
+  /// <param name="idleTimeout">
+  /// the idleTimeout in seconds for entries in this region.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetEntryIdleTimeout(ExpirationAction action, TimeSpan idleTimeout);
 
-        /// <summary>
-        /// Sets the timeToLive expiration attributes for region entries for the next
-        /// <c>RegionAttributes</c> created.
-        /// </summary>
-        /// <param name="action">
-        /// The expiration action for which to set the timeout.
-        /// </param>
-        /// <param name="timeToLive">
-        /// the timeToLive in seconds for entries in this region.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetEntryTimeToLive( ExpirationAction action, TimeSpan timeToLive );
+  /// <summary>
+  /// Sets the timeToLive expiration attributes for region entries for the next
+  /// <c>RegionAttributes</c> created.
+  /// </summary>
+  /// <param name="action">
+  /// The expiration action for which to set the timeout.
+  /// </param>
+  /// <param name="timeToLive">
+  /// the timeToLive in seconds for entries in this region.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetEntryTimeToLive(ExpirationAction action, TimeSpan timeToLive);
 
-        /// <summary>
-        /// Sets the idleTimeout expiration attributes for the region itself for the
-        /// next <c>RegionAttributes</c> created.
-        /// </summary>
-        /// <param name="action">
-        /// The expiration action for which to set the timeout.
-        /// </param>
-        /// <param name="idleTimeout">
-        /// the idleTimeout in seconds for the region as a whole.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetRegionIdleTimeout( ExpirationAction action, TimeSpan idleTimeout );
+  /// <summary>
+  /// Sets the idleTimeout expiration attributes for the region itself for the
+  /// next <c>RegionAttributes</c> created.
+  /// </summary>
+  /// <param name="action">
+  /// The expiration action for which to set the timeout.
+  /// </param>
+  /// <param name="idleTimeout">
+  /// the idleTimeout in seconds for the region as a whole.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetRegionIdleTimeout(ExpirationAction action, TimeSpan idleTimeout);
 
-        /// <summary>
-        /// Sets the timeToLive expiration attributes for the region itself for the
-        /// next <c>RegionAttributes</c> created.
-        /// </summary>
-        /// <param name="action">
-        /// The expiration action for which to set the timeout.
-        /// </param>
-        /// <param name="timeToLive">
-        /// the timeToLive in seconds for the region as a whole.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetRegionTimeToLive( ExpirationAction action, TimeSpan timeToLive );
+  /// <summary>
+  /// Sets the timeToLive expiration attributes for the region itself for the
+  /// next <c>RegionAttributes</c> created.
+  /// </summary>
+  /// <param name="action">
+  /// The expiration action for which to set the timeout.
+  /// </param>
+  /// <param name="timeToLive">
+  /// the timeToLive in seconds for the region as a whole.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetRegionTimeToLive(ExpirationAction action, TimeSpan timeToLive);
 
+  // PERSISTENCE
 
-        // PERSISTENCE
-        
-        /// <summary>
-        /// Sets the persistence manager for the <c>RegionAttributes</c> being created.
-        /// </summary>
-        /// <param name="persistenceManager">
-        /// a user-defined persistence manager, or null for no persistence manager
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        generic <class TKey, class TValue>
-        RegionFactory^ SetPersistenceManager( Client::IPersistenceManager<TKey, TValue>^ persistenceManager );
-        
-        /// <summary>
-        /// Sets the persistence manager for the <c>RegionAttributes</c> being created.
-        /// </summary>
-        /// <param name="persistenceManager">
-        /// a user-defined persistence manager, or null for no persistence manager
-        /// </param>
-        /// <param name="config">
-        /// The configuration properties to use for the PersistenceManager.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        generic <class TKey, class TValue>
-        RegionFactory^ SetPersistenceManager( Client::IPersistenceManager<TKey, TValue>^ persistenceManager, 
-            Properties<String^, String^>^ config);
+  /// <summary>
+  /// Sets the persistence manager for the <c>RegionAttributes</c> being created.
+  /// </summary>
+  /// <param name="persistenceManager">
+  /// a user-defined persistence manager, or null for no persistence manager
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  generic<class TKey, class TValue> gc_ptr(RegionFactory)
+      SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager);
 
-        /// <summary>
-        /// Sets the library path for the library that will be invoked for the persistence of the region.
-        /// If the region is being created from a client on a server, or on a server directly, then
-        /// This must be used to set the PersistenceManager.
-        /// </summary>
-        /// <param name="libPath">The path of the PersistenceManager shared library.</param>
-        /// <param name="factoryFunctionName">
-        /// The name of the factory function to create an instance of PersistenceManager object.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetPersistenceManager( String^ libPath, String^ factoryFunctionName );
+  /// <summary>
+  /// Sets the persistence manager for the <c>RegionAttributes</c> being created.
+  /// </summary>
+  /// <param name="persistenceManager">
+  /// a user-defined persistence manager, or null for no persistence manager
+  /// </param>
+  /// <param name="config">
+  /// The configuration properties to use for the PersistenceManager.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  generic<class TKey, class TValue> gc_ptr(RegionFactory)
+      SetPersistenceManager(gc_ptr(Client::IPersistenceManager<TKey, TValue>) persistenceManager,
+                            gc_ptr(Properties<String ^, String ^>) config);
 
-        /// <summary>
-        /// Sets the library path for the library that will be invoked for the persistence of the region.
-        /// If the region is being created from a client on a server, or on a server directly, then
-        /// This must be used to set the PersistenceManager.
-        /// </summary>
-        /// <param name="libPath">The path of the PersistenceManager shared library.</param>
-        /// <param name="factoryFunctionName">
-        /// The name of the factory function to create an instance of PersistenceManager object.
-        /// </param>
-        /// <param name="config">
-        /// The configuration properties to use for the PersistenceManager.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetPersistenceManager( String^ libPath, String^ factoryFunctionName,
-          /*Dictionary<Object^, Object^>*/Properties<String^, String^>^ config );
+  /// <summary>
+  /// Sets the library path for the library that will be invoked for the persistence of the region.
+  /// If the region is being created from a client on a server, or on a server directly, then
+  /// This must be used to set the PersistenceManager.
+  /// </summary>
+  /// <param name="libPath">The path of the PersistenceManager shared library.</param>
+  /// <param name="factoryFunctionName">
+  /// The name of the factory function to create an instance of PersistenceManager object.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetPersistenceManager(gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName);
 
-        /// <summary>
-        /// Set the pool name for a Thin Client region.
-        /// </summary>
-        /// <remarks>
-        /// The pool with the name specified must be already created.
-        /// </remarks>
-        /// <param name="poolName">
-        /// The name of the pool to attach to this region.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetPoolName( String^ poolName );
+  /// <summary>
+  /// Sets the library path for the library that will be invoked for the persistence of the region.
+  /// If the region is being created from a client on a server, or on a server directly, then
+  /// This must be used to set the PersistenceManager.
+  /// </summary>
+  /// <param name="libPath">The path of the PersistenceManager shared library.</param>
+  /// <param name="factoryFunctionName">
+  /// The name of the factory function to create an instance of PersistenceManager object.
+  /// </param>
+  /// <param name="config">
+  /// The configuration properties to use for the PersistenceManager.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetPersistenceManager(
+      gc_ptr(String) libPath, gc_ptr(String) factoryFunctionName,
+      /*Dictionary<gc_ptr(Object), gc_ptr(Object)>*/ gc_ptr(Properties<String ^, String ^>) config);
 
-        // MAP ATTRIBUTES
+  /// <summary>
+  /// Set the pool name for a Thin Client region.
+  /// </summary>
+  /// <remarks>
+  /// The pool with the name specified must be already created.
+  /// </remarks>
+  /// <param name="poolName">
+  /// The name of the pool to attach to this region.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetPoolName(gc_ptr(String) poolName);
 
-        /// <summary>
-        /// Sets the entry initial capacity for the <c>RegionAttributes</c>
-        /// being created. This value is used in initializing the map that
-        /// holds the entries.
-        /// </summary>
-        /// <param name="initialCapacity">the initial capacity of the entry map</param>
-        /// <exception cref="IllegalArgumentException">
-        /// if initialCapacity is nonpositive
-        /// </exception>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetInitialCapacity( System::Int32 initialCapacity );
+  // MAP ATTRIBUTES
 
-        /// <summary>
-        /// Sets the entry load factor for the next <c>RegionAttributes</c>
-        /// created. This value is
-        /// used in initializing the map that holds the entries.
-        /// </summary>
-        /// <param name="loadFactor">the load factor of the entry map</param>
-        /// <exception cref="IllegalArgumentException">
-        /// if loadFactor is nonpositive
-        /// </exception>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetLoadFactor( Single loadFactor );
+  /// <summary>
+  /// Sets the entry initial capacity for the <c>RegionAttributes</c>
+  /// being created. This value is used in initializing the map that
+  /// holds the entries.
+  /// </summary>
+  /// <param name="initialCapacity">the initial capacity of the entry map</param>
+  /// <exception cref="IllegalArgumentException">
+  /// if initialCapacity is nonpositive
+  /// </exception>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetInitialCapacity(System::Int32 initialCapacity);
 
-        /// <summary>
-        /// Sets the concurrency level of the next <c>RegionAttributes</c>
-        /// created. This value is used in initializing the map that holds the entries.
-        /// </summary>
-        /// <param name="concurrencyLevel">
-        /// the concurrency level of the entry map
-        /// </param>
-        /// <exception cref="IllegalArgumentException">
-        /// if concurrencyLevel is nonpositive
-        /// </exception>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetConcurrencyLevel( System::Int32 concurrencyLevel );
+  /// <summary>
+  /// Sets the entry load factor for the next <c>RegionAttributes</c>
+  /// created. This value is
+  /// used in initializing the map that holds the entries.
+  /// </summary>
+  /// <param name="loadFactor">the load factor of the entry map</param>
+  /// <exception cref="IllegalArgumentException">
+  /// if loadFactor is nonpositive
+  /// </exception>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetLoadFactor(Single loadFactor);
 
-        /// <summary>
-        /// Sets a limit on the number of entries that will be held in the cache.
-        /// If a new entry is added while at the limit, the cache will evict the
-        /// least recently used entry.
-        /// </summary>
-        /// <param name="entriesLimit">
-        /// The limit of the number of entries before eviction starts.
-        /// Defaults to 0, meaning no LRU actions will used.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetLruEntriesLimit( System::UInt32 entriesLimit );
+  /// <summary>
+  /// Sets the concurrency level of the next <c>RegionAttributes</c>
+  /// created. This value is used in initializing the map that holds the entries.
+  /// </summary>
+  /// <param name="concurrencyLevel">
+  /// the concurrency level of the entry map
+  /// </param>
+  /// <exception cref="IllegalArgumentException">
+  /// if concurrencyLevel is nonpositive
+  /// </exception>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetConcurrencyLevel(System::Int32 concurrencyLevel);
 
-        /// <summary>
-        /// Sets the disk policy type for the next <c>RegionAttributes</c> created.
-        /// </summary>
-        /// <param name="diskPolicy">
-        /// the disk policy to use for the region
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetDiskPolicy( DiskPolicyType diskPolicy );
+  /// <summary>
+  /// Sets a limit on the number of entries that will be held in the cache.
+  /// If a new entry is added while at the limit, the cache will evict the
+  /// least recently used entry.
+  /// </summary>
+  /// <param name="entriesLimit">
+  /// The limit of the number of entries before eviction starts.
+  /// Defaults to 0, meaning no LRU actions will used.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetLruEntriesLimit(System::UInt32 entriesLimit);
 
-        /// <summary>
-        /// Set caching enabled flag for this region.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// If set to false, then no data is stored in the local process,
-        /// but events and distributions will still occur, and the region
-        /// can still be used to put and remove, etc...
-        /// </para><para>
-        /// The default if not set is 'true', 'false' is illegal for regions
-        /// of <c>ScopeType.Local</c> scope. 
-        /// </para>
-        /// </remarks>
-        /// <param name="cachingEnabled">
-        /// if true, cache data for this region in this process.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetCachingEnabled( bool cachingEnabled );
-        /// <summary>
-        /// Set cloning enabled flag for this region.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// If set to false, then there is no cloning will take place in case of delta.
-        /// Delta will be applied on the old value which will change old value in-place.
-        /// </para><para>
-        /// The default if not set is 'false'
-        /// of <c>ScopeType.Local</c> scope. 
-        /// </para>
-        /// </remarks>
-        /// <param name="cloningEnabled">
-        /// if true, clone old value before applying delta so that in-place change would not occour..
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetCloningEnabled( bool cloningEnabled );
+  /// <summary>
+  /// Sets the disk policy type for the next <c>RegionAttributes</c> created.
+  /// </summary>
+  /// <param name="diskPolicy">
+  /// the disk policy to use for the region
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetDiskPolicy(DiskPolicyType diskPolicy);
 
-        /// <summary>
-        /// Sets concurrency checks enabled flag for this region.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// If set to false, then the version checks will not occur.
-        /// </para><para>
-        /// The default if not set is 'true'
-        /// </para>
-        /// </remarks>
-        /// <param name="concurrencyChecksEnabled">
-        /// if true, version checks for region entries will occur.
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        RegionFactory^ SetConcurrencyChecksEnabled( bool concurrencyChecksEnabled );
-        // NEW GENERIC APIs:
+  /// <summary>
+  /// Set caching enabled flag for this region.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// If set to false, then no data is stored in the local process,
+  /// but events and distributions will still occur, and the region
+  /// can still be used to put and remove, etc...
+  /// </para><para>
+  /// The default if not set is 'true', 'false' is illegal for regions
+  /// of <c>ScopeType.Local</c> scope.
+  /// </para>
+  /// </remarks>
+  /// <param name="cachingEnabled">
+  /// if true, cache data for this region in this process.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetCachingEnabled(bool cachingEnabled);
+  /// <summary>
+  /// Set cloning enabled flag for this region.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// If set to false, then there is no cloning will take place in case of delta.
+  /// Delta will be applied on the old value which will change old value in-place.
+  /// </para><para>
+  /// The default if not set is 'false'
+  /// of <c>ScopeType.Local</c> scope.
+  /// </para>
+  /// </remarks>
+  /// <param name="cloningEnabled">
+  /// if true, clone old value before applying delta so that in-place change would not occour..
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetCloningEnabled(bool cloningEnabled);
 
-        /// <summary>
-        /// Creates a region with the given name. 
-        /// The region is just created locally. It is not created on the server
-        /// to which this client is connected with.
-        /// </summary>
-        /// <remarks>
-        /// If Pool attached with Region is in multiusersecure mode then don't use return instance of region as no credential are attached with this instance.
-        /// Get instance of region from <see cref="Cache.CreateAuthenticatedView" to do the operation on Cache. 
-        /// </remarks>
-        /// <param name="name">the name of the region to create</param>
-        /// <returns>new region</returns>
-        /// <exception cref="RegionExistsException">
-        /// if a region with the same name is already in this cache
-        /// </exception>
-        /// <exception cref="CacheClosedException">
-        /// if the cache is closed
-        /// </exception>
-        /// <exception cref="OutOfMemoryException">
-        /// if the memory allocation failed
-        /// </exception>
-        /// <exception cref="RegionCreationFailedException">
-        /// if the call fails due to incomplete mirror initialization
-        /// </exception>
-        /// <exception cref="InitFailedException">
-        /// if the optional PersistenceManager fails to initialize
-        /// </exception>
-        /// <exception cref="UnknownException">otherwise</exception>
-        generic <class TKey, class TValue>
-        IRegion<TKey, TValue>^ Create(String^ regionName);
+  /// <summary>
+  /// Sets concurrency checks enabled flag for this region.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// If set to false, then the version checks will not occur.
+  /// </para><para>
+  /// The default if not set is 'true'
+  /// </para>
+  /// </remarks>
+  /// <param name="concurrencyChecksEnabled">
+  /// if true, version checks for region entries will occur.
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  gc_ptr(RegionFactory) SetConcurrencyChecksEnabled(bool concurrencyChecksEnabled);
+  // NEW GENERIC APIs:
 
-        /// <summary>
-        /// Sets the cache loader for the <c>RegionAttributes</c> being created.
-        /// </summary>
-        /// <param name="cacheLoader">
-        /// a user-defined cache loader, or null for no cache loader
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        generic <class TKey, class TValue>
-        RegionFactory^ SetCacheLoader( ICacheLoader<TKey, TValue>^ cacheLoader );
+  /// <summary>
+  /// Creates a region with the given name.
+  /// The region is just created locally. It is not created on the server
+  /// to which this client is connected with.
+  /// </summary>
+  /// <remarks>
+  /// If Pool attached with Region is in multiusersecure mode then don't use return instance of region as no credential
+  /// are attached with this instance. Get instance of region from <see cref="Cache.CreateAuthenticatedView" to do the
+  /// operation on Cache.
+  /// </remarks>
+  /// <param name="name">the name of the region to create</param>
+  /// <returns>new region</returns>
+  /// <exception cref="RegionExistsException">
+  /// if a region with the same name is already in this cache
+  /// </exception>
+  /// <exception cref="CacheClosedException">
+  /// if the cache is closed
+  /// </exception>
+  /// <exception cref="OutOfMemoryException">
+  /// if the memory allocation failed
+  /// </exception>
+  /// <exception cref="RegionCreationFailedException">
+  /// if the call fails due to incomplete mirror initialization
+  /// </exception>
+  /// <exception cref="InitFailedException">
+  /// if the optional PersistenceManager fails to initialize
+  /// </exception>
+  /// <exception cref="UnknownException">otherwise</exception>
+  generic<class TKey, class TValue> gc_ptr(IRegion<TKey, TValue>) Create(gc_ptr(String) regionName);
 
-        /// <summary>
-        /// Sets the cache writer for the <c>RegionAttributes</c> being created.
-        /// </summary>
-        /// <param name="cacheWriter">
-        /// user-defined cache writer, or null for no cache writer
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        generic <class TKey, class TValue>
-        RegionFactory^ SetCacheWriter( ICacheWriter<TKey, TValue>^ cacheWriter );
+  /// <summary>
+  /// Sets the cache loader for the <c>RegionAttributes</c> being created.
+  /// </summary>
+  /// <param name="cacheLoader">
+  /// a user-defined cache loader, or null for no cache loader
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  generic<class TKey, class TValue> gc_ptr(RegionFactory)
+      SetCacheLoader(gc_ptr(ICacheLoader<TKey, TValue>) cacheLoader);
 
-        /// <summary>
-        /// Sets the CacheListener for the <c>RegionAttributes</c> being created.
-        /// </summary>
-        /// <param name="cacheListener">
-        /// user-defined cache listener, or null for no cache listener
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        generic <class TKey, class TValue>
-        RegionFactory^ SetCacheListener( ICacheListener<TKey, TValue>^ cacheListener );
+  /// <summary>
+  /// Sets the cache writer for the <c>RegionAttributes</c> being created.
+  /// </summary>
+  /// <param name="cacheWriter">
+  /// user-defined cache writer, or null for no cache writer
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  generic<class TKey, class TValue> gc_ptr(RegionFactory)
+      SetCacheWriter(gc_ptr(ICacheWriter<TKey, TValue>) cacheWriter);
 
-        /// <summary>
-        /// Sets the PartitionResolver for the <c>RegionAttributes</c> being created.
-        /// </summary>
-        /// <param name="partitionresolver">
-        /// user-defined partition resolver, or null for no partition resolver
-        /// </param>
-        /// <returns>the instance of RegionFactory</returns>
-        generic <class TKey, class TValue>
-        RegionFactory^ SetPartitionResolver( IPartitionResolver<TKey, TValue>^ partitionresolver );
+  /// <summary>
+  /// Sets the CacheListener for the <c>RegionAttributes</c> being created.
+  /// </summary>
+  /// <param name="cacheListener">
+  /// user-defined cache listener, or null for no cache listener
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  generic<class TKey, class TValue> gc_ptr(RegionFactory)
+      SetCacheListener(gc_ptr(ICacheListener<TKey, TValue>) cacheListener);
 
+  /// <summary>
+  /// Sets the PartitionResolver for the <c>RegionAttributes</c> being created.
+  /// </summary>
+  /// <param name="partitionresolver">
+  /// user-defined partition resolver, or null for no partition resolver
+  /// </param>
+  /// <returns>the instance of RegionFactory</returns>
+  generic<class TKey, class TValue> gc_ptr(RegionFactory)
+      SetPartitionResolver(gc_ptr(IPartitionResolver<TKey, TValue>) partitionresolver);
 
-    internal:
+  internal :
 
       /// <summary>
       /// Internal factory function to wrap a native object pointer inside
@@ -428,32 +421,23 @@ namespace Apache
       /// <returns>
       /// The managed wrapper object; null if the native pointer is null.
       /// </returns>
-      inline static RegionFactory^ Create(std::unique_ptr<native::RegionFactory>& nativeptr)
-      {
-          return __nullptr == nativeptr ? nullptr :
-            gcnew RegionFactory( nativeptr );
-      }
+      inline static gc_ptr(RegionFactory) Create(std::unique_ptr<native::RegionFactory>& nativeptr) {
+    return __nullptr == nativeptr ? nullptr : gcnew RegionFactory(nativeptr);
+  }
 
-      native::RegionFactory& GetNative()
-      {
-          return *m_nativeptr;
-      }
+  native::RegionFactory& GetNative() { return *m_nativeptr; }
 
-	  private:
+ private:
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline RegionFactory(std::unique_ptr<native::RegionFactory>& nativeptr) {
+    m_nativeptr = gcnew native_conditional_unique_ptr<native::RegionFactory>(std::move(nativeptr));
+  }
 
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-      inline RegionFactory(std::unique_ptr<native::RegionFactory>& nativeptr)
-      {
-        m_nativeptr = gcnew native_conditional_unique_ptr<native::RegionFactory>(std::move(nativeptr));
-      }
-
-      native_conditional_unique_ptr<native::RegionFactory>^ m_nativeptr; 
-      };
-    }  // namespace Client
-  }  // namespace Geode
+  gc_ptr(native_conditional_unique_ptr<native::RegionFactory>) m_nativeptr;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-

@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-
 #pragma once
-
 
 #include "geode_defs.hpp"
 #include "Serializable.hpp"
@@ -25,104 +23,85 @@
 #include <geode/Struct.hpp>
 #include "end_native.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TResult)
-      ref class StructSet;
+GENERIC(class TResult)
+ref class StructSet;
+
+/// <summary>
+/// Encapsulates a row of query struct set.
+/// </summary>
+/// <remarks>
+/// A Struct has a StructSet as its parent. It contains the field values
+/// returned after executing a Query obtained from a QueryService which in turn
+/// is obtained from a Cache.
+/// </remarks>
+PUBLIC ref class Struct sealed : public Apache::Geode::Client::Serializable {
+ public:
+  /// <summary>
+  /// Get the field value for the given index number.
+  /// </summary>
+  /// <returns>
+  /// The value of the field or null if index is out of bounds.
+  /// </returns>
+  property gc_ptr(Object) GFINDEXER(int32_t) { gc_ptr(Object) get(int32_t index); }
+
+  /// <summary>
+  /// Get the field value for the given field name.
+  /// </summary>
+  /// <returns>The value of the field.</returns>
+  /// <exception cref="IllegalArgumentException">
+  /// if the field name is not found.
+  /// </exception>
+  property gc_ptr(Object) GFINDEXER(gc_ptr(String)) { gc_ptr(Object) get(gc_ptr(String) fieldName); }
+
+  /// <summary>
+  /// Get the parent <c>StructSet</c> of this <c>Struct</c>.
+  /// </summary>
+  /// <returns>
+  /// A reference to the parent <c>StructSet</c> of this <c>Struct</c>.
+  /// </returns>
+  property gc_ptr(Apache::Geode::Client::StructSet<Object ^>) Set {
+    gc_ptr(Apache::Geode::Client::StructSet<Object ^>) get();
+  }
+
+  /// <summary>
+  /// Get the number of field values available.
+  /// </summary>
+  /// <returns>the number of field values available.</returns>
+  property int32_t Count { int32_t get(); }
+
+ private:
+  /// <summary>
+  /// Private constructor to wrap a native object pointer
+  /// </summary>
+  /// <param name="nativeptr">The native object pointer</param>
+  inline Apache::Geode::Client::Struct /*<TResult>*/ (std::shared_ptr<apache::geode::client::Serializable> nativeptr)
+      : Apache::Geode::Client::Serializable(nativeptr) {}
+
+  inline Apache::Geode::Client::Struct /*<TResult>*/ ()
+      : Apache::Geode::Client::Serializable(std::shared_ptr<apache::geode::client::Serializable>(
+            apache::geode::client::Struct::createDeserializable())) {}
+
+  internal :
 
       /// <summary>
-      /// Encapsulates a row of query struct set.
+      /// Factory function to register wrapper
       /// </summary>
-      /// <remarks>
-      /// A Struct has a StructSet as its parent. It contains the field values
-      /// returned after executing a Query obtained from a QueryService which in turn
-      /// is obtained from a Cache.
-      /// </remarks>
-      public ref class Struct sealed
-        : public Apache::Geode::Client::Serializable
-      {
-      public:
+      inline static gc_ptr(Apache::Geode::Client::ISerializable)
+          Create(::std::shared_ptr<apache::geode::client::Serializable> obj) {
+    return (obj != nullptr ? gcnew Apache::Geode::Client::Struct(obj) : nullptr);
+  }
 
-        /// <summary>
-        /// Get the field value for the given index number.
-        /// </summary>
-        /// <returns>
-        /// The value of the field or null if index is out of bounds.
-        /// </returns>
-        property Object^ GFINDEXER( int32_t )
-        {
-          Object^ get( int32_t index );
-        }
+  inline static gc_ptr(Apache::Geode::Client::ISerializable) CreateDeserializable() {
+    return gcnew Apache::Geode::Client::Struct();
+  }
+};
 
-        /// <summary>
-        /// Get the field value for the given field name.
-        /// </summary>
-        /// <returns>The value of the field.</returns>
-        /// <exception cref="IllegalArgumentException">
-        /// if the field name is not found.
-        /// </exception>
-        property Object^ GFINDEXER( String^ )
-        {
-          Object^ get( String^ fieldName );
-        }
-
-        /// <summary>
-        /// Get the parent <c>StructSet</c> of this <c>Struct</c>.
-        /// </summary>
-        /// <returns>
-        /// A reference to the parent <c>StructSet</c> of this <c>Struct</c>.
-        /// </returns>
-        property Apache::Geode::Client::StructSet<Object^>^ Set
-        {
-          Apache::Geode::Client::StructSet<Object^>^ get( );
-        }
-
-        /// <summary>
-        /// Get the number of field values available.
-        /// </summary>
-        /// <returns>the number of field values available.</returns>
-        property int32_t Count
-        {
-          int32_t get( );
-        }
-
-      private:
-
-        /// <summary>
-        /// Private constructor to wrap a native object pointer
-        /// </summary>
-        /// <param name="nativeptr">The native object pointer</param>
-        inline Apache::Geode::Client::Struct/*<TResult>*/( std::shared_ptr<apache::geode::client::Serializable> nativeptr )
-          : Apache::Geode::Client::Serializable( nativeptr ) { }
-
-        inline Apache::Geode::Client::Struct/*<TResult>*/(  )
-          : Apache::Geode::Client::Serializable( std::shared_ptr<apache::geode::client::Serializable>(apache::geode::client::Struct::createDeserializable())) { }
-
-      internal:
-
-        /// <summary>
-        /// Factory function to register wrapper
-        /// </summary>
-        inline static Apache::Geode::Client::ISerializable^ Create( ::std::shared_ptr<apache::geode::client::Serializable> obj )
-        {
-          return ( obj != nullptr ?
-            gcnew Apache::Geode::Client::Struct( obj ) : nullptr );
-        }
-
-        inline static Apache::Geode::Client::ISerializable^ CreateDeserializable( )
-        {
-          return gcnew Apache::Geode::Client::Struct(  ) ;
-        }
-      };
-
-    }  // namespace Client
-  }  // namespace Geode
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

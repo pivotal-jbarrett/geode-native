@@ -15,181 +15,127 @@
  * limitations under the License.
  */
 
-
-
-
 #include "PdxFieldType.hpp"
 #include "../begin_native.hpp"
 #include <PdxTypes.hpp>
 #include <PdxFieldType.hpp>
 #include "../end_native.hpp"
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      namespace Internal
-      {
-        Int32 PdxFieldType::SequenceId::get()
-        {
-          return m_sequenceId;
-        }
+namespace Internal {
+Int32 PdxFieldType::SequenceId::get() { return m_sequenceId; }
 
-        String^ PdxFieldType::FieldName::get()
-        {
-          return m_fieldName;
-        }
+gc_ptr(String) PdxFieldType::FieldName::get() { return m_fieldName; }
 
-        String^ PdxFieldType::ClassName::get()
-        {
-          return m_className;
-        }
+gc_ptr(String) PdxFieldType::ClassName::get() { return m_className; }
 
-        Byte PdxFieldType::TypeId::get()
-        {
-          return m_typeId;
-        }
+Byte PdxFieldType::TypeId::get() { return m_typeId; }
 
-        bool PdxFieldType::IsVariableLengthType::get()
-        {
-          return m_isVariableLengthType;
-        }
+bool PdxFieldType::IsVariableLengthType::get() { return m_isVariableLengthType; }
 
-        Int32 PdxFieldType::Size::get()
-        {
-          return m_fixedSize;
-        }
+Int32 PdxFieldType::Size::get() { return m_fixedSize; }
 
-        Int32 PdxFieldType::VarLenFieldIdx::get()
-        {
-          return m_varLenFieldIdx;
-        }
+Int32 PdxFieldType::VarLenFieldIdx::get() { return m_varLenFieldIdx; }
 
-        Int32 PdxFieldType::VarLenOffsetIndex::get()
-        {
-          return m_vlOffsetIndex;
-        }
+Int32 PdxFieldType::VarLenOffsetIndex::get() { return m_vlOffsetIndex; }
 
-        void PdxFieldType::VarLenOffsetIndex::set(Int32 val)
-        {
-          m_vlOffsetIndex = val;
-        }
+void PdxFieldType::VarLenOffsetIndex::set(Int32 val) { m_vlOffsetIndex = val; }
 
-        Int32 PdxFieldType::RelativeOffset::get()
-        {
-          return m_relativeOffset;
-        }
+Int32 PdxFieldType::RelativeOffset::get() { return m_relativeOffset; }
 
-        void PdxFieldType::RelativeOffset::set(Int32 val)
-        {
-          m_relativeOffset = val;
-        }
+void PdxFieldType::RelativeOffset::set(Int32 val) { m_relativeOffset = val; }
 
-        //it compares fieldname and type-id
-        bool PdxFieldType::Equals(Object^ otherObj)
-        {
-          if (otherObj == nullptr)
-            return false;
+// it compares fieldname and type-id
+bool PdxFieldType::Equals(gc_ptr(Object) otherObj) {
+  if (otherObj == nullptr) return false;
 
-          PdxFieldType^ otherFieldType = dynamic_cast<PdxFieldType^>(otherObj);
+  gc_ptr(PdxFieldType) otherFieldType = dynamic_cast<gc_ptr(PdxFieldType)>(otherObj);
 
-          if (otherFieldType == nullptr)
-            return false;
+  if (otherFieldType == nullptr) return false;
 
-          if (otherFieldType == this)
-            return true;
+  if (otherFieldType == this) return true;
 
-          if (otherFieldType->m_fieldName == m_fieldName && otherFieldType->m_typeId == m_typeId)
-            return true;
+  if (otherFieldType->m_fieldName == m_fieldName && otherFieldType->m_typeId == m_typeId) return true;
 
-          return false;
-        }
-
-        Int32 PdxFieldType::GetHashCode()
-        {
-          int hash = m_cachedHashcode;
-          if (hash == 0)
-          {
-            if (m_fieldName != nullptr)
-            {
-              hash = hash * 31 + m_fieldName->GetHashCode();
-            }
-
-            hash = hash * 31 + m_typeId;
-            if (hash == 0)
-              hash = 1;
-            m_cachedHashcode = hash;
-          }
-
-          return m_cachedHashcode;
-        }
-
-        void PdxFieldType::ToData(DataOutput^ output)
-        {
-          output->WriteString(m_fieldName);
-          output->WriteInt32(m_sequenceId);
-          output->WriteInt32(m_varLenFieldIdx);
-          output->WriteByte(m_typeId);
-
-          output->WriteInt32(m_relativeOffset);
-          output->WriteInt32(m_vlOffsetIndex);
-          output->WriteBoolean(m_isIdentityField);
-        }
-
-        void PdxFieldType::FromData(DataInput^ input)
-        {
-          m_fieldName = input->ReadString();
-          m_sequenceId = input->ReadInt32();
-          m_varLenFieldIdx = input->ReadInt32();
-          m_typeId = input->ReadByte();
-
-          m_relativeOffset = input->ReadInt32();
-          m_vlOffsetIndex = input->ReadInt32();
-          m_isIdentityField = input->ReadBoolean();
-
-          m_fixedSize = getFixedTypeSize();
-
-          if (m_fixedSize != -1)
-            m_isVariableLengthType = false;
-          else
-            m_isVariableLengthType = true;
-        }
-
-        Int32 PdxFieldType::getFixedTypeSize()
-        {
-          switch (m_typeId)
-          {
-          case PdxFieldTypes::BYTE:
-            return PdxTypes::BYTE_SIZE;
-          case PdxFieldTypes::BOOLEAN:
-            return PdxTypes::BOOLEAN_SIZE;
-          case PdxFieldTypes::SHORT:
-            return PdxTypes::SHORT_SIZE;
-          case PdxFieldTypes::CHAR:
-            return PdxTypes::CHAR_SIZE;
-          case PdxFieldTypes::INT:
-            return PdxTypes::INTEGER_SIZE;
-          case PdxFieldTypes::FLOAT:
-            return PdxTypes::FLOAT_SIZE;
-          case PdxFieldTypes::LONG:
-            return PdxTypes::LONG_SIZE;
-          case PdxFieldTypes::DOUBLE:
-            return PdxTypes::DOUBLE_SIZE;
-          case PdxFieldTypes::DATE:
-            return PdxTypes::DATE_SIZE;
-
-          default:
-            return -1;
-          }  // namespace Client
-        }  // namespace Geode
-      }  // namespace Apache
-
-    }
-  }
+  return false;
 }
+
+Int32 PdxFieldType::GetHashCode() {
+  int hash = m_cachedHashcode;
+  if (hash == 0) {
+    if (m_fieldName != nullptr) {
+      hash = hash * 31 + m_fieldName->GetHashCode();
+    }
+
+    hash = hash * 31 + m_typeId;
+    if (hash == 0) hash = 1;
+    m_cachedHashcode = hash;
+  }
+
+  return m_cachedHashcode;
+}
+
+void PdxFieldType::ToData(gc_ptr(DataOutput) output) {
+  output->WriteString(m_fieldName);
+  output->WriteInt32(m_sequenceId);
+  output->WriteInt32(m_varLenFieldIdx);
+  output->WriteByte(m_typeId);
+
+  output->WriteInt32(m_relativeOffset);
+  output->WriteInt32(m_vlOffsetIndex);
+  output->WriteBoolean(m_isIdentityField);
+}
+
+void PdxFieldType::FromData(gc_ptr(DataInput) input) {
+  m_fieldName = input->ReadString();
+  m_sequenceId = input->ReadInt32();
+  m_varLenFieldIdx = input->ReadInt32();
+  m_typeId = input->ReadByte();
+
+  m_relativeOffset = input->ReadInt32();
+  m_vlOffsetIndex = input->ReadInt32();
+  m_isIdentityField = input->ReadBoolean();
+
+  m_fixedSize = getFixedTypeSize();
+
+  if (m_fixedSize != -1)
+    m_isVariableLengthType = false;
+  else
+    m_isVariableLengthType = true;
+}
+
+Int32 PdxFieldType::getFixedTypeSize() {
+  switch (m_typeId) {
+    case PdxFieldTypes::BYTE:
+      return PdxTypes::BYTE_SIZE;
+    case PdxFieldTypes::BOOLEAN:
+      return PdxTypes::BOOLEAN_SIZE;
+    case PdxFieldTypes::SHORT:
+      return PdxTypes::SHORT_SIZE;
+    case PdxFieldTypes::CHAR:
+      return PdxTypes::CHAR_SIZE;
+    case PdxFieldTypes::INT:
+      return PdxTypes::INTEGER_SIZE;
+    case PdxFieldTypes::FLOAT:
+      return PdxTypes::FLOAT_SIZE;
+    case PdxFieldTypes::LONG:
+      return PdxTypes::LONG_SIZE;
+    case PdxFieldTypes::DOUBLE:
+      return PdxTypes::DOUBLE_SIZE;
+    case PdxFieldTypes::DATE:
+      return PdxTypes::DATE_SIZE;
+
+    default:
+      return -1;
+  }  // namespace Client
+}  // namespace Geode
+}  // namespace Internal
+
+}  // namespace Client
+}  // namespace Geode
+}  // namespace Apache

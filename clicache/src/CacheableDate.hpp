@@ -17,161 +17,130 @@
 
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ICacheableKey.hpp"
 #include "IDataSerializablePrimitive.hpp"
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      /// <summary>
-      /// An immutable date wrapper that can serve as a distributable
-      /// key object for caching as well as being a string value.
-      /// </summary>
-      public ref class CacheableDate
-        : public ICacheableKey,
-          public IDataSerializablePrimitive
-      {
-      public:
-        /// <summary>
-        /// Allocates a new default instance.
-        /// </summary>
-        inline CacheableDate()
-          { }
+/// <summary>
+/// An immutable date wrapper that can serve as a distributable
+/// key object for caching as well as being a string value.
+/// </summary>
+PUBLIC ref class CacheableDate : public ICacheableKey, public IDataSerializablePrimitive {
+ public:
+  /// <summary>
+  /// Allocates a new default instance.
+  /// </summary>
+  inline CacheableDate() {}
 
-        /// <summary>
-        /// Initializes a new instance of the <c>CacheableDate</c> to the
-        /// given <c>System.DateTime</c> value.
-        /// </summary>
-        /// <param name="dateTime">
-        /// A <c>System.DateTime</c> value to initialize this instance.
-        /// </param>
-        CacheableDate(DateTime dateTime);
+  /// <summary>
+  /// Initializes a new instance of the <c>CacheableDate</c> to the
+  /// given <c>System.DateTime</c> value.
+  /// </summary>
+  /// <param name="dateTime">
+  /// A <c>System.DateTime</c> value to initialize this instance.
+  /// </param>
+  CacheableDate(DateTime dateTime);
 
-        /// <summary>
-        /// Static function that returns a new default instance.
-        /// </summary>
-        inline static CacheableDate^ Create()
-        {
-          return gcnew CacheableDate();
-        }
+  /// <summary>
+  /// Static function that returns a new default instance.
+  /// </summary>
+  inline static gc_ptr(CacheableDate) Create() { return gcnew CacheableDate(); }
 
-        /// <summary>
-        /// Static function that returns a new instance initialized to the
-        /// given <c>System.DateTime</c> value.
-        /// </summary>
-        inline static CacheableDate^ Create(DateTime dateTime)
-        {
-          return gcnew CacheableDate(dateTime);
-        }
+  /// <summary>
+  /// Static function that returns a new instance initialized to the
+  /// given <c>System.DateTime</c> value.
+  /// </summary>
+  inline static gc_ptr(CacheableDate) Create(DateTime dateTime) { return gcnew CacheableDate(dateTime); }
 
-        // Region: ISerializable Members
+  // Region: ISerializable Members
 
-        /// <summary>
-        /// Serializes this object.
-        /// </summary>
-        /// <param name="output">
-        /// the DataOutput object to use for serializing the object
-        /// </param>
-        virtual void ToData(DataOutput^ output);
+  /// <summary>
+  /// Serializes this object.
+  /// </summary>
+  /// <param name="output">
+  /// the DataOutput object to use for serializing the object
+  /// </param>
+  virtual void ToData(gc_ptr(DataOutput) output);
 
-        /// <summary>
-        /// Deserialize this object, typical implementation should return
-        /// the 'this' pointer.
-        /// </summary>
-        /// <param name="input">
-        /// the DataInput stream to use for reading the object data
-        /// </param>
-        /// <returns>the deserialized object</returns>
-        virtual void FromData(DataInput^ input);
+  /// <summary>
+  /// Deserialize this object, typical implementation should return
+  /// the 'this' pointer.
+  /// </summary>
+  /// <param name="input">
+  /// the DataInput stream to use for reading the object data
+  /// </param>
+  /// <returns>the deserialized object</returns>
+  virtual void FromData(gc_ptr(DataInput) input);
 
-        /// <summary>
-        /// return the size of this object in bytes
-        /// </summary>
-        /// <summary>
-        /// return the size of this object in bytes
-        /// </summary>
-        virtual property System::UInt64 ObjectSize
-        {
-          virtual System::UInt64 get();
-        }
+  /// <summary>
+  /// return the size of this object in bytes
+  /// </summary>
+  /// <summary>
+  /// return the size of this object in bytes
+  /// </summary>
+  virtual property System::UInt64 ObjectSize { virtual System::UInt64 get(); }
 
-        /// <summary>
-        /// Returns the classId of the instance being serialized.
-        /// This is used by deserialization to determine what instance
-        /// type to create and deserialize into.
-        /// </summary>
-        /// <returns>the classId</returns>
-        property int8_t DsCode
-        {
-          virtual int8_t get();
-        }
+  /// <summary>
+  /// Returns the classId of the instance being serialized.
+  /// This is used by deserialization to determine what instance
+  /// type to create and deserialize into.
+  /// </summary>
+  /// <returns>the classId</returns>
+  property int8_t DsCode { virtual int8_t get(); }
 
-        /// <summary>
-        /// Return a string representation of the object.
-        /// </summary>
-        virtual String^ ToString() override;
+  /// <summary>
+  /// Return a string representation of the object.
+  /// </summary>
+  virtual gc_ptr(String) ToString() override;
 
-        // End Region: ISerializable Members
+  // End Region: ISerializable Members
 
+  // Region: ICacheableKey Members
 
-        // Region: ICacheableKey Members
+  /// <summary>
+  /// Return the hashcode for this key.
+  /// </summary>
+  virtual System::Int32 GetHashCode() override;
 
-        /// <summary>
-        /// Return the hashcode for this key.
-        /// </summary>
-        virtual System::Int32 GetHashCode() override;
+  /// <summary>
+  /// Return true if this key matches other object.
+  /// </summary>
+  virtual bool Equals(gc_ptr(ICacheableKey) other);
 
-        /// <summary>
-        /// Return true if this key matches other object.
-        /// </summary>
-        virtual bool Equals(ICacheableKey^ other);
+  /// <summary>
+  /// Return true if this key matches other object.
+  /// </summary>
+  virtual bool Equals(gc_ptr(Object) obj) override;
 
-        /// <summary>
-        /// Return true if this key matches other object.
-        /// </summary>
-        virtual bool Equals(Object^ obj) override;
+  // End Region: ICacheableKey Members
 
-        // End Region: ICacheableKey Members
+  /// <summary>
+  /// Gets the <c>System.DateTime</c> value.
+  /// </summary>
+  property DateTime Value {
+    inline DateTime get() { return m_dateTime; }
+  }
 
-        /// <summary>
-        /// Gets the <c>System.DateTime</c> value.
-        /// </summary>
-        property DateTime Value
-        {
-          inline DateTime get()
-          {
-            return m_dateTime;
-          }
-        }
+  /// <summary>
+  /// <c>DataTime</c> value since 1/1/1970
+  /// </summary>
+  static initonly DateTime EpochTime = DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind::Utc);
 
-        /// <summary>
-        /// <c>DataTime</c> value since 1/1/1970
-        /// </summary>
-        static initonly DateTime EpochTime = DateTime(1970, 1, 1,
-          0, 0, 0, DateTimeKind::Utc);
+  /// <summary>
+  /// Factory function to register this class.
+  /// </summary>
+  static gc_ptr(ISerializable) CreateDeserializable() { return gcnew CacheableDate(); }
 
-        /// <summary>
-        /// Factory function to register this class.
-        /// </summary>
-        static ISerializable^ CreateDeserializable()
-        {
-          return gcnew CacheableDate();
-        }
-
-      private:
-        DateTime m_dateTime;
-        int m_hashcode;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  DateTime m_dateTime;
+  int m_hashcode;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-
-

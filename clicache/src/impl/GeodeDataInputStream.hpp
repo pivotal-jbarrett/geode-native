@@ -17,7 +17,6 @@
 
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include "../DataInput.hpp"
 #include "../ExceptionTypes.hpp"
@@ -25,113 +24,95 @@
 using namespace System;
 using namespace System::IO;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class GeodeDataInputStream : public Stream
-      {
-      public:
+ref class GeodeDataInputStream : public Stream {
+ public:
+  GeodeDataInputStream(gc_ptr(DataInput) input) {
+    m_buffer = input;
+    m_maxSize = input->BytesRemaining;
+  }
 
-        GeodeDataInputStream(DataInput^ input)
-        {
-          m_buffer = input;
-          m_maxSize = input->BytesRemaining;
-        }
+  GeodeDataInputStream(gc_ptr(DataInput) input, int maxSize) {
+    m_buffer = input;
+    m_maxSize = maxSize;
+    m_buffer->AdvanceUMCursor();
+    m_buffer->SetBuffer();
+  }
 
-        GeodeDataInputStream(DataInput^ input, int maxSize)
-        {
-          m_buffer = input;
-          m_maxSize = maxSize;
-          m_buffer->AdvanceUMCursor();
-          m_buffer->SetBuffer();
-        }
+  virtual property bool CanSeek {
+    bool get() override { return false; }
+  }
+  virtual property bool CanRead {
+    bool get() override { return true; }
+  }
+  virtual property bool CanWrite {
+    bool get() override { return false; }
+  }
 
-        virtual property bool CanSeek { bool get() override { return false; } }
-        virtual property bool CanRead { bool get() override { return true; } }
-        virtual property bool CanWrite { bool get() override { return false; } }
+  virtual void Close() override { Stream::Close(); }
 
-        virtual void Close() override { Stream::Close(); }
+  virtual property System::Int64 Length {
+    System::Int64 get() override {
+      // return (System::Int64) m_buffer->BytesRead + m_buffer->BytesRemaining;
+      return (System::Int64)m_maxSize;
+    }
+  }
 
-        virtual property System::Int64 Length
-        {
-          System::Int64 get() override
-          {
-            //return (System::Int64) m_buffer->BytesRead + m_buffer->BytesRemaining;
-            return (System::Int64) m_maxSize;
-          }
-        }
+  virtual property System::Int64 Position {
+    System::Int64 get() override { return (System::Int64)m_position; }
 
-        virtual property System::Int64 Position
-        {
-          System::Int64 get() override
-          {
-            return (System::Int64) m_position;
-          }
+    void set(System::Int64 value) override { m_position = (int)value; }
+  }
 
-          void set(System::Int64 value) override
-          {
-            m_position = (int) value;
-          }
-        }
+  virtual System::Int64 Seek(System::Int64 offset, SeekOrigin origin) override {
+    throw gcnew System::NotSupportedException("Seek not supported by GeodeDataInputStream");
+  }
 
-        virtual System::Int64 Seek(System::Int64 offset, SeekOrigin origin) override
-        {
-          throw gcnew System::NotSupportedException("Seek not supported by GeodeDataInputStream");
-        }
+  virtual void SetLength(System::Int64 value) override { /* do nothing */
+  }
 
-        virtual void SetLength(System::Int64 value) override { /* do nothing */ }
+  virtual void Write(gc_ptr(array<Byte>) buffer, int offset, int count) override {
+    throw gcnew System::NotSupportedException("Write not supported by GeodeDataInputStream");
+  }
 
-        virtual void Write(array<Byte> ^ buffer, int offset, int count) override
-        {
-          throw gcnew System::NotSupportedException("Write not supported by GeodeDataInputStream");
-        }
+  virtual void WriteByte(unsigned char value) override {
+    throw gcnew System::NotSupportedException("WriteByte not supported by GeodeDataInputStream");
+  }
 
-        virtual void WriteByte(unsigned char value) override
-        {
-          throw gcnew System::NotSupportedException("WriteByte not supported by GeodeDataInputStream");
-        }
+  virtual int Read(gc_ptr(array<Byte>) buffer, int offset, int count) override {
+    _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
+      auto bytesRemaining = static_cast<int>(m_maxSize - m_buffer->BytesReadInternally);
+      if (bytesRemaining <= 0) return bytesRemaining;
+      auto actual = static_cast<int>(bytesRemaining < count ? bytesRemaining : count);
+      if (actual > 0) {
+        /*
+        array<Byte>::ConstrainedCopy(m_buffer->ReadBytesOnly(actual), 0,
+          buffer, offset, actual);
+          */
+        // pin_ptr<Byte> pin_buffer = &buffer[offset];
+        // m_buffer->NativePtr->readBytesOnly((System::Byte*)pin_buffer, actual);
+        m_buffer->ReadBytesOnly(buffer, offset, actual);
+        m_position += actual;
+      }
+      return actual;
+    _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+  }
 
-        virtual int Read(array<Byte> ^ buffer, int offset, int count) override
-        {
-          _GF_MG_EXCEPTION_TRY2/* due to auto replace */
-          auto bytesRemaining = static_cast<int>(m_maxSize - m_buffer->BytesReadInternally);
-					if(bytesRemaining <= 0)
-						return bytesRemaining;
-          auto actual = static_cast<int>(bytesRemaining < count ? bytesRemaining : count);
-					if (actual > 0)
-          {
-            /*
-            array<Byte>::ConstrainedCopy(m_buffer->ReadBytesOnly(actual), 0,
-              buffer, offset, actual);
-              */
-            //pin_ptr<Byte> pin_buffer = &buffer[offset];
-            //m_buffer->NativePtr->readBytesOnly((System::Byte*)pin_buffer, actual);
-            m_buffer->ReadBytesOnly(buffer, offset, actual);
-            m_position += actual;
-          }
-          return actual;
-          _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-        }
+  virtual void Flush() override { /* do nothing */
+  }
 
-        virtual void Flush() override { /* do nothing */ }
+  property size_t BytesRead {
+    size_t get() { return m_buffer->BytesReadInternally; }
+  }
 
-        property size_t BytesRead
-        {
-          size_t get()
-          {
-            return m_buffer->BytesReadInternally;
-          }
-        }
-
-      private:
-        size_t m_position;
-        size_t m_maxSize;
-        DataInput ^ m_buffer;
-      };
-    }  // namespace Client
-  }  // namespace Geode
+ private:
+  size_t m_position;
+  size_t m_maxSize;
+  gc_ptr(DataInput) m_buffer;
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

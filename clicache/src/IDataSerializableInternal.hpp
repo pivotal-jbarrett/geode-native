@@ -27,24 +27,20 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      ref class DataOutput;
-      ref class DataInput;
-     
-      private interface class IDataSerializableInternal : public ISerializable
-      {
-        void ToData( DataOutput^ output );
+ref class DataOutput;
+ref class DataInput;
 
-        void FromData( DataInput^ input );
-      };
+private
+interface class IDataSerializableInternal : public ISerializable {
+  void ToData(gc_ptr(DataOutput) output);
 
-    }  // namespace Client
-  }  // namespace Geode
+  void FromData(gc_ptr(DataInput) input);
+};
+
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

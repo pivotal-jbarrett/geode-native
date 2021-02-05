@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-
-
-
-
 #include "CacheableVector.hpp"
 #include "DataOutput.hpp"
 #include "DataInput.hpp"
@@ -28,51 +24,41 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      // Region: ISerializable Members
+// Region: ISerializable Members
 
-      void CacheableVector::ToData(DataOutput^ output)
-      {
-        if(m_arrayList != nullptr)
-        {
-          output->WriteArrayLen(m_arrayList->Count);
-          FOR_EACH (Object^ obj in m_arrayList) {
-						//TODO::split
-            output->WriteObject(obj);
-          }
-        }
-        else
-          output->WriteByte(0xFF);
-      }
+void CacheableVector::ToData(gc_ptr(DataOutput) output) {
+  if (m_arrayList != nullptr) {
+    output->WriteArrayLen(m_arrayList->Count);
+    FOR_EACH (gc_ptr(Object) obj in m_arrayList) {
+      // TODO::split
+      output->WriteObject(obj);
+    }
+  } else
+    output->WriteByte(0xFF);
+}
 
-     void CacheableVector::FromData(DataInput^ input)
-      {
-        int len = input->ReadArrayLen();
-        for( int i = 0; i < len; i++)
-        {
-          m_arrayList->Add(input->ReadObject());
-        }
-      }
+void CacheableVector::FromData(gc_ptr(DataInput) input) {
+  int len = input->ReadArrayLen();
+  for (int i = 0; i < len; i++) {
+    m_arrayList->Add(input->ReadObject());
+  }
+}
 
-      System::UInt64 CacheableVector::ObjectSize::get()
-      { 
-        //TODO::
-        /*System::UInt32 size = static_cast<System::UInt32> (sizeof(CacheableVector^));
-        FOR_EACH (ISerializable^ val in this) {
-          if (val != nullptr) {
-            size += val->ObjectSize;
-          }
-        }*/
-        return m_arrayList->Count;
-    }  // namespace Client
-  }  // namespace Geode
+System::UInt64 CacheableVector::ObjectSize::get() {
+  // TODO::
+  /*System::UInt32 size = static_cast<System::UInt32> (sizeof(gc_ptr(CacheableVector)));
+  FOR_EACH (gc_ptr(ISerializable) val in this) {
+    if (val != nullptr) {
+      size += val->ObjectSize;
+    }
+  }*/
+  return m_arrayList->Count;
+}  // namespace Client
+}  // namespace Client
+}  // namespace Geode
+
 }  // namespace Apache
-
- } //namespace 
-

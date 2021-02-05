@@ -17,9 +17,6 @@
 
 #pragma once
 
-
-
-
 #include "../geode_defs.hpp"
 
 #ifdef _WIN32
@@ -27,75 +24,52 @@
 //#define snprintf _snprintf
 #endif
 
-
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-    private ref class ManagedString sealed
-    {
-    private:
+private
+ref class ManagedString sealed {
+ private:
+  IntPtr m_str;
 
-      IntPtr m_str;
+ public:
+  // Constructors
 
+  inline ManagedString(gc_ptr(String) str) {
+    m_str = (str == nullptr) ? IntPtr::Zero : System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str);
+  }
 
-    public:
+  // Destructor
 
-      // Constructors
+  inline ~ManagedString() {
+    if (m_str != IntPtr::Zero) {
+      System::Runtime::InteropServices::Marshal::FreeHGlobal(m_str);
+    }
+  }
 
-      inline ManagedString( String^ str )
-      {
-        m_str = (str == nullptr) ? IntPtr::Zero :
-          System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( str );
-      }
+  // The finalizer should normally never be called; either use non-pointer object
+  // or call delete explicitly.
+  !ManagedString() {
+    if (m_str != IntPtr::Zero) {
+      System::Runtime::InteropServices::Marshal::FreeHGlobal(m_str);
+    }
+  }
 
-      // Destructor
+  inline static gc_ptr(String) Get(const char* str) { return ((str == nullptr) ? nullptr : gcnew String(str)); }
 
-      inline ~ManagedString( )
-      {
-        if (m_str != IntPtr::Zero)
-        {
-          System::Runtime::InteropServices::Marshal::FreeHGlobal( m_str );
-        }
-      }
+  inline static gc_ptr(String) Get(const wchar_t* str) { return ((str == nullptr) ? nullptr : gcnew String(str)); }
 
-      // The finalizer should normally never be called; either use non-pointer object
-      // or call delete explicitly.
-      !ManagedString( )
-      {
-        if (m_str != IntPtr::Zero)
-        {
-          System::Runtime::InteropServices::Marshal::FreeHGlobal( m_str );
-        }
-      }
+  // Properties
 
-      inline static String^ Get( const char* str )
-      {
-        return ((str == nullptr) ? nullptr : gcnew String( str ));
-      }
-
-      inline static String^ Get( const wchar_t* str )
-      {
-        return ((str == nullptr) ? nullptr : gcnew String( str ));
-      }
-
-      // Properties
-
-      property const char* CharPtr
-      {
-        inline const char* get( )
-        {
-          return ((m_str == IntPtr::Zero) ? nullptr :
-            static_cast<const char*>( m_str.ToPointer( ) ));
-        }
-      }
-    };
-    }  // namespace Client
-  }  // namespace Geode
+  property const char* CharPtr {
+    inline const char* get() {
+      return ((m_str == IntPtr::Zero) ? nullptr : static_cast<const char*>(m_str.ToPointer()));
+    }
+  }
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
-

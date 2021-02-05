@@ -17,33 +17,24 @@
 #ifdef CSTX_COMMENTED
 #pragma once
 
-
 #include "geode_defs.hpp"
 #include "ITransactionWriter.hpp"
 
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
-
-      /// <summary>
-      /// Utility class that implements all methods in <c>ITransactionWriter</c>
-      /// with empty implementations.
-      /// </summary>
-      GENERIC(class TKey, class TValue)
-      public ref class TransactionWriterAdapter
-        : public Apache::Geode::Client::ITransactionWriter<TKey, TValue>
-      {
-      public:
-        virtual void BeforeCommit(TransactionEvent<TKey, TValue>^ te)
-        {
-        }
-      };
-    }  // namespace Client
-  }  // namespace Geode
+/// <summary>
+/// Utility class that implements all methods in <c>ITransactionWriter</c>
+/// with empty implementations.
+/// </summary>
+GENERIC(class TKey, class TValue)
+PUBLIC ref class TransactionWriterAdapter : public Apache::Geode::Client::ITransactionWriter<TKey, TValue> {
+ public:
+  virtual void BeforeCommit(gc_ptr(TransactionEvent<TKey, TValue>) te) {}
+};
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache
 
 #endif

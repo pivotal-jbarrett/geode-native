@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "CacheableStringArray.hpp"
 #include "CacheableString.hpp"
 #include "DataInput.hpp"
@@ -25,70 +23,44 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      CacheableStringArray::CacheableStringArray(array<String^>^ strings)
-      {
-        m_value = strings;
-      }
+CacheableStringArray::CacheableStringArray(gc_ptr(array<String ^>) strings) { m_value = strings; }
 
-      
-      array<String^>^ CacheableStringArray::GetValues()
-      {
-        return m_value;
-      }
+gc_ptr(array<String ^>) CacheableStringArray::GetValues() { return m_value; }
 
-      String^ CacheableStringArray::default::get(System::Int32 index)
-      {
-        return m_value[index];
-      }
+gc_ptr(String) CacheableStringArray::default ::get(System::Int32 index) { return m_value[index]; }
 
-      void CacheableStringArray::ToData(DataOutput^ output) 
-      {
-        if (m_value == nullptr)
-        {
-          output->WriteArrayLen(-1);
-        }
-        else
-        {
-          output->WriteArrayLen(m_value->Length);
-          if (m_value->Length > 0)
-          {
-            for(int i = 0; i < m_value->Length; i++)
-            {
-              output->WriteObject(m_value[i]);
-            }
-            GC::KeepAlive(this);
-          }
-		    }
+void CacheableStringArray::ToData(gc_ptr(DataOutput) output) {
+  if (m_value == nullptr) {
+    output->WriteArrayLen(-1);
+  } else {
+    output->WriteArrayLen(m_value->Length);
+    if (m_value->Length > 0) {
+      for (int i = 0; i < m_value->Length; i++) {
+        output->WriteObject(m_value[i]);
       }
-        
-    
-      void CacheableStringArray::FromData(DataInput^ input)
-      {
-        int len = input->ReadArrayLen();
-        if ( len == -1)
-        {
-          m_value = nullptr;
-        }
-        else 
-        {
-          m_value = gcnew array<String^>(len);
-          if (len > 0)
-          {
-            for( int i = 0; i < len; i++)
-            {
-              m_value[i] = dynamic_cast<String^>(input->ReadObject());
-            }
-          }
-        }
-      }
+      GC::KeepAlive(this);
+    }
+  }
+}
 
-    }  // namespace Client
-  }  // namespace Geode
+void CacheableStringArray::FromData(gc_ptr(DataInput) input) {
+  int len = input->ReadArrayLen();
+  if (len == -1) {
+    m_value = nullptr;
+  } else {
+    m_value = gcnew array<gc_ptr(String)>(len);
+    if (len > 0) {
+      for (int i = 0; i < len; i++) {
+        m_value[i] = dynamic_cast<gc_ptr(String)>(input->ReadObject());
+      }
+    }
+  }
+}
+
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

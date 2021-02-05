@@ -17,81 +17,62 @@
 #ifdef CSTX_COMMENTED
 #pragma once
 
-
 #include "../geode_defs.hpp"
 #include <vcclr.h>
 #include <cppcache/TransactionWriter.hpp>
 #include "../ITransactionWriter.hpp"
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 interface class ITransactionWriter;
-    }
-  }
 }
+}  // namespace Geode
+}  // namespace Apache
 
 namespace apache {
-  namespace geode {
-    namespace client {
+namespace geode {
+namespace client {
 
-      /// <summary>
-      /// Wraps the managed <see cref="Apache.Geode.Client.ITransactionWriter" />
-      /// object and implements the native <c>apache::geode::client::TransactionWriter</c> interface.
-      /// </summary>
-      class ManagedTransactionWriterGeneric
-        : public apache::geode::client::TransactionWriter
-      {
-      public:
+/// <summary>
+/// Wraps the managed <see cref="Apache.Geode.Client.ITransactionWriter" />
+/// object and implements the native <c>apache::geode::client::TransactionWriter</c> interface.
+/// </summary>
+class ManagedTransactionWriterGeneric : public apache::geode::client::TransactionWriter {
+ public:
+  /// <summary>
+  /// Constructor to initialize with the provided managed object.
+  /// </summary>
+  /// <param name="userptr">
+  /// The managed object.
+  /// </param>
+  inline ManagedTransactionWriterGeneric(gc_ptr(Object) userptr) : m_userptr(userptr) {}
 
-        /// <summary>
-        /// Constructor to initialize with the provided managed object.
-        /// </summary>
-        /// <param name="userptr">
-        /// The managed object.
-        /// </param>
-        inline ManagedTransactionWriterGeneric(Object^ userptr )
-          : m_userptr( userptr ) { }
+  static apache::geode::client::TransactionWriter* create(const char* assemblyPath, const char* factoryFunctionName);
 
-        static apache::geode::client::TransactionWriter* create( const char* assemblyPath,
-          const char* factoryFunctionName );
+  virtual ~ManagedTransactionWriterGeneric() {}
 
-        virtual ~ManagedTransactionWriterGeneric( ) { }
+  virtual void beforeCommit(std::shared_ptr<apache::geode::client::TransactionEvent>& te);
 
-        virtual void beforeCommit(std::shared_ptr<apache::geode::client::TransactionEvent>& te);
+  inline gc_ptr(Apache::Geode::Client::ITransactionWriter) ptr() const { return m_managedptr; }
 
-        inline Apache::Geode::Client::ITransactionWriter^ ptr( ) const
-        {
-          return m_managedptr;
-        }
+  inline void setptr(gc_ptr(Apache::Geode::Client::ITransactionWriter) managedptr) { m_managedptr = managedptr; }
 
-        inline void setptr( Apache::Geode::Client::ITransactionWriter^ managedptr )
-        {
-          m_managedptr = managedptr;
-        }
+  inline gc_ptr(Object) userptr() const { return m_userptr; }
 
-        inline Object^ userptr( ) const
-        {
-          return m_userptr;
-        }
+ private:
+  /// <summary>
+  /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
+  /// Note: not using auto_gcroot since it will result in 'Dispose' of the ITransactionWriter
+  /// to be called which is not what is desired when this object is destroyed. Normally this
+  /// managed object may be created by the user and will be handled automatically by the GC.
+  /// </summary>
+  gcroot<gc_ptr(Apache::Geode::Client::ITransactionWriter)> m_managedptr;
 
-      private:
+  gcroot<gc_ptr(Object)> m_userptr;
+};
 
-        /// <summary>
-        /// Using gcroot to hold the managed delegate pointer (since it cannot be stored directly).
-        /// Note: not using auto_gcroot since it will result in 'Dispose' of the ITransactionWriter
-        /// to be called which is not what is desired when this object is destroyed. Normally this
-        /// managed object may be created by the user and will be handled automatically by the GC.
-        /// </summary>
-        gcroot<Apache::Geode::Client::ITransactionWriter^> m_managedptr;
-
-        gcroot<Object^> m_userptr;
-      };
-
-    }  // namespace client
-  }  // namespace geode
+}  // namespace client
+}  // namespace geode
 }  // namespace apache
 #endif

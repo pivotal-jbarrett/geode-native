@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 #include "StructSet.hpp"
 #include "SelectResultsIterator.hpp"
 #include "ExceptionTypes.hpp"
@@ -24,80 +22,59 @@
 
 using namespace System;
 
-namespace Apache
-{
-  namespace Geode
-  {
-    namespace Client
-    {
+namespace Apache {
+namespace Geode {
+namespace Client {
 
-      GENERIC(class TResult)
-      size_t StructSet<TResult>::Size::get( )
-      {
-        try
-        {
-          return m_nativeptr->get()->size( );
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TResult)
+size_t StructSet<TResult>::Size::get() {
+  try {
+    return m_nativeptr->get()->size();
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TResult)
-      TResult StructSet<TResult>::default::get( size_t index )
-      {
-        try
-        {
-          return TypeRegistry::GetManagedValueGeneric<TResult>(m_nativeptr->get()->operator[](index));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
+GENERIC(class TResult)
+TResult StructSet<TResult>::default ::get(size_t index) {
+  try {
+    return TypeRegistry::GetManagedValueGeneric<TResult>(m_nativeptr->get()->operator[](index));
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
 
-      GENERIC(class TResult)
-      System::Collections::Generic::IEnumerator<TResult>^ StructSet<TResult>::GetEnumerator( )
-      {
-        return SelectResultsIterator<TResult>::Create(this);
-      }
+GENERIC(class TResult)
+gc_ptr(System::Collections::Generic::IEnumerator<TResult>) StructSet<TResult>::GetEnumerator() {
+  return SelectResultsIterator<TResult>::Create(this);
+}
 
-      GENERIC(class TResult)
-      System::Collections::IEnumerator^ StructSet<TResult>::GetIEnumerator( )
-      {
-        return SelectResultsIterator<TResult>::Create(this);
-      }
+GENERIC(class TResult)
+gc_ptr(System::Collections::IEnumerator) StructSet<TResult>::GetIEnumerator() {
+  return SelectResultsIterator<TResult>::Create(this);
+}
 
-      GENERIC(class TResult)
-      int32_t StructSet<TResult>::GetFieldIndex( String^ fieldName )
-      {
-        _GF_MG_EXCEPTION_TRY2/* due to auto replace */
+GENERIC(class TResult)
+int32_t StructSet<TResult>::GetFieldIndex(gc_ptr(String) fieldName) {
+  _GF_MG_EXCEPTION_TRY2 /* due to auto replace */
 
-          try
-          {
-            return m_nativeptr->get()->getFieldIndex( marshal_as<std::string>(fieldName) );
-          }
-          finally
-          {
-            GC::KeepAlive(m_nativeptr);
-          }
+    try {
+      return m_nativeptr->get()->getFieldIndex(marshal_as<std::string>(fieldName));
+    } finally {
+      GC::KeepAlive(m_nativeptr);
+    }
 
-        _GF_MG_EXCEPTION_CATCH_ALL2/* due to auto replace */
-      }
+  _GF_MG_EXCEPTION_CATCH_ALL2 /* due to auto replace */
+}
 
-      GENERIC(class TResult)
-      String^ StructSet<TResult>::GetFieldName(int32_t index)
-      {
-        try
-        {
-          return marshal_as<String^>(m_nativeptr->get()->getFieldName(index));
-        }
-        finally
-        {
-          GC::KeepAlive(m_nativeptr);
-        }
-      }
-    }  // namespace Client
-  }  // namespace Geode
+GENERIC(class TResult)
+gc_ptr(String) StructSet<TResult>::GetFieldName(int32_t index) {
+  try {
+    return marshal_as<gc_ptr(String)>(m_nativeptr->get()->getFieldName(index));
+  } finally {
+    GC::KeepAlive(m_nativeptr);
+  }
+}
+}  // namespace Client
+}  // namespace Geode
 }  // namespace Apache

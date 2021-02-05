@@ -274,8 +274,7 @@ void PdxType::initLocalToRemote() {
 
       for (std::vector<std::shared_ptr<PdxFieldType>>::iterator remotePdxfield =
                m_pdxFieldTypes->begin();
-           remotePdxfield != m_pdxFieldTypes->end(); ++remotePdxfield)
-      {
+           remotePdxfield != m_pdxFieldTypes->end(); ++remotePdxfield) {
         PdxFieldType* remotePdx = (*(remotePdxfield)).get();
         if (localPdxField->equals(*remotePdxfield)) {
           found = true;
