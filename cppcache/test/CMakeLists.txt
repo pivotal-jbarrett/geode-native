@@ -64,6 +64,7 @@ add_executable(apache-geode_unittests
   util/functionalTests.cpp
   util/JavaModifiedUtf8Tests.cpp
   util/queueTest.cpp
+  util/stringTest.cpp
   util/synchronized_mapTest.cpp
   util/synchronized_setTest.cpp
   util/TestableRecursiveMutex.hpp
